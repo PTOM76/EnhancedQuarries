@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "active=false,facing=up": {"model":"enhanced_quarries:block/normal_marker"},
+        "active=false,facing=down" : {          "x":180 , "model":"enhanced_quarries:block/normal_marker"},
+        "active=false,facing=east" : { "y":90,  "x":90  , "model":"enhanced_quarries:block/normal_marker"},
+        "active=false,facing=south": { "y":180, "x":90  , "model":"enhanced_quarries:block/normal_marker"},
+        "active=false,facing=west" : { "y":270, "x":90  , "model":"enhanced_quarries:block/normal_marker"},
+        "active=false,facing=north": {          "x":90  , "model":"enhanced_quarries:block/normal_marker"},
+        "active=true,facing=up": {"model":"enhanced_quarries:block/active_normal_marker"},
+        "active=true,facing=down" : {          "x":180 , "model":"enhanced_quarries:block/active_normal_marker"},
+        "active=true,facing=east" : { "y":90,  "x":90  , "model":"enhanced_quarries:block/active_normal_marker"},
+        "active=true,facing=south": { "y":180, "x":90  , "model":"enhanced_quarries:block/active_normal_marker"},
+        "active=true,facing=west" : { "y":270, "x":90  , "model":"enhanced_quarries:block/active_normal_marker"},
+        "active=true,facing=north": {          "x":90  , "model":"enhanced_quarries:block/active_normal_marker"}
+    }
+}

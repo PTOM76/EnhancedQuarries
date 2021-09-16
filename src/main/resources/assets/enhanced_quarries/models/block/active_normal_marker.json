@@ -1,0 +1,6 @@
+{
+    "parent":"enhanced_quarries:block/torch_center_lit",
+    "textures": {
+        "all":"enhanced_quarries:block/active_normal_marker"
+    }
+}

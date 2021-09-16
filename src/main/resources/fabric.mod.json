@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "enhanced_quarries",
+  "version": "${version}",
+  "name": "Enhanced Quarries",
+  "description": "add Filler, Quarry etc",
+  "authors": [
+    "Pitan"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/enhanced_quarries",
+    "sources": "https://github.com/PTOM76/EnhancedQuarries",
+    "issues": "https://github.com/PTOM76/EnhancedQuarries/issues"
+  },
+
+  "license": "MPL-2.0",
+  "icon": "assets/enhanced_quarries/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "ml.pkom.enhancedquarries.EnhancedQuarries"
+    ],
+    "client": [
+      "ml.pkom.enhancedquarries.EnhancedQuarriesClient"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "enhanced_quarries.client.mixins.json",
+      "environment": "client"
+    },
+    {
+      "config": "enhanced_quarries.mixins.json",
+      "environment": "*"
+    }
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "fabric": "*",
+    "minecraft": "*"
+  }
+}
