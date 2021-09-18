@@ -14,6 +14,10 @@
     "item.enhanced_quarries.mob_delete_module": "モブ消去モジュール",
     "item.enhanced_quarries.mob_kill_module": "モブ殺害モジュール",
 
+    "item.enhanced_quarries.filler_all_fill": "全て埋め立てモジュール",
+    "item.enhanced_quarries.filler_all_delete": "全て消去モジュール",
+    "item.enhanced_quarries.filler_all_remove": "全て撤去モジュール",
+
     "message.enhanced_quarries.bedrock_break_module.1": "そのクァーリーは既に岩盤破壊モジュールが適用されています。",
     "message.enhanced_quarries.silk_touch_module.1": "そのクァーリーは既にシルクタッチモジュールが適用されています。",
     "message.enhanced_quarries.luck_enchant_module.1": "そのクァーリーは既に幸運モジュールが適用されています。",

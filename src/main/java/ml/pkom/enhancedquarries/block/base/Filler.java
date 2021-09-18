@@ -78,7 +78,8 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof FillerTile) {
                 FillerTile filler = (FillerTile)blockEntity;
-                ItemScatterer.spawn(world, pos, filler);
+                ItemScatterer.spawn(world, pos, filler.getInventory());
+                ItemScatterer.spawn(world, pos, filler.getCraftingInventory());
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }
@@ -126,7 +127,7 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
                     if ((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null) || markerList.size() <= 2 ) return;
                     // ミスった仕様上 min min max、max max minという関数になってしまった。
                     fillerTile.setPos1(new BlockPos(minPosX, minPosY, maxPosZ));
-                    fillerTile.setPos2(new BlockPos(maxPosX + 1, maxPosY, minPosZ - 1));
+                    fillerTile.setPos2(new BlockPos(maxPosX, maxPosY, minPosZ));
                 }
             }
         }

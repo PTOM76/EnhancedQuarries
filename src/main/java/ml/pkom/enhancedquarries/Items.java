@@ -1,6 +1,7 @@
 package ml.pkom.enhancedquarries;
 
 import ml.pkom.enhancedquarries.item.*;
+import ml.pkom.enhancedquarries.item.base.FillerModule;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -21,6 +22,19 @@ public class Items {
     public static Item MOB_KILL_MODULE = new MobKillModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
     public static Item MOB_DELETE_MODULE = new MobDeleteModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
 
+    // 全配置
+    public static Item fillerALL_FILL = new FillerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    // 全消去
+    public static Item fillerALL_DELETE = new FillerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    // 全撤去
+    public static Item fillerALL_REMOVE = new FillerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    // 整地
+    public static Item fillerLEVELING = new FillerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    // ボックス
+    public static Item fillerBOX = new FillerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    // 壁
+    public static Item fillerWALL = new FillerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+
     public static void init() {
         Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_filler"), NORMAL_FILLER);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_quarry"), NORMAL_QUARRY);
@@ -35,5 +49,12 @@ public class Items {
         Registry.register(Registry.ITEM, EnhancedQuarries.id("luck_enchant_module"), LUCK_MODULE);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("mob_kill_module"), MOB_KILL_MODULE);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("mob_delete_module"), MOB_DELETE_MODULE);
+
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_all_fill"), fillerALL_FILL);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_all_delete"), fillerALL_DELETE);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_all_remove"), fillerALL_REMOVE);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_leveling"), fillerLEVELING);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_create_box"), fillerBOX);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_create_wall"), fillerWALL);
     }
 }

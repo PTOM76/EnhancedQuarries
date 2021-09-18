@@ -115,7 +115,7 @@ public class NormalMarker extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient()) return super.onUse(state, world, pos, player, hand, hit);
+        if (world.isClient()) return ActionResult.SUCCESS;
         List<BlockStatePos> markerList = new ArrayList<>();
         markerList.add(new BlockStatePos(state, pos, world));
         searchMarker(world, pos, markerList);

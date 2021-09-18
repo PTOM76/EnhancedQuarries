@@ -29,27 +29,12 @@ import reborncore.common.util.RebornInventory;
 
 import java.util.List;
 
-public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryProvider, BuiltScreenHandlerProvider {// implements IInventory {
+public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
     // Container
     public RebornInventory<QuarryTile> inventory = new RebornInventory<>(27, "QuarryTile", 64, this);
 
     public RebornInventory<QuarryTile> getInventory() {
         return inventory;
-    }
-
-    @Override
-    public BuiltScreenHandler createScreenHandler(int syncID, PlayerEntity player) {
-        return new ScreenHandlerBuilder("quarry").player(player.inventory).inventory().hotbar().addInventory()
-                .blockEntity(this)
-                .outputSlot(6, 55, 66)
-                .outputSlot(7, 75, 66)
-                .outputSlot(8, 95, 66)
-                .outputSlot(9, 115, 66)
-                .outputSlot(10, 135, 66)
-                .energySlot(11, 8, 72)
-                .syncEnergyValue()
-                .addInventory()
-                .create(this, syncID);
     }
     // ----
 

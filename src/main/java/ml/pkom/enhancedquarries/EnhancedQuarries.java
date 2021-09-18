@@ -1,14 +1,18 @@
 package ml.pkom.enhancedquarries;
 
 import ml.pkom.enhancedquarries.tile.Tiles;
+import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
 
 public class EnhancedQuarries implements ModInitializer {
 
@@ -29,6 +33,8 @@ public class EnhancedQuarries implements ModInitializer {
         Items.init();
         Blocks.init();
         Tiles.init();
+        ScreenHandlers.init();
+        FillerCraftingPatterns.init();
     }
 
     public static void log(Level level, String message){

@@ -1,57 +1,68 @@
 package ml.pkom.enhancedquarries.tile.base;
 
+import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.Frame;
 import ml.pkom.enhancedquarries.block.base.Filler;
-import ml.pkom.enhancedquarries.block.base.Quarry;
+import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 import reborncore.api.blockentity.InventoryProvider;
-import reborncore.client.screen.BuiltScreenHandlerProvider;
-import reborncore.client.screen.builder.BuiltScreenHandler;
-import reborncore.client.screen.builder.ScreenHandlerBuilder;
 import reborncore.common.blockentity.SlotConfiguration;
 import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
 import reborncore.common.util.RebornInventory;
 
 import java.util.List;
 
-public class FillerTile extends PowerAcceptorBlockEntity implements InventoryProvider, BuiltScreenHandlerProvider {// implements IInventory {
+public class FillerTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
+
     // Container
     public RebornInventory<FillerTile> inventory = new RebornInventory<>(27, "FillerTile", 64, this);
+
+    //public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
+    public DefaultedList<ItemStack> craftingInvItems = DefaultedList.ofSize(10, ItemStack.EMPTY);
+
+    //public ImplementedInventory inventory = () -> invItems;
+    public ImplementedInventory craftingInventory = () -> craftingInvItems;
 
     public RebornInventory<FillerTile> getInventory() {
         return inventory;
     }
 
-    @Override
-    public BuiltScreenHandler createScreenHandler(int syncID, PlayerEntity player) {
-        return new ScreenHandlerBuilder("filler").player(player.inventory).inventory().hotbar().addInventory()
-                .blockEntity(this)
-                .outputSlot(6, 55, 66)
-                .outputSlot(7, 75, 66)
-                .outputSlot(8, 95, 66)
-                .outputSlot(9, 115, 66)
-                .outputSlot(10, 135, 66)
-                .energySlot(11, 8, 72)
-                .syncEnergyValue()
-                .addInventory()
-                .create(this, syncID);
+    public Inventory getCraftingInventory() {
+        return craftingInventory;
     }
+
+    public boolean hasModule() {
+        return !getModule().isEmpty();
+    }
+
+    public ItemStack getModule() {
+        return getCraftingInventory().getStack(9).copy();
+    }
+
     // ----
 
     // TR
@@ -88,8 +99,11 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
     // NBT
 
     public NbtCompound writeNbt(NbtCompound tag) {
-        tag.putDouble("coolTime", coolTime);
+        NbtCompound invTag = new NbtCompound();
+        Inventories.writeNbt(invTag, craftingInvItems);
+        tag.put("craftingInv", invTag);
 
+        tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
             tag.putInt("rangePos1Y", getPos1().getY());
@@ -105,6 +119,9 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     public void fromTag(BlockState blockState, NbtCompound tag) {
         super.fromTag(blockState, tag);
+        NbtCompound invTag = tag.getCompound("craftingInv");
+        Inventories.readNbt(invTag, craftingInvItems);
+
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("rangePos1X")
                 && tag.contains("rangePos1Y")
@@ -115,7 +132,6 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
             setPos1(new BlockPos(tag.getInt("rangePos1X"), tag.getInt("rangePos1Y"), tag.getInt("rangePos1Z")));
             setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
         }
-
     }
 
     // ----
@@ -159,14 +175,16 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
             }
             return;
         }
-
+        if (!hasModule()){
+            return;
+        }
         if (getEnergy() > getEuPerTick(getEnergyCost())) {
             // ここに処理を記入
             if (coolTime <= 0) {
                 coolTime = getSettingCoolTime();
-                //if (tryQuarrying()) {
-                //    useEnergy(getEnergyCost());
-                //}
+                if (tryFilling(getModule().getItem())) {
+                    useEnergy(getEnergyCost());
+                }
             }
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
@@ -176,6 +194,66 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         } else if (isActive()) {
             filler.setActive(false, getWorld(), getPos());
         }
+    }
+
+    public ItemStack getInventoryStack() {
+        for (ItemStack stack : getInventory().getStacks()) {
+            if (!stack.isEmpty() && stack.getItem() instanceof BlockItem) {
+                return stack;
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public boolean tryFilling(Item item) {
+        if (getWorld() == null || getWorld().isClient()) return false;
+        if (pos1 == null || pos2 == null)
+            return false;
+        int procX;
+        int procY;
+        int procZ;
+        for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
+            for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
+                for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
+                    BlockPos procPos = new BlockPos(procX, procY, procZ);
+                    Block procBlock = getWorld().getBlockState(procPos).getBlock();
+                    // 埋め立てモジュール
+                    if (item.equals(Items.fillerALL_FILL)) {
+                        if (procBlock instanceof AirBlock || procBlock instanceof FluidBlock) {
+                            ItemStack stack = getInventoryStack();
+                            if (stack.isEmpty()) {
+                                return false;
+                            }
+                            Block block = Block.getBlockFromItem(stack.getItem());
+                            if (block.is(procBlock)) {
+                                continue;
+                            }
+                            if (getWorld().setBlockState(procPos, block.getDefaultState())) {
+                                getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+                                stack.setCount(stack.getCount() - 1);
+                                return true;
+                            }
+                        }
+                    }
+                    // 消去モジュール
+                    if (item.equals(Items.fillerALL_DELETE)) {
+                        if (procBlock instanceof AirBlock) continue;
+                        return getWorld().removeBlock(procPos, false);
+                    }
+                    // 撤去モジュール
+                    if (item.equals(Items.fillerALL_REMOVE)) {
+                        if (procBlock instanceof AirBlock) continue;
+                        return getWorld().breakBlock(procPos, true);
+                    }
+                    // 整地モジュール
+                    if (item.equals(Items.fillerLEVELING)) {
+                        if (procBlock instanceof AirBlock) continue;
+                        return getWorld().breakBlock(procPos, true);
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     // クールダウンのエネルギー量による追加ボーナス
@@ -218,42 +296,6 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         }
     }
 
-    public BlockPos getRangePos1() {
-        BlockPos blockPos = null;
-        // default
-        if (getFacing().equals(Direction.NORTH)) {
-            blockPos = new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() + 11);
-        }
-        if (getFacing().equals(Direction.SOUTH)) {
-            blockPos = new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() - 1);
-        }
-        if (getFacing().equals(Direction.WEST)) {
-            blockPos = new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ() + 5);
-        }
-        if (getFacing().equals(Direction.EAST)) {
-            blockPos = new BlockPos(getPos().getX() - 11, getPos().getY(), getPos().getZ() + 5);
-        }
-        return blockPos;
-    }
-
-    public BlockPos getRangePos2() {
-        BlockPos blockPos = null;
-        // default
-        if (getFacing().equals(Direction.NORTH)) {
-            blockPos = new BlockPos(getPos().getX() + 6, getPos().getY() + 5, getPos().getZ());
-        }
-        if (getFacing().equals(Direction.SOUTH)) {
-            blockPos = new BlockPos(getPos().getX() + 6, getPos().getY() + 5, getPos().getZ() - 12);
-        }
-        if (getFacing().equals(Direction.WEST)) {
-            blockPos = new BlockPos(getPos().getX() + 12, getPos().getY() + 5, getPos().getZ() - 6);
-        }
-        if (getFacing().equals(Direction.EAST)) {
-            blockPos = new BlockPos(getPos().getX(), getPos().getY() + 5, getPos().getZ() - 6);
-        }
-        return blockPos;
-    }
-
     // マーカーによる範囲指定を許可するか？
     public boolean canSetPosByMarker() {
         return true;
@@ -282,24 +324,20 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         super(type);
     }
 
-
     public void init() {
-        /*
         int index = 0;
-        SlotConfiguration.SlotIO slotIO = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.OUTPUT);
+        SlotConfiguration.SlotIO output = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.OUTPUT);
+        SlotConfiguration.SlotIO input = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.INPUT);
         SlotConfiguration slotConfig = new SlotConfiguration(getInventory());
         for (;index < getInventory().size();index++){
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.NORTH, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.SOUTH, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.EAST, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.WEST, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.UP, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.DOWN, slotIO, index));
+            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.NORTH, input, index));
+            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.SOUTH, input, index));
+            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.EAST, input, index));
+            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.WEST, input, index));
+            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.UP, input, index));
+            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.DOWN, output, index));
             markDirty();
         }
         ((MachineBaseBlockEntityAccessor) this).setSlotConfiguration(slotConfig);
-        //FillerPlus.log(Level.INFO, "north output: " + slotConfig.getSlotDetails(0).getSideDetail(Direction.NORTH).getSlotIO().getIoConfig().name());
-
-         */
     }
 }
