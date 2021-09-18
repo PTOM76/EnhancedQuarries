@@ -1,6 +1,7 @@
 {
     "itemGroup.enhanced_quarries.all": "EnhancedQuarries",
     "block.enhanced_quarries.normal_filler": "ノーマル フィラー",
+    "block.enhanced_quarries.enhanced_filler": "強化型フィラー",
     "block.enhanced_quarries.normal_quarry": "ノーマル クァーリー",
     "block.enhanced_quarries.enhanced_quarry": "強化型クァーリー",
     "block.enhanced_quarries.fluid_quarry": "液体除去型クァーリー",
@@ -17,6 +18,9 @@
     "item.enhanced_quarries.filler_all_fill": "全て埋め立てモジュール",
     "item.enhanced_quarries.filler_all_delete": "全て消去モジュール",
     "item.enhanced_quarries.filler_all_remove": "全て撤去モジュール",
+    "item.enhanced_quarries.filler_leveling": "整地モジュール",
+    "item.enhanced_quarries.filler_create_box": "ボックス建設モジュール",
+    "item.enhanced_quarries.filler_create_wall": "壁建設モジュール",
 
     "message.enhanced_quarries.bedrock_break_module.1": "そのクァーリーは既に岩盤破壊モジュールが適用されています。",
     "message.enhanced_quarries.silk_touch_module.1": "そのクァーリーは既にシルクタッチモジュールが適用されています。",

@@ -79,6 +79,7 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
             if (blockEntity instanceof FillerTile) {
                 FillerTile filler = (FillerTile)blockEntity;
                 ItemScatterer.spawn(world, pos, filler.getInventory());
+                filler.getCraftingInventory().setStack(9, ItemStack.EMPTY);
                 ItemScatterer.spawn(world, pos, filler.getCraftingInventory());
             }
             super.onStateReplaced(state, world, pos, newState, moved);

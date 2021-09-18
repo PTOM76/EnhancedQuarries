@@ -212,60 +212,15 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         int procX;
         int procY;
         int procZ;
-        for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
-            for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
-                for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
+        //procY = pos1.getY(); procY <= pos2.getY(); procY++
+        for (procY = 0; procY <= getWorld().getDimensionHeight(); procY++) {
+            for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
+                for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
-                    // 埋め立てモジュール
-                    if (item.equals(Items.fillerALL_FILL)) {
-                        if (procBlock instanceof AirBlock || procBlock instanceof FluidBlock) {
-                            ItemStack stack = getInventoryStack();
-                            if (stack.isEmpty()) return false;
-                            Block block = Block.getBlockFromItem(stack.getItem());
-                            if (block.is(procBlock)) continue;
-                            if (getWorld().setBlockState(procPos, block.getDefaultState())) {
-                                getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
-                                stack.setCount(stack.getCount() - 1);
-                                return true;
-                            }
-                        }
-                    }
-                    // 消去モジュール
-                    if (item.equals(Items.fillerALL_DELETE)) {
-                        if (procBlock instanceof AirBlock) continue;
-                        return getWorld().removeBlock(procPos, false);
-                    }
-                    // 撤去モジュール
-                    if (item.equals(Items.fillerALL_REMOVE)) {
-                        if (procBlock instanceof AirBlock) continue;
-                        return getWorld().breakBlock(procPos, true);
-                    }
-                    // 整地モジュール
-                    if (item.equals(Items.fillerLEVELING)) {
-                        if (procBlock instanceof AirBlock) continue;
-                        return getWorld().breakBlock(procPos, true);
-                    }
-                }
-                // 選択範囲より上～最高域
-                if (item.equals(Items.fillerLEVELING)) { // ←ここで対応モジュールの条件を定義する。
-                    for (procY = pos2.getY() + 1; procY <= getWorld().getDimensionHeight(); procY++) {
-                        BlockPos procPos = new BlockPos(procX, procY, procZ);
-                        Block procBlock = getWorld().getBlockState(procPos).getBlock();
-                        // 整地モジュール
-                        if (item.equals(Items.fillerLEVELING)) {
-                            if (procBlock instanceof AirBlock) continue;
-                            return getWorld().breakBlock(procPos, true);
-                        }
-                    }
-                }
-                // 選択範囲より下～0
-                if (item.equals(Items.fillerLEVELING)) { // ←ここで対応モジュールの条件を定義する。
-                    for (procY = pos1.getY() - 1; procY >= 0; procY--) {
-                        BlockPos procPos = new BlockPos(procX, procY, procZ);
-                        Block procBlock = getWorld().getBlockState(procPos).getBlock();
-                        // 整地モジュール
-                        if (item.equals(Items.fillerLEVELING)) {
+                    if ( procY <= pos2.getY() && procY >= pos1.getY()) {
+                        // 埋め立てモジュール
+                        if (item.equals(Items.fillerALL_FILL)) {
                             if (procBlock instanceof AirBlock || procBlock instanceof FluidBlock) {
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
@@ -278,7 +233,82 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 }
                             }
                         }
+                        // 消去モジュール
+                        if (item.equals(Items.fillerALL_DELETE)) {
+                            if (procBlock instanceof AirBlock) continue;
+                            return getWorld().removeBlock(procPos, false);
+                        }
+                        // 撤去モジュール
+                        if (item.equals(Items.fillerALL_REMOVE)) {
+                            if (procBlock instanceof AirBlock) continue;
+                            return getWorld().breakBlock(procPos, true);
+                        }
+                        // 整地モジュール
+                        if (item.equals(Items.fillerLEVELING)) {
+                            if (!(procBlock instanceof AirBlock))
+                                return getWorld().breakBlock(procPos, true);
+                        }
+                        // 箱モジュール
+                        if (item.equals(Items.fillerBOX)) {
+                            if ((procBlock instanceof AirBlock || procBlock instanceof FluidBlock)
+                            && (
+                                    procX == pos1.getX() || procX == pos2.getX() || procZ == pos1.getZ() || procZ == pos2.getZ() // 壁
+                                || procY == pos1.getY() || procY == pos2.getY())) {
+                                ItemStack stack = getInventoryStack();
+                                if (stack.isEmpty()) return false;
+                                Block block = Block.getBlockFromItem(stack.getItem());
+                                if (block.is(procBlock)) continue;
+                                if (getWorld().setBlockState(procPos, block.getDefaultState())) {
+                                    getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+                                    stack.setCount(stack.getCount() - 1);
+                                    return true;
+                                }
+                            }
+                        }
+                        // 壁モジュール
+                        if (item.equals(Items.fillerWALL)) {
+                            if ((procBlock instanceof AirBlock || procBlock instanceof FluidBlock)
+                                    && (
+                                    procX == pos1.getX() || procX == pos2.getX() || procZ == pos1.getZ() || procZ == pos2.getZ()
+                            )) {
+                                ItemStack stack = getInventoryStack();
+                                if (stack.isEmpty()) return false;
+                                Block block = Block.getBlockFromItem(stack.getItem());
+                                if (block.is(procBlock)) continue;
+                                if (getWorld().setBlockState(procPos, block.getDefaultState())) {
+                                    getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+                                    stack.setCount(stack.getCount() - 1);
+                                    return true;
+                                }
+                            }
+                        }
                     }
+                    // 選択範囲より上～最高域
+                    if (procY <= getWorld().getDimensionHeight() && procY >= pos2.getY() + 1) {
+                        // 整地モジュール
+                        if (item.equals(Items.fillerLEVELING)) {
+                            if (!(procBlock instanceof AirBlock))
+                                return getWorld().breakBlock(procPos, true);
+                        }
+                    }
+                    // 選択範囲より下～0
+                    if (procY >= 0 && procY <= pos1.getY() - 1) {
+                        // 整地モジュール
+                        if (item.equals(Items.fillerLEVELING)) {
+                            if (procBlock instanceof AirBlock || procBlock instanceof FluidBlock) {
+                                ItemStack stack = getInventoryStack();
+                                if (stack.isEmpty()) continue;
+                                Block block = Block.getBlockFromItem(stack.getItem());
+                                if (block.is(procBlock)) continue;
+                                if (getWorld().setBlockState(procPos, block.getDefaultState())) {
+                                    getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+                                    stack.setCount(stack.getCount() - 1);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
         }

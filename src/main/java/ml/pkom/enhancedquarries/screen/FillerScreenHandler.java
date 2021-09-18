@@ -57,14 +57,18 @@ public class FillerScreenHandler extends ScreenHandler {
     public ItemStack transferSlot(PlayerEntity player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(invSlot);
+        if (slot instanceof FillerCraftingSlot) {
+            if (invSlot != 9)
+                return ItemStack.EMPTY;
+        }
         if (slot != null && slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
-            if (invSlot < this.inventory.size()) {
-                if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
+            if (invSlot < inventory.size() + craftingInventory.size()) {
+                if (!this.insertItem(originalStack, inventory.size() + craftingInventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, 0, this.inventory.size(), false)) {
+            } else if (!this.insertItem(originalStack, craftingInventory.size(),craftingInventory.size() + inventory.size(), false)) {
                 return ItemStack.EMPTY;
             }
 

@@ -1,6 +1,7 @@
 {
     "itemGroup.enhanced_quarries.all": "EnhancedQuarries",
     "block.enhanced_quarries.normal_filler": "Normal Filler",
+    "block.enhanced_quarries.enhanced_filler": "Enhanced Filler",
     "block.enhanced_quarries.normal_quarry": "Normal Quarry",
     "block.enhanced_quarries.enhanced_quarry": "Enhanced Quarry",
     "block.enhanced_quarries.fluid_quarry": "Fluid Delete Type Quarry",

@@ -75,4 +75,9 @@ public class FillerCraftingSlot extends Slot {
     public boolean canInsert(ItemStack stack) {
         return !isOutput;
     }
+
+    @Override
+    public int getMaxItemCount() {
+        return 1;
+    }
 }
