@@ -212,22 +212,18 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         int procX;
         int procY;
         int procZ;
-        for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
-            for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
-                for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
+        for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
+            for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
+                for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
                     // 埋め立てモジュール
                     if (item.equals(Items.fillerALL_FILL)) {
                         if (procBlock instanceof AirBlock || procBlock instanceof FluidBlock) {
                             ItemStack stack = getInventoryStack();
-                            if (stack.isEmpty()) {
-                                return false;
-                            }
+                            if (stack.isEmpty()) return false;
                             Block block = Block.getBlockFromItem(stack.getItem());
-                            if (block.is(procBlock)) {
-                                continue;
-                            }
+                            if (block.is(procBlock)) continue;
                             if (getWorld().setBlockState(procPos, block.getDefaultState())) {
                                 getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
                                 stack.setCount(stack.getCount() - 1);
@@ -249,6 +245,39 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                     if (item.equals(Items.fillerLEVELING)) {
                         if (procBlock instanceof AirBlock) continue;
                         return getWorld().breakBlock(procPos, true);
+                    }
+                }
+                // 選択範囲より上～最高域
+                if (item.equals(Items.fillerLEVELING)) { // ←ここで対応モジュールの条件を定義する。
+                    for (procY = pos2.getY() + 1; procY <= getWorld().getDimensionHeight(); procY++) {
+                        BlockPos procPos = new BlockPos(procX, procY, procZ);
+                        Block procBlock = getWorld().getBlockState(procPos).getBlock();
+                        // 整地モジュール
+                        if (item.equals(Items.fillerLEVELING)) {
+                            if (procBlock instanceof AirBlock) continue;
+                            return getWorld().breakBlock(procPos, true);
+                        }
+                    }
+                }
+                // 選択範囲より下～0
+                if (item.equals(Items.fillerLEVELING)) { // ←ここで対応モジュールの条件を定義する。
+                    for (procY = pos1.getY() - 1; procY >= 0; procY--) {
+                        BlockPos procPos = new BlockPos(procX, procY, procZ);
+                        Block procBlock = getWorld().getBlockState(procPos).getBlock();
+                        // 整地モジュール
+                        if (item.equals(Items.fillerLEVELING)) {
+                            if (procBlock instanceof AirBlock || procBlock instanceof FluidBlock) {
+                                ItemStack stack = getInventoryStack();
+                                if (stack.isEmpty()) return false;
+                                Block block = Block.getBlockFromItem(stack.getItem());
+                                if (block.is(procBlock)) continue;
+                                if (getWorld().setBlockState(procPos, block.getDefaultState())) {
+                                    getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+                                    stack.setCount(stack.getCount() - 1);
+                                    return true;
+                                }
+                            }
+                        }
                     }
                 }
             }
