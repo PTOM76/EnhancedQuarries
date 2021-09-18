@@ -37,6 +37,13 @@ public class Items {
     // 壁
     public static Item fillerWALL = new FillerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
 
+    // 素材
+    public static Item REFINED_GEAR = new Item(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    public static Item ENHANCED_REFINED_GEAR = new Item(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    public static Item ENHANCED_PANEL = new Item(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+
+    // ----
+
     public static void init() {
         Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_quarry"), NORMAL_QUARRY);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_quarry"), ENHANCED_QUARRY);
@@ -60,5 +67,9 @@ public class Items {
         Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_leveling"), fillerLEVELING);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_create_box"), fillerBOX);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_create_wall"), fillerWALL);
+
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("refined_gear"), REFINED_GEAR);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_refined_gear"), ENHANCED_REFINED_GEAR);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_panel"), ENHANCED_PANEL);
     }
 }

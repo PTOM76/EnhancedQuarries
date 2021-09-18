@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XAX",
+    "ZXZ",
+    "ZYZ"
+  ],
+  "key": {
+    "X": {
+      "item": "enhanced_quarries:refined_gear"
+    },
+    "Y": {
+      "item": "minecraft:diamond_pickaxe"
+    },
+    "Z": {
+      "item": "enhanced_quarries:enhanced_panel"
+    },
+    "A": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:normal_quarry",
+    "count": 1
+  }
+}

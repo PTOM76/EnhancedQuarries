@@ -1,40 +1,26 @@
 package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.Items;
-import ml.pkom.enhancedquarries.block.Frame;
 import ml.pkom.enhancedquarries.block.base.Filler;
 import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.registry.Registry;
 import reborncore.api.blockentity.InventoryProvider;
 import reborncore.common.blockentity.SlotConfiguration;
 import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
 import reborncore.common.util.RebornInventory;
-
-import java.util.List;
 
 public class FillerTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
 
@@ -64,6 +50,22 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
     }
 
     // ----
+
+    // モジュール
+
+    // - 岩盤破壊モジュール
+    private boolean canBedrockBreak = false;
+
+    public boolean canBedrockBreak() {
+        return canBedrockBreak;
+    }
+
+    public void setBedrockBreak(boolean canBedrockBreak) {
+        this.canBedrockBreak = canBedrockBreak;
+    }
+
+    // ----
+
 
     // TR
     // デフォルトコスト
@@ -102,7 +104,6 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         NbtCompound invTag = new NbtCompound();
         Inventories.writeNbt(invTag, craftingInvItems);
         tag.put("craftingInv", invTag);
-
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
@@ -114,6 +115,9 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
             tag.putInt("rangePos2Y", getPos2().getY());
             tag.putInt("rangePos2Z", getPos2().getZ());
         }
+
+        if (canBedrockBreak)
+            tag.putBoolean("module_bedrock_break", true);
         return super.writeNbt(tag);
     }
 
@@ -132,6 +136,9 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
             setPos1(new BlockPos(tag.getInt("rangePos1X"), tag.getInt("rangePos1Y"), tag.getInt("rangePos1Z")));
             setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
         }
+
+        if (tag.contains("module_bedrock_break"))
+            canBedrockBreak = tag.getBoolean("module_bedrock_break");
     }
 
     // ----
@@ -196,13 +203,52 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         }
     }
 
+    private ItemStack latestGotStack = ItemStack.EMPTY;
+
+    public static boolean isStorageBox(ItemStack stack) {
+        return Registry.ITEM.getId(stack.getItem()).toString().equals("storagebox:storagebox");
+    }
+
     public ItemStack getInventoryStack() {
         for (ItemStack stack : getInventory().getStacks()) {
-            if (!stack.isEmpty() && stack.getItem() instanceof BlockItem) {
-                return stack;
+            latestGotStack = stack;
+            if (stack.isEmpty()) continue;
+            if (stack.getItem() instanceof BlockItem) return stack;
+            // StorageBox
+            if (isStorageBox(stack)) {
+                NbtCompound tag = stack.getTag();
+                if (tag.contains("item")) {
+                    ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("item"));
+                    if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
+                }
             }
+            // ---- StorageBox
         }
         return ItemStack.EMPTY;
+    }
+
+    public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
+        if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
+            getWorld().playSound(null, blockPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+            if (isStorageBox(latestGotStack)) {
+                NbtCompound tag = latestGotStack.getTag();
+                if (tag.contains("countInBox")) {
+                    int countInBox = tag.getInt("countInBox");
+                    countInBox--;
+                    tag.putInt("countInBox", countInBox);
+                    if (countInBox <= 0) {
+                        tag.remove("item");
+                        tag.remove("countInBox");
+                    }
+                    latestGotStack.setTag(tag);
+                }
+                return true;
+            }
+            latestGotStack.setCount(latestGotStack.getCount() - 1);
+            return true;
+        }
+        return false;
+
     }
 
     public boolean tryFilling(Item item) {
@@ -226,26 +272,22 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
                                 if (block.is(procBlock)) continue;
-                                if (getWorld().setBlockState(procPos, block.getDefaultState())) {
-                                    getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
-                                    stack.setCount(stack.getCount() - 1);
-                                    return true;
-                                }
+                                if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
                         // 消去モジュール
                         if (item.equals(Items.fillerALL_DELETE)) {
-                            if (procBlock instanceof AirBlock) continue;
+                            if (procBlock instanceof AirBlock || (procBlock.is(Blocks.BEDROCK) && !canBedrockBreak)) continue;
                             return getWorld().removeBlock(procPos, false);
                         }
                         // 撤去モジュール
                         if (item.equals(Items.fillerALL_REMOVE)) {
-                            if (procBlock instanceof AirBlock) continue;
+                            if (procBlock instanceof AirBlock || (procBlock.is(Blocks.BEDROCK) && !canBedrockBreak)) continue;
                             return getWorld().breakBlock(procPos, true);
                         }
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
-                            if (!(procBlock instanceof AirBlock))
+                            if (!(procBlock instanceof AirBlock) && !(procBlock.is(Blocks.BEDROCK) && !canBedrockBreak))
                                 return getWorld().breakBlock(procPos, true);
                         }
                         // 箱モジュール
@@ -258,11 +300,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
                                 if (block.is(procBlock)) continue;
-                                if (getWorld().setBlockState(procPos, block.getDefaultState())) {
-                                    getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
-                                    stack.setCount(stack.getCount() - 1);
-                                    return true;
-                                }
+                                if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
                         // 壁モジュール
@@ -275,11 +313,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
                                 if (block.is(procBlock)) continue;
-                                if (getWorld().setBlockState(procPos, block.getDefaultState())) {
-                                    getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
-                                    stack.setCount(stack.getCount() - 1);
-                                    return true;
-                                }
+                                if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
                     }
@@ -300,11 +334,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 if (stack.isEmpty()) continue;
                                 Block block = Block.getBlockFromItem(stack.getItem());
                                 if (block.is(procBlock)) continue;
-                                if (getWorld().setBlockState(procPos, block.getDefaultState())) {
-                                    getWorld().playSound(null, procPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
-                                    stack.setCount(stack.getCount() - 1);
-                                    return true;
-                                }
+                                if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
                     }

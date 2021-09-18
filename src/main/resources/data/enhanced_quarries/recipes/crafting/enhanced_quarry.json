@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "Y",
+    "X",
+    "Y"
+  ],
+  "key": {
+    "X": {
+      "item": "enhanced_quarries:normal_quarry"
+    },
+    "Y": {
+      "item": "enhanced_quarries:enhanced_refined_gear"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:enhanced_quarry",
+    "count": 1
+  }
+}

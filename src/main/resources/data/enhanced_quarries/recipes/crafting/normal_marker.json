@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    "ZYZ",
+    " Z "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "Y": {
+      "item": "minecraft:redstone_torch"
+    },
+    "Z": {
+      "item": "enhanced_quarries:enhanced_panel"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:normal_marker",
+    "count": 4
+  }
+}

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-      "layer0": "enhanced_quarries:item/normal_marker"
+      "layer0": "enhanced_quarries:item/refined_gear"
     }
   }

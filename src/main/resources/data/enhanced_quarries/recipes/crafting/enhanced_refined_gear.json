@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " Y ",
+    "XZX",
+    " Y "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:diamond"
+    },
+    "Y": {
+      "item": "minecraft:obsidian"
+    },
+    "Z": {
+      "item": "enhanced_quarries:refined_gear"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:enhanced_refined_gear",
+    "count": 4
+  }
+}

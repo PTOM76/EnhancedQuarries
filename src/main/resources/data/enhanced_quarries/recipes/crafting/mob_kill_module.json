@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " Y ",
+    "YXY",
+    " Y "
+  ],
+  "key": {
+    "X": {
+      "item": "enhanced_quarries:enhanced_panel"
+    },
+    "Y": {
+      "item": "minecraft:iron_sword"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:mob_kill_module",
+    "count": 1
+  }
+}

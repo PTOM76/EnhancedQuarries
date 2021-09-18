@@ -19,14 +19,18 @@
     "item.enhanced_quarries.filler_all_delete": "全て消去モジュール",
     "item.enhanced_quarries.filler_all_remove": "全て撤去モジュール",
     "item.enhanced_quarries.filler_leveling": "整地モジュール",
-    "item.enhanced_quarries.filler_create_box": "ボックス建設モジュール",
+    "item.enhanced_quarries.filler_create_box": "箱建設モジュール",
     "item.enhanced_quarries.filler_create_wall": "壁建設モジュール",
 
-    "message.enhanced_quarries.bedrock_break_module.1": "そのクァーリーは既に岩盤破壊モジュールが適用されています。",
-    "message.enhanced_quarries.silk_touch_module.1": "そのクァーリーは既にシルクタッチモジュールが適用されています。",
-    "message.enhanced_quarries.luck_enchant_module.1": "そのクァーリーは既に幸運モジュールが適用されています。",
-    "message.enhanced_quarries.mob_delete_module.1": "そのクァーリーは既にモブ消去モジュールが適用されています。",
+    "item.enhanced_quarries.refined_gear": "洗練されたギア",
+    "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",
+    "item.enhanced_quarries.enhanced_gear": "強化されたパネル",
+
+    "message.enhanced_quarries.bedrock_break_module.1": "そのマシンは既に岩盤破壊モジュールが適用されています。",
+    "message.enhanced_quarries.silk_touch_module.1": "そのマシンは既にシルクタッチモジュールが適用されています。",
+    "message.enhanced_quarries.luck_enchant_module.1": "そのマシンは既に幸運モジュールが適用されています。",
+    "message.enhanced_quarries.mob_delete_module.1": "そのマシンは既にモブ消去モジュールが適用されています。",
     "message.enhanced_quarries.mob_delete_module.2": "モブ消去モジュールとモブ殺害モジュールは共存できません。",
-    "message.enhanced_quarries.mob_kill_module.1": "そのクァーリーは既にモブ殺害モジュールが適用されています。",
+    "message.enhanced_quarries.mob_kill_module.1": "そのマシンは既にモブ殺害モジュールが適用されています。",
     "message.enhanced_quarries.mob_kill_module.2": "モブ殺害モジュールとモブ消去モジュールは共存できません。"
 }
