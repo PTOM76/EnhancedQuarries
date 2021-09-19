@@ -2,6 +2,7 @@ package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Blocks;
 import ml.pkom.enhancedquarries.EnhancedQuarries;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -25,8 +26,8 @@ public class Tiles {
         ENHANCED_FILLER_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("enhanced_filler_tile"), create(EnhancedFillerTile::new, Blocks.ENHANCED_FILLER));
     }
 
-    public static <T extends BlockEntity> BlockEntityType create(Supplier supplier, Block... blocks) {
-        return BlockEntityType.Builder.create(supplier, blocks).build(null);
+    public static <T extends BlockEntity> BlockEntityType<T> create(FabricBlockEntityTypeBuilder.Factory<T> supplier, Block... blocks) {
+        return FabricBlockEntityTypeBuilder.create(supplier, blocks).build(null);
     }
 
 }

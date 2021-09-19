@@ -17,7 +17,9 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import reborncore.api.blockentity.InventoryProvider;
+import reborncore.common.blockentity.MachineBaseBlockEntity;
 import reborncore.common.blockentity.SlotConfiguration;
 import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
 import reborncore.common.util.RebornInventory;
@@ -69,27 +71,25 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // TR
     // デフォルトコスト
-    private double defaultEnergyCost = 30;
-    private double defaultPlaceFrameEnergyCost = 40;
-    private double defaultReplaceFluidEnergyCost = 120;
+    private long defaultEnergyCost = 30;
 
     // ブロック1回設置分に対するエネルギーのコスト
-    public double getEnergyCost() {
+    public long getEnergyCost() {
         return defaultEnergyCost;
     }
 
     // エネルギーの容量
-    public double getBaseMaxPower() {
+    public long getBaseMaxPower() {
         return 5000;
     }
 
     // エネルギーの最大出力(不要なので0)
-    public double getBaseMaxOutput() {
+    public long getBaseMaxOutput() {
         return 0;
     }
 
     // エネルギーの最大入力
-    public double getBaseMaxInput() {
+    public long getBaseMaxInput() {
         return 500;
     }
 
@@ -121,8 +121,8 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         return super.writeNbt(tag);
     }
 
-    public void fromTag(BlockState blockState, NbtCompound tag) {
-        super.fromTag(blockState, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         NbtCompound invTag = tag.getCompound("craftingInv");
         Inventories.readNbt(invTag, craftingInvItems);
 
@@ -151,8 +151,8 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
     }
 
     // TR用のTick
-    public void TRTick() {
-        super.tick();
+    public void TRTick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
+        super.tick(world, pos, state, blockEntity);
     }
 
     public double defaultSettingCoolTime = 300;
@@ -164,15 +164,15 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     public double coolTime = getSettingCoolTime();
 
-    public void tick() {
+    public void tick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
         // 1.--
-        super.tick();
+        super.tick(world, pos, state, blockEntity);
         if (getWorld() == null || getWorld().isClient())
         {
             return;
         }
         // ----
-        BlockState state = getWorld().getBlockState(getPos());
+        //BlockState state = getWorld().getBlockState(getPos());
         Filler filler = (Filler) state.getBlock();
 
         // レッドストーン受信で無効
@@ -216,7 +216,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
             if (stack.getItem() instanceof BlockItem) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
-                NbtCompound tag = stack.getTag();
+                NbtCompound tag = stack.getNbt();
                 if (tag.contains("item")) {
                     ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("item"));
                     if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
@@ -228,8 +228,8 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
     }
 
     public int getModuleInterval() {
-        if (!getModule().hasTag()) return 6;
-        NbtCompound tag = getModule().getTag();
+        if (!getModule().hasNbt()) return 6;
+        NbtCompound tag = getModule().getNbt();
         if (!tag.contains("interval")) return 6;
         return tag.getInt("interval");
     }
@@ -238,7 +238,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
             getWorld().playSound(null, blockPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
-                NbtCompound tag = latestGotStack.getTag();
+                NbtCompound tag = latestGotStack.getNbt();
                 if (tag.contains("countInBox")) {
                     int countInBox = tag.getInt("countInBox");
                     countInBox--;
@@ -247,7 +247,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                         tag.remove("item");
                         tag.remove("countInBox");
                     }
-                    latestGotStack.setTag(tag);
+                    latestGotStack.setNbt(tag);
                 }
                 return true;
             }
@@ -266,7 +266,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         int procY;
         int procZ;
         //procY = pos1.getY(); procY <= pos2.getY(); procY++
-        for (procY = 0; procY <= getWorld().getDimensionHeight(); procY++) {
+        for (procY = 0; procY <= getWorld().getDimension().getHeight(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
@@ -278,23 +278,23 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
                         // 消去モジュール
                         if (item.equals(Items.fillerALL_DELETE)) {
-                            if (procBlock instanceof AirBlock || (procBlock.is(Blocks.BEDROCK) && !canBedrockBreak)) continue;
+                            if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) continue;
                             return getWorld().removeBlock(procPos, false);
                         }
                         // 撤去モジュール
                         if (item.equals(Items.fillerALL_REMOVE)) {
-                            if (procBlock instanceof AirBlock || (procBlock.is(Blocks.BEDROCK) && !canBedrockBreak)) continue;
+                            if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) continue;
                             return getWorld().breakBlock(procPos, true);
                         }
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
-                            if (!(procBlock instanceof AirBlock) && !(procBlock.is(Blocks.BEDROCK) && !canBedrockBreak))
+                            if (!(procBlock instanceof AirBlock) && !(procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak))
                                 return getWorld().breakBlock(procPos, true);
                         }
                         // 箱モジュール
@@ -306,7 +306,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
@@ -319,7 +319,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
@@ -334,13 +334,13 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
                     }
                     // 選択範囲より上～最高域
-                    if (procY <= getWorld().getDimensionHeight() && procY >= pos2.getY() + 1) {
+                    if (procY <= getWorld().getDimension().getHeight() && procY >= pos2.getY() + 1) {
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
                             if (!(procBlock instanceof AirBlock))
@@ -355,7 +355,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) continue;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
@@ -431,8 +431,8 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         this.pos2 = pos2;
     }
 
-    public FillerTile(BlockEntityType<?> type) {
-        super(type);
+    public FillerTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     public void init() {

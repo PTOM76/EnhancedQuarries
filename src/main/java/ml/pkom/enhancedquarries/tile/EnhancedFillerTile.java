@@ -2,15 +2,17 @@ package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
 
 public class EnhancedFillerTile extends FillerTile {
 
-    public EnhancedFillerTile() {
-        super(Tiles.ENHANCED_FILLER_TILE);
+    public EnhancedFillerTile(BlockPos pos, BlockState state) {
+        super(Tiles.ENHANCED_FILLER_TILE, pos, state);
     }
 
     public EnhancedFillerTile(TileCreateEvent event) {
-        this();
+        this(event.getBlockPos(), event.getBlockState());
     }
 
     @Override
@@ -30,12 +32,12 @@ public class EnhancedFillerTile extends FillerTile {
     }
 
     @Override
-    public double getBaseMaxPower() {
+    public long getBaseMaxPower() {
         return 10000;
     }
 
     @Override
-    public double getBaseMaxInput() {
+    public long getBaseMaxInput() {
         return super.getBaseMaxInput() * 3;
     }
 

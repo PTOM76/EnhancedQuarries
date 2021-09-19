@@ -75,37 +75,37 @@ public class NormalMarker extends Block {
                 blockPosList.add(blockStatePos.getBlockPos());
             }
             blockState = world.getBlockState(blockPosX1);
-            if (blockState.getBlock().is(Blocks.NORMAL_MARKER))
+            if (blockState.getBlock().equals(Blocks.NORMAL_MARKER))
                 if (!blockPosList.contains(blockPosX1)) {
                     list.add(new BlockStatePos(blockState, blockPosX1, world));
                     searchMarker(world, blockPosX1, list);
                 }
             blockState = world.getBlockState(blockPosX2);
-            if (blockState.getBlock().is(Blocks.NORMAL_MARKER))
+            if (blockState.getBlock().equals(Blocks.NORMAL_MARKER))
                 if (!blockPosList.contains(blockPosX2)) {
                     list.add(new BlockStatePos(blockState, blockPosX2, world));
                     searchMarker(world, blockPosX2, list);
                 }
             blockState = world.getBlockState(blockPosY1);
-            if (blockState.getBlock().is(Blocks.NORMAL_MARKER))
+            if (blockState.getBlock().equals(Blocks.NORMAL_MARKER))
                 if (!blockPosList.contains(blockPosY1)) {
                     list.add(new BlockStatePos(blockState, blockPosY1, world));
                     searchMarker(world, blockPosY1, list);
                 }
             blockState = world.getBlockState(blockPosY2);
-            if (blockState.getBlock().is(Blocks.NORMAL_MARKER))
+            if (blockState.getBlock().equals(Blocks.NORMAL_MARKER))
                 if (!blockPosList.contains(blockPosY2)) {
                     list.add(new BlockStatePos(blockState, blockPosY2, world));
                     searchMarker(world, blockPosY2, list);
                 }
             blockState = world.getBlockState(blockPosZ1);
-            if (blockState.getBlock().is(Blocks.NORMAL_MARKER))
+            if (blockState.getBlock().equals(Blocks.NORMAL_MARKER))
                 if (!blockPosList.contains(blockPosZ1)) {
                     list.add(new BlockStatePos(blockState, blockPosZ1, world));
                     searchMarker(world, blockPosZ1, list);
                 }
             blockState = world.getBlockState(blockPosZ2);
-            if (blockState.getBlock().is(Blocks.NORMAL_MARKER))
+            if (blockState.getBlock().equals(Blocks.NORMAL_MARKER))
                 if (!blockPosList.contains(blockPosZ2)) {
                     list.add(new BlockStatePos(blockState, blockPosZ2, world));
                     searchMarker(world, blockPosZ2, list);
