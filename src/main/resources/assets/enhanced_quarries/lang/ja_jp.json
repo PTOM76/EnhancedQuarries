@@ -21,6 +21,7 @@
     "item.enhanced_quarries.filler_leveling": "整地モジュール",
     "item.enhanced_quarries.filler_create_box": "箱建設モジュール",
     "item.enhanced_quarries.filler_create_wall": "壁建設モジュール",
+    "item.enhanced_quarries.filler_place_torch": "松明設置モジュール",
 
     "item.enhanced_quarries.refined_gear": "洗練されたギア",
     "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",

@@ -21,6 +21,7 @@
     "item.enhanced_quarries.filler_leveling": "Leveling Module",
     "item.enhanced_quarries.filler_create_box": "Create Box Module",
     "item.enhanced_quarries.filler_create_wall": "Create Wall Module",
+    "item.enhanced_quarries.filler_place_torch": "Place Torch Module",
 
     "item.enhanced_quarries.refined_gear": "Refined Gear",
     "item.enhanced_quarries.enhanced_refined_gear": "Enhanced / Refined Gear",

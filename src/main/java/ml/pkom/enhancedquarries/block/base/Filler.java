@@ -1,5 +1,6 @@
 package ml.pkom.enhancedquarries.block.base;
 
+import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.NormalMarker;
 import ml.pkom.enhancedquarries.event.BlockStatePos;
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
@@ -10,6 +11,7 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -81,6 +83,11 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
                 ItemScatterer.spawn(world, pos, filler.getInventory());
                 filler.getCraftingInventory().setStack(9, ItemStack.EMPTY);
                 ItemScatterer.spawn(world, pos, filler.getCraftingInventory());
+
+                // モジュールの返却
+                if (filler.canBedrockBreak()) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.BEDROCK_BREAK_MODULE, 1)));
+                }
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }

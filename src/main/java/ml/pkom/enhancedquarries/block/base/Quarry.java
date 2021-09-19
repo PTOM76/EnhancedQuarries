@@ -86,6 +86,18 @@ public abstract class Quarry extends BlockMachineBase implements BlockEntityProv
                 if (quarry.canBedrockBreak()) {
                     world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.BEDROCK_BREAK_MODULE, 1)));
                 }
+                if (quarry.isSetLuck()) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.LUCK_MODULE, 1)));
+                }
+                if (quarry.isSetSilkTouch()) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.SILK_TOUCH_MODULE, 1)));
+                }
+                if (quarry.isSetMobDelete()) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.MOB_DELETE_MODULE, 1)));
+                }
+                if (quarry.isSetMobKill()) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.MOB_KILL_MODULE, 1)));
+                }
 
                 // フレーム破壊
                 BlockPos framePos = null;
@@ -146,6 +158,7 @@ public abstract class Quarry extends BlockMachineBase implements BlockEntityProv
                         worldIn.breakBlock(markerSP.getBlockPos(), true);
                     }
                     if ((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null) || markerList.size() <= 2 ) return;
+                    if (maxPosY.equals(minPosY)) maxPosY += 4;
                     // ミスった仕様上 min min max、max max minという関数になってしまった。
                     quarryTile.setPos1(new BlockPos(minPosX, minPosY, maxPosZ));
                     quarryTile.setPos2(new BlockPos(maxPosX + 1, maxPosY, minPosZ - 1));

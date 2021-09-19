@@ -227,6 +227,13 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         return ItemStack.EMPTY;
     }
 
+    public int getModuleInterval() {
+        if (!getModule().hasTag()) return 6;
+        NbtCompound tag = getModule().getTag();
+        if (!tag.contains("interval")) return 6;
+        return tag.getInt("interval");
+    }
+
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
         if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
             getWorld().playSound(null, blockPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
@@ -309,6 +316,21 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                     && (
                                     procX == pos1.getX() || procX == pos2.getX() || procZ == pos1.getZ() || procZ == pos2.getZ()
                             )) {
+                                ItemStack stack = getInventoryStack();
+                                if (stack.isEmpty()) return false;
+                                Block block = Block.getBlockFromItem(stack.getItem());
+                                if (block.is(procBlock)) continue;
+                                if (tryPlacing(procPos, block, stack)) return true;
+                            }
+                        }
+                        // 松明モジュール
+                        if (item.equals(Items.fillerTORCH)) {
+                            if ((procBlock instanceof AirBlock || procBlock instanceof FluidBlock)
+                                    && (
+                                    ((procY - pos1.getY() + getModuleInterval()) % getModuleInterval() == 0)
+                                            && ((procX - pos1.getX() + getModuleInterval()) % getModuleInterval() == 0)
+                                            && ((procZ - pos1.getZ() + getModuleInterval()) % getModuleInterval() == 0)
+                            ) && !(getWorld().getBlockState(procPos.down()).getBlock() instanceof AirBlock)) {
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());

@@ -5,6 +5,7 @@ import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -241,6 +242,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                 coolTime = getSettingCoolTime();
                 if (tryQuarrying()) {
                     useEnergy(getEnergyCost());
+                    //insertChest();
                 }
             }
             coolTimeBonus();
@@ -252,15 +254,46 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
             quarry.setActive(false, getWorld(), getPos());
         }
 
-        // チェスト自動挿入
-        /*
-        if (getAnyContainerBlock() != null) {
-            if (getInventory().getStack(1))
-            Inventory inventory = getAnyContainerBlock();
-            getEmptyOrCanInsertIndex(inventory, )
-        }
 
-         */
+    }
+
+    // この関数は失敗作なのでTRで処理することにした。
+    public boolean insertChest() {
+        // チェスト自動挿入
+        if (getAnyContainerBlock() != null) {
+            int i;
+            for (i = 0; i < getInventory().size(); i++) {
+                ItemStack stack = getInventory().getStack(i);
+                if (!stack.isEmpty()) {
+                    Inventory container = getAnyContainerBlock();
+                    if (getEmptyOrCanInsertIndex(container, stack) != null) {
+                        try {
+                            int canIndex = getEmptyOrCanInsertIndex(container, stack);
+                            ItemStack containerStack = container.getStack(canIndex);
+                            if (containerStack.isEmpty()) {
+                                container.setStack(canIndex, stack.copy());
+                                getInventory().setStack(i, ItemStack.EMPTY);
+                            } else {
+                                int originInCount = containerStack.getCount();
+                                container.getStack(i).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
+                                if (stack.getMaxCount() >= stack.getCount() + originInCount) {
+                                    getInventory().setStack(i, ItemStack.EMPTY);
+                                    return true;
+                                }
+                                stack.setCount(stack.getCount() + originInCount - stack.getMaxCount());
+                                getInventory().setStack(i, stack);
+                            }
+                            return true;
+                        } catch (NullPointerException e) {
+
+                        }
+                    }
+
+                }
+
+            }
+        }
+        return false;
     }
 
     public Inventory getAnyContainerBlock() {
@@ -357,16 +390,16 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
         BlockPos blockPos = null;
         // default
         if (getFacing().equals(Direction.NORTH)) {
-            blockPos = new BlockPos(getPos().getX() + 6, getPos().getY() + 5, getPos().getZ());
+            blockPos = new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ());
         }
         if (getFacing().equals(Direction.SOUTH)) {
-            blockPos = new BlockPos(getPos().getX() + 6, getPos().getY() + 5, getPos().getZ() - 12);
+            blockPos = new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ() - 12);
         }
         if (getFacing().equals(Direction.WEST)) {
-            blockPos = new BlockPos(getPos().getX() + 12, getPos().getY() + 5, getPos().getZ() - 6);
+            blockPos = new BlockPos(getPos().getX() + 12, getPos().getY() + 4, getPos().getZ() - 6);
         }
         if (getFacing().equals(Direction.EAST)) {
-            blockPos = new BlockPos(getPos().getX(), getPos().getY() + 5, getPos().getZ() - 6);
+            blockPos = new BlockPos(getPos().getX(), getPos().getY() + 4, getPos().getZ() - 6);
         }
         return blockPos;
     }
@@ -666,15 +699,16 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
             if (inventory.getStack(index).isEmpty()) {
                 return index;
             }
-        }
-        ItemStack inStack = getInventory().getStack(index);
-        if (stack.getItem().equals(inStack.getItem()) && (ItemStack.areTagsEqual(stack, inStack) || !stack.hasTag() == !inStack.hasTag()) && inStack.getItem().getMaxCount() != 1) {
-            int originInCount = getInventory().getStack(index).getCount();
-            getInventory().getStack(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
-            if (stack.getMaxCount() >= stack.getCount() + originInCount) {
-                return index;
+            ItemStack inStack = getInventory().getStack(index);
+            if (stack.getItem().equals(inStack.getItem()) && (ItemStack.areTagsEqual(stack, inStack) || !stack.hasTag() == !inStack.hasTag()) && inStack.getItem().getMaxCount() != 1) {
+                int originInCount = getInventory().getStack(index).getCount();
+                getInventory().getStack(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
+                if (stack.getMaxCount() >= stack.getCount() + originInCount) {
+                    return index;
+                }
             }
         }
+
         return null;
     }
 
@@ -715,6 +749,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
             slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.WEST, slotIO, index));
             slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.UP, slotIO, index));
             slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.DOWN, slotIO, index));
+            slotConfig.getSlotDetails(index).setOutput(true);
             markDirty();
         }
         ((MachineBaseBlockEntityAccessor) this).setSlotConfiguration(slotConfig);
