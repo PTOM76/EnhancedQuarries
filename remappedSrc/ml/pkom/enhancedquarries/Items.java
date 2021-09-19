@@ -2,8 +2,6 @@ package ml.pkom.enhancedquarries;
 
 import ml.pkom.enhancedquarries.item.*;
 import ml.pkom.enhancedquarries.item.base.FillerModule;
-import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
-import ml.pkom.enhancedquarries.item.fillermodule.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -40,18 +38,6 @@ public class Items {
     public static Item fillerWALL = new FillerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
     // 松明
     public static Item fillerTORCH = new FillerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
-    // 垂直レイヤー
-    public static FillerModuleItem fillerVERTICAL_LAYER = new VerticalLayerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
-    // 平行レイヤー
-    public static FillerModuleItem fillerHORIZONTAL_LAYER = new HorizontalLayerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
-    // 積み上げ
-    public static FillerModuleItem fillerTOWER = new TowerModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
-    // 液体除去(未実装)
-    public static FillerModuleItem fillerDELETE_FLUID = new DeleteFluidModule(new FabricItemSettings()); //.group(EnhancedQuarries.FILLER_PLUS_GROUP)
-    // 床張り替え
-    public static FillerModuleItem fillerFLOOR_REPLACE = new FloorReplaceModule(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
-
-
 
     // 素材
     public static Item REFINED_GEAR = new Item(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
@@ -84,11 +70,6 @@ public class Items {
         Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_create_box"), fillerBOX);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_create_wall"), fillerWALL);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_place_torch"), fillerTORCH);
-        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_vertical_layer"), fillerVERTICAL_LAYER);
-        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_horizontal_layer"), fillerHORIZONTAL_LAYER);
-        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_tower"), fillerTOWER);
-        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_delete_fluid"), fillerDELETE_FLUID);
-        Registry.register(Registry.ITEM, EnhancedQuarries.id("filler_floor_replace"), fillerFLOOR_REPLACE);
 
         Registry.register(Registry.ITEM, EnhancedQuarries.id("refined_gear"), REFINED_GEAR);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_refined_gear"), ENHANCED_REFINED_GEAR);

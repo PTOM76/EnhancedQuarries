@@ -124,8 +124,8 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         return super.writeNbt(tag);
     }
 
-    public void fromTag(BlockState blockState, NbtCompound tag) {
-        super.fromTag(blockState, tag);
+    public void readNbt(BlockState blockState, NbtCompound tag) {
+        super.readNbt(blockState, tag);
         NbtCompound invTag = tag.getCompound("craftingInv");
         Inventories.readNbt(invTag, craftingInvItems);
 
@@ -219,7 +219,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
             if (stack.getItem() instanceof BlockItem) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
-                NbtCompound tag = stack.getTag();
+                NbtCompound tag = stack.getNbt();
                 if (tag.contains("item")) {
                     ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("item"));
                     if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
@@ -231,8 +231,8 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
     }
 
     public int getModuleInterval() {
-        if (!getModule().hasTag()) return 6;
-        NbtCompound tag = getModule().getTag();
+        if (!getModule().hasNbt()) return 6;
+        NbtCompound tag = getModule().getNbt();
         if (!tag.contains("interval")) return 6;
         return tag.getInt("interval");
     }
@@ -241,7 +241,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
             getWorld().playSound(null, blockPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
-                NbtCompound tag = latestGotStack.getTag();
+                NbtCompound tag = latestGotStack.getNbt();
                 if (tag.contains("countInBox")) {
                     int countInBox = tag.getInt("countInBox");
                     countInBox--;
@@ -250,7 +250,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                         tag.remove("item");
                         tag.remove("countInBox");
                     }
-                    latestGotStack.setTag(tag);
+                    latestGotStack.setNbt(tag);
                 }
                 return true;
             }

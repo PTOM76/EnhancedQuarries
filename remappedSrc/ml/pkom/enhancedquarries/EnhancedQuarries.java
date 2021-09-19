@@ -30,7 +30,6 @@ public class EnhancedQuarries implements ModInitializer {
         Blocks.init();
         Tiles.init();
         ScreenHandlers.init();
-        FillerModules.init();
         FillerCraftingPatterns.init();
     }
 
