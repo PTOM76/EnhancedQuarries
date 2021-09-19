@@ -18,7 +18,7 @@ public class EnhancedQuarries implements ModInitializer {
 
     public static final String MOD_ID = "enhanced_quarries";
     public static final String MOD_NAME = "Enhanced Quarries";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.1";
     public static EnhancedQuarries instance;
     private static final Logger LOGGER = LogManager.getLogger();
 
