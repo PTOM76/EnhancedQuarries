@@ -19,6 +19,7 @@ public class FillerCraftingPatterns {
         patterns.add(new FillerCraftingPattern(create(Items.fillerLEVELING), ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, GLASS, GLASS, GLASS, BRICKS, BRICKS, BRICKS));
         patterns.add(new FillerCraftingPattern(create(Items.fillerWALL), BRICKS, ItemStack.EMPTY, BRICKS, BRICKS, ItemStack.EMPTY, BRICKS, BRICKS, ItemStack.EMPTY, BRICKS));
         patterns.add(new FillerCraftingPattern(create(Items.fillerBOX), BRICKS, BRICKS, BRICKS, BRICKS, ItemStack.EMPTY, BRICKS, BRICKS, BRICKS, BRICKS));
+        patterns.add(new FillerCraftingPattern(create(Items.fillerTORCH), BRICKS, ItemStack.EMPTY, BRICKS, ItemStack.EMPTY, BRICKS, ItemStack.EMPTY, BRICKS, ItemStack.EMPTY, BRICKS));
     }
 
     public static ItemStack create(Item item) {
