@@ -9,5 +9,9 @@ public class FillerModules {
         Registry.register(EnhancedQuarries.id("tower"), Items.fillerTOWER);
         Registry.register(EnhancedQuarries.id("delete_fluid"), Items.fillerDELETE_FLUID);
         Registry.register(EnhancedQuarries.id("floor_replace"), Items.fillerFLOOR_REPLACE);
+        Registry.register(EnhancedQuarries.id("stairs"), Items.fillerSTAIRS);
+        Registry.register(EnhancedQuarries.id("pyramid"), Items.fillerPYRAMID);
+        Registry.register(EnhancedQuarries.id("cut_stairs"), Items.fillerCUT_STAIRS);
+        Registry.register(EnhancedQuarries.id("cut_pyramid"), Items.fillerCUT_PYRAMID);
     }
 }

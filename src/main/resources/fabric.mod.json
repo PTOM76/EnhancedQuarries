@@ -3,12 +3,12 @@
   "id": "enhanced_quarries",
   "version": "${version}",
   "name": "Enhanced Quarries",
-  "description": "add Filler, Quarry etc",
+  "description": "This mod is Add Filler, Quarry etc",
   "authors": [
     "Pitan"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/enhanced_quarries",
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/enhancedquarries",
     "sources": "https://github.com/PTOM76/EnhancedQuarries",
     "issues": "https://github.com/PTOM76/EnhancedQuarries/issues"
   },

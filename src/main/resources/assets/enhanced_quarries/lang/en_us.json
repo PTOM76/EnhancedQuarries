@@ -2,6 +2,7 @@
     "itemGroup.enhanced_quarries.all": "EnhancedQuarries",
     "block.enhanced_quarries.normal_filler": "Normal Filler",
     "block.enhanced_quarries.enhanced_filler": "Enhanced Filler",
+    "block.enhanced_quarries.enhanced_filler_with_chest": "Enhanced Filler With Chest",
     "block.enhanced_quarries.normal_quarry": "Normal Quarry",
     "block.enhanced_quarries.enhanced_quarry": "Enhanced Quarry",
     "block.enhanced_quarries.fluid_quarry": "Fluid Delete Type Quarry",
@@ -27,6 +28,12 @@
     "item.enhanced_quarries.filler_vertical_layer": "Create Vertical Layer Module",
     "item.enhanced_quarries.filler_delete_fluid": "Delete Fluid Module",
     "item.enhanced_quarries.filler_floor_replace": "Replace Floor Module",
+    "item.enhanced_quarries.filler_create_stairs": "Create Stairs Module",
+    "item.enhanced_quarries.filler_create_pyramid": "Create Pyramid Module",
+    "item.enhanced_quarries.filler_cut_stairs": "Cut Stairs Module",
+    "item.enhanced_quarries.filler_cut_pyramid": "Cut Pyramid Module",
+
+    "item.enhanced_quarries.redstone_hammer": "Redstone Hammer",
 
     "item.enhanced_quarries.refined_gear": "Refined Gear",
     "item.enhanced_quarries.enhanced_refined_gear": "Enhanced / Refined Gear",

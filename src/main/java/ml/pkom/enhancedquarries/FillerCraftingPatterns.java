@@ -50,7 +50,10 @@ public class FillerCraftingPatterns {
         addPattern(new FillerCraftingPattern(create(Items.fillerTOWER), ItemStack.EMPTY, BRICKS, BRICKS, ItemStack.EMPTY, BRICKS, BRICKS, ItemStack.EMPTY, BRICKS, BRICKS));
         addPattern(new FillerCraftingPattern(create(Items.fillerVERTICAL_LAYER), SLAB_BRICKS, EMPTY, SLAB_BRICKS, SLAB_BRICKS, EMPTY, SLAB_BRICKS, SLAB_BRICKS, EMPTY, SLAB_BRICKS));
         addPattern(new FillerCraftingPattern(create(Items.fillerHORIZONTAL_LAYER), SLAB_BRICKS, SLAB_BRICKS, SLAB_BRICKS, EMPTY, EMPTY, EMPTY, SLAB_BRICKS, SLAB_BRICKS, SLAB_BRICKS));
-
+        addPattern(new FillerCraftingPattern(create(Items.fillerSTAIRS), EMPTY, EMPTY, BRICKS, EMPTY, BRICKS, BRICKS, BRICKS, BRICKS, BRICKS));
+        addPattern(new FillerCraftingPattern(create(Items.fillerPYRAMID), EMPTY, EMPTY, EMPTY, EMPTY, BRICKS, EMPTY, BRICKS, BRICKS, BRICKS));
+        addPattern(new FillerCraftingPattern(create(Items.fillerCUT_STAIRS), EMPTY, EMPTY, GLASS, EMPTY, GLASS, GLASS, GLASS, GLASS, GLASS));
+        addPattern(new FillerCraftingPattern(create(Items.fillerCUT_PYRAMID), EMPTY, EMPTY, EMPTY, EMPTY, GLASS, EMPTY, GLASS, GLASS, GLASS));
     }
 
     public static ItemStack create(Item item) {
