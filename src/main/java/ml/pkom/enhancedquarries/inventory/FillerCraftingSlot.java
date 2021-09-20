@@ -45,7 +45,7 @@ public class FillerCraftingSlot extends Slot {
     }
 
     public void tryCraft() {
-        for(FillerCraftingPattern pattern : FillerCraftingPatterns.patterns) {
+        for(FillerCraftingPattern pattern : FillerCraftingPatterns.getPatterns()) {
             if (pattern.inputEquals(new FillerCraftingPattern(
                     ItemStack.EMPTY, inventory.getStack(0), inventory.getStack(1), inventory.getStack(2),
                     inventory.getStack(3), inventory.getStack(4), inventory.getStack(5), inventory.getStack(6),

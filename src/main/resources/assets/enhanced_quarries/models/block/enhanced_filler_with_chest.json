@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "enhanced_quarries:block/filler_with_chest/bottom",
+        "down": "enhanced_quarries:block/filler_with_chest/bottom",
+        "up": "enhanced_quarries:block/filler_with_chest/side",
+        "north": "enhanced_quarries:block/filler_with_chest/front",
+        "east": "enhanced_quarries:block/filler_with_chest/side",
+        "south": "enhanced_quarries:block/filler_with_chest/side",
+        "west": "enhanced_quarries:block/filler_with_chest/side"
+    }
+}

@@ -14,6 +14,7 @@ public class Blocks {
 
     public static Filler NORMAL_FILLER = NormalFiller.getFiller();
     public static Filler ENHANCED_FILLER = EnhancedFiller.getFiller();
+    public static Filler ENHANCED_FILLER_WITH_CHEST = EnhancedFillerWithChest.getFiller();
 
     public static Block NORMAL_MARKER = NormalMarker.getBlock();
     public static Block FRAME = Frame.getBlock();
@@ -25,6 +26,7 @@ public class Blocks {
 
         Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_filler"), NORMAL_FILLER);
         Registry.register(Registry.BLOCK, EnhancedQuarries.id("enhanced_filler"), ENHANCED_FILLER);
+        Registry.register(Registry.BLOCK, EnhancedQuarries.id("enhanced_filler_with_chest"), ENHANCED_FILLER_WITH_CHEST);
 
         Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_marker"), NORMAL_MARKER);
         Registry.register(Registry.BLOCK, EnhancedQuarries.id("frame"), FRAME);

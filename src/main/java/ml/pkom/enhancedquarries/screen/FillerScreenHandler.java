@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
 public class FillerScreenHandler extends ScreenHandler {
@@ -21,7 +22,11 @@ public class FillerScreenHandler extends ScreenHandler {
     }
 
     public FillerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, Inventory craftingInventory) {
-        super(ScreenHandlers.FILLER_SCREEN_HANDLER_TYPE, syncId);
+        this(ScreenHandlers.FILLER_SCREEN_HANDLER_TYPE, syncId, playerInventory, inventory, craftingInventory);
+    }
+
+    public FillerScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory, Inventory craftingInventory) {
+        super(type, syncId);
         this.inventory = inventory;
         this.craftingInventory = craftingInventory;
         int m, l;

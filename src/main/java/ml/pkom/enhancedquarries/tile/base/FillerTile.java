@@ -2,7 +2,10 @@ package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.base.Filler;
+import ml.pkom.enhancedquarries.event.FillerModuleReturn;
+import ml.pkom.enhancedquarries.event.FillerProcessEvent;
 import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
+import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
@@ -203,7 +206,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         }
     }
 
-    private ItemStack latestGotStack = ItemStack.EMPTY;
+    public ItemStack latestGotStack = ItemStack.EMPTY;
 
     public static boolean isStorageBox(ItemStack stack) {
         return Registry.ITEM.getId(stack.getItem()).toString().equals("storagebox:storagebox");
@@ -258,6 +261,10 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     }
 
+    public boolean tryBreaking(BlockPos procPos) {
+        return getWorld().breakBlock(procPos, true);
+    }
+
     public boolean tryFilling(Item item) {
         if (getWorld() == null || getWorld().isClient()) return false;
         if (pos1 == null || pos2 == null)
@@ -290,12 +297,12 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                         // 撤去モジュール
                         if (item.equals(Items.fillerALL_REMOVE)) {
                             if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) continue;
-                            return getWorld().breakBlock(procPos, true);
+                            return tryBreaking(procPos);
                         }
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
                             if (!(procBlock instanceof AirBlock) && !(procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak))
-                                return getWorld().breakBlock(procPos, true);
+                                return tryBreaking(procPos);
                         }
                         // 箱モジュール
                         if (item.equals(Items.fillerBOX)) {
@@ -338,14 +345,44 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
+                        // - 登録モジュールの処理
+                        FillerModuleReturn returnEvent = null;
+                        for(FillerModuleItem fillerModule : ml.pkom.enhancedquarries.registry.Registry.getINSTANCE().getModules()) {
+                            if (item.equals(fillerModule)) {
+                                returnEvent = fillerModule.onProcessInRange(new FillerProcessEvent(this, procPos, procBlock));
+                                break;
+                            }
+                        }
+                        if (returnEvent != null) {
+                            if (returnEvent.equals(FillerModuleReturn.RETURN_FALSE)) return false;
+                            if (returnEvent.equals(FillerModuleReturn.RETURN_TRUE)) return true;
+                            if (returnEvent.equals(FillerModuleReturn.BREAK)) break;
+                            if (returnEvent.equals(FillerModuleReturn.CONTINUE)) continue;
+                        }
+                        // ----
                     }
                     // 選択範囲より上～最高域
                     if (procY <= getWorld().getDimension().getHeight() && procY >= pos2.getY() + 1) {
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
                             if (!(procBlock instanceof AirBlock))
-                                return getWorld().breakBlock(procPos, true);
+                                return tryBreaking(procPos);
                         }
+                        // - 登録モジュールの処理
+                        FillerModuleReturn returnEvent = null;
+                        for(FillerModuleItem fillerModule : ml.pkom.enhancedquarries.registry.Registry.getINSTANCE().getModules()) {
+                            if (item.equals(fillerModule)) {
+                                returnEvent = fillerModule.onProcessOnRange(new FillerProcessEvent(this, procPos, procBlock));
+                                break;
+                            }
+                        }
+                        if (returnEvent != null) {
+                            if (returnEvent.equals(FillerModuleReturn.RETURN_FALSE)) return false;
+                            if (returnEvent.equals(FillerModuleReturn.RETURN_TRUE)) return true;
+                            if (returnEvent.equals(FillerModuleReturn.BREAK)) break;
+                            if (returnEvent.equals(FillerModuleReturn.CONTINUE)) continue;
+                        }
+                        // ----
                     }
                     // 選択範囲より下～0
                     if (procY >= 0 && procY <= pos1.getY() - 1) {
@@ -359,6 +396,21 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
+                        // - 登録モジュールの処理
+                        FillerModuleReturn returnEvent = null;
+                        for(FillerModuleItem fillerModule : ml.pkom.enhancedquarries.registry.Registry.getINSTANCE().getModules()) {
+                            if (item.equals(fillerModule)) {
+                                returnEvent = fillerModule.onProcessUnderRange(new FillerProcessEvent(this, procPos, procBlock));
+                                break;
+                            }
+                        }
+                        if (returnEvent != null) {
+                            if (returnEvent.equals(FillerModuleReturn.RETURN_FALSE)) return false;
+                            if (returnEvent.equals(FillerModuleReturn.RETURN_TRUE)) return true;
+                            if (returnEvent.equals(FillerModuleReturn.BREAK)) break;
+                            if (returnEvent.equals(FillerModuleReturn.CONTINUE)) continue;
+                        }
+                        // ----
                     }
 
                 }
