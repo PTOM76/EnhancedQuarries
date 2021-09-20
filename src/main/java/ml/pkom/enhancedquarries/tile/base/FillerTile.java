@@ -206,7 +206,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         }
     }
 
-    private ItemStack latestGotStack = ItemStack.EMPTY;
+    public ItemStack latestGotStack = ItemStack.EMPTY;
 
     public static boolean isStorageBox(ItemStack stack) {
         return Registry.ITEM.getId(stack.getItem()).toString().equals("storagebox:storagebox");
@@ -261,6 +261,10 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     }
 
+    public boolean tryBreaking(BlockPos procPos) {
+        return getWorld().breakBlock(procPos, true);
+    }
+
     public boolean tryFilling(Item item) {
         if (getWorld() == null || getWorld().isClient()) return false;
         if (pos1 == null || pos2 == null)
@@ -281,24 +285,24 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
                         // 消去モジュール
                         if (item.equals(Items.fillerALL_DELETE)) {
-                            if (procBlock instanceof AirBlock || (procBlock.is(Blocks.BEDROCK) && !canBedrockBreak)) continue;
+                            if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) continue;
                             return getWorld().removeBlock(procPos, false);
                         }
                         // 撤去モジュール
                         if (item.equals(Items.fillerALL_REMOVE)) {
-                            if (procBlock instanceof AirBlock || (procBlock.is(Blocks.BEDROCK) && !canBedrockBreak)) continue;
-                            return getWorld().breakBlock(procPos, true);
+                            if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) continue;
+                            return tryBreaking(procPos);
                         }
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
-                            if (!(procBlock instanceof AirBlock) && !(procBlock.is(Blocks.BEDROCK) && !canBedrockBreak))
-                                return getWorld().breakBlock(procPos, true);
+                            if (!(procBlock instanceof AirBlock) && !(procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak))
+                                return tryBreaking(procPos);
                         }
                         // 箱モジュール
                         if (item.equals(Items.fillerBOX)) {
@@ -309,7 +313,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
@@ -322,7 +326,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
@@ -337,7 +341,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) return false;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }
@@ -362,7 +366,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
                             if (!(procBlock instanceof AirBlock))
-                                return getWorld().breakBlock(procPos, true);
+                                return tryBreaking(procPos);
                         }
                         // - 登録モジュールの処理
                         FillerModuleReturn returnEvent = null;
@@ -388,7 +392,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 ItemStack stack = getInventoryStack();
                                 if (stack.isEmpty()) continue;
                                 Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.is(procBlock)) continue;
+                                if (block.equals(procBlock)) continue;
                                 if (tryPlacing(procPos, block, stack)) return true;
                             }
                         }

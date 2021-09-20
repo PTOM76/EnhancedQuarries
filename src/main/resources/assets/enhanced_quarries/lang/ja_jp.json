@@ -2,6 +2,7 @@
     "itemGroup.enhanced_quarries.all": "EnhancedQuarries",
     "block.enhanced_quarries.normal_filler": "ノーマル フィラー",
     "block.enhanced_quarries.enhanced_filler": "強化型フィラー",
+    "block.enhanced_quarries.enhanced_filler_with_chest": "チェスト付き強化型フィラー",
     "block.enhanced_quarries.normal_quarry": "ノーマル クァーリー",
     "block.enhanced_quarries.enhanced_quarry": "強化型クァーリー",
     "block.enhanced_quarries.fluid_quarry": "液体除去型クァーリー",
@@ -27,6 +28,10 @@
     "item.enhanced_quarries.filler_vertical_layer": "垂直層建設モジュール",
     "item.enhanced_quarries.filler_delete_fluid": "液体除去モジュール",
     "item.enhanced_quarries.filler_floor_replace": "床張り替えモジュール",
+    "item.enhanced_quarries.filler_create_stairs": "階段建設モジュール",
+    "item.enhanced_quarries.filler_create_pyramid": "四角錐建設モジュール",
+    "item.enhanced_quarries.filler_cut_stairs": "階段型取りモジュール",
+    "item.enhanced_quarries.filler_cut_pyramid": "四角錐型取りモジュール",
 
     "item.enhanced_quarries.refined_gear": "洗練されたギア",
     "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",

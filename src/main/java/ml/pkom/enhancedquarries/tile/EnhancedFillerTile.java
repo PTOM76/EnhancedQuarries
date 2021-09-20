@@ -2,11 +2,16 @@ package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
+import net.minecraft.block.entity.BlockEntityType;
 
 public class EnhancedFillerTile extends FillerTile {
 
     public EnhancedFillerTile() {
         super(Tiles.ENHANCED_FILLER_TILE);
+    }
+
+    public EnhancedFillerTile(BlockEntityType type) {
+        super(type);
     }
 
     public EnhancedFillerTile(TileCreateEvent event) {
