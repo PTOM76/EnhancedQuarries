@@ -14,10 +14,15 @@ public class Items {
     public static Item NORMAL_QUARRY = new BlockItem(Blocks.NORMAL_QUARRY, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
     public static Item ENHANCED_QUARRY = new BlockItem(Blocks.ENHANCED_QUARRY, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
     public static Item FLUID_QUARRY = new BlockItem(Blocks.FLUID_QUARRY, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    public static Item OPTIMUM_QUARRY = new BlockItem(Blocks.OPTIMUM_QUARRY, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
 
     public static Item NORMAL_FILLER = new BlockItem(Blocks.NORMAL_FILLER, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
     public static Item ENHANCED_FILLER = new BlockItem(Blocks.ENHANCED_FILLER, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
     public static Item ENHANCED_FILLER_WITH_CHEST = new BlockItem(Blocks.ENHANCED_FILLER_WITH_CHEST, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+
+    public static Item NORMAL_PUMP = new BlockItem(Blocks.NORMAL_PUMP, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    public static Item ENHANCED_PUMP = new BlockItem(Blocks.ENHANCED_PUMP, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+
 
     public static Item NORMAL_MARKER = new BlockItem(Blocks.NORMAL_MARKER, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
     public static Item FRAME = new BlockItem(Blocks.FRAME, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
@@ -74,10 +79,14 @@ public class Items {
         Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_quarry"), NORMAL_QUARRY);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_quarry"), ENHANCED_QUARRY);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("fluid_quarry"), FLUID_QUARRY);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("optimum_quarry"), OPTIMUM_QUARRY);
 
         Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_filler"), NORMAL_FILLER);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_filler"), ENHANCED_FILLER);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_filler_with_chest"), ENHANCED_FILLER_WITH_CHEST);
+
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_pump"), NORMAL_PUMP);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_pump"), ENHANCED_PUMP);
 
         Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_marker"), NORMAL_MARKER);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("frame"), FRAME);

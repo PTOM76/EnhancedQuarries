@@ -1,5 +1,6 @@
 package ml.pkom.enhancedquarries.tile;
 
+import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import net.minecraft.block.entity.BlockEntityType;
 

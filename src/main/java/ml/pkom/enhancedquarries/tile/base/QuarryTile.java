@@ -5,7 +5,6 @@ import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;

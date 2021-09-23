@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "active=false,facing=north": {"model": "enhanced_quarries:block/normal_pump", "y": 0},
+        "active=false,facing=east": {"model": "enhanced_quarries:block/normal_pump", "y": 90},
+        "active=false,facing=south": {"model": "enhanced_quarries:block/normal_pump", "y": 180},
+        "active=false,facing=west": {"model": "enhanced_quarries:block/normal_pump", "y": 270},
+        
+        "active=true,facing=north": {"model": "enhanced_quarries:block/normal_pump_active", "y": 0},
+        "active=true,facing=east": {"model": "enhanced_quarries:block/normal_pump_active", "y": 90},
+        "active=true,facing=south": {"model": "enhanced_quarries:block/normal_pump_active", "y": 180},
+        "active=true,facing=west": {"model": "enhanced_quarries:block/normal_pump_active", "y": 270}
+    }
+}

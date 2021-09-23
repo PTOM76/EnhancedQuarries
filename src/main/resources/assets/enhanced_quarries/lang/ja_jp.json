@@ -6,6 +6,9 @@
     "block.enhanced_quarries.normal_quarry": "ノーマル クァーリー",
     "block.enhanced_quarries.enhanced_quarry": "強化型クァーリー",
     "block.enhanced_quarries.fluid_quarry": "液体除去型クァーリー",
+    "block.enhanced_quarries.optimum_quarry": "軽量処理クァーリー",
+    "block.enhanced_quarries.normal_pump": "ノーマル ポンプ",
+    "block.enhanced_quarries.enhanced_pump": "強化型ポンプ",
 
     "block.enhanced_quarries.normal_marker": "ノーマル マーカー",
     "block.enhanced_quarries.frame": "フレーム",
@@ -43,5 +46,11 @@
     "message.enhanced_quarries.mob_delete_module.1": "そのマシンは既にモブ消去モジュールが適用されています。",
     "message.enhanced_quarries.mob_delete_module.2": "モブ消去モジュールとモブ殺害モジュールは共存できません。",
     "message.enhanced_quarries.mob_kill_module.1": "そのマシンは既にモブ殺害モジュールが適用されています。",
-    "message.enhanced_quarries.mob_kill_module.2": "モブ殺害モジュールとモブ消去モジュールは共存できません。"
+    "message.enhanced_quarries.mob_kill_module.2": "モブ殺害モジュールとモブ消去モジュールは共存できません。",
+
+    "title.enhanced_quarries.config": "Enhanced Quarriesの設定",
+    "category.enhanced_quarries.general": "一般",
+    "option.enhanced_quarries.torch_interval": "松明設置モジュールの設置間隔",
+    "option.enhanced_quarries.vertical_layer_interval": "垂直層建設モジュールの設置間隔",
+    "option.enhanced_quarries.horizontal_layer_interval": "平行層建設モジュールの設置間隔"
 }

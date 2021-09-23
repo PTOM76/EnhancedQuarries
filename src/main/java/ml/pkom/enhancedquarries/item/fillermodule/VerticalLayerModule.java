@@ -14,12 +14,14 @@ public class VerticalLayerModule extends FillerModuleItem {
         super(settings);
     }
 
+    public static int interval = 6;
+
     @Override
     public FillerModuleReturn onProcessInRange(FillerProcessEvent e) {
         if ((e.getProcessBlock() instanceof AirBlock || e.getProcessBlock() instanceof FluidBlock)
                 && (
-                        ((e.getProcessPos().getX() - e.getPos1().getX() + e.getTile().getModuleInterval()) % e.getTile().getModuleInterval() == 0 && isX(e.getTile().getFacing()))
-                        || ((e.getProcessPos().getZ() - e.getPos1().getZ() + e.getTile().getModuleInterval()) % e.getTile().getModuleInterval() == 0 && !isX(e.getTile().getFacing()))
+                        ((e.getProcessPos().getX() - e.getPos1().getX() + interval) % interval == 0 && isX(e.getTile().getFacing()))
+                        || ((e.getProcessPos().getZ() - e.getPos1().getZ() + interval) % interval == 0 && !isX(e.getTile().getFacing()))
                 )) {
             ItemStack stack = e.getTile().getInventoryStack();
             if (stack.isEmpty()) return FillerModuleReturn.RETURN_FALSE;

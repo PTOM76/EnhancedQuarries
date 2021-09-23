@@ -230,11 +230,17 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         return ItemStack.EMPTY;
     }
 
+    public static int moduleInterval = 6;
+
     public int getModuleInterval() {
+        /*
         if (!getModule().hasTag()) return 6;
         NbtCompound tag = getModule().getTag();
         if (!tag.contains("interval")) return 6;
         return tag.getInt("interval");
+
+         */
+        return moduleInterval;
     }
 
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {

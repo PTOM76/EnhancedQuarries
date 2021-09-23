@@ -1,5 +1,6 @@
 package ml.pkom.enhancedquarries.tile;
 
+import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;

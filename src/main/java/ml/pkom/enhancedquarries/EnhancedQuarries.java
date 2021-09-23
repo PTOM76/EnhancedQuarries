@@ -1,6 +1,5 @@
 package ml.pkom.enhancedquarries;
 
-import ml.pkom.enhancedquarries.tile.Tiles;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.ItemGroup;
@@ -14,7 +13,7 @@ public class EnhancedQuarries implements ModInitializer {
 
     public static final String MOD_ID = "enhanced_quarries";
     public static final String MOD_NAME = "Enhanced Quarries";
-    public static final String VERSION = "1.1.0";
+    public static final String VERSION = "1.2.0";
     public static EnhancedQuarries instance;
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -32,6 +31,7 @@ public class EnhancedQuarries implements ModInitializer {
         ScreenHandlers.init();
         FillerModules.init();
         FillerCraftingPatterns.init();
+        Configs.init();
     }
 
     public static void log(Level level, String message){
