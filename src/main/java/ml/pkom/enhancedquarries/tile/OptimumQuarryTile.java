@@ -66,7 +66,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         }
                         return continueQuarrying();
                     }
-                    if (pos1.getY() - 1 >= procY) {
+                    if (pos1.getY() >= procY) {
                         if (procBlock instanceof FluidBlock) {
                             if (canReplaceFluid()
                                     && getWorld().getFluidState(procPos).isStill()
@@ -96,17 +96,20 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                             addStack(itemEntity.getStack());
                             itemEntity.kill();
                         }
+                        procZ--;
                         return true;
                     }
                 } else {
-                    procZ = pos1.getZ();
+                    procZ = getPos1().getZ();
                     procX++;
+                    return continueQuarrying();
                 }
             } else {
-                procX = pos1.getX();
+                procX = getPos1().getX();
                 procY--;
+                return continueQuarrying();
             }
-            procZ--;
+            //procZ--;
         } else if (pos1.getY() <= procY && pos2.getY() >= procY) {
             if (procX < pos2.getX()) {
                 if (procZ > pos2.getZ()) {
@@ -144,20 +147,21 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                     }
                     if (procBlock instanceof Frame) return continueQuarrying();
                     breakBlock(procPos, false);
+                    procZ--;
                     return true;
                 } else {
-                    procZ = pos1.getZ();
+                    procZ = getPos1().getZ() + 1;
                     procX++;
+                    return continueQuarrying();
                 }
             } else {
-                procX = pos1.getX();
+                procX = getPos1().getX() - 1;
                 procY--;
+                return continueQuarrying();
             }
-            procZ--;
         }
         return false;
     }
-
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
