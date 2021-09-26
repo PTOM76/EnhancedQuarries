@@ -38,7 +38,7 @@
 
     "item.enhanced_quarries.refined_gear": "洗練されたギア",
     "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",
-    "item.enhanced_quarries.enhanced_gear": "強化されたパネル",
+    "item.enhanced_quarries.enhanced_panel": "強化されたパネル",
 
     "message.enhanced_quarries.bedrock_break_module.1": "そのマシンは既に岩盤破壊モジュールが適用されています。",
     "message.enhanced_quarries.silk_touch_module.1": "そのマシンは既にシルクタッチモジュールが適用されています。",

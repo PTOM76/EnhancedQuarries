@@ -29,7 +29,7 @@ public class NormalMarker extends Block {
 
     public NormalMarker() {
         super(FabricBlockSettings.of(Material.METAL).breakByHand(true).strength(1, 4));
-            this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(ACTIVE, false));
+            this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.UP).with(ACTIVE, false));
     }
 
     public static Block INSTANCE = new NormalMarker();
@@ -188,6 +188,10 @@ public class NormalMarker extends Block {
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState blockState = this.getDefaultState();
+        Block block = ctx.getWorld().getBlockState(ctx.getBlockPos()).getBlock();
+        if (!(block instanceof AirBlock || block instanceof FluidBlock)) {
+            return blockState.with(FACING, Direction.UP);
+        }
         Direction direction = ctx.getSide();
         return blockState.with(FACING, direction);
     }

@@ -48,5 +48,11 @@
     "message.enhanced_quarries.mob_kill_module.2": "Модули «Убийство мобов» и «Удаление мобов» не возможно установить одновременно.",
 
     "screen.enhanced_quarries.filler.title": "Заполнитель",
-    "screen.enhanced_quarries.filler.title2": "Ресурсы для заполнения"
+    "screen.enhanced_quarries.filler.title2": "Ресурсы для заполнения",
+
+    "title.enhanced_quarries.config": "Настройки Enhanced Quarries",
+    "category.enhanced_quarries.general": "Общий",
+    "option.enhanced_quarries.torch_interval": "Место Интервал Модуль «Размещение факелов»",
+    "option.enhanced_quarries.vertical_layer_interval": "Место Интервал Модуль «Создание вертикального слоя»",
+    "option.enhanced_quarries.horizontal_layer_interval": "Место Интервал Модуль «Создание горизонтального слоя»"
 }
