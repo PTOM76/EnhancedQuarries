@@ -16,6 +16,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
@@ -57,6 +58,10 @@ public class NormalMarker extends Block {
         if (getFacing(state).equals(Direction.EAST)) return EAST_SHAPE;
         if (getFacing(state).equals(Direction.WEST)) return WEST_SHAPE;
         return UP_SHAPE;
+    }
+
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return VoxelShapes.empty();
     }
 
     public static void searchMarker(World world, BlockPos pos, List<BlockStatePos> list) {
