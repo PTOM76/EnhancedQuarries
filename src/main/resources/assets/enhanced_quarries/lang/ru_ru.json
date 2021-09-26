@@ -6,6 +6,9 @@
     "block.enhanced_quarries.normal_quarry": "Обычный карьер",
     "block.enhanced_quarries.enhanced_quarry": "Улучшенный карьер",
     "block.enhanced_quarries.fluid_quarry": "Карьер для удаления жидкости",
+    "block.enhanced_quarries.optimum_quarry": "Optimum Process Quarry",
+    "block.enhanced_quarries.normal_pump": "Обычная помпа",
+    "block.enhanced_quarries.enhanced_pump": "Улучшенная помпа",
 
     "block.enhanced_quarries.normal_marker": "Маркер",
     "block.enhanced_quarries.frame": "Рамка",
@@ -51,8 +54,8 @@
     "screen.enhanced_quarries.filler.title2": "Ресурсы для заполнения",
 
     "title.enhanced_quarries.config": "Настройки Enhanced Quarries",
-    "category.enhanced_quarries.general": "Общий",
-    "option.enhanced_quarries.torch_interval": "Место Интервал Модуль «Размещение факелов»",
-    "option.enhanced_quarries.vertical_layer_interval": "Место Интервал Модуль «Создание вертикального слоя»",
-    "option.enhanced_quarries.horizontal_layer_interval": "Место Интервал Модуль «Создание горизонтального слоя»"
+    "category.enhanced_quarries.general": "Общее",
+    "option.enhanced_quarries.torch_interval": "Интервал размещения для модуля «Размещение факелов»",
+    "option.enhanced_quarries.vertical_layer_interval": "Интервал размещения для модуля «Создание вертикального слоя»",
+    "option.enhanced_quarries.horizontal_layer_interval": "Интервал размещения для модуля «Создание горизонтального слоя»"
 }
