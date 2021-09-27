@@ -137,7 +137,7 @@ public class PumpTile extends PowerAcceptorBlockEntity {
     }
 
     public BlockStatePos getFarFluid() {
-        for (BlockStatePos statePos : sphereAround(getPos(), 32)) {
+        for (BlockStatePos statePos : sphereAround(getPos(), 30)) {
             if (statePos.getBlockState().getFluidState().getFluid() != null && statePos.getBlockState().getFluidState().isStill()) {
                 //if (statePos.getBlockState().getFluidState().getFluid().equals(fluid))
                 return statePos;
@@ -158,9 +158,10 @@ public class PumpTile extends PowerAcceptorBlockEntity {
                     if (getWorld().getFluidState(procPos).getFluid() == null) continue;
                     if (!getWorld().getFluidState(procPos).isStill()) continue;
                     BlockStatePos b = new BlockStatePos(getWorld().getBlockState(procPos), procPos, getWorld());
-                    if (center.getBlockPos().getSquaredDistance(b.getBlockPos()) <= radius) {
+                    if (center.getBlockPos().getManhattanDistance(b.getBlockPos()) <= radius) {
                         if (b.getBlockPos().equals(getPos().down())) continue;
                         sphere.add(b);
+                        return sphere;
                     }
                 }
 
