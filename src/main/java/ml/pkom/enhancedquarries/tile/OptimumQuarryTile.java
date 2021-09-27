@@ -62,7 +62,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
             if (procX < pos2.getX() - 1) {
                 if (procZ > pos2.getZ() + 1) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
-                    if (getWorld().getBlockState(procPos) == null) return continueQuarrying();
+                    if (getWorld().getBlockState(procPos) == null) return false;
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
                     if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak())) {
                         if (canReplaceFluid()) {
@@ -124,7 +124,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                 if (procZ > pos2.getZ()) {
                     // procX < pos2.getX()を=<するとposのずれ問題は修正可能だが、別の方法で対処しているので、時間があればこっちで修正したい。
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
-                    if (getWorld().getBlockState(procPos) == null) continueQuarrying();
+                    if (getWorld().getBlockState(procPos) == null) return false;
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
                     if (procBlock instanceof AirBlock || (procBlock.is(Blocks.BEDROCK) && !canBedrockBreak())) {
                         if (tryPlaceFrame(procPos)) {
