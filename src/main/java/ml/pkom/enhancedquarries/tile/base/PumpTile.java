@@ -159,11 +159,15 @@ public class PumpTile extends PowerAcceptorBlockEntity {
                     if (!getWorld().getFluidState(procPos).isStill()) continue;
                     BlockStatePos b = new BlockStatePos(getWorld().getBlockState(procPos), procPos, getWorld());
                     if (center.getBlockPos().getSquaredDistance(b.getBlockPos()) <= radius) {
+                        if (b.getBlockPos().equals(getPos().down())) continue;
                         sphere.add(b);
                     }
                 }
 
             }
+        }
+        if (sphere.isEmpty() && !getWorld().getFluidState(getPos().down()).isEmpty()) {
+            sphere.add(new BlockStatePos(getWorld().getBlockState(getPos().down()), getPos().down(), getWorld()));
         }
         return sphere;
     }
