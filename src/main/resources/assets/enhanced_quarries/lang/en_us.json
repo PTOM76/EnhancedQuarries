@@ -7,6 +7,8 @@
     "block.enhanced_quarries.enhanced_quarry": "Enhanced Quarry",
     "block.enhanced_quarries.fluid_quarry": "Fluid Delete Type Quarry",
     "block.enhanced_quarries.optimum_quarry": "Optimum Process Quarry",
+    "block.enhanced_quarries.enhanced_optimum_quarry": "Enhanced Optimum Process Quarry",
+    "block.enhanced_quarries.fluid_optimum_quarry": "Fluid Delete Type Optimum Process Quarry",
     "block.enhanced_quarries.normal_pump": "Normal Pump",
     "block.enhanced_quarries.enhanced_pump": "Enhanced Pump",
 

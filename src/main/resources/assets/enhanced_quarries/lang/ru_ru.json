@@ -7,6 +7,8 @@
     "block.enhanced_quarries.enhanced_quarry": "Улучшенный карьер",
     "block.enhanced_quarries.fluid_quarry": "Карьер для удаления жидкости",
     "block.enhanced_quarries.optimum_quarry": "Optimum Process Quarry",
+    "block.enhanced_quarries.enhanced_optimum_quarry": "Улучшенный Optimum Process Quarry",
+    "block.enhanced_quarries.fluid_optimum_quarry": " Карьер для удаления Optimum Process Quarry",
     "block.enhanced_quarries.normal_pump": "Обычная помпа",
     "block.enhanced_quarries.enhanced_pump": "Улучшенная помпа",
 
