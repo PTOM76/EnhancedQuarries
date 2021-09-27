@@ -35,8 +35,12 @@ public class OptimumQuarryTile extends NormalQuarryTile {
     Integer procZ = null;
 
     private boolean continueQuarrying() {
-        procZ--;
-        return tryQuarrying();
+        try {
+            procZ--;
+            return tryQuarrying();
+        } catch (StackOverflowError e) {
+            return false;
+        }
     }
 
     @Override
