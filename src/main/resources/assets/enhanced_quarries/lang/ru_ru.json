@@ -1,0 +1,63 @@
+{
+    "itemGroup.enhanced_quarries.all": "Улучшенные карьеры",
+    "block.enhanced_quarries.normal_filler": "Обычный заполнитель",
+    "block.enhanced_quarries.enhanced_filler": "Улучшенный заполнитель",
+    "block.enhanced_quarries.enhanced_filler_with_chest": "Улучшенный заполнитель с сундуком",
+    "block.enhanced_quarries.normal_quarry": "Обычный карьер",
+    "block.enhanced_quarries.enhanced_quarry": "Улучшенный карьер",
+    "block.enhanced_quarries.fluid_quarry": "Карьер для удаления жидкости",
+    "block.enhanced_quarries.optimum_quarry": "Optimum Process Quarry",
+    "block.enhanced_quarries.enhanced_optimum_quarry": "Улучшенный Optimum Process Quarry",
+    "block.enhanced_quarries.fluid_optimum_quarry": " Карьер для удаления Optimum Process Quarry",
+    "block.enhanced_quarries.normal_pump": "Обычная помпа",
+    "block.enhanced_quarries.enhanced_pump": "Улучшенная помпа",
+
+    "block.enhanced_quarries.normal_marker": "Маркер",
+    "block.enhanced_quarries.frame": "Рамка",
+
+    "item.enhanced_quarries.bedrock_break_module": "Модуль «Пролом бедрока»",
+    "item.enhanced_quarries.silk_touch_module": "Модуль «Шёлковое касание»",
+    "item.enhanced_quarries.luck_enchant_module": "Модуль «Удача»",
+    "item.enhanced_quarries.mob_delete_module": "Модуль «Удаление мобов»",
+    "item.enhanced_quarries.mob_kill_module": "Модуль «Убийство мобов»",
+
+    "item.enhanced_quarries.filler_all_fill": "Модуль «Заполнение»",
+    "item.enhanced_quarries.filler_all_delete": "Модуль «Удаление»",
+    "item.enhanced_quarries.filler_all_remove": "Модуль «Разрушение»",
+    "item.enhanced_quarries.filler_leveling": "Модуль «Выравнивание»",
+    "item.enhanced_quarries.filler_create_box": "Модуль «Создание коробки»",
+    "item.enhanced_quarries.filler_create_wall": "Модуль «Создание забора»",
+    "item.enhanced_quarries.filler_place_torch": "Модуль «Размещение факелов»",
+    "item.enhanced_quarries.filler_tower": "Модуль «Башня»",
+    "item.enhanced_quarries.filler_horizontal_layer": "Модуль «Создание горизонтального слоя»",
+    "item.enhanced_quarries.filler_vertical_layer": "Модуль «Создание вертикального слоя»",
+    "item.enhanced_quarries.filler_delete_fluid": "Модуль «Удаление жидкостей»",
+    "item.enhanced_quarries.filler_floor_replace": "Модуль «Замена пола»",
+    "item.enhanced_quarries.filler_create_stairs": "Модуль «Создание лестниц»",
+    "item.enhanced_quarries.filler_create_pyramid": "Модуль «Создание пирамид»",
+    "item.enhanced_quarries.filler_cut_stairs": "Модуль «Вырезать лестницу»",
+    "item.enhanced_quarries.filler_cut_pyramid": "Модуль «Вырезать пирамиду»",
+
+    "item.enhanced_quarries.redstone_hammer": "Редстоуновый молот",
+
+    "item.enhanced_quarries.refined_gear": "Утонченная шестеренка",
+    "item.enhanced_quarries.enhanced_refined_gear": "Усовершенствованная шестеренка",
+    "item.enhanced_quarries.enhanced_panel": "Расширенная панель",
+
+    "message.enhanced_quarries.bedrock_break_module.1": "Модуль «Пролом бедрока» уже установлен.",
+    "message.enhanced_quarries.silk_touch_module.1": "Модуль «Шёлковое касание» уже установлен.",
+    "message.enhanced_quarries.luck_enchant_module.1": "Модуль «Удача» уже установлен.",
+    "message.enhanced_quarries.mob_delete_module.1": "Модуль «Удаление мобов» уже установлен.",
+    "message.enhanced_quarries.mob_delete_module.2": "Модули «Удаление мобов» и «Убийство мобов» не возможно установить одновременно.",
+    "message.enhanced_quarries.mob_kill_module.1": "Модуль «Убийство мобов» уже установлен.",
+    "message.enhanced_quarries.mob_kill_module.2": "Модули «Убийство мобов» и «Удаление мобов» не возможно установить одновременно.",
+
+    "screen.enhanced_quarries.filler.title": "Заполнитель",
+    "screen.enhanced_quarries.filler.title2": "Ресурсы для заполнения",
+
+    "title.enhanced_quarries.config": "Настройки Enhanced Quarries",
+    "category.enhanced_quarries.general": "Общее",
+    "option.enhanced_quarries.torch_interval": "Интервал размещения для модуля «Размещение факелов»",
+    "option.enhanced_quarries.vertical_layer_interval": "Интервал размещения для модуля «Создание вертикального слоя»",
+    "option.enhanced_quarries.horizontal_layer_interval": "Интервал размещения для модуля «Создание горизонтального слоя»"
+}

@@ -95,20 +95,16 @@ public class PumpTile extends PowerAcceptorBlockEntity {
 
     public double coolTime = getSettingCoolTime();
 
-    @Override
-    public void tick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity2) {
-        super.tick(world, pos, state, blockEntity2);
-        tick();
-    }
+    public void tick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
+        super.tick(world, pos, state, blockEntity);
 
-    public void tick() {
         // 1.--
         if (getWorld() == null || getWorld().isClient())
         {
             return;
         }
         // ----
-        BlockState state = getCachedState();
+        //BlockState state = getCachedState();
         if (!(state.getBlock() instanceof Pump)) return;
         //Pump pump = (Pump) state.getBlock();
 

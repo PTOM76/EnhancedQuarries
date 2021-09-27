@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "enhanced_quarries:block/enhanced_pump/side_active",
+        "down": "enhanced_quarries:block/enhanced_pump/bottom",
+        "up": "enhanced_quarries:block/enhanced_pump/top_active",
+        "north": "enhanced_quarries:block/enhanced_pump/side_active",
+        "east": "enhanced_quarries:block/enhanced_pump/side_active",
+        "south": "enhanced_quarries:block/enhanced_pump/side_active",
+        "west": "enhanced_quarries:block/enhanced_pump/side_active"
+    }
+}

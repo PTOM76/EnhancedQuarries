@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ZYZ",
+    "ZXZ",
+    "AAA"
+  ],
+  "key": {
+    "X": {
+      "item": "enhanced_quarries:refined_gear"
+    },
+    "Y": {
+      "item": "minecraft:redstone"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "A": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:normal_pump",
+    "count": 1
+  }
+}

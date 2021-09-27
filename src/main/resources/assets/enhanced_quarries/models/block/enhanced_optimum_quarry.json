@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "enhanced_quarries:block/enhanced_optimum_quarry/side",
+        "down": "enhanced_quarries:block/enhanced_optimum_quarry/side",
+        "up": "enhanced_quarries:block/enhanced_optimum_quarry/top",
+        "north": "enhanced_quarries:block/enhanced_optimum_quarry/front",
+        "east": "enhanced_quarries:block/enhanced_optimum_quarry/side",
+        "south": "enhanced_quarries:block/enhanced_optimum_quarry/side",
+        "west": "enhanced_quarries:block/enhanced_optimum_quarry/side"
+    }
+}
