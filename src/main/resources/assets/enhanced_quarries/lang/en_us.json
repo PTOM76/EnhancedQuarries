@@ -6,6 +6,11 @@
     "block.enhanced_quarries.normal_quarry": "Normal Quarry",
     "block.enhanced_quarries.enhanced_quarry": "Enhanced Quarry",
     "block.enhanced_quarries.fluid_quarry": "Fluid Delete Type Quarry",
+    "block.enhanced_quarries.optimum_quarry": "Optimum Process Quarry",
+    "block.enhanced_quarries.enhanced_optimum_quarry": "Enhanced Optimum Process Quarry",
+    "block.enhanced_quarries.fluid_optimum_quarry": "Fluid Delete Type Optimum Process Quarry",
+    "block.enhanced_quarries.normal_pump": "Normal Pump",
+    "block.enhanced_quarries.enhanced_pump": "Enhanced Pump",
 
     "block.enhanced_quarries.normal_marker": "Normal Marker",
     "block.enhanced_quarries.frame": "Frame",
@@ -48,5 +53,11 @@
     "message.enhanced_quarries.mob_kill_module.2": "\"Mob Kill Module\" And \"Mob Delete Module\" cannot coexist.",
 
     "screen.enhanced_quarries.filler.title": "Filler",
-    "screen.enhanced_quarries.filler.title2": "Filling Resources"
+    "screen.enhanced_quarries.filler.title2": "Filling Resources",
+
+    "title.enhanced_quarries.config": "Enhanced Quarries' Settings",
+    "category.enhanced_quarries.general": "General",
+    "option.enhanced_quarries.torch_interval": "Place Interval of Place Torch Module",
+    "option.enhanced_quarries.vertical_layer_interval": "Place Interval of Create Vertical Layer Module",
+    "option.enhanced_quarries.horizontal_layer_interval": "Place Interval of Create Horizontal Layer Module"
 }

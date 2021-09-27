@@ -6,22 +6,23 @@ import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FluidBlock;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 
 public class VerticalLayerModule extends FillerModuleItem {
-    public VerticalLayerModule(Item.Settings settings) {
+    public VerticalLayerModule(Settings settings) {
         super(settings);
     }
+
+    public static int interval = 6;
 
     @Override
     public FillerModuleReturn onProcessInRange(FillerProcessEvent e) {
         if ((e.getProcessBlock() instanceof AirBlock || e.getProcessBlock() instanceof FluidBlock)
                 && (
-                        ((e.getProcessPos().getX() - e.getPos1().getX() + e.getTile().getModuleInterval()) % e.getTile().getModuleInterval() == 0 && isX(e.getTile().getFacing()))
-                        || ((e.getProcessPos().getZ() - e.getPos1().getZ() + e.getTile().getModuleInterval()) % e.getTile().getModuleInterval() == 0 && !isX(e.getTile().getFacing()))
-                )) {
+                ((e.getProcessPos().getX() - e.getPos1().getX() + interval) % interval == 0 && isX(e.getTile().getFacing()))
+                        || ((e.getProcessPos().getZ() - e.getPos1().getZ() + interval) % interval == 0 && !isX(e.getTile().getFacing()))
+        )) {
             ItemStack stack = e.getTile().getInventoryStack();
             if (stack.isEmpty()) return FillerModuleReturn.RETURN_FALSE;
             Block block = Block.getBlockFromItem(stack.getItem());

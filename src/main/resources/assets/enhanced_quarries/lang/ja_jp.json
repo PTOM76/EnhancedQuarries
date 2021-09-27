@@ -6,6 +6,11 @@
     "block.enhanced_quarries.normal_quarry": "ノーマル クァーリー",
     "block.enhanced_quarries.enhanced_quarry": "強化型クァーリー",
     "block.enhanced_quarries.fluid_quarry": "液体除去型クァーリー",
+    "block.enhanced_quarries.optimum_quarry": "軽量処理クァーリー",
+    "block.enhanced_quarries.enhanced_optimum_quarry": "強化型軽量処理クァーリー",
+    "block.enhanced_quarries.fluid_optimum_quarry": "液体除去型軽量処理クァーリー",
+    "block.enhanced_quarries.normal_pump": "ノーマル ポンプ",
+    "block.enhanced_quarries.enhanced_pump": "強化型ポンプ",
 
     "block.enhanced_quarries.normal_marker": "ノーマル マーカー",
     "block.enhanced_quarries.frame": "フレーム",
@@ -35,7 +40,7 @@
 
     "item.enhanced_quarries.refined_gear": "洗練されたギア",
     "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",
-    "item.enhanced_quarries.enhanced_gear": "強化されたパネル",
+    "item.enhanced_quarries.enhanced_panel": "強化されたパネル",
 
     "message.enhanced_quarries.bedrock_break_module.1": "そのマシンは既に岩盤破壊モジュールが適用されています。",
     "message.enhanced_quarries.silk_touch_module.1": "そのマシンは既にシルクタッチモジュールが適用されています。",
@@ -43,5 +48,11 @@
     "message.enhanced_quarries.mob_delete_module.1": "そのマシンは既にモブ消去モジュールが適用されています。",
     "message.enhanced_quarries.mob_delete_module.2": "モブ消去モジュールとモブ殺害モジュールは共存できません。",
     "message.enhanced_quarries.mob_kill_module.1": "そのマシンは既にモブ殺害モジュールが適用されています。",
-    "message.enhanced_quarries.mob_kill_module.2": "モブ殺害モジュールとモブ消去モジュールは共存できません。"
+    "message.enhanced_quarries.mob_kill_module.2": "モブ殺害モジュールとモブ消去モジュールは共存できません。",
+
+    "title.enhanced_quarries.config": "Enhanced Quarriesの設定",
+    "category.enhanced_quarries.general": "一般",
+    "option.enhanced_quarries.torch_interval": "松明設置モジュールの設置間隔",
+    "option.enhanced_quarries.vertical_layer_interval": "垂直層建設モジュールの設置間隔",
+    "option.enhanced_quarries.horizontal_layer_interval": "平行層建設モジュールの設置間隔"
 }

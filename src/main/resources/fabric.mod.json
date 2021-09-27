@@ -23,6 +23,9 @@
     ],
     "client": [
       "ml.pkom.enhancedquarries.EnhancedQuarriesClient"
+    ],
+    "modmenu": [
+      "ml.pkom.enhancedquarries.Config"
     ]
   },
   "mixins": [

@@ -1,5 +1,7 @@
 package ml.pkom.enhancedquarries.item;
 
+import ml.pkom.enhancedquarries.simple_pipes.RedstoneHammerEvent;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.PickaxeItem;
@@ -21,6 +23,10 @@ public class RedstoneHammer extends PickaxeItem {
                 energyStorage.addEnergy(1);
                 return ActionResult.SUCCESS;
             }
+        }
+        if (FabricLoader.getInstance().isModLoaded("simple_pipes")) {
+            new RedstoneHammerEvent(context);
+            return ActionResult.SUCCESS;
         }
         return super.useOnBlock(context);
     }

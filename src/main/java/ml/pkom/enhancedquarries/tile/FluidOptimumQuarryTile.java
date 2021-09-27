@@ -6,18 +6,18 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 
-public class FluidQuarryTile extends EnhancedQuarryTile {
+public class FluidOptimumQuarryTile extends EnhancedOptimumQuarryTile {
 
-    public FluidQuarryTile(BlockPos pos, BlockState state) {
-        super(Tiles.FLUID_QUARRY_TILE, pos, state);
+    public FluidOptimumQuarryTile(BlockPos pos, BlockState state) {
+        super(Tiles.FLUID_OPTIMUM_QUARRY_TILE, pos, state);
     }
 
     // 継承のため
-    public FluidQuarryTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public FluidOptimumQuarryTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
-    public FluidQuarryTile(TileCreateEvent event) {
+    public FluidOptimumQuarryTile(TileCreateEvent event) {
         this(event.getBlockPos(), event.getBlockState());
     }
 
