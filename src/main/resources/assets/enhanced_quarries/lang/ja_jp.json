@@ -7,6 +7,8 @@
     "block.enhanced_quarries.enhanced_quarry": "強化型クァーリー",
     "block.enhanced_quarries.fluid_quarry": "液体除去型クァーリー",
     "block.enhanced_quarries.optimum_quarry": "軽量処理クァーリー",
+    "block.enhanced_quarries.enhanced_optimum_quarry": "強化型軽量処理クァーリー",
+    "block.enhanced_quarries.fluid_optimum_quarry": "液体除去型軽量処理クァーリー",
     "block.enhanced_quarries.normal_pump": "ノーマル ポンプ",
     "block.enhanced_quarries.enhanced_pump": "強化型ポンプ",
 

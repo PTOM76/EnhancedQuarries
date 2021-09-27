@@ -28,6 +28,8 @@ public class OptimumQuarryTile extends NormalQuarryTile {
         this();
     }
 
+    boolean finishedQuarry = false;
+
     Integer procX = null;
     Integer procY = null;
     Integer procZ = null;
@@ -39,6 +41,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
 
     @Override
     public boolean tryQuarrying() {
+        if (finishedQuarry) return true;
         if (getWorld() == null || getWorld().isClient()) return false;
         if (getPos1() == null)
             setPos1(getRangePos1());
@@ -50,6 +53,10 @@ public class OptimumQuarryTile extends NormalQuarryTile {
             procX = pos1.getX();
             procY = pos2.getY();
             procZ = pos1.getZ();
+        }
+        if (procY <= 0) {
+            finishedQuarry = true;
+            return false;
         }
         if (pos1.getY() - 1 >= procY) {
             if (procX < pos2.getX() - 1) {
@@ -100,12 +107,14 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         return true;
                     }
                 } else {
-                    procZ = getPos1().getZ();
+                    procZ = getPos1().getZ() - 1;
+                    procZ++; // continue先でprocZ--されるためここで追加しておく。
                     procX++;
                     return continueQuarrying();
                 }
             } else {
-                procX = getPos1().getX();
+                procX = getPos1().getX() + 1;
+                procZ++;
                 procY--;
                 return continueQuarrying();
             }
@@ -147,16 +156,21 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                     }
                     if (procBlock instanceof Frame) return continueQuarrying();
                     breakBlock(procPos, false);
-                    procZ--;
                     return true;
                 } else {
-                    procZ = getPos1().getZ() + 1;
+                    procZ = getPos1().getZ();
                     procX++;
+                    procZ++;
                     return continueQuarrying();
                 }
             } else {
-                procX = getPos1().getX() - 1;
+                procX = getPos1().getX();
+                procZ++;
                 procY--;
+                if (pos1.getY() - 1 >= procY) {
+                    procX = pos1.getX() + 1;
+                    procZ = pos1.getZ() - 1;
+                }
                 return continueQuarrying();
             }
         }
@@ -170,6 +184,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
         if (procY != null) procPos.putInt("y", procY);
         if (procZ != null) procPos.putInt("z", procZ);
         tag.put("procPos", procPos);
+        tag.putBoolean("finished", finishedQuarry);
         return super.writeNbt(tag);
     }
 
@@ -181,5 +196,6 @@ public class OptimumQuarryTile extends NormalQuarryTile {
         if (procPos.contains("x")) procX = procPos.getInt("x");
         if (procPos.contains("y")) procY = procPos.getInt("y");
         if (procPos.contains("z")) procZ = procPos.getInt("z");
+        if (tag.contains("finished")) finishedQuarry = tag.getBoolean("finished");
     }
 }
