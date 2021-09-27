@@ -32,7 +32,7 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         return stored;
     }
 
-    public void setStored(FluidVolume stored) {
+    public void setStoredFluid(FluidVolume stored) {
         this.stored = stored;
     }
 
@@ -70,7 +70,7 @@ public class PumpTile extends PowerAcceptorBlockEntity {
 
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
-        setStored(FluidVolume.fromTag(tag.getCompound("fluid")));
+        setStoredFluid(FluidVolume.fromTag(tag.getCompound("fluid")));
     }
 
     public NbtCompound writeNbt(NbtCompound nbt) {
@@ -99,7 +99,7 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         super.tick(world, pos, state, blockEntity);
 
         // 1.--
-        if (getWorld() == null || getWorld().isClient())
+        if (world == null || world.isClient())
         {
             return;
         }
@@ -109,9 +109,9 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         //Pump pump = (Pump) state.getBlock();
 
         // レッドストーン受信で無効
-        if (getWorld().isReceivingRedstonePower(getPos())) {
+        if (world.isReceivingRedstonePower(getPos())) {
             if (isActive()) {
-                 Pump.setActive(false, getWorld(), getPos());
+                 Pump.setActive(false, world, getPos());
             }
             return;
         }
@@ -119,17 +119,17 @@ public class PumpTile extends PowerAcceptorBlockEntity {
             // ここに処理を記入
             if (coolTime <= 0) {
                 coolTime = getSettingCoolTime();
-                if (tryPump(getWorld())) {
+                if (tryPump(world)) {
                     useEnergy(getEnergyCost());
                 }
             }
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!Pump.isActive(state)) {
-                Pump.setActive(true, getWorld(), getPos());
+                Pump.setActive(true, world, getPos());
             }
         } else if (Pump.isActive(state)) {
-            Pump.setActive(false, getWorld(), getPos());
+            Pump.setActive(false, world, getPos());
         }
     }
 
@@ -179,22 +179,22 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         if (!getStoredFluid().isEmpty()) {
             FluidVolume original = getStoredFluid().copy();
             FluidInsertable insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.UP);
-            setStored(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
+            setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
             if (getStoredFluid().equals(original)) {
                 insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.NORTH);
-                setStored(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
+                setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
             }
             if (getStoredFluid().equals(original)) {
                 insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.SOUTH);
-                setStored(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
+                setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
             }
             if (getStoredFluid().equals(original)) {
                 insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.WEST);
-                setStored(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
+                setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
             }
             if (getStoredFluid().equals(original)) {
                 insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.EAST);
-                setStored(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
+                setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
             }
             if (!getStoredFluid().isEmpty())
                 return false;
@@ -203,7 +203,7 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         BlockStatePos statePos = getFarFluid();
         try {
             FluidVolume drained = FluidWorldUtil.drain(world, statePos.getBlockPos(), Simulation.ACTION);
-            setStored(drained);
+            setStoredFluid(drained);
             return !getStoredFluid().isEmpty();
         } catch (NullPointerException e) {
             return false;
