@@ -30,6 +30,7 @@ public class EnhancedQuarries implements ModInitializer {
         Tiles.init();
         ScreenHandlers.init();
         FillerCraftingPatterns.init();
+        Configs.init();
     }
 
     public static void log(Level level, String message){
