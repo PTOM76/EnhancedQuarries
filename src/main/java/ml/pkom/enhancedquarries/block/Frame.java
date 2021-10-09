@@ -93,7 +93,23 @@ public class Frame extends Block {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (world.isClient()) return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-        return state.with(ConnectingBlock.FACING_PROPERTIES.get(direction), canConnect(world, pos.offset(direction)));
+        try {
+            if (direction.equals(Direction.NORTH))
+                return state.with(CONNECT_NORTH, canConnect(world, pos.offset(direction)));
+            if (direction.equals(Direction.SOUTH))
+                return state.with(CONNECT_SOUTH, canConnect(world, pos.offset(direction)));
+            if (direction.equals(Direction.WEST))
+                return state.with(CONNECT_WEST, canConnect(world, pos.offset(direction)));
+            if (direction.equals(Direction.EAST))
+                return state.with(CONNECT_EAST, canConnect(world, pos.offset(direction)));
+            if (direction.equals(Direction.UP))
+                return state.with(CONNECT_UP, canConnect(world, pos.offset(direction)));
+            if (direction.equals(Direction.DOWN))
+                return state.with(CONNECT_DOWN, canConnect(world, pos.offset(direction)));
+        } catch (IllegalArgumentException e) {
+            return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        }
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     public static boolean canConnect(BlockView world, BlockPos blockPos) {
