@@ -5,6 +5,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.org.yaml.snakeyaml.Yaml;
 import ml.pkom.enhancedquarries.easyapi.FileControll;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 public class YamlConfig extends Config {

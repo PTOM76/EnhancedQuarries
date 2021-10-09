@@ -2,6 +2,7 @@ package ml.pkom.enhancedquarries.block;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -91,6 +92,7 @@ public class Frame extends Block {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (world.isClient()) return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
         return state.with(ConnectingBlock.FACING_PROPERTIES.get(direction), canConnect(world, pos.offset(direction)));
     }
 
@@ -100,6 +102,12 @@ public class Frame extends Block {
 
     public static boolean canConnect(World world, BlockPos blockPos) {
         return world.getBlockState(blockPos).getBlock() == getBlock();
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+        breakConnectFrames(world, pos);
     }
 
     public static void breakConnectFrames(World world, BlockPos pos) {
