@@ -599,7 +599,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
         int procX;
         int procY;
         int procZ;
-        for (procY = pos2.getY(); procY > 0; procY--) {
+        for (procY = pos2.getY(); procY > getWorld().getBottomY(); procY--) {
             if (pos1.getY() - 1 >= procY) {
                 for (procX = pos1.getX() + 1; procX < pos2.getX() - 1; procX++) {
                     for (procZ = pos1.getZ() - 1; procZ > pos2.getZ() + 1; procZ--) {
