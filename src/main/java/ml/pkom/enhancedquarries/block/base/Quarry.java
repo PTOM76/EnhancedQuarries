@@ -7,7 +7,6 @@ import ml.pkom.enhancedquarries.event.BlockStatePos;
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.QuarryTile;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
@@ -35,7 +34,7 @@ public abstract class Quarry extends BlockMachineBase implements BlockEntityProv
     public static FabricBlockSettings defaultSettings = FabricBlockSettings
             .of(Material.METAL)
             .requiresTool()
-            .breakByTool(FabricToolTags.PICKAXES, 0)
+            //.breakByTool(FabricToolTags.PICKAXES, 0)
             .strength(2, 8);
 
     // Custom Setting

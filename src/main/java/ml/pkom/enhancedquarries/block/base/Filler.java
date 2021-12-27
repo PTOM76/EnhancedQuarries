@@ -34,7 +34,7 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
     public static FabricBlockSettings defaultSettings = FabricBlockSettings
             .of(Material.METAL)
             .requiresTool()
-            .breakByTool(FabricToolTags.PICKAXES, 0)
+            //.breakByTool(FabricToolTags.PICKAXES, 0)
             .strength(2, 8);
 
     // Custom Setting

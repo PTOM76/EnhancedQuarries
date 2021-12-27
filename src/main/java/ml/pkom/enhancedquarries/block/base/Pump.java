@@ -22,7 +22,7 @@ public abstract class Pump extends BaseBlock implements BlockEntityProvider, Att
     public static FabricBlockSettings defaultSettings = FabricBlockSettings
             .of(Material.METAL)
             .requiresTool()
-            .breakByTool(FabricToolTags.PICKAXES, 0)
+            //.breakByTool(FabricToolTags.PICKAXES, 0)
             .strength(2, 8);
 
     // Custom Setting
