@@ -58,7 +58,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
             procY = pos2.getY();
             procZ = pos1.getZ();
         }
-        if (procY <= 0) {
+        if (procY <= getWorld().getBottomY()) {
             finishedQuarry = true;
             return false;
         }
