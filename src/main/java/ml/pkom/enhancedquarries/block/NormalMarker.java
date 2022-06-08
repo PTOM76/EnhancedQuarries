@@ -28,7 +28,7 @@ public class NormalMarker extends Block {
     public static BooleanProperty ACTIVE = BooleanProperty.of("active");
 
     public NormalMarker() {
-        super(FabricBlockSettings.of(Material.METAL).breakByHand(true).strength(1, 4));
+        super(FabricBlockSettings.of(Material.METAL).strength(1, 4));
             this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(ACTIVE, false));
     }
 

@@ -73,10 +73,9 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         setStoredFluid(FluidVolume.fromTag(tag.getCompound("fluid")));
     }
 
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        nbt = super.writeNbt(nbt);
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         nbt.put("fluid", getStoredFluid().toTag());
-        return nbt;
     }
 
     private double defaultBasicSpeed = 5;

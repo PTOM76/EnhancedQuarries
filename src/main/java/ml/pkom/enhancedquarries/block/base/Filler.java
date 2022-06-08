@@ -6,7 +6,6 @@ import ml.pkom.enhancedquarries.event.BlockStatePos;
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;

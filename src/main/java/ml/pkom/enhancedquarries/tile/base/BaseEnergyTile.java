@@ -18,9 +18,9 @@ public abstract class BaseEnergyTile extends BlockEntity implements BlockEntityT
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         nbt.putLong("energy", holdEnergy);
-        return super.writeNbt(nbt);
+        super.writeNbt(nbt);
     }
 
     @Override

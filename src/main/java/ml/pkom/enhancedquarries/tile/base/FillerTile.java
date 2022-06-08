@@ -103,7 +103,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // NBT
 
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         NbtCompound invTag = new NbtCompound();
         Inventories.writeNbt(invTag, craftingInvItems);
         tag.put("craftingInv", invTag);
@@ -121,7 +121,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
         if (canBedrockBreak)
             tag.putBoolean("module_bedrock_break", true);
-        return super.writeNbt(tag);
+        super.writeNbt(tag);
     }
 
     public void readNbt(NbtCompound tag) {

@@ -149,7 +149,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // NBT
 
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         tag.putDouble("coolTime", coolTime);
         if (canBedrockBreak)
             tag.putBoolean("module_bedrock_break", true);
@@ -172,7 +172,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
             tag.putInt("rangePos2Y", getPos2().getY());
             tag.putInt("rangePos2Z", getPos2().getZ());
         }
-        return super.writeNbt(tag);
+        super.writeNbt(tag);
     }
 
     public void readNbt(NbtCompound tag) {

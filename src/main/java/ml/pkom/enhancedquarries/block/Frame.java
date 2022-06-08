@@ -32,7 +32,7 @@ public class Frame extends Block {
     public static VoxelShape DOWN = VoxelShapes.cuboid(0.25, 0, 0.25, 0.75, .25, 0.75);
 
     public Frame() {
-        super(FabricBlockSettings.of(Material.METAL).breakByHand(true).strength(1, 4).nonOpaque());
+        super(FabricBlockSettings.of(Material.METAL).strength(1, 4).nonOpaque());
         setDefaultState(getDefaultState()
                 .with(CONNECT_NORTH, false)
                 .with(CONNECT_SOUTH, false)
