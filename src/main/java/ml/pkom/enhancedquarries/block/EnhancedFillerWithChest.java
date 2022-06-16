@@ -5,12 +5,12 @@ import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.screen.FillerWithChestScreenHandler;
 import ml.pkom.enhancedquarries.tile.EnhancedFillerWithChestTile;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
+import ml.pkom.mcpitanlib.api.text.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -57,6 +57,6 @@ public class EnhancedFillerWithChest extends Filler {
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
         FillerTile fillerTile = (FillerTile) world.getBlockEntity(pos);
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new FillerWithChestScreenHandler(i, playerInventory, fillerTile.getInventory(), fillerTile.getCraftingInventory()), new LiteralText(""));
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new FillerWithChestScreenHandler(i, playerInventory, fillerTile.getInventory(), fillerTile.getCraftingInventory()), TextUtil.literal(""));
     }
 }

@@ -81,6 +81,7 @@ public abstract class Quarry extends BlockMachineBase implements BlockEntityProv
             if (blockEntity instanceof QuarryTile) {
                 QuarryTile quarry = (QuarryTile)blockEntity;
                 ItemScatterer.spawn(world, pos, (QuarryTile)blockEntity);
+
                 // モジュールの返却
                 if (quarry.canBedrockBreak()) {
                     world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.BEDROCK_BREAK_MODULE, 1)));

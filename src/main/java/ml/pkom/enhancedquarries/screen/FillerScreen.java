@@ -9,7 +9,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import ml.pkom.mcpitanlib.api.text.TextUtil;
 import net.minecraft.util.Identifier;
 
 public class FillerScreen extends HandledScreen<FillerScreenHandler> {
@@ -38,8 +38,8 @@ public class FillerScreen extends HandledScreen<FillerScreenHandler> {
         super.drawForeground(matrices, mouseX, mouseY);
         x = (this.width - this.backgroundWidth) / 2;
         y = (this.height - this.backgroundHeight) / 2;
-        this.textRenderer.draw(matrices, new TranslatableText("screen.enhanced_quarries.filler.title"), 45, 7, 4210752);
-        this.textRenderer.draw(matrices, new TranslatableText("screen.enhanced_quarries.filler.title2"), 8, 75, 4210752);
+        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.filler.title"), 45, 7, 4210752);
+        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.filler.title2"), 8, 75, 4210752);
     }
 
     @Override

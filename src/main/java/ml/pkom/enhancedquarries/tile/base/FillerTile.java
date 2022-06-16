@@ -279,7 +279,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         int procY;
         int procZ;
         //procY = pos1.getY(); procY <= pos2.getY(); procY++
-        for (procY = world.getBottomY(); procY <= getWorld().getDimension().getHeight(); procY++) {
+        for (procY = world.getBottomY(); procY <= getWorld().getDimension().height(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
@@ -368,7 +368,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                         // ----
                     }
                     // 選択範囲より上～最高域
-                    if (procY <= getWorld().getDimension().getHeight() && procY >= pos2.getY() + 1) {
+                    if (procY <= getWorld().getDimension().height() && procY >= pos2.getY() + 1) {
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
                             if (!(procBlock instanceof AirBlock))

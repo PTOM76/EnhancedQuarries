@@ -4,7 +4,7 @@ import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.enhancedquarries.tile.base.QuarryTile;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.text.TranslatableText;
+import ml.pkom.mcpitanlib.api.text.TextUtil;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,11 +25,11 @@ public class MobKillModule extends Item {
             if (world.getBlockEntity(blockPos) != null && world.getBlockEntity(blockPos) instanceof QuarryTile) {
                 QuarryTile quarry = (QuarryTile) world.getBlockEntity(blockPos);
                 if (quarry.isSetMobKill()) {
-                    context.getPlayer().sendMessage(new TranslatableText("message.enhanced_quarries.mob_kill_module.1"), false);
+                    context.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.mob_kill_module.1"), false);
                     return ActionResult.PASS;
                 }
                 if (quarry.isSetMobDelete()) {
-                    context.getPlayer().sendMessage(new TranslatableText("message.enhanced_quarries.mob_kill_module.2"), false);
+                    context.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.mob_kill_module.2"), false);
                     return ActionResult.PASS;
                 }
                 quarry.setMobKillModule(true);
