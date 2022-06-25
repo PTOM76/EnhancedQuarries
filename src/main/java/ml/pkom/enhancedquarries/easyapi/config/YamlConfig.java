@@ -2,10 +2,9 @@ package ml.pkom.enhancedquarries.easyapi.config;
 
 import me.shedaniel.cloth.clothconfig.shadowed.org.yaml.snakeyaml.DumperOptions;
 import me.shedaniel.cloth.clothconfig.shadowed.org.yaml.snakeyaml.Yaml;
-import ml.pkom.enhancedquarries.easyapi.FileControll;
+import ml.pkom.enhancedquarries.easyapi.FileControl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Map;
 
 public class YamlConfig extends Config {
@@ -59,7 +58,7 @@ public class YamlConfig extends Config {
     @SuppressWarnings("unchecked")
     public boolean load(File file) {
         try {
-            String configData = FileControll.fileReadContents(file);
+            String configData = FileControl.fileReadContents(file);
             Yaml yaml = new Yaml();
             configMap = (Map<String, Object>) yaml.load(configData);
             return true;
@@ -78,7 +77,7 @@ public class YamlConfig extends Config {
     public boolean save(File file, boolean pretty) {
         try {
             String configData = this.toYaml(pretty);
-            FileControll.fileWriteContents(file, configData);
+            FileControl.fileWriteContents(file, configData);
             return true;
         } catch (Exception e) {
             return false;

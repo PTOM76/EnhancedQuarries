@@ -3,7 +3,7 @@ package ml.pkom.enhancedquarries.easyapi.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import ml.pkom.enhancedquarries.easyapi.FileControll;
+import ml.pkom.enhancedquarries.easyapi.FileControl;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -47,7 +47,7 @@ public class JsonConfig extends Config {
      */
     public boolean load(File file) {
         try {
-            String configData = FileControll.fileReadContents(file);
+            String configData = FileControl.fileReadContents(file);
             Gson gson = new Gson();
             Type jsonMap = new TypeToken<LinkedHashMap<String, Object>>() {
             }.getType();
@@ -68,7 +68,7 @@ public class JsonConfig extends Config {
     public boolean save(File file, boolean pretty) {
         try {
             String configData = this.toJson(pretty);
-            FileControll.fileWriteContents(file, configData);
+            FileControl.fileWriteContents(file, configData);
             return true;
         } catch (Exception e) {
             return false;

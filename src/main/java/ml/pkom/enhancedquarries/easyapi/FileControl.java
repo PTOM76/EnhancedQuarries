@@ -3,7 +3,7 @@ package ml.pkom.enhancedquarries.easyapi;
 import java.io.*;
 import java.nio.channels.FileChannel;
 
-public class FileControll {
+public class FileControl {
     
     public static boolean fileWriteContents(String pathName, String contents){ return fileWriteContents(new File(pathName), contents); }
 
