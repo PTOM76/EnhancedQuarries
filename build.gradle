@@ -28,8 +28,8 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// TRのエネルギー用
-	modImplementation 'RebornCore:RebornCore-1.19:5.3.0'
-	modImplementation 'TechReborn:TechReborn-1.19:5.3.0'
+	modImplementation 'RebornCore:RebornCore-1.19:5.3.2'
+	modImplementation 'TechReborn:TechReborn-1.19:5.3.2'
 
 	// Mod Menu
 	// 1.16 => 1.16.19
