@@ -3,7 +3,7 @@ package ml.pkom.enhancedquarries.block.base;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
-import alexiil.mc.mod.pipes.blocks.TilePump;
+//import alexiil.mc.mod.pipes.blocks.TilePump;
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.PumpTile;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;

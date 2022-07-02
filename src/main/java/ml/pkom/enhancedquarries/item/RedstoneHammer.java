@@ -2,6 +2,8 @@ package ml.pkom.enhancedquarries.item;
 
 import ml.pkom.enhancedquarries.simple_pipes.RedstoneHammerEvent;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.LeverBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.PickaxeItem;
@@ -25,9 +27,14 @@ public class RedstoneHammer extends PickaxeItem {
             }
         }
         if (FabricLoader.getInstance().isModLoaded("simple_pipes")) {
-            new RedstoneHammerEvent(context);
-            return ActionResult.SUCCESS;
+            //new RedstoneHammerEvent(context);
+            //return ActionResult.SUCCESS;
         }
+        BlockState block = context.getWorld().getBlockState(context.getBlockPos());
+        block.cycle(LeverBlock.POWERED);
+        context.getWorld().updateNeighborsAlways(context.getBlockPos(), block.getBlock());
+        block.cycle(LeverBlock.POWERED);
+        context.getWorld().updateNeighborsAlways(context.getBlockPos(), block.getBlock());
         return super.useOnBlock(context);
     }
 }
