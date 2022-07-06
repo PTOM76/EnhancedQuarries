@@ -42,7 +42,6 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "*",
-    "libblockattributes": "*"
+    "minecraft": "*"
   }
 }

@@ -1,7 +1,5 @@
 package ml.pkom.enhancedquarries.tile.base;
 
-import alexiil.mc.lib.attributes.CombinableAttribute;
-import alexiil.mc.lib.attributes.SearchOptions;
 import ml.pkom.enhancedquarries.block.base.BaseBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -79,7 +77,4 @@ public abstract class BaseEnergyTile extends BlockEntity implements BlockEntityT
         return getWorld().getBlockState(getPos());
     }
 
-    public <T> T getNeighbourAttribute(CombinableAttribute<T> attr, Direction dir) {
-        return attr.get(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
-    }
 }

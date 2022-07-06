@@ -4,10 +4,8 @@ import ml.pkom.enhancedquarries.block.base.Pump;
 import ml.pkom.enhancedquarries.event.BlockStatePos;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -24,7 +22,7 @@ import java.util.Set;
 // reference: Kibe Utilities's tank
 @SuppressWarnings("UnstableApiUsage")
 public class PumpTile extends PowerAcceptorBlockEntity {
-    private SingleVariantStorage<FluidVariant> storedFluid = new SingleVariantStorage<FluidVariant>() {
+    private SingleVariantStorage<FluidVariant> storedFluid = new SingleVariantStorage<>() {
 
         @Override
         protected FluidVariant getBlankVariant() {
@@ -82,15 +80,19 @@ public class PumpTile extends PowerAcceptorBlockEntity {
     public void readNbt(NbtCompound nbt) {
 
         super.readNbt(nbt);
-
+        if (nbt.contains("variant")) {
+            storedFluid.variant = FluidVariant.fromNbt(nbt.getCompound("variant"));
+            storedFluid.amount = nbt.getLong("amount");
+        }
         //setStoredFluid(FluidVolume.fromTag(tag.getCompound("fluid")));
     }
 
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        if(!storedFluid.isResourceBlank() && !fluidIsEmpty())
+        if(!storedFluid.isResourceBlank() && !fluidIsEmpty()) {
             nbt.put("variant", storedFluid.getResource().toNbt());
             nbt.putLong("amount", storedFluid.getAmount());
+        }
     }
 
     public boolean fluidIsEmpty() {
@@ -190,6 +192,7 @@ public class PumpTile extends PowerAcceptorBlockEntity {
 
     public boolean tryPump(World world) {
         //EnhancedQuarries.log(Level.INFO, getStored().amount().asInt(1) + "");
+        System.out.println("amount: " + storedFluid.getAmount() + ", max: " + storedFluid.getCapacity());
         if (storedFluid.getAmount() >= storedFluid.getCapacity()) {
             return false;
         }
@@ -200,7 +203,10 @@ public class PumpTile extends PowerAcceptorBlockEntity {
             BlockState state = statePos.getBlockState();
             world.removeBlock(statePos.getBlockPos(), false);
             FluidState fluidState = state.getFluidState();
-            storedFluid.insert(FluidVariant.of(fluidState.getFluid()), 1, Transaction.openOuter());
+            try (Transaction transaction = Transaction.openOuter()) {
+                storedFluid.insert(FluidVariant.of(fluidState.getFluid()), 1, transaction);
+                transaction.commit();
+            }
             return !fluidIsEmpty();
         } catch (NullPointerException e) {
             return false;
