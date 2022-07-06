@@ -31,7 +31,7 @@ public class PumpTile extends PowerAcceptorBlockEntity {
 
         @Override
         protected long getCapacity(FluidVariant variant) {
-            return FluidConstants.BUCKET;
+            return FluidConstants.BUCKET * 4;
         }
 
         @Override
@@ -192,7 +192,6 @@ public class PumpTile extends PowerAcceptorBlockEntity {
 
     public boolean tryPump(World world) {
         //EnhancedQuarries.log(Level.INFO, getStored().amount().asInt(1) + "");
-        System.out.println("amount: " + storedFluid.getAmount() + ", max: " + storedFluid.getCapacity());
         if (storedFluid.getAmount() >= storedFluid.getCapacity()) {
             return false;
         }
@@ -204,7 +203,7 @@ public class PumpTile extends PowerAcceptorBlockEntity {
             world.removeBlock(statePos.getBlockPos(), false);
             FluidState fluidState = state.getFluidState();
             try (Transaction transaction = Transaction.openOuter()) {
-                storedFluid.insert(FluidVariant.of(fluidState.getFluid()), 1, transaction);
+                storedFluid.insert(FluidVariant.of(fluidState.getFluid()), FluidConstants.BUCKET, transaction);
                 transaction.commit();
             }
             return !fluidIsEmpty();

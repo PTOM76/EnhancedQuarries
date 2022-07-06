@@ -35,12 +35,6 @@ public abstract class Pump extends BaseBlock implements BlockEntityProvider {
         return createBlockEntity(new TileCreateEvent(pos, state));
     }
 
-    /*
-    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
-        to.offer(EmptyFluidExtractable.SUPPLIER);
-    }
-     */
-
     public BlockEntity createBlockEntity(BlockView world) {
         return createBlockEntity(new TileCreateEvent(world));
     }
