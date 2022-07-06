@@ -1,9 +1,5 @@
 package ml.pkom.enhancedquarries.block.base;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProvider;
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
-//import alexiil.mc.mod.pipes.blocks.TilePump;
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.PumpTile;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -17,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public abstract class Pump extends BaseBlock implements BlockEntityProvider, AttributeProvider {
+public abstract class Pump extends BaseBlock implements BlockEntityProvider {
     public static FabricBlockSettings defaultSettings = FabricBlockSettings
             .of(Material.METAL)
             .requiresTool()
@@ -39,9 +35,11 @@ public abstract class Pump extends BaseBlock implements BlockEntityProvider, Att
         return createBlockEntity(new TileCreateEvent(pos, state));
     }
 
+    /*
     public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
         to.offer(EmptyFluidExtractable.SUPPLIER);
     }
+     */
 
     public BlockEntity createBlockEntity(BlockView world) {
         return createBlockEntity(new TileCreateEvent(world));

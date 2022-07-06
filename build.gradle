@@ -11,6 +11,7 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+	mavenLocal()
 	maven { url "https://maven.shedaniel.me/" }
 	maven {
 		name = "BuildCraft"
@@ -42,10 +43,11 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	// LibBlockAttributes
+	// LibBlockAttributes (0.11.0-pre.2 is unofficial)
 	// 1.16 => 0.8.8
 	// 1.17 => 0.9.0
-	modImplementation "alexiil.mc.lib:libblockattributes-all:0.11.0-pre.1"
+	//modImplementation "alexiil.mc.lib:libblockattributes-all:0.11.0-pre.2"
+	//include "alexiil.mc.lib:libblockattributes-all:0.11.0-pre.2"
 
 	// 1.16 => 0.5.0
 	// 1.17 => 0.6.1

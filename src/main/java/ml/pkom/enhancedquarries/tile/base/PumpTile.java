@@ -1,22 +1,19 @@
 package ml.pkom.enhancedquarries.tile.base;
 
-import alexiil.mc.lib.attributes.CombinableAttribute;
-import alexiil.mc.lib.attributes.SearchOptions;
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.attributes.fluid.world.FluidWorldUtil;
 import ml.pkom.enhancedquarries.block.base.Pump;
 import ml.pkom.enhancedquarries.event.BlockStatePos;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import reborncore.common.blockentity.MachineBaseBlockEntity;
 import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
@@ -24,16 +21,34 @@ import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
 import java.util.HashSet;
 import java.util.Set;
 
+// reference: Kibe Utilities's tank
+@SuppressWarnings("UnstableApiUsage")
 public class PumpTile extends PowerAcceptorBlockEntity {
+    private SingleVariantStorage<FluidVariant> storedFluid = new SingleVariantStorage<FluidVariant>() {
 
-    public FluidVolume stored = FluidVolumeUtil.EMPTY;
+        @Override
+        protected FluidVariant getBlankVariant() {
+            return FluidVariant.blank();
+        }
 
-    public FluidVolume getStoredFluid() {
-        return stored;
+        @Override
+        protected long getCapacity(FluidVariant variant) {
+            return FluidConstants.BUCKET;
+        }
+
+        @Override
+        protected void onFinalCommit() {
+            super.onFinalCommit();
+            markDirty();
+        }
+    };
+
+    public SingleVariantStorage<FluidVariant> getStoredFluid() {
+        return storedFluid;
     }
 
-    public void setStoredFluid(FluidVolume stored) {
-        this.stored = stored;
+    public void setStoredFluid(SingleVariantStorage<FluidVariant> storedFluid) {
+        this.storedFluid = storedFluid;
     }
 
     // デフォルトコスト
@@ -43,10 +58,6 @@ public class PumpTile extends PowerAcceptorBlockEntity {
     public long getEnergyCost() {
         return defaultEnergyCost;
     }
-
-    //public PumpTile(BlockEntityType<?> type) {
-    //    super(type);
-    //}
 
     public PumpTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -68,14 +79,22 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         return 500;
     }
 
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        setStoredFluid(FluidVolume.fromTag(tag.getCompound("fluid")));
+    public void readNbt(NbtCompound nbt) {
+
+        super.readNbt(nbt);
+
+        //setStoredFluid(FluidVolume.fromTag(tag.getCompound("fluid")));
     }
 
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        nbt.put("fluid", getStoredFluid().toTag());
+        if(!storedFluid.isResourceBlank() && !fluidIsEmpty())
+            nbt.put("variant", storedFluid.getResource().toNbt());
+            nbt.putLong("amount", storedFluid.getAmount());
+    }
+
+    public boolean fluidIsEmpty() {
+        return storedFluid.getAmount() == 0;
     }
 
     private double defaultBasicSpeed = 5;
@@ -132,10 +151,6 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         }
     }
 
-    public <T> T getNeighbourAttribute(CombinableAttribute<T> attr, Direction dir) {
-        return attr.get(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
-    }
-
     public BlockStatePos getFarFluid() {
         for (BlockStatePos statePos : sphereAround(getPos(), 30)) {
             if (statePos.getBlockState().getFluidState().getFluid() != null && statePos.getBlockState().getFluidState().isStill()) {
@@ -175,35 +190,18 @@ public class PumpTile extends PowerAcceptorBlockEntity {
 
     public boolean tryPump(World world) {
         //EnhancedQuarries.log(Level.INFO, getStored().amount().asInt(1) + "");
-        if (!getStoredFluid().isEmpty()) {
-            FluidVolume original = getStoredFluid().copy();
-            FluidInsertable insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.UP);
-            setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
-            if (getStoredFluid().equals(original)) {
-                insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.NORTH);
-                setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
-            }
-            if (getStoredFluid().equals(original)) {
-                insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.SOUTH);
-                setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
-            }
-            if (getStoredFluid().equals(original)) {
-                insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.WEST);
-                setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
-            }
-            if (getStoredFluid().equals(original)) {
-                insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, Direction.EAST);
-                setStoredFluid(insertable.attemptInsertion(getStoredFluid(), Simulation.ACTION));
-            }
-            if (!getStoredFluid().isEmpty())
-                return false;
+        if (storedFluid.getAmount() >= storedFluid.getCapacity()) {
+            return false;
         }
-        if (world.getFluidState(getPos().down()).isEmpty() && world.getFluidState(getPos().down(2)).isEmpty() && world.getFluidState(getPos().down(3)).isEmpty()) return false;
+        if (world.getFluidState(getPos().down()).isEmpty() && world.getFluidState(getPos().down(2)).isEmpty() && world.getFluidState(getPos().down(3)).isEmpty())
+            return false;
         BlockStatePos statePos = getFarFluid();
         try {
-            FluidVolume drained = FluidWorldUtil.drain(world, statePos.getBlockPos(), Simulation.ACTION);
-            setStoredFluid(drained);
-            return !getStoredFluid().isEmpty();
+            BlockState state = statePos.getBlockState();
+            world.removeBlock(statePos.getBlockPos(), false);
+            FluidState fluidState = state.getFluidState();
+            storedFluid.insert(FluidVariant.of(fluidState.getFluid()), 1, Transaction.openOuter());
+            return !fluidIsEmpty();
         } catch (NullPointerException e) {
             return false;
         }
