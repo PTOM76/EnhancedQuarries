@@ -51,7 +51,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
             if (stack.getItem() instanceof BlockItem) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
-                NbtCompound tag = stack.getNbt();
+                NbtCompound tag = stack.getTag();
                 if (tag.contains("StorageItemData")) {
                     ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("StorageItemData"));
                     if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
