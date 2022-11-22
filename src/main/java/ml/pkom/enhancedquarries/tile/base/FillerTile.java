@@ -220,8 +220,8 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
             // StorageBox
             if (isStorageBox(stack)) {
                 NbtCompound tag = stack.getNbt();
-                if (tag.contains("item")) {
-                    ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("item"));
+                if (tag.contains("StorageItemData")) {
+                    ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("StorageItemData"));
                     if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
                 }
             }
@@ -248,13 +248,13 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
             getWorld().playSound(null, blockPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
                 NbtCompound tag = latestGotStack.getNbt();
-                if (tag.contains("countInBox")) {
-                    int countInBox = tag.getInt("countInBox");
+                if (tag.contains("StorageSize")) {
+                    int countInBox = tag.getInt("StorageSize");
                     countInBox--;
-                    tag.putInt("countInBox", countInBox);
+                    tag.putInt("StorageSize", countInBox);
                     if (countInBox <= 0) {
-                        tag.remove("item");
-                        tag.remove("countInBox");
+                        tag.remove("StorageItemData");
+                        tag.remove("StorageSize");
                     }
                     latestGotStack.setNbt(tag);
                 }
