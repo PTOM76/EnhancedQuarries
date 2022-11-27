@@ -23,6 +23,8 @@ public class Tiles {
     public static BlockEntityType<NormalPumpTile> NORMAL_PUMP;
     public static BlockEntityType<EnhancedPumpTile> ENHANCED_PUMP;
 
+    public static BlockEntityType<MarkerTile> NORMAL_MARKER;
+
     public static void init() {
         NORMAL_QUARRY_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_quarry_tile"), create(NormalQuarryTile::new, Blocks.NORMAL_QUARRY));
         ENHANCED_QUARRY_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("enhanced_quarry_tile"), create(EnhancedQuarryTile::new, Blocks.ENHANCED_QUARRY));
@@ -37,6 +39,8 @@ public class Tiles {
         ENHANCED_FILLER_WITH_CHEST_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("enhanced_filler_with_chest_tile"), create(EnhancedFillerWithChestTile::new, Blocks.ENHANCED_FILLER_WITH_CHEST));
         NORMAL_PUMP = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_pump"), create(NormalPumpTile::new, Blocks.NORMAL_PUMP));
         ENHANCED_PUMP = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("enhanced_pump"), create(EnhancedPumpTile::new, Blocks.ENHANCED_PUMP));
+
+        NORMAL_MARKER = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_marker"), create(MarkerTile::new, Blocks.NORMAL_MARKER));
     }
 
     public static <T extends BlockEntity> BlockEntityType<T> create(FabricBlockEntityTypeBuilder.Factory<T> supplier, Block... blocks) {

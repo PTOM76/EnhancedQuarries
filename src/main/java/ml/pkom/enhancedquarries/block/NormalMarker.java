@@ -2,8 +2,11 @@ package ml.pkom.enhancedquarries.block;
 
 import ml.pkom.enhancedquarries.Blocks;
 import ml.pkom.enhancedquarries.event.BlockStatePos;
+import ml.pkom.enhancedquarries.event.TileCreateEvent;
+import ml.pkom.enhancedquarries.tile.MarkerTile;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -19,11 +22,12 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NormalMarker extends Block {
+public class NormalMarker extends Block { //BlockWithEntity {
 
     public static DirectionProperty FACING = Properties.FACING;
     public static BooleanProperty ACTIVE = BooleanProperty.of("active");
@@ -202,4 +206,13 @@ public class NormalMarker extends Block {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, ACTIVE);
     }
+
+    /*
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new MarkerTile(new TileCreateEvent(pos, state));
+    }
+
+     */
 }
