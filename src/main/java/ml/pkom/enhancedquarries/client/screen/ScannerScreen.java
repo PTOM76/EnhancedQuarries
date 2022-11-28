@@ -1,21 +1,21 @@
-package ml.pkom.enhancedquarries.screen;
+package ml.pkom.enhancedquarries.client.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import ml.pkom.enhancedquarries.EnhancedQuarries;
-import net.minecraft.client.MinecraftClient;
+import ml.pkom.enhancedquarries.screen.FillerScreenHandler;
+import ml.pkom.enhancedquarries.screen.ScannerScreenHandler;
+import ml.pkom.mcpitanlib.api.text.TextUtil;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import ml.pkom.mcpitanlib.api.text.TextUtil;
 import net.minecraft.util.Identifier;
 
-public class FillerScreen extends HandledScreen<FillerScreenHandler> {
-    private static final Identifier GUI = EnhancedQuarries.id("textures/gui/filler.png");
+public class ScannerScreen extends HandledScreen<ScannerScreenHandler> {
+    private static final Identifier GUI = EnhancedQuarries.id("textures/gui/scanner.png");
 
-    public FillerScreen(FillerScreenHandler handler, PlayerInventory inventory, Text title) {
+    public ScannerScreen(ScannerScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         playerInventoryTitleY = 143;
         this.backgroundWidth = 176;

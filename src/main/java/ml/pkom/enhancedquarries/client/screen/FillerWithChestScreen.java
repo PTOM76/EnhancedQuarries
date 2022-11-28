@@ -1,8 +1,9 @@
-package ml.pkom.enhancedquarries.screen;
+package ml.pkom.enhancedquarries.client.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import ml.pkom.enhancedquarries.EnhancedQuarries;
+import ml.pkom.enhancedquarries.screen.FillerWithChestScreenHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;

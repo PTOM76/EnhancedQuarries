@@ -20,8 +20,12 @@ public class Tiles {
     public static BlockEntityType<EnhancedFillerTile> ENHANCED_FILLER_TILE;
     public static BlockEntityType<EnhancedFillerWithChestTile> ENHANCED_FILLER_WITH_CHEST_TILE;
 
-    public static BlockEntityType<NormalPumpTile> NORMAL_PUMP;
-    public static BlockEntityType<EnhancedPumpTile> ENHANCED_PUMP;
+    public static BlockEntityType<NormalPumpTile> NORMAL_PUMP_TILE;
+    public static BlockEntityType<EnhancedPumpTile> ENHANCED_PUMP_TILE;
+
+    public static BlockEntityType<NormalScannerTile> NORMAL_SCANNER_TILE;
+    public static BlockEntityType<NormalBuilderTile> NORMAL_BUILDER_TILE;
+    public static BlockEntityType<NormalLibraryTile> NORMAL_LIBRARY_TILE;
 
     public static BlockEntityType<MarkerTile> NORMAL_MARKER;
 
@@ -37,8 +41,13 @@ public class Tiles {
         NORMAL_FILLER_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_filler_tile"), create(NormalFillerTile::new, Blocks.NORMAL_FILLER));
         ENHANCED_FILLER_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("enhanced_filler_tile"), create(EnhancedFillerTile::new, Blocks.ENHANCED_FILLER));
         ENHANCED_FILLER_WITH_CHEST_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("enhanced_filler_with_chest_tile"), create(EnhancedFillerWithChestTile::new, Blocks.ENHANCED_FILLER_WITH_CHEST));
-        NORMAL_PUMP = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_pump"), create(NormalPumpTile::new, Blocks.NORMAL_PUMP));
-        ENHANCED_PUMP = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("enhanced_pump"), create(EnhancedPumpTile::new, Blocks.ENHANCED_PUMP));
+
+        NORMAL_PUMP_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_pump"), create(NormalPumpTile::new, Blocks.NORMAL_PUMP));
+        ENHANCED_PUMP_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("enhanced_pump"), create(EnhancedPumpTile::new, Blocks.ENHANCED_PUMP));
+
+        NORMAL_SCANNER_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_scanner"), create(NormalScannerTile::new, Blocks.NORMAL_SCANNER));
+        NORMAL_BUILDER_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_builder"), create(NormalBuilderTile::new, Blocks.NORMAL_BUILDER));
+        NORMAL_LIBRARY_TILE = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_library"), create(NormalLibraryTile::new, Blocks.NORMAL_LIBRARY));
 
         NORMAL_MARKER = Registry.register(Registry.BLOCK_ENTITY_TYPE, EnhancedQuarries.id("normal_marker"), create(MarkerTile::new, Blocks.NORMAL_MARKER));
     }

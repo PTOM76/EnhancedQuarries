@@ -6,6 +6,7 @@ import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
 import ml.pkom.enhancedquarries.item.fillermodule.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.FoodComponents;
 import net.minecraft.item.Item;
 import net.minecraft.util.registry.Registry;
 
@@ -24,6 +25,10 @@ public class Items {
 
     public static Item NORMAL_PUMP = new BlockItem(Blocks.NORMAL_PUMP, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
     public static Item ENHANCED_PUMP = new BlockItem(Blocks.ENHANCED_PUMP, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+
+    public static Item NORMAL_SCANNER = new BlockItem(Blocks.NORMAL_SCANNER, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    public static Item NORMAL_BUILDER = new BlockItem(Blocks.NORMAL_BUILDER, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    public static Item NORMAL_LIBRARY = new BlockItem(Blocks.NORMAL_LIBRARY, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
 
 
     public static Item NORMAL_MARKER = new BlockItem(Blocks.NORMAL_MARKER, new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
@@ -77,6 +82,14 @@ public class Items {
 
     // ----
 
+    // 設計図
+    public static Item BLUEPRINT = new Blueprint(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+    public static Item EMPTY_BLUEPRINT = new Blueprint(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP));
+
+    // ゆっくり饅頭
+    public static Item BUN = new Item(new FabricItemSettings().group(EnhancedQuarries.FILLER_PLUS_GROUP).food(FoodComponents.COOKIE));
+
+
     public static void init() {
         Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_quarry"), NORMAL_QUARRY);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_quarry"), ENHANCED_QUARRY);
@@ -91,6 +104,10 @@ public class Items {
 
         Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_pump"), NORMAL_PUMP);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_pump"), ENHANCED_PUMP);
+
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_scanner"), NORMAL_SCANNER);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_builder"), NORMAL_BUILDER);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_library"), NORMAL_LIBRARY);
 
         Registry.register(Registry.ITEM, EnhancedQuarries.id("normal_marker"), NORMAL_MARKER);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("frame"), FRAME);
@@ -123,5 +140,11 @@ public class Items {
         Registry.register(Registry.ITEM, EnhancedQuarries.id("refined_gear"), REFINED_GEAR);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_refined_gear"), ENHANCED_REFINED_GEAR);
         Registry.register(Registry.ITEM, EnhancedQuarries.id("enhanced_panel"), ENHANCED_PANEL);
+
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("empty_blueprint"), EMPTY_BLUEPRINT);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("blueprint"), BLUEPRINT);
+
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("reimu_bun"), BUN);
+        Registry.register(Registry.ITEM, EnhancedQuarries.id("marisa_bun"), BUN);
     }
 }

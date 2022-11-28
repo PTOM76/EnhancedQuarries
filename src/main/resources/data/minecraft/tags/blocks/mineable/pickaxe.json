@@ -11,6 +11,9 @@
     "enhanced_quarries:enhanced_filler",
     "enhanced_quarries:enhanced_filler_with_chest",
     "enhanced_quarries:normal_pump",
-    "enhanced_quarries:enhanced_pump"
+    "enhanced_quarries:enhanced_pump",
+    "enhanced_quarries:normal_scanner",
+    "enhanced_quarries:normal_builder",
+    "enhanced_quarries:normal_library"
   ]
 }

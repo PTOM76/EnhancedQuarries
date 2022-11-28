@@ -26,7 +26,7 @@ public class EnhancedPumpTile extends PumpTile {
     }
 
     public EnhancedPumpTile(BlockPos pos, BlockState state) {
-        this(Tiles.ENHANCED_PUMP, pos, state);
+        this(Tiles.ENHANCED_PUMP_TILE, pos, state);
     }
 
     public EnhancedPumpTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {

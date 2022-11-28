@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 public class NormalPumpTile extends PumpTile {
 
     public NormalPumpTile(BlockPos pos, BlockState state) {
-        this(Tiles.NORMAL_PUMP, pos, state);
+        this(Tiles.NORMAL_PUMP_TILE, pos, state);
     }
 
     public NormalPumpTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {

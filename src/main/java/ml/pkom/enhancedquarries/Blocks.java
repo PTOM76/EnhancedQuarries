@@ -1,9 +1,7 @@
 package ml.pkom.enhancedquarries;
 
 import ml.pkom.enhancedquarries.block.*;
-import ml.pkom.enhancedquarries.block.base.Filler;
-import ml.pkom.enhancedquarries.block.base.Pump;
-import ml.pkom.enhancedquarries.block.base.Quarry;
+import ml.pkom.enhancedquarries.block.base.*;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 
@@ -23,6 +21,10 @@ public class Blocks {
     public static Pump NORMAL_PUMP = NormalPump.getPump();
     public static Pump ENHANCED_PUMP = EnhancedPump.getPump();
 
+    public static Scanner NORMAL_SCANNER = NormalScanner.getScanner();
+    public static Builder NORMAL_BUILDER = NormalBuilder.getBuilder();
+    public static Library NORMAL_LIBRARY = NormalLibrary.getLibrary();
+
     public static Block NORMAL_MARKER = NormalMarker.getBlock();
     public static Block FRAME = Frame.getBlock();
 
@@ -40,6 +42,10 @@ public class Blocks {
 
         Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_pump"), NORMAL_PUMP);
         Registry.register(Registry.BLOCK, EnhancedQuarries.id("enhanced_pump"), ENHANCED_PUMP);
+
+        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_scanner"), NORMAL_SCANNER);
+        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_builder"), NORMAL_BUILDER);
+        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_library"), NORMAL_LIBRARY);
 
         Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_marker"), NORMAL_MARKER);
         Registry.register(Registry.BLOCK, EnhancedQuarries.id("frame"), FRAME);

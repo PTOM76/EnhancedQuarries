@@ -11,6 +11,9 @@
     "block.enhanced_quarries.fluid_optimum_quarry": "液体除去型軽量処理クァーリー",
     "block.enhanced_quarries.normal_pump": "ノーマル ポンプ",
     "block.enhanced_quarries.enhanced_pump": "強化型ポンプ",
+    "block.enhanced_quarries.normal_scanner": "スキャナー",
+    "block.enhanced_quarries.normal_builder": "ビルダー",
+    "block.enhanced_quarries.normal_library": "ライブラリ",
 
     "block.enhanced_quarries.normal_marker": "ノーマル マーカー",
     "block.enhanced_quarries.frame": "フレーム",
@@ -37,6 +40,14 @@
     "item.enhanced_quarries.filler_create_pyramid": "四角錐建設モジュール",
     "item.enhanced_quarries.filler_cut_stairs": "階段型取りモジュール",
     "item.enhanced_quarries.filler_cut_pyramid": "四角錐型取りモジュール",
+
+    "item.enhanced_quarries.redstone_hammer": "赤石ハンマー",
+
+    "item.enhanced_quarries.empty_blueprint": "製図用紙",
+    "item.enhanced_quarries.blueprint": "設計図",
+
+    "item.enhanced_quarries.reimu_bun": "ゆっくり霊夢",
+    "item.enhanced_quarries.marisa_bun": "ゆっくり魔理沙",
 
     "item.enhanced_quarries.refined_gear": "洗練されたギア",
     "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",
