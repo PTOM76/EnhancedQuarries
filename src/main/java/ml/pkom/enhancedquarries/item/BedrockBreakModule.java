@@ -4,7 +4,7 @@ import ml.pkom.enhancedquarries.block.base.Filler;
 import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import ml.pkom.enhancedquarries.tile.base.QuarryTile;
-import ml.pkom.mcpitanlib.api.text.TextUtil;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;

@@ -42,6 +42,7 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "*"
+    "minecraft": "*",
+    "mcpitanlibarch": ">1.2.2"
   }
 }

@@ -5,7 +5,7 @@ import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.screen.LibraryScreenHandler;
 import ml.pkom.enhancedquarries.tile.NormalLibraryTile;
 import ml.pkom.enhancedquarries.tile.base.LibraryTile;
-import ml.pkom.mcpitanlib.api.text.TextUtil;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;

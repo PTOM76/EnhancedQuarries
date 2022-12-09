@@ -9,7 +9,7 @@ import ml.pkom.enhancedquarries.item.fillermodule.HorizontalLayerModule;
 import ml.pkom.enhancedquarries.item.fillermodule.VerticalLayerModule;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import net.minecraft.client.gui.screen.Screen;
-import ml.pkom.mcpitanlib.api.text.TextUtil;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 
 public class Config implements ModMenuApi {
 

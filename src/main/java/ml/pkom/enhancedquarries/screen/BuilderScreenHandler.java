@@ -4,6 +4,7 @@ import ml.pkom.enhancedquarries.ScreenHandlers;
 import ml.pkom.enhancedquarries.inventory.FillerCraftingInventory;
 import ml.pkom.enhancedquarries.inventory.FillerCraftingSlot;
 import ml.pkom.enhancedquarries.inventory.FillerInventory;
+import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -12,7 +13,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
-public class BuilderScreenHandler extends ScreenHandler {
+public class BuilderScreenHandler extends SimpleScreenHandler {
     public Inventory inventory;
     public Inventory craftingInventory;
 
@@ -22,7 +23,7 @@ public class BuilderScreenHandler extends ScreenHandler {
     }
 
     public BuilderScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, Inventory craftingInventory) {
-        this(ScreenHandlers.FILLER_SCREEN_HANDLER_TYPE, syncId, playerInventory, inventory, craftingInventory);
+        this(ScreenHandlers.BUILDER_SCREEN_HANDLER_TYPE, syncId, playerInventory, inventory, craftingInventory);
     }
 
     public BuilderScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory, Inventory craftingInventory) {
@@ -59,7 +60,7 @@ public class BuilderScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity player, int invSlot) {
+    public ItemStack quickMoveOverride(PlayerEntity player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(invSlot);
         if (slot instanceof FillerCraftingSlot) {

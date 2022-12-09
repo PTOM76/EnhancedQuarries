@@ -3,6 +3,7 @@ package ml.pkom.enhancedquarries.tile.base;
 import ml.pkom.enhancedquarries.block.base.Builder;
 import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
+import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -15,7 +16,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import reborncore.api.blockentity.InventoryProvider;
 import reborncore.common.blockentity.MachineBaseBlockEntity;
@@ -171,7 +171,7 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
     public ItemStack latestGotStack = ItemStack.EMPTY;
 
     public static boolean isStorageBox(ItemStack stack) {
-        return Registry.ITEM.getId(stack.getItem()).toString().equals("storagebox:storagebox");
+        return ItemUtil.toID(stack.getItem()).toString().equals("storagebox:storagebox");
     }
 
     public ItemStack getInventoryStack() {

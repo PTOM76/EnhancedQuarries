@@ -3,7 +3,8 @@ package ml.pkom.enhancedquarries;
 import ml.pkom.enhancedquarries.block.*;
 import ml.pkom.enhancedquarries.block.base.*;
 import net.minecraft.block.Block;
-import net.minecraft.util.registry.Registry;
+
+import static ml.pkom.enhancedquarries.EnhancedQuarries.registry;
 
 public class Blocks {
 
@@ -29,25 +30,25 @@ public class Blocks {
     public static Block FRAME = Frame.getBlock();
 
     public static void init() {
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_quarry"), NORMAL_QUARRY);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("enhanced_quarry"), ENHANCED_QUARRY);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("fluid_quarry"), FLUID_QUARRY);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("optimum_quarry"), OPTIMUM_QUARRY);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("enhanced_optimum_quarry"), ENHANCED_OPTIMUM_QUARRY);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("fluid_optimum_quarry"), FLUID_OPTIMUM_QUARRY);
+        registry.registerBlock(EnhancedQuarries.id("normal_quarry"), () -> NORMAL_QUARRY);
+        registry.registerBlock(EnhancedQuarries.id("enhanced_quarry"), () -> ENHANCED_QUARRY);
+        registry.registerBlock(EnhancedQuarries.id("fluid_quarry"), () -> FLUID_QUARRY);
+        registry.registerBlock(EnhancedQuarries.id("optimum_quarry"), () -> OPTIMUM_QUARRY);
+        registry.registerBlock(EnhancedQuarries.id("enhanced_optimum_quarry"), () -> ENHANCED_OPTIMUM_QUARRY);
+        registry.registerBlock(EnhancedQuarries.id("fluid_optimum_quarry"), () -> FLUID_OPTIMUM_QUARRY);
 
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_filler"), NORMAL_FILLER);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("enhanced_filler"), ENHANCED_FILLER);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("enhanced_filler_with_chest"), ENHANCED_FILLER_WITH_CHEST);
+        registry.registerBlock(EnhancedQuarries.id("normal_filler"), () -> NORMAL_FILLER);
+        registry.registerBlock(EnhancedQuarries.id("enhanced_filler"), () -> ENHANCED_FILLER);
+        registry.registerBlock(EnhancedQuarries.id("enhanced_filler_with_chest"), () -> ENHANCED_FILLER_WITH_CHEST);
 
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_pump"), NORMAL_PUMP);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("enhanced_pump"), ENHANCED_PUMP);
+        registry.registerBlock(EnhancedQuarries.id("normal_pump"), () -> NORMAL_PUMP);
+        registry.registerBlock(EnhancedQuarries.id("enhanced_pump"), () -> ENHANCED_PUMP);
 
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_scanner"), NORMAL_SCANNER);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_builder"), NORMAL_BUILDER);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_library"), NORMAL_LIBRARY);
+        registry.registerBlock(EnhancedQuarries.id("normal_scanner"), () -> NORMAL_SCANNER);
+        registry.registerBlock(EnhancedQuarries.id("normal_builder"), () -> NORMAL_BUILDER);
+        registry.registerBlock(EnhancedQuarries.id("normal_library"), () -> NORMAL_LIBRARY);
 
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("normal_marker"), NORMAL_MARKER);
-        Registry.register(Registry.BLOCK, EnhancedQuarries.id("frame"), FRAME);
+        registry.registerBlock(EnhancedQuarries.id("normal_marker"), () -> NORMAL_MARKER);
+        registry.registerBlock(EnhancedQuarries.id("frame"), () -> FRAME);
     }
 }

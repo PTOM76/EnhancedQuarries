@@ -5,7 +5,7 @@ import ml.pkom.enhancedquarries.event.TileCreateEvent;
 import ml.pkom.enhancedquarries.screen.FillerWithChestScreenHandler;
 import ml.pkom.enhancedquarries.tile.EnhancedFillerWithChestTile;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
-import ml.pkom.mcpitanlib.api.text.TextUtil;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;

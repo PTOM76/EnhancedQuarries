@@ -1,6 +1,6 @@
 package ml.pkom.enhancedquarries.tile.base;
 
-import ml.pkom.enhancedquarries.block.base.Scanner;
+import ml.pkom.enhancedquarries.block.base.Library;
 import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import net.minecraft.block.Block;
@@ -137,12 +137,12 @@ public class LibraryTile extends PowerAcceptorBlockEntity implements InventoryPr
         }
         // ----
         //BlockState state = getWorld().getBlockState(getPos());
-        Scanner scanner = (Scanner) state.getBlock();
+        Library library = (Library) state.getBlock();
 
         // レッドストーン受信で無効
         if (getWorld().isReceivingRedstonePower(getPos())) {
             if (isActive()) {
-                scanner.setActive(false, getWorld(), getPos());
+                library.setActive(false, getWorld(), getPos());
             }
             return;
         }
@@ -157,10 +157,10 @@ public class LibraryTile extends PowerAcceptorBlockEntity implements InventoryPr
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive()) {
-                scanner.setActive(true, getWorld(), getPos());
+                library.setActive(true, getWorld(), getPos());
             }
         } else if (isActive()) {
-            scanner.setActive(false, getWorld(), getPos());
+            library.setActive(false, getWorld(), getPos());
         }
     }
 

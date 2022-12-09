@@ -7,6 +7,7 @@ import ml.pkom.enhancedquarries.event.FillerProcessEvent;
 import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
 import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
+import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventories;
@@ -19,7 +20,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import reborncore.api.blockentity.InventoryProvider;
 import reborncore.common.blockentity.MachineBaseBlockEntity;
@@ -209,7 +209,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
     public ItemStack latestGotStack = ItemStack.EMPTY;
 
     public static boolean isStorageBox(ItemStack stack) {
-        return Registry.ITEM.getId(stack.getItem()).toString().equals("storagebox:storagebox");
+        return ItemUtil.toID(stack.getItem()).toString().equals("storagebox:storagebox");
     }
 
     public ItemStack getInventoryStack() {

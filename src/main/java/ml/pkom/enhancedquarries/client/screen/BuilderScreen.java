@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import ml.pkom.enhancedquarries.EnhancedQuarries;
 import ml.pkom.enhancedquarries.screen.BuilderScreenHandler;
 import ml.pkom.enhancedquarries.screen.FillerScreenHandler;
-import ml.pkom.mcpitanlib.api.text.TextUtil;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -19,7 +19,7 @@ public class BuilderScreen extends HandledScreen<BuilderScreenHandler> {
         super(handler, inventory, title);
         playerInventoryTitleY = 143;
         this.backgroundWidth = 176;
-        this.backgroundHeight = 241;
+        this.backgroundHeight = 235;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class BuilderScreen extends HandledScreen<BuilderScreenHandler> {
         int x = (this.width - this.backgroundWidth) / 2;
         int y = (this.height - this.backgroundHeight) / 2;
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI);
         drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
@@ -38,8 +38,8 @@ public class BuilderScreen extends HandledScreen<BuilderScreenHandler> {
         super.drawForeground(matrices, mouseX, mouseY);
         x = (this.width - this.backgroundWidth) / 2;
         y = (this.height - this.backgroundHeight) / 2;
-        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.filler.title"), 45, 7, 4210752);
-        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.filler.title2"), 8, 75, 4210752);
+        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.builder.title"), 45, 7, 4210752);
+        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.builder.title2"), 8, 75, 4210752);
     }
 
     @Override
