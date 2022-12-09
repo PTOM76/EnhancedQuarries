@@ -27,9 +27,9 @@ public class Items {
     public static Item NORMAL_PUMP = new BlockItem(Blocks.NORMAL_PUMP, new ExtendSettings().addGroup(EnhancedQuarries.FILLER_PLUS_GROUP, EnhancedQuarries.id("normal_pump")));
     public static Item ENHANCED_PUMP = new BlockItem(Blocks.ENHANCED_PUMP, new ExtendSettings().addGroup(EnhancedQuarries.FILLER_PLUS_GROUP, EnhancedQuarries.id("enhanced_pump")));
 
-    public static Item NORMAL_SCANNER = new BlockItem(Blocks.NORMAL_SCANNER, new ExtendSettings().addGroup(EnhancedQuarries.FILLER_PLUS_GROUP, EnhancedQuarries.id("normal_scanner")));
-    public static Item NORMAL_BUILDER = new BlockItem(Blocks.NORMAL_BUILDER, new ExtendSettings().addGroup(EnhancedQuarries.FILLER_PLUS_GROUP, EnhancedQuarries.id("normal_builder")));
-    public static Item NORMAL_LIBRARY = new BlockItem(Blocks.NORMAL_LIBRARY, new ExtendSettings().addGroup(EnhancedQuarries.FILLER_PLUS_GROUP, EnhancedQuarries.id("normal_library")));
+    public static Item NORMAL_SCANNER = new BlockItem(Blocks.NORMAL_SCANNER, new ExtendSettings()); //.addGroup(EnhancedQuarries.FILLER_PLUS_GROUP, EnhancedQuarries.id("normal_scanner")));
+    public static Item NORMAL_BUILDER = new BlockItem(Blocks.NORMAL_BUILDER, new ExtendSettings()); //.addGroup(EnhancedQuarries.FILLER_PLUS_GROUP, EnhancedQuarries.id("normal_builder")));
+    public static Item NORMAL_LIBRARY = new BlockItem(Blocks.NORMAL_LIBRARY, new ExtendSettings()); //.addGroup(EnhancedQuarries.FILLER_PLUS_GROUP, EnhancedQuarries.id("normal_library")));
 
 
     public static Item NORMAL_MARKER = new BlockItem(Blocks.NORMAL_MARKER, new ExtendSettings().addGroup(EnhancedQuarries.FILLER_PLUS_GROUP, EnhancedQuarries.id("normal_marker")));
