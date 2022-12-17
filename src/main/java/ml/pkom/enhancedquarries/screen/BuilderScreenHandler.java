@@ -1,81 +1,69 @@
 package ml.pkom.enhancedquarries.screen;
 
 import ml.pkom.enhancedquarries.ScreenHandlers;
-import ml.pkom.enhancedquarries.inventory.FillerCraftingInventory;
-import ml.pkom.enhancedquarries.inventory.FillerCraftingSlot;
-import ml.pkom.enhancedquarries.inventory.FillerInventory;
+import ml.pkom.enhancedquarries.inventory.BuilderInventory;
+import ml.pkom.enhancedquarries.inventory.DisabledInventory;
+import ml.pkom.enhancedquarries.inventory.slot.BuilderSlot;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
 public class BuilderScreenHandler extends SimpleScreenHandler {
-    public Inventory inventory;
-    public Inventory craftingInventory;
+    public Inventory builderInventory; // index0=Blueprint
+    public Inventory needInventory;
 
     @Deprecated
     public BuilderScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new FillerInventory(), new FillerCraftingInventory());
+        this(syncId, playerInventory, new BuilderInventory(), new DisabledInventory(27));
     }
 
-    public BuilderScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, Inventory craftingInventory) {
-        this(ScreenHandlers.BUILDER_SCREEN_HANDLER_TYPE, syncId, playerInventory, inventory, craftingInventory);
+    public BuilderScreenHandler(int syncId, PlayerInventory playerInventory, Inventory builderInventory, Inventory needInventory) {
+        this(ScreenHandlers.BUILDER_SCREEN_HANDLER_TYPE, syncId, playerInventory, builderInventory, needInventory);
     }
 
-    public BuilderScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory, Inventory craftingInventory) {
+    public BuilderScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory builderInventory, Inventory needInventory) {
         super(type, syncId);
-        this.inventory = inventory;
-        this.craftingInventory = craftingInventory;
-        int m, l;
-        int i = 0;
-        for (m = 0; m < 3; ++m) {
-            for (l = 0; l < 3; ++l) {
-                addSlot(new FillerCraftingSlot(craftingInventory, i, 30 + l * 18, 17 + m * 18));
-                i++;
-            }
-        }
-        addSlot(new FillerCraftingSlot(craftingInventory, 9, 124, 35, true));
-        for (m = 0; m < 3; ++m) {
-            for (l = 0; l < 9; ++l) {
-                addSlot(new Slot(inventory, l + m * 9, 8 + l * 18, 85 + m * 18));
-            }
-        }
-        for (m = 0; m < 3; ++m) {
-            for (l = 0; l < 9; ++l) {
-                addSlot(new Slot(playerInventory, l + m * 9 + 9, 8 + l * 18, 153 + m * 18));
-            }
-        }
-        for (m = 0; m < 9; ++m) {
-            addSlot(new Slot(playerInventory, m, 8 + m * 18, 211));
-        }
+        this.builderInventory = builderInventory;
+        this.needInventory = needInventory;
+
+        addPlayerMainInventorySlots(playerInventory, 8, 153);
+        addPlayerHotbarSlots(playerInventory, 8, 211);
+        addSlot(new BuilderSlot(builderInventory, 0, 80, 34));
+        addSlots(builderInventory, 1, 8, 85, 18, 9, 3);
+        addSlots(needInventory, 0, 180, 13, 18, 3, 9);
     }
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return inventory.canPlayerUse(player);
+        return true;
     }
 
     @Override
-    public ItemStack quickMoveOverride(PlayerEntity player, int invSlot) {
+    public ItemStack quickMoveOverride(PlayerEntity player, int index) {
         ItemStack newStack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(invSlot);
-        if (slot instanceof FillerCraftingSlot) {
-            if (invSlot != 9)
-                return ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        if (slot instanceof BuilderSlot) {
+            //if (invSlot != 9)
+            //    return ItemStack.EMPTY;
+        }
+        if (slot.inventory instanceof DisabledInventory) {
+            return ItemStack.EMPTY;
         }
         if (slot != null && slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
-            if (invSlot < inventory.size() + craftingInventory.size()) {
-                if (!this.insertItem(originalStack, inventory.size() + craftingInventory.size(), this.slots.size(), true)) {
+            if (index < 36) {
+                if (!this.insertItem(originalStack, 36,  36 + builderInventory.size() - 1, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, craftingInventory.size(),craftingInventory.size() + inventory.size(), false)) {
-                return ItemStack.EMPTY;
+            } else {
+                if (!this.insertItem(originalStack, 0, 35, false)) {
+                    return ItemStack.EMPTY;
+                }
             }
 
             if (originalStack.isEmpty()) {
@@ -85,6 +73,6 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
             }
         }
 
-        return newStack;
+        return ItemStack.EMPTY;
     }
 }

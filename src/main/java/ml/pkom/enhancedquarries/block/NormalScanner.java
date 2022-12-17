@@ -57,6 +57,6 @@ public class NormalScanner extends Scanner {
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
         ScannerTile scannerTile = (ScannerTile) world.getBlockEntity(pos);
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new ScannerScreenHandler(i, playerInventory, scannerTile.getInventory(), scannerTile.getCraftingInventory()), TextUtil.literal(""));
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new ScannerScreenHandler(i, playerInventory, scannerTile.getInventory()), TextUtil.literal(""));
     }
 }

@@ -35,10 +35,12 @@ dependencies {
 	modImplementation 'RebornCore:RebornCore-1.19:5.5.0'
 	modImplementation 'TechReborn:TechReborn-1.19:5.5.0'
 
+	modImplementation "ml.pkom:mcpitanlibarch-fabric${rootProject.mcpitanlib_version}"
+
 	// Mod Menu
 	// 1.16 => 1.16.19
 	// 1.17 => 2.0.12
-	modImplementation "com.terraformersmc:modmenu:5.0.1"
+	modImplementation "com.terraformersmc:modmenu:5.0.2"
 	// Cloth Config API
 	// 1.16 => 4.11.26
 	// 1.17 => 5.0.38
@@ -58,9 +60,6 @@ dependencies {
 
 	//modImplementation 'com.github.PTOM76:MCPitanLib:1.19-SNAPSHOT'
 	//include 'com.github.PTOM76:MCPitanLib:1.19-SNAPSHOT'
-
-	modImplementation "ml.pkom:mcpitanlibarch-fabric${rootProject.mcpitanlib_version}"
-
 }
 
 processResources {

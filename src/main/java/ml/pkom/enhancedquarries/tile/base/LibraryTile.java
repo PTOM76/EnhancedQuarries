@@ -1,16 +1,11 @@
 package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.block.base.Library;
-import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -23,20 +18,10 @@ import reborncore.common.util.RebornInventory;
 public class LibraryTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
 
     // Container
-    public RebornInventory<LibraryTile> inventory = new RebornInventory<>(27, "LibraryTile", 64, this);
-
-    //public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
-    public DefaultedList<ItemStack> craftingInvItems = DefaultedList.ofSize(10, ItemStack.EMPTY);
-
-    //public ImplementedInventory inventory = () -> invItems;
-    public ImplementedInventory craftingInventory = () -> craftingInvItems;
+    public RebornInventory<LibraryTile> inventory = new RebornInventory<>(4, "LibraryTile", 64, this);
 
     public RebornInventory<LibraryTile> getInventory() {
         return inventory;
-    }
-
-    public Inventory getCraftingInventory() {
-        return craftingInventory;
     }
 
     // TR
@@ -71,9 +56,6 @@ public class LibraryTile extends PowerAcceptorBlockEntity implements InventoryPr
     // NBT
 
     public void writeNbt(NbtCompound tag) {
-        NbtCompound invTag = new NbtCompound();
-        Inventories.writeNbt(invTag, craftingInvItems);
-        tag.put("craftingInv", invTag);
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
@@ -90,8 +72,6 @@ public class LibraryTile extends PowerAcceptorBlockEntity implements InventoryPr
 
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
-        NbtCompound invTag = tag.getCompound("craftingInv");
-        Inventories.readNbt(invTag, craftingInvItems);
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("rangePos1X")

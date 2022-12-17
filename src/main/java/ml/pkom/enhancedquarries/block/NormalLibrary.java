@@ -57,6 +57,6 @@ public class NormalLibrary extends Library {
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
         LibraryTile libraryTile = (LibraryTile) world.getBlockEntity(pos);
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new LibraryScreenHandler(i, playerInventory, libraryTile.getInventory(), libraryTile.getCraftingInventory()), TextUtil.literal(""));
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new LibraryScreenHandler(i, playerInventory, libraryTile.getInventory()), TextUtil.literal(""));
     }
 }

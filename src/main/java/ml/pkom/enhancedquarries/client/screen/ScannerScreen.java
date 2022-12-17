@@ -17,7 +17,7 @@ public class ScannerScreen extends HandledScreen<ScannerScreenHandler> {
 
     public ScannerScreen(ScannerScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        playerInventoryTitleY = 143;
+        playerInventoryTitleY = 72;
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
     }
@@ -38,8 +38,7 @@ public class ScannerScreen extends HandledScreen<ScannerScreenHandler> {
         super.drawForeground(matrices, mouseX, mouseY);
         x = (this.width - this.backgroundWidth) / 2;
         y = (this.height - this.backgroundHeight) / 2;
-        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.scanner.title"), 45, 7, 4210752);
-        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.scanner.title2"), 8, 75, 4210752);
+        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.scanner.title"), backgroundWidth / 2 - textRenderer.getWidth(TextUtil.translatable("screen.enhanced_quarries.scanner.title")) / 2, 7, 4210752);
     }
 
     @Override

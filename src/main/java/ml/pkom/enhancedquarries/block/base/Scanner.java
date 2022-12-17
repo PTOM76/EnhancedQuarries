@@ -68,8 +68,6 @@ public abstract class Scanner extends BlockMachineBase implements BlockEntityPro
             if (blockEntity instanceof ScannerTile) {
                 ScannerTile scanner = (ScannerTile)blockEntity;
                 ItemScatterer.spawn(world, pos, scanner.getInventory());
-                scanner.getCraftingInventory().setStack(9, ItemStack.EMPTY);
-                ItemScatterer.spawn(world, pos, scanner.getCraftingInventory());
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }
@@ -115,9 +113,8 @@ public abstract class Scanner extends BlockMachineBase implements BlockEntityPro
                         worldIn.breakBlock(markerSP.getBlockPos(), true);
                     }
                     if ((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null) || markerList.size() <= 2 ) return;
-                    // ミスった仕様上 min min max、max max minという関数になってしまった。
-                    scannerTile.setPos1(new BlockPos(minPosX, minPosY, maxPosZ));
-                    scannerTile.setPos2(new BlockPos(maxPosX, maxPosY, minPosZ));
+                    scannerTile.setPos1(new BlockPos(minPosX, minPosY, minPosZ));
+                    scannerTile.setPos2(new BlockPos(maxPosX, maxPosY, maxPosZ));
                 }
             }
         }

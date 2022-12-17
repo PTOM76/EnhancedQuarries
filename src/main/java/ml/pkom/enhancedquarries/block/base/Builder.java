@@ -1,14 +1,13 @@
 package ml.pkom.enhancedquarries.block.base;
 
 import ml.pkom.enhancedquarries.event.TileCreateEvent;
-import ml.pkom.enhancedquarries.tile.base.ScannerTile;
+import ml.pkom.enhancedquarries.tile.base.BuilderTile;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -58,11 +57,9 @@ public abstract class Builder extends BlockMachineBase implements BlockEntityPro
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof ScannerTile) {
-                ScannerTile scanner = (ScannerTile)blockEntity;
-                ItemScatterer.spawn(world, pos, scanner.getInventory());
-                scanner.getCraftingInventory().setStack(9, ItemStack.EMPTY);
-                ItemScatterer.spawn(world, pos, scanner.getCraftingInventory());
+            if (blockEntity instanceof BuilderTile) {
+                BuilderTile builder = (BuilderTile)blockEntity;
+                ItemScatterer.spawn(world, pos, builder.getInventory());
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }

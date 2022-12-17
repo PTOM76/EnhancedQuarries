@@ -2,14 +2,13 @@ package ml.pkom.enhancedquarries.screen;
 
 import ml.pkom.enhancedquarries.ScreenHandlers;
 import ml.pkom.enhancedquarries.inventory.FillerCraftingInventory;
-import ml.pkom.enhancedquarries.inventory.FillerCraftingSlot;
+import ml.pkom.enhancedquarries.inventory.slot.FillerCraftingSlot;
 import ml.pkom.enhancedquarries.inventory.FillerInventory;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 

@@ -1,4 +1,4 @@
-package ml.pkom.enhancedquarries.inventory;
+package ml.pkom.enhancedquarries.inventory.slot;
 
 import ml.pkom.enhancedquarries.EnhancedQuarries;
 import ml.pkom.enhancedquarries.FillerCraftingPattern;

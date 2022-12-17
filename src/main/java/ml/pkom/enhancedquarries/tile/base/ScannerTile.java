@@ -1,16 +1,18 @@
 package ml.pkom.enhancedquarries.tile.base;
 
+import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.base.Scanner;
-import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
+import ml.pkom.enhancedquarries.util.BlueprintUtil;
+import ml.pkom.mcpitanlibarch.api.util.BlockUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -20,24 +22,19 @@ import reborncore.common.blockentity.SlotConfiguration;
 import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
 import reborncore.common.util.RebornInventory;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
 
     // Container
     public RebornInventory<ScannerTile> inventory = new RebornInventory<>(27, "ScannerTile", 64, this);
 
-    //public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
-    public DefaultedList<ItemStack> craftingInvItems = DefaultedList.ofSize(10, ItemStack.EMPTY);
-
-    //public ImplementedInventory inventory = () -> invItems;
-    public ImplementedInventory craftingInventory = () -> craftingInvItems;
-
     public RebornInventory<ScannerTile> getInventory() {
         return inventory;
     }
 
-    public Inventory getCraftingInventory() {
-        return craftingInventory;
-    }
 
     // TR
     // デフォルトコスト
@@ -71,9 +68,6 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
     // NBT
 
     public void writeNbt(NbtCompound tag) {
-        NbtCompound invTag = new NbtCompound();
-        Inventories.writeNbt(invTag, craftingInvItems);
-        tag.put("craftingInv", invTag);
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
@@ -90,8 +84,6 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
 
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
-        NbtCompound invTag = tag.getCompound("craftingInv");
-        Inventories.readNbt(invTag, craftingInvItems);
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("rangePos1X")
@@ -148,11 +140,20 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
         }
         if (getEnergy() > getEuPerTick(getEnergyCost())) {
             // ここに処理を記入
-            if (coolTime <= 0) {
+            if ((
+                            inventory.getStack(0).getItem().equals(Items.EMPTY_BLUEPRINT)
+                                    || inventory.getStack(0).getItem().equals(Items.BLUEPRINT)
+                    ) && coolTime <= 0 && inventory.getStack(1).isEmpty()) {
                 coolTime = getSettingCoolTime();
-                if (tryScanning()) {
+                Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
+                if (tryScanning(blocks)) {
+                    ItemStack stack = new ItemStack(Items.BLUEPRINT, inventory.getStack(0).getCount());
+                    BlueprintUtil.writeNbt(stack, blocks);
+                    inventory.setStack(1, stack);
+                    inventory.setStack(0, ItemStack.EMPTY);
                     useEnergy(getEnergyCost());
                 }
+
             }
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
@@ -164,7 +165,9 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
         }
     }
 
-    public boolean tryScanning() {
+    // blocks...スキャナーを基準とした相対的な座標
+    public boolean tryScanning(Map<BlockPos, BlockState> blocks) {
+        System.out.println("scanning");
         if (getWorld() == null || getWorld().isClient()) return false;
         if (pos1 == null || pos2 == null)
             return false;
@@ -173,13 +176,17 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
         int procZ;
         for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
-                for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
+                for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
-                    Block procBlock = getWorld().getBlockState(procPos).getBlock();
+                    BlockState procState = getWorld().getBlockState(procPos);
+
+                    if (procState.getBlock() == Blocks.AIR) continue;
+
+                    blocks.put(new BlockPos(procX - pos1.getX(), procY - pos1.getY(), procZ - pos1.getZ()), procState);
                 }
             }
         }
-        return false;
+        return true;
     }
 
     // クールダウンのエネルギー量による追加ボーナス

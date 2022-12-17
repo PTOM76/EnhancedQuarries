@@ -17,7 +17,7 @@ public class LibraryScreen extends HandledScreen<LibraryScreenHandler> {
 
     public LibraryScreen(LibraryScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        playerInventoryTitleY = 143;
+        playerInventoryTitleY = 72;
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
     }
@@ -38,8 +38,7 @@ public class LibraryScreen extends HandledScreen<LibraryScreenHandler> {
         super.drawForeground(matrices, mouseX, mouseY);
         x = (this.width - this.backgroundWidth) / 2;
         y = (this.height - this.backgroundHeight) / 2;
-        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.library.title"), 45, 7, 4210752);
-        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.library.title2"), 8, 75, 4210752);
+        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.library.title"), backgroundWidth / 2 - textRenderer.getWidth(TextUtil.translatable("screen.enhanced_quarries.library.title")) / 2, 6, 4210752);
     }
 
     @Override

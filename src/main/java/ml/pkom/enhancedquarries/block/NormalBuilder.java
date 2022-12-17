@@ -57,6 +57,6 @@ public class NormalBuilder extends Builder {
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
         BuilderTile builderTile = (BuilderTile) world.getBlockEntity(pos);
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new BuilderScreenHandler(i, playerInventory, builderTile.getInventory(), builderTile.getCraftingInventory()), TextUtil.literal(""));
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new BuilderScreenHandler(i, playerInventory,  builderTile.getInventory(), builderTile.needInventory), TextUtil.literal(""));
     }
 }

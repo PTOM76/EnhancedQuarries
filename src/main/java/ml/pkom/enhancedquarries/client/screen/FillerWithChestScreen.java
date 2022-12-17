@@ -1,17 +1,15 @@
 package ml.pkom.enhancedquarries.client.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import ml.pkom.enhancedquarries.EnhancedQuarries;
 import ml.pkom.enhancedquarries.screen.FillerWithChestScreenHandler;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.util.Identifier;
 
 public class FillerWithChestScreen extends HandledScreen<FillerWithChestScreenHandler> {

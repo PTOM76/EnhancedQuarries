@@ -63,6 +63,10 @@
 
     "screen.enhanced_quarries.filler.title": "Filler",
     "screen.enhanced_quarries.filler.title2": "Filling Resources",
+    "screen.enhanced_quarries.scanner.title": "Scanner",
+    "screen.enhanced_quarries.builder.title": "Builder",
+    "screen.enhanced_quarries.builder.title2": "Building Resources",
+    "screen.enhanced_quarries.library.title": "Library",
 
     "title.enhanced_quarries.config": "Enhanced Quarries' Settings",
     "category.enhanced_quarries.general": "General",

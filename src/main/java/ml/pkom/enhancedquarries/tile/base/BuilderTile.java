@@ -1,19 +1,24 @@
 package ml.pkom.enhancedquarries.tile.base;
 
+import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.base.Builder;
-import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
+import ml.pkom.enhancedquarries.inventory.DisabledInventory;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
+import ml.pkom.enhancedquarries.util.BlueprintUtil;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
+import net.minecraft.block.enums.StairShape;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -23,25 +28,21 @@ import reborncore.common.blockentity.SlotConfiguration;
 import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
 import reborncore.common.util.RebornInventory;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
 
     // Container
-    public RebornInventory<BuilderTile> inventory = new RebornInventory<>(27, "BuilderTile", 64, this);
-
-    //public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
-    public DefaultedList<ItemStack> craftingInvItems = DefaultedList.ofSize(10, ItemStack.EMPTY);
-
-    //public ImplementedInventory inventory = () -> invItems;
-    public ImplementedInventory craftingInventory = () -> craftingInvItems;
+    public RebornInventory<BuilderTile> inventory = new RebornInventory<>(28, "BuilderTile", 64, this);
 
     public RebornInventory<BuilderTile> getInventory() {
         return inventory;
     }
 
-    public Inventory getCraftingInventory() {
-        return craftingInventory;
-    }
-
+    public Inventory needInventory = new DisabledInventory(27);
 
     // TR
     // デフォルトコスト
@@ -75,9 +76,6 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
     // NBT
 
     public void writeNbt(NbtCompound tag) {
-        NbtCompound invTag = new NbtCompound();
-        Inventories.writeNbt(invTag, craftingInvItems);
-        tag.put("craftingInv", invTag);
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
@@ -94,8 +92,6 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
 
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
-        NbtCompound invTag = tag.getCompound("craftingInv");
-        Inventories.readNbt(invTag, craftingInvItems);
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("rangePos1X")
@@ -132,6 +128,8 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
 
     public double coolTime = getSettingCoolTime();
 
+    public Map<BlockPos, BlockState> blueprintMap = new LinkedHashMap<>();
+
     public void tick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
         // 1.--
         super.tick(world, pos, state, blockEntity);
@@ -150,6 +148,44 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
             }
             return;
         }
+        if (inventory.isEmpty()) return;
+        ItemStack blueprint = inventory.getStack(0);
+
+        if (blueprint.hasNbt() && blueprint.getItem() == Items.BLUEPRINT) {
+            if (blueprintMap.isEmpty()) {
+                blueprintMap = BlueprintUtil.readNBt(blueprint, getFacing());
+                pos1 = pos.add(BlueprintUtil.getMinPos(blueprintMap));
+                pos2 = pos.add(BlueprintUtil.getMaxPos(blueprintMap));
+
+                // 必要なアイテム数
+                List<ItemStack> needStacks = new ArrayList<>();
+                for (BlockState blockState : blueprintMap.values()) {
+                    if (blockState.isAir()) continue;
+                    Item item = blockState.getBlock().asItem();
+
+                    boolean b = false;
+                    for (ItemStack stack : needStacks) {
+                        if (stack.getItem() != item) continue;
+                        stack.increment(1);
+                        b = true;
+                    }
+                    if (b) continue;
+                    needStacks.add(new ItemStack(item, 1));
+                }
+                int i = 0;
+                for (ItemStack stack : needStacks) {
+                    if (stack.isEmpty()) continue;
+                    needInventory.setStack(i, stack);
+                    i++;
+                    if (i == needInventory.size()) break;
+                }
+            }
+        } else {
+            pos1 = pos2 = null;
+            blueprintMap = new LinkedHashMap<>();
+            return;
+        }
+        if (blueprintMap.isEmpty()) return;
         if (getEnergy() > getEuPerTick(getEnergyCost())) {
             // ここに処理を記入
             if (coolTime <= 0) {
@@ -174,17 +210,18 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
         return ItemUtil.toID(stack.getItem()).toString().equals("storagebox:storagebox");
     }
 
-    public ItemStack getInventoryStack() {
+    public ItemStack getInventoryStack(Block block) {
         for (ItemStack stack : getInventory().getStacks()) {
-            latestGotStack = stack;
             if (stack.isEmpty()) continue;
-            if (stack.getItem() instanceof BlockItem) return stack;
+
+            latestGotStack = stack;
+            if (stack.getItem() instanceof BlockItem && stack.getItem() == block.asItem()) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
                 NbtCompound tag = stack.getNbt();
                 if (tag.contains("StorageItemData")) {
                     ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("StorageItemData"));
-                    if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
+                    if (itemInBox.getItem() instanceof BlockItem && itemInBox.getItem() == block.asItem()) return itemInBox;
                 }
             }
             // ---- StorageBox
@@ -192,9 +229,12 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
         return ItemStack.EMPTY;
     }
 
-    public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
-        if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
-            getWorld().playSound(null, blockPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+    public boolean tryPlacing(BlockPos blockPos, BlockState state) {
+        if (getInventoryStack(state.getBlock()).isEmpty()) return false;
+
+        if (getWorld().setBlockState(blockPos, state)) {
+            state.getBlock().onPlaced(getWorld(), blockPos, state, null, latestGotStack);
+            getWorld().playSound(null, blockPos, state.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
                 NbtCompound tag = latestGotStack.getNbt();
                 if (tag.contains("StorageSize")) {
@@ -209,15 +249,11 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
                 }
                 return true;
             }
-            latestGotStack.setCount(latestGotStack.getCount() - 1);
+            latestGotStack.decrement(1);
             return true;
         }
         return false;
 
-    }
-
-    public boolean tryBreaking(BlockPos procPos) {
-        return getWorld().breakBlock(procPos, true);
     }
 
     public boolean tryBuilding() {
@@ -229,9 +265,21 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
         int procZ;
         for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
-                for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
+                for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
+
+                    BlockState buildingState = blueprintMap.get(procPos.add(-pos.getX(), -pos.getY(), -pos.getZ()));
+                    if (buildingState == null) continue;
+                    if (buildingState.getBlock() == Blocks.AIR || procBlock == buildingState.getBlock()) continue;
+                    if (procBlock != Blocks.AIR) continue;
+
+                    if (procBlock.asItem() == Items.NORMAL_BUILDER) {
+                        continue;
+                    }
+                    if (tryPlacing(procPos, buildingState)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -280,7 +328,7 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
 
     // マーカーによる範囲指定を許可するか？
     public boolean canSetPosByMarker() {
-        return true;
+        return false;
     }
 
     private BlockPos pos1 = null;
