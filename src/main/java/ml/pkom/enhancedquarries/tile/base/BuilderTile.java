@@ -148,7 +148,6 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
             }
             return;
         }
-        if (inventory.isEmpty()) return;
         ItemStack blueprint = inventory.getStack(0);
 
         if (blueprint.hasNbt() && blueprint.getItem() == Items.BLUEPRINT) {
@@ -183,8 +182,13 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
         } else {
             pos1 = pos2 = null;
             blueprintMap = new LinkedHashMap<>();
+            for (int i = 0; i < needInventory.size(); i++) {
+                needInventory.setStack(i, ItemStack.EMPTY);
+            }
             return;
         }
+        if (inventory.isEmpty()) return;
+
         if (blueprintMap.isEmpty()) return;
         if (getEnergy() > getEuPerTick(getEnergyCost())) {
             // ここに処理を記入

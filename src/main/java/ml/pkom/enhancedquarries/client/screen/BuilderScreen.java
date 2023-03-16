@@ -38,7 +38,7 @@ public class BuilderScreen extends HandledScreen<BuilderScreenHandler> {
         super.drawForeground(matrices, mouseX, mouseY);
         x = (this.width - this.backgroundWidth) / 2;
         y = (this.height - this.backgroundHeight) / 2;
-        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.builder.title"), backgroundWidth / 2 - textRenderer.getWidth(TextUtil.translatable("screen.enhanced_quarries.builder.title")) / 2, 7, 4210752);
+        this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.builder.title"), (backgroundWidth - 62) / 2 - textRenderer.getWidth(TextUtil.translatable("screen.enhanced_quarries.builder.title")) / 2, 7, 4210752);
         this.textRenderer.draw(matrices, TextUtil.translatable("screen.enhanced_quarries.builder.title2"), 8, 75, 4210752);
     }
 

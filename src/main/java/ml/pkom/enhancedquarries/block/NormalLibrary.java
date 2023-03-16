@@ -1,32 +1,28 @@
 package ml.pkom.enhancedquarries.block;
 
 import ml.pkom.enhancedquarries.block.base.Library;
-import ml.pkom.enhancedquarries.event.TileCreateEvent;
-import ml.pkom.enhancedquarries.screen.LibraryScreenHandler;
 import ml.pkom.enhancedquarries.tile.NormalLibraryTile;
 import ml.pkom.enhancedquarries.tile.base.LibraryTile;
-import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 public class NormalLibrary extends Library {
 
+    public static DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+
     public NormalLibrary() {
         super();
-    }
-
-    @Override
-    public BlockEntity createBlockEntity(TileCreateEvent event) {
-        return new NormalLibraryTile(event);
+        getStateManager().getDefaultState().with(FACING, Direction.NORTH);
     }
 
     // instance
@@ -42,21 +38,33 @@ public class NormalLibrary extends Library {
     // ----
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        if (world.isClient())
+    public ActionResult onRightClick(BlockUseEvent e) {
+        if (e.world.isClient())
             return ActionResult.SUCCESS;
-        NamedScreenHandlerFactory namedScreenHandlerFactory = createScreenHandlerFactory(state, world, pos);
-        if (namedScreenHandlerFactory != null) {
-            player.openHandledScreen(namedScreenHandlerFactory);
+        BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
+        if (blockEntity instanceof LibraryTile) {
+            LibraryTile tile = (LibraryTile) blockEntity;
+            e.player.openGuiScreen(tile);
+            return ActionResult.CONSUME;
         }
 
         return ActionResult.CONSUME;
     }
 
-    @Nullable
     @Override
-    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        LibraryTile libraryTile = (LibraryTile) world.getBlockEntity(pos);
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new LibraryScreenHandler(i, playerInventory, libraryTile.getInventory()), TextUtil.literal(""));
+    public @Nullable BlockEntity createBlockEntity(TileCreateEvent event) {
+        return new NormalLibraryTile(event);
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+        super.appendProperties(builder);
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        if (ctx.getPlayer() == null) super.getPlacementState(ctx);
+        return getDefaultState().with(FACING, ctx.getPlayer().getHorizontalFacing().getOpposite());
     }
 }

@@ -1,5 +1,6 @@
 package ml.pkom.enhancedquarries.util;
 
+import ml.pkom.easyapi.config.JsonConfig;
 import ml.pkom.mcpitanlibarch.api.util.BlockUtil;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
@@ -16,8 +17,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.zip.Deflater;
 
 public class BlueprintUtil {
 
@@ -141,7 +144,6 @@ public class BlueprintUtil {
     }
 
     public static Map<BlockPos, BlockState> readData(NbtCompound nbt, Direction direction) {
-        System.out.println(direction.getName());
         Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
 
         NbtList nbtList = nbt.getList("blocks", NbtType.COMPOUND);
@@ -288,6 +290,42 @@ public class BlueprintUtil {
         if (name.equalsIgnoreCase("west")) return Direction.WEST;
 
         return Direction.NORTH;
+    }
+
+    // WEST基準
+    public static boolean save(ItemStack stack, String name) {
+        JsonConfig config = new JsonConfig();
+
+        NbtCompound nbt = stack.getSubNbt("blueprint");
+
+        if (nbt == null) return false;
+        if (!nbt.contains("blocks")) return false;
+
+        NbtList nbtList = nbt.getList("blocks", NbtType.COMPOUND);
+        for (NbtElement element : nbtList) {
+            if (element instanceof NbtCompound) {
+                NbtCompound blockNbt = (NbtCompound) element;
+                NbtCompound posNbt = blockNbt.getCompound("pos");
+
+                Map<String, Object> data = new LinkedHashMap<>();
+
+                for (String key : blockNbt.getKeys()) {
+                    data.put(key, blockNbt.get(key));
+                }
+
+                config.set(posNbt.getInt("x") + "," + posNbt.getInt("y") + "," + posNbt.getInt("z"), data);
+            }
+        }
+
+        String json = config.toJson(false);
+
+
+
+        return true;
+    }
+
+    public static boolean load(ItemStack blueprint) {
+        return true;
     }
 
 }

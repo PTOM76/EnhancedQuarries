@@ -1,19 +1,28 @@
 package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
-import ml.pkom.enhancedquarries.event.TileCreateEvent;
-import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import ml.pkom.enhancedquarries.tile.base.LibraryTile;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 
 public class NormalLibraryTile extends LibraryTile {
 
     public NormalLibraryTile(BlockPos pos, BlockState state) {
-        super(Tiles.NORMAL_LIBRARY_TILE, pos, state);
+        this(Tiles.NORMAL_LIBRARY_TILE, new TileCreateEvent(pos, state));
     }
 
-    public NormalLibraryTile(TileCreateEvent event) {
-        this(event.getBlockPos(), event.getBlockState());
+    public NormalLibraryTile(BlockView world) {
+        this(Tiles.NORMAL_LIBRARY_TILE, new TileCreateEvent(world));
+    }
+
+    public NormalLibraryTile(ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent e) {
+        this(Tiles.NORMAL_LIBRARY_TILE, e);
+    }
+
+    public NormalLibraryTile(BlockEntityType<?> blockEntityType, ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent e) {
+        super(blockEntityType, e);
     }
 }

@@ -1,8 +1,11 @@
 package ml.pkom.enhancedquarries;
 
+import ml.pkom.enhancedquarries.screen.LibraryScreenHandler;
+import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.item.CreativeTabBuilder;
 import ml.pkom.mcpitanlibarch.api.registry.ArchRegistry;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -32,6 +35,14 @@ public class EnhancedQuarries implements ModInitializer {
         FillerModules.init();
         FillerCraftingPatterns.init();
         Configs.init();
+
+        ServerPlayNetworking.registerGlobalReceiver(id("blueprint_name"), ((server, p, handler, buf, sender) -> {
+            String text = buf.readString();
+            Player player = new Player(p);
+            if (!(player.getCurrentScreenHandler() instanceof LibraryScreenHandler)) return;
+            LibraryScreenHandler screenHandler = (LibraryScreenHandler) player.getCurrentScreenHandler();
+            screenHandler.setBlueprintName(text);
+        }));
 
         registry.allRegister();
     }
