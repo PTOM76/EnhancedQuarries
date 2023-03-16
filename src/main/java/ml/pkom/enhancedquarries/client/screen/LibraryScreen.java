@@ -1,6 +1,7 @@
 package ml.pkom.enhancedquarries.client.screen;
 
 import ml.pkom.enhancedquarries.EnhancedQuarries;
+import ml.pkom.enhancedquarries.screen.LibraryScreenHandler;
 import ml.pkom.mcpitanlibarch.api.client.SimpleHandledScreen;
 import ml.pkom.mcpitanlibarch.api.network.ClientNetworking;
 import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
@@ -45,6 +46,7 @@ public class LibraryScreen extends SimpleHandledScreen {
                 PacketByteBuf buf = PacketByteUtil.create();
                 buf.writeString(nameBox.getText());
                 ClientNetworking.send(EnhancedQuarries.id("blueprint_name"), buf);
+                ((LibraryScreenHandler) handler).setBlueprintName(nameBox.getText());
             }
         }
         return super.keyReleased(keyCode, scanCode, modifiers);
