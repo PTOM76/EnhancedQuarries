@@ -11,9 +11,9 @@
     "block.enhanced_quarries.fluid_optimum_quarry": "液体除去型軽量処理クァーリー",
     "block.enhanced_quarries.normal_pump": "ノーマル ポンプ",
     "block.enhanced_quarries.enhanced_pump": "強化型ポンプ",
-    "block.enhanced_quarries.normal_scanner": "スキャナー",
-    "block.enhanced_quarries.normal_builder": "ビルダー",
-    "block.enhanced_quarries.normal_library": "ライブラリ",
+    "block.enhanced_quarries.normal_scanner": "スキャナー (experiment)",
+    "block.enhanced_quarries.normal_builder": "ビルダー (experiment)",
+    "block.enhanced_quarries.normal_library": "ライブラリ (experiment)",
 
     "block.enhanced_quarries.normal_marker": "ノーマル マーカー",
     "block.enhanced_quarries.frame": "フレーム",

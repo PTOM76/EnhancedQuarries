@@ -1,7 +1,7 @@
 package ml.pkom.enhancedquarries.block;
 
 import ml.pkom.enhancedquarries.block.base.Scanner;
-import ml.pkom.enhancedquarries.event.TileCreateEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.screen.ScannerScreenHandler;
 import ml.pkom.enhancedquarries.tile.NormalScannerTile;
 import ml.pkom.enhancedquarries.tile.base.ScannerTile;

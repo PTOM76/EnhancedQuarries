@@ -1,17 +1,17 @@
-package ml.pkom.enhancedquarries.easyapi;
+package ml.pkom.easyapi;
 
 import java.io.UnsupportedEncodingException;
 
 public class Compressor {
-    public static String compress(String src) {
-        src = num2str(bin2hex(src));
+    public static String compress(String data) {
+        data = num2str(bin2hex(data));
 
         int cnt = 0;
-        int length = src.length();
+        int length = data.length();
         String result = "", prev = "", c = "";
         boolean firstFlag = true;
         for (int i = 0; i < length; i++){
-            c = src.substring(i, i + 1);
+            c = data.substring(i, i + 1);
             if (firstFlag){
                 firstFlag = false;
                 prev = c;
@@ -32,11 +32,11 @@ public class Compressor {
     public static String decompress(String data) {
 
         int cnt = 0;
-        int length = src.length();
+        int length = data.length();
         String result = "", prev = "", c = "";
         boolean firstFlag = true;
         for (int i = 0; i < length; i++){
-            c = src.substring(i, i+1);
+            c = data.substring(i, i+1);
             if (firstFlag){
                 firstFlag = false;
                 prev = c;

@@ -1,6 +1,6 @@
 package ml.pkom.enhancedquarries;
 
-import ml.pkom.enhancedquarries.easyapi.config.YamlConfig;
+import ml.pkom.easyapi.config.YamlConfig;
 import ml.pkom.enhancedquarries.item.fillermodule.HorizontalLayerModule;
 import ml.pkom.enhancedquarries.item.fillermodule.VerticalLayerModule;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;

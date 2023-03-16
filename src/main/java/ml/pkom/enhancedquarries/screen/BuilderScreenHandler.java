@@ -20,7 +20,6 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
     public Inventory builderInventory; // index0=Blueprint
     public Inventory needInventory;
 
-    @Deprecated
     public BuilderScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new BuilderInventory(), new DisabledInventory(27));
     }

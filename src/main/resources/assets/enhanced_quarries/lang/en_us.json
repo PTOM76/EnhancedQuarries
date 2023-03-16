@@ -11,9 +11,9 @@
     "block.enhanced_quarries.fluid_optimum_quarry": "Fluid Delete Type Optimum Process Quarry",
     "block.enhanced_quarries.normal_pump": "Normal Pump",
     "block.enhanced_quarries.enhanced_pump": "Enhanced Pump",
-    "block.enhanced_quarries.normal_scanner": "Scanner",
-    "block.enhanced_quarries.normal_builder": "Builder",
-    "block.enhanced_quarries.normal_library": "Library",
+    "block.enhanced_quarries.normal_scanner": "Scanner (experiment)",
+    "block.enhanced_quarries.normal_builder": "Builder (experiment)",
+    "block.enhanced_quarries.normal_library": "Library (experiment)",
 
     "block.enhanced_quarries.normal_marker": "Normal Marker",
     "block.enhanced_quarries.frame": "Frame",

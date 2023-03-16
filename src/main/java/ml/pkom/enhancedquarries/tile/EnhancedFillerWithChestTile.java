@@ -1,7 +1,7 @@
 package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
-import ml.pkom.enhancedquarries.event.TileCreateEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import net.minecraft.block.Block;
@@ -29,7 +29,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
     }
 
     public EnhancedFillerWithChestTile(BlockPos pos, BlockState state) {
-        super(Tiles.ENHANCED_FILLER_WITH_CHEST_TILE, pos, state);
+        super(Tiles.ENHANCED_FILLER_WITH_CHEST_TILE.getOrNull(), pos, state);
     }
 
     public EnhancedFillerWithChestTile(BlockEntityType type,BlockPos pos, BlockState state) {

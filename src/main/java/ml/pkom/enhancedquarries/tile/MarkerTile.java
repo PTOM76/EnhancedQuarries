@@ -1,7 +1,7 @@
 package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
-import ml.pkom.enhancedquarries.event.TileCreateEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -14,7 +14,7 @@ public class MarkerTile extends BlockEntity {
     }
 
     public MarkerTile(BlockPos pos, BlockState state) {
-        super(Tiles.NORMAL_MARKER, pos, state);
+        super(Tiles.NORMAL_MARKER.getOrNull(), pos, state);
     }
 
     public MarkerTile(TileCreateEvent event) {

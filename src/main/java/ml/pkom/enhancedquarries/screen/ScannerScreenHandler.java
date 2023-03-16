@@ -14,7 +14,6 @@ import net.minecraft.screen.slot.Slot;
 public class ScannerScreenHandler extends SimpleScreenHandler {
     public Inventory scannerInventory;
 
-    @Deprecated
     public ScannerScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new ScannerInventory());
     }

@@ -1,12 +1,13 @@
 package ml.pkom.enhancedquarries.client.renderer;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import ml.pkom.enhancedquarries.EnhancedQuarries;
 import ml.pkom.enhancedquarries.block.NormalMarker;
 import ml.pkom.enhancedquarries.event.BlockStatePos;
 import ml.pkom.enhancedquarries.tile.MarkerTile;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;

@@ -16,7 +16,6 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
 
     public String blueprintName = "";
 
-    @Deprecated
     public LibraryScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new SimpleInventory(4));
     }

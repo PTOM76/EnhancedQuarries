@@ -1,11 +1,11 @@
 package ml.pkom.enhancedquarries.client.screen;
 
-import io.netty.buffer.Unpooled;
 import ml.pkom.enhancedquarries.EnhancedQuarries;
 import ml.pkom.mcpitanlibarch.api.client.SimpleHandledScreen;
+import ml.pkom.mcpitanlibarch.api.network.ClientNetworking;
+import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import ml.pkom.mcpitanlibarch.api.util.client.ScreenUtil;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -32,7 +32,7 @@ public class LibraryScreen extends SimpleHandledScreen {
         nameBox = new TextFieldWidget(this.textRenderer, x + 85,  y + 50, 60, 9, TextUtil.literal(""));
         nameBox.setDrawsBackground(true);
         nameBox.setFocusUnlocked(true);
-        nameBox.setTextFieldFocused(false);
+        ScreenUtil.TextFieldUtil.setFocused(nameBox, false);
         nameBox.setMaxLength(256);
         nameBox.setText("");
         addDrawableChild_compatibility(nameBox);
@@ -42,9 +42,9 @@ public class LibraryScreen extends SimpleHandledScreen {
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         if (nameBox.isFocused()) {
             if (keyCode != 256) {
-                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                PacketByteBuf buf = PacketByteUtil.create();
                 buf.writeString(nameBox.getText());
-                ClientPlayNetworking.send(EnhancedQuarries.id("blueprint_name"), buf);
+                ClientNetworking.send(EnhancedQuarries.id("blueprint_name"), buf);
             }
         }
         return super.keyReleased(keyCode, scanCode, modifiers);

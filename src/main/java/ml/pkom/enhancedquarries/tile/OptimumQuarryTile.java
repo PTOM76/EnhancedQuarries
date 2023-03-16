@@ -2,7 +2,7 @@ package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.enhancedquarries.block.Frame;
-import ml.pkom.enhancedquarries.event.TileCreateEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
@@ -17,7 +17,7 @@ import java.util.List;
 public class OptimumQuarryTile extends NormalQuarryTile {
 
     public OptimumQuarryTile(BlockPos pos, BlockState state) {
-        super(Tiles.OPTIMUM_QUARRY_TILE, pos, state);
+        super(Tiles.OPTIMUM_QUARRY_TILE.getOrNull(), pos, state);
     }
 
     public OptimumQuarryTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {

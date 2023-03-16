@@ -1,7 +1,7 @@
 package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
-import ml.pkom.enhancedquarries.event.TileCreateEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.QuarryTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 public class EnhancedQuarryTile extends QuarryTile {
 
     public EnhancedQuarryTile(BlockPos pos, BlockState state) {
-        super(Tiles.ENHANCED_QUARRY_TILE, pos, state);
+        super(Tiles.ENHANCED_QUARRY_TILE.getOrNull(), pos, state);
     }
 
     // 継承のため

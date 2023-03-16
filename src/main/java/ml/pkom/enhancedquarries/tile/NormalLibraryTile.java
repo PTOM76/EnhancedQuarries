@@ -11,18 +11,18 @@ import net.minecraft.world.BlockView;
 public class NormalLibraryTile extends LibraryTile {
 
     public NormalLibraryTile(BlockPos pos, BlockState state) {
-        this(Tiles.NORMAL_LIBRARY_TILE, new TileCreateEvent(pos, state));
+        this(Tiles.NORMAL_LIBRARY_TILE.getOrNull(), new TileCreateEvent(pos, state));
     }
 
     public NormalLibraryTile(BlockView world) {
-        this(Tiles.NORMAL_LIBRARY_TILE, new TileCreateEvent(world));
+        this(Tiles.NORMAL_LIBRARY_TILE.getOrNull(), new TileCreateEvent(world));
     }
 
-    public NormalLibraryTile(ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent e) {
-        this(Tiles.NORMAL_LIBRARY_TILE, e);
+    public NormalLibraryTile(TileCreateEvent e) {
+        this(Tiles.NORMAL_LIBRARY_TILE.getOrNull(), e);
     }
 
-    public NormalLibraryTile(BlockEntityType<?> blockEntityType, ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent e) {
+    public NormalLibraryTile(BlockEntityType<?> blockEntityType, TileCreateEvent e) {
         super(blockEntityType, e);
     }
 }

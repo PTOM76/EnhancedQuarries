@@ -1,6 +1,11 @@
 package ml.pkom.enhancedquarries.util;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import ml.pkom.easyapi.FileControl;
 import ml.pkom.easyapi.config.JsonConfig;
+import ml.pkom.easyapi.Compressor;
+import ml.pkom.mcpitanlibarch.api.nbt.NbtTag;
 import ml.pkom.mcpitanlibarch.api.util.BlockUtil;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
@@ -17,10 +22,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.zip.Deflater;
+
+import static ml.pkom.enhancedquarries.Configs.configDir;
 
 public class BlueprintUtil {
 
@@ -319,12 +328,60 @@ public class BlueprintUtil {
 
         String json = config.toJson(false);
 
+        String compressed = Compressor.compress(json);
+        File dir = new File(configDir, "blueprint");
+        if (!dir.exists()) dir.mkdirs();
 
+        FileControl.fileWriteContents(new File(dir, name), compressed);
 
         return true;
     }
 
-    public static boolean load(ItemStack blueprint) {
+    public static boolean load(ItemStack stack, String name) {
+
+        File dir = new File(configDir, "blueprint");
+        String compressed = FileControl.fileReadContents(new File(dir, name));
+        String json = Compressor.decompress(compressed);
+        JsonConfig config = new JsonConfig();
+
+        Gson gson = new Gson();
+        Type jsonMap = new TypeToken<LinkedHashMap<String, Object>>() {
+        }.getType();
+
+        config.configMap = gson.fromJson(json, jsonMap);
+
+        NbtCompound nbt = NbtTag.create();
+
+        NbtList nbtList = new NbtList();
+
+        for (Map.Entry<String, Object> entry : config.configMap.entrySet()) {
+            String key = entry.getKey();
+            String[] keys = key.split(",");
+            if (keys.length != 3) continue;
+            BlockPos pos = new BlockPos(Integer.parseInt(keys[0]), Integer.parseInt(keys[1]), Integer.parseInt(keys[2]));
+
+            if (!(entry.getValue() instanceof Map)) continue;
+            Map<String, Object> data = (Map<String, Object>) entry.getValue();
+
+            NbtCompound blockNbt = new NbtCompound();
+            NbtCompound posNbt = new NbtCompound();
+
+            for (Map.Entry<String, Object> entry1 : data.entrySet()) {
+                blockNbt.put(entry1.getKey(), (NbtCompound) entry1.getValue());
+
+            }
+
+            posNbt.putInt("x", pos.getX());
+            posNbt.putInt("y", pos.getY());
+            posNbt.putInt("z", pos.getZ());
+            blockNbt.put("pos", posNbt);
+
+            nbtList.add(blockNbt);
+        }
+
+        nbt.put("blocks", nbtList);
+        stack.setSubNbt("blueprint", nbt);
+
         return true;
     }
 
