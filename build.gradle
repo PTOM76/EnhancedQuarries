@@ -93,3 +93,47 @@ publishing {
 
 	}
 }
+
+if (System.getenv("CURSEFORGE_TOKEN") != null) {
+	curseforge {
+		apiKey = System.getenv("CURSEFORGE_TOKEN")
+		project {
+			id = '528338'
+			changelog = project.changelog
+			releaseType = 'release'
+			addGameVersion "Fabric"
+			addGameVersion project.minecraft_version
+			relations {
+				requiredDependency "fabric-api"
+				requiredDependency "mcpitanlibarch"
+				requiredDependency "reborncore"
+				optionalDependency "techreborn"
+				optionalDependency "modmenu"
+				optionalDependency "storagebox-fabric"
+				embeddedLibrary "cloth-config"
+			}
+
+			mainArtifact(tasks.remapJar)
+		}
+	}
+}
+
+apply plugin: "com.modrinth.minotaur"
+apply plugin: "com.matthewprenger.cursegradle"
+
+if (System.getenv("MODRINTH_TOKEN") != null) {
+	modrinth {
+		token = System.getenv("MODRINTH_TOKEN")
+		projectId = 'JcIgEOzn'
+		versionNumber = project.mod_version + "-fabric"
+		gameVersions = [project.minecraft_version]
+		versionType = 'release'
+		uploadFile = tasks.remapJar
+		changelog = project.changelog
+		loaders = ["fabric"]
+		dependencies {
+			required.project "P7dR8mSH" // Fabric API
+			required.project "uNRoUnGT"
+		}
+	}
+}

@@ -1,59 +1,42 @@
-package ml.pkom.easyapi;
+package ml.pkom.enhancedquarries.easyapi;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 public class Compressor {
-    public static String compress(String data) {
-        data = num2str(bin2hex(data));
-
-        int cnt = 0;
-        int length = data.length();
-        String result = "", prev = "", c = "";
-        boolean firstFlag = true;
-        for (int i = 0; i < length; i++){
-            c = data.substring(i, i + 1);
-            if (firstFlag){
-                firstFlag = false;
-                prev = c;
-            }
-            if (!c.equals(prev)){
-                if (cnt > 0){
-                    result += prev + cnt;
-                    cnt = 0;
-                }
-            }
-            prev = c;
-            cnt++;
+    public static String compress(String str) {
+        try {
+            byte[] input = str.getBytes("UTF-8");
+            Deflater deflater = new Deflater();
+            deflater.setInput(input);
+            deflater.finish();
+            byte[] output = new byte[deflater.getTotalOut()];
+            deflater.deflate(output);
+            deflater.end();
+            return new String(Base64.getEncoder().encode(output));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        result += c + cnt;
-        return result;
     }
 
-    public static String decompress(String data) {
-
-        int cnt = 0;
-        int length = data.length();
-        String result = "", prev = "", c = "";
-        boolean firstFlag = true;
-        for (int i = 0; i < length; i++){
-            c = data.substring(i, i+1);
-            if (firstFlag){
-                firstFlag = false;
-                prev = c;
-            }
-            if (!c.equals(prev)){
-                if (cnt > 0){
-                    result += prev + cnt;
-                    cnt = 0;
-                }
-            }
-            prev = c;
-            cnt++;
+    public static String decompress(String compressedStr) {
+        try {
+            byte[] input = Base64.getDecoder().decode(compressedStr);
+            Inflater inflater = new Inflater();
+            inflater.setInput(input);
+            byte[] output = new byte[100];
+            int resultLength = inflater.inflate(output);
+            inflater.end();
+            return new String(output, 0, resultLength, "UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        result += c + cnt;
-        result = hex2bin(str2num(result));
-        return result;
     }
+
 
     public static String bin2hex(String data) {
         StringBuilder sb = new StringBuilder();

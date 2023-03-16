@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import ml.pkom.easyapi.FileControl;
 import ml.pkom.easyapi.config.JsonConfig;
-import ml.pkom.easyapi.Compressor;
+import ml.pkom.enhancedquarries.easyapi.Compressor;
 import ml.pkom.mcpitanlibarch.api.nbt.NbtTag;
 import ml.pkom.mcpitanlibarch.api.util.BlockUtil;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -332,7 +332,7 @@ public class BlueprintUtil {
         File dir = new File(configDir, "blueprint");
         if (!dir.exists()) dir.mkdirs();
 
-        FileControl.fileWriteContents(new File(dir, name), compressed);
+        FileControl.fileWriteContents(new File(dir, name + ".ebp"), compressed);
 
         return true;
     }
@@ -340,7 +340,10 @@ public class BlueprintUtil {
     public static boolean load(ItemStack stack, String name) {
 
         File dir = new File(configDir, "blueprint");
-        String compressed = FileControl.fileReadContents(new File(dir, name));
+
+        if (!new File(dir, name + ".ebp").exists()) return false;
+
+        String compressed = FileControl.fileReadContents(new File(dir, name + ".ebp"));
         String json = Compressor.decompress(compressed);
         JsonConfig config = new JsonConfig();
 
