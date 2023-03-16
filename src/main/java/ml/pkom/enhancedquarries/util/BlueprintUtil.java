@@ -331,7 +331,7 @@ public class BlueprintUtil {
         if (!dir.exists()) dir.mkdirs();
 
         FileControl.fileWriteContents(new File(dir, name + ".ebp"), compressed);
-        FileControl.fileWriteContents(new File(dir, name + ".json"), json);
+        //FileControl.fileWriteContents(new File(dir, name + ".json"), json);
 
         return true;
     }
@@ -344,19 +344,18 @@ public class BlueprintUtil {
 
         String compressed = FileControl.fileReadContents(new File(dir, name + ".ebp"));
         String json = Compressor.decompress(compressed);
-        JsonConfig config = new JsonConfig();
 
         Gson gson = new Gson();
         Type jsonMap = new TypeToken<LinkedHashMap<String, Object>>() {
         }.getType();
 
-        config.configMap = gson.fromJson(json, jsonMap);
+        Map<String, Object> map = gson.fromJson(json, jsonMap);
 
         NbtCompound nbt = NbtTag.create();
 
         NbtList nbtList = new NbtList();
 
-        for (Map.Entry<String, Object> entry : config.configMap.entrySet()) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
             String[] keys = key.split(",");
             if (keys.length != 3) continue;
