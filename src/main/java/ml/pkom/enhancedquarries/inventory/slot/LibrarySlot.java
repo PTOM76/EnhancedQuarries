@@ -32,9 +32,10 @@ public class LibrarySlot extends Slot {
             inventory.setStack(2, stack);
         }
         if (getIndex() == 0) { // Load
-            BlueprintUtil.load(stack, screenHandler.blueprintName);
+            ItemStack newStack = new ItemStack(Items.BLUEPRINT, stack.getCount());
+            BlueprintUtil.load(newStack, screenHandler.blueprintName);
             super.setStack(ItemStack.EMPTY);
-            inventory.setStack(1, stack);
+            inventory.setStack(1, newStack);
         }
     }
 }

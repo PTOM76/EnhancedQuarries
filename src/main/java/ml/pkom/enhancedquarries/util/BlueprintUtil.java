@@ -23,11 +23,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.zip.Deflater;
 
 import static ml.pkom.enhancedquarries.Configs.configDir;
 
@@ -310,7 +308,7 @@ public class BlueprintUtil {
         if (nbt == null) return false;
         if (!nbt.contains("blocks")) return false;
 
-        NbtList nbtList = nbt.getList("blocks", NbtType.COMPOUND);
+        NbtList nbtList = nbt.getList("blocks", NbtElement.COMPOUND_TYPE);
         for (NbtElement element : nbtList) {
             if (element instanceof NbtCompound) {
                 NbtCompound blockNbt = (NbtCompound) element;
@@ -333,6 +331,7 @@ public class BlueprintUtil {
         if (!dir.exists()) dir.mkdirs();
 
         FileControl.fileWriteContents(new File(dir, name + ".ebp"), compressed);
+        FileControl.fileWriteContents(new File(dir, name + ".json"), json);
 
         return true;
     }
@@ -371,7 +370,6 @@ public class BlueprintUtil {
 
             for (Map.Entry<String, Object> entry1 : data.entrySet()) {
                 blockNbt.put(entry1.getKey(), (NbtCompound) entry1.getValue());
-
             }
 
             posNbt.putInt("x", pos.getX());
@@ -384,7 +382,6 @@ public class BlueprintUtil {
 
         nbt.put("blocks", nbtList);
         stack.setSubNbt("blueprint", nbt);
-
         return true;
     }
 
