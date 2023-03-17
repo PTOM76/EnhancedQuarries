@@ -30,7 +30,7 @@ public class LibraryScreen extends SimpleHandledScreen {
     @Override
     public void initOverride() {
         super.initOverride();
-        nameBox = new TextFieldWidget(this.textRenderer, x + 85,  y + 50, 60, 9, TextUtil.literal(""));
+        nameBox = new TextFieldWidget(this.textRenderer, x + 85,  y + 40, 60, 9, TextUtil.literal(""));
         nameBox.setDrawsBackground(true);
         nameBox.setFocusUnlocked(true);
         ScreenUtil.TextFieldUtil.setFocused(nameBox, false);
