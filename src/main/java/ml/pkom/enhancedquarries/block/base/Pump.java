@@ -1,11 +1,11 @@
 package ml.pkom.enhancedquarries.block.base;
 
+import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
+import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.PumpTile;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -14,15 +14,15 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public abstract class Pump extends BaseBlock implements BlockEntityProvider {
-    public static FabricBlockSettings defaultSettings = FabricBlockSettings
-            .of(Material.METAL)
+    public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
+            .of(CompatibleMaterial.METAL)
             .requiresTool()
             //.breakByTool(FabricToolTags.PICKAXES, 0)
             .strength(2, 8);
 
     // Custom Setting
-    public Pump(Settings settings) {
-        super(settings);
+    public Pump(CompatibleBlockSettings settings) {
+        super(settings.build());
     }
 
     // Default Setting

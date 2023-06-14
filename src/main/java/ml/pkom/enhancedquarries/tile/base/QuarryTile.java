@@ -3,6 +3,7 @@ package ml.pkom.enhancedquarries.tile.base;
 import ml.pkom.enhancedquarries.block.Frame;
 import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
+import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
@@ -701,7 +702,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                 return index;
             }
             ItemStack inStack = getInventory().getStack(index);
-            if (stack.getItem().equals(inStack.getItem()) && (ItemStack.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
+            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
                 int originInCount = getInventory().getStack(index).getCount();
                 getInventory().getStack(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {
@@ -723,7 +724,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                 return;
             }
             ItemStack inStack = getInventory().getStack(index);
-            if (stack.getItem().equals(inStack.getItem()) && (ItemStack.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
+            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
                 int originInCount = getInventory().getStack(index).getCount();
                 getInventory().getStack(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {

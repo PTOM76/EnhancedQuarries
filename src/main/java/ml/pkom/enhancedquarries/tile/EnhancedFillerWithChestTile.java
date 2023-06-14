@@ -4,6 +4,7 @@ import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
+import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -85,7 +86,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
                 return;
             }
             ItemStack inStack = getInventory().getStack(index);
-            if (stack.getItem().equals(inStack.getItem()) && (ItemStack.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
+            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
                 int originInCount = getInventory().getStack(index).getCount();
                 getInventory().getStack(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {

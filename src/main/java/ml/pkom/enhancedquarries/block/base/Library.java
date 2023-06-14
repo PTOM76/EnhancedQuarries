@@ -1,11 +1,11 @@
 package ml.pkom.enhancedquarries.block.base;
 
 import ml.pkom.enhancedquarries.tile.base.LibraryTile;
+import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
+import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 
 public abstract class Library extends ExtendBlock implements ExtendBlockEntityProvider {
 
-    public static FabricBlockSettings defaultSettings = FabricBlockSettings
-            .of(Material.METAL)
+    public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
+            .of(CompatibleMaterial.METAL)
             .requiresTool()
             //.breakByTool(FabricToolTags.PICKAXES, 0)
             .strength(2, 8);

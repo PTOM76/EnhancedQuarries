@@ -28,6 +28,7 @@ public class EnhancedQuarries implements ModInitializer {
         instance = this;
         log(Level.INFO, "Initializing");
 
+        registry.registerItemGroup(id("all"), () -> ENHANCED_QUARRIES_GROUP);
         Items.init();
         Blocks.init();
         Tiles.init();

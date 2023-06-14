@@ -2,11 +2,12 @@ package ml.pkom.enhancedquarries.block;
 
 import ml.pkom.enhancedquarries.Blocks;
 import ml.pkom.enhancedquarries.event.BlockStatePos;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.enhancedquarries.tile.MarkerTile;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
+import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
+import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
+import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -22,18 +23,17 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NormalMarker extends Block { //BlockWithEntity {
+public class NormalMarker extends ExtendBlock { //BlockWithEntity {
 
     public static DirectionProperty FACING = Properties.FACING;
     public static BooleanProperty ACTIVE = BooleanProperty.of("active");
 
     public NormalMarker() {
-        super(FabricBlockSettings.of(Material.METAL).strength(1, 4));
+        super(CompatibleBlockSettings.of(CompatibleMaterial.METAL).strength(1, 4));
             this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(ACTIVE, false));
     }
 
@@ -213,6 +213,5 @@ public class NormalMarker extends Block { //BlockWithEntity {
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new MarkerTile(new TileCreateEvent(pos, state));
     }
-
      */
 }

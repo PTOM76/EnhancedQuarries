@@ -1,11 +1,11 @@
 package ml.pkom.enhancedquarries.block.base;
 
+import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
+import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.BuilderTile;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -20,11 +20,15 @@ import reborncore.common.blocks.BlockMachineBase;
 
 public abstract class Builder extends BlockMachineBase implements BlockEntityProvider {
 
-    public static FabricBlockSettings defaultSettings = FabricBlockSettings
-            .of(Material.METAL)
+    public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
+            .of(CompatibleMaterial.METAL)
             .requiresTool()
             //.breakByTool(FabricToolTags.PICKAXES, 0)
             .strength(2, 8);
+
+    public Builder() {
+        super(defaultSettings.build());
+    }
 
     // 1.17.1へのポート用
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {

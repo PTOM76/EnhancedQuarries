@@ -1,6 +1,8 @@
 package ml.pkom.enhancedquarries.block;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
+import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
+import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -15,7 +17,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class Frame extends Block {
+public class Frame extends ExtendBlock {
     public static BooleanProperty CONNECT_NORTH = BooleanProperty.of("north");
     public static BooleanProperty CONNECT_SOUTH = BooleanProperty.of("south");
     public static BooleanProperty CONNECT_WEST = BooleanProperty.of("west");
@@ -32,7 +34,7 @@ public class Frame extends Block {
     public static VoxelShape DOWN = VoxelShapes.cuboid(0.25, 0, 0.25, 0.75, .25, 0.75);
 
     public Frame() {
-        super(FabricBlockSettings.of(Material.METAL).strength(1, 4).nonOpaque());
+        super(CompatibleBlockSettings.of(CompatibleMaterial.METAL).strength(1, 4).nonOpaque());
         setDefaultState(getDefaultState()
                 .with(CONNECT_NORTH, false)
                 .with(CONNECT_SOUTH, false)

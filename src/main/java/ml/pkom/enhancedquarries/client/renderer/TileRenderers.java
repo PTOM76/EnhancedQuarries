@@ -1,8 +1,8 @@
 package ml.pkom.enhancedquarries.client.renderer;
 
+import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.enhancedquarries.tile.MarkerTile;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.minecraft.block.entity.BlockEntityType;
 
 public class TileRenderers {
