@@ -74,7 +74,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // TR
     // デフォルトコスト
-    private long defaultEnergyCost = 30;
+    private final long defaultEnergyCost = 30;
 
     // ブロック1回設置分に対するエネルギーのコスト
     public long getEnergyCost() {
@@ -146,7 +146,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // ----
 
-    private double defaultBasicSpeed = 5;
+    private final double defaultBasicSpeed = 5;
 
     // 基準の速度
     public double getBasicSpeed() {
@@ -281,7 +281,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         //procY = pos1.getY(); procY <= pos2.getY(); procY++
         for (procY = world.getBottomY(); procY <= getWorld().getDimension().height(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
-                for (procZ = pos1.getZ(); procZ >= pos2.getZ(); procZ--) {
+                for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
                     if ( procY <= pos2.getY() && procY >= pos1.getY()) {

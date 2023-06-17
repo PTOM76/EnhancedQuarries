@@ -21,8 +21,8 @@ public class FillerScreen extends SimpleHandledScreen {
     public FillerScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         playerInventoryTitleY = 143;
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 235;
+        setBackgroundWidth(176);
+        setBackgroundHeight(235);
     }
 
     @Override

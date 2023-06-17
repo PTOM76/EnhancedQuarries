@@ -16,7 +16,6 @@ public abstract class Library extends ExtendBlock implements ExtendBlockEntityPr
     public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
             .of(CompatibleMaterial.METAL)
             .requiresTool()
-            //.breakByTool(FabricToolTags.PICKAXES, 0)
             .strength(2, 8);
 
     public Library() {

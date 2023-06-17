@@ -25,6 +25,7 @@ import reborncore.common.blocks.BlockMachineBase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Scanner extends BlockMachineBase implements BlockEntityProvider {
 
@@ -82,10 +83,10 @@ public abstract class Scanner extends BlockMachineBase implements BlockEntityPro
         super.onPlaced(worldIn, pos, fstate, placer, stack);
         BlockState state;
         state = (worldIn.getBlockState(pos) == null) ? fstate : worldIn.getBlockState(pos);
-        if (worldIn == null || worldIn.isClient()) return;
+        if (worldIn.isClient()) return;
         if (worldIn.getBlockEntity(pos) instanceof ScannerTile) {
             ScannerTile scannerTile = (ScannerTile) worldIn.getBlockEntity(pos);
-            scannerTile.init();
+            Objects.requireNonNull(scannerTile).init();
             if (scannerTile.canSetPosByMarker()) {
                 BlockPos markerPos = null;
                 if (getFacing(state).equals(Direction.NORTH))
@@ -116,7 +117,7 @@ public abstract class Scanner extends BlockMachineBase implements BlockEntityPro
                         if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
                         worldIn.breakBlock(markerSP.getBlockPos(), true);
                     }
-                    if ((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null) || markerList.size() <= 2 ) return;
+                    if (markerList.size() <= 2) return;
                     scannerTile.setPos1(new BlockPos(minPosX, minPosY, minPosZ));
                     scannerTile.setPos2(new BlockPos(maxPosX, maxPosY, maxPosZ));
                 }

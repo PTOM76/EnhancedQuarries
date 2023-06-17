@@ -26,6 +26,7 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static ml.pkom.enhancedquarries.Configs.configDir;
 
@@ -317,6 +318,7 @@ public class BlueprintUtil {
                 Map<String, Object> data = new LinkedHashMap<>();
 
                 for (String key : blockNbt.getKeys()) {
+                    if (Objects.equals(key, "pos")) continue;
                     data.put(key, blockNbt.get(key));
                 }
 
@@ -331,7 +333,7 @@ public class BlueprintUtil {
         if (!dir.exists()) dir.mkdirs();
 
         FileControl.fileWriteContents(new File(dir, name + ".ebp"), compressed);
-        //FileControl.fileWriteContents(new File(dir, name + ".json"), json);
+        FileControl.fileWriteContents(new File(dir, name + ".json"), json);
 
         return true;
     }
@@ -340,10 +342,12 @@ public class BlueprintUtil {
 
         File dir = new File(configDir, "blueprint");
 
-        if (!new File(dir, name + ".ebp").exists()) return false;
+        if (!new File(dir, name + ".json").exists()) return false;
+        //if (!new File(dir, name + ".ebp").exists()) return false;
 
-        String compressed = FileControl.fileReadContents(new File(dir, name + ".ebp"));
-        String json = Compressor.decompress(compressed);
+        String json = FileControl.fileReadContents(new File(dir, name + ".json"));
+        //String compressed = FileControl.fileReadContents(new File(dir, name + ".ebp"));
+        //String json = Compressor.decompress(compressed);
 
         Gson gson = new Gson();
         Type jsonMap = new TypeToken<LinkedHashMap<String, Object>>() {
@@ -368,7 +372,34 @@ public class BlueprintUtil {
             NbtCompound posNbt = new NbtCompound();
 
             for (Map.Entry<String, Object> entry1 : data.entrySet()) {
-                blockNbt.put(entry1.getKey(), (NbtCompound) entry1.getValue());
+                Object value = entry1.getValue();
+                if (value instanceof Map) {
+                    Map<String, Object> mapInValue = (Map<String, Object>) value;
+                    for (Map.Entry<String, Object> value2 : mapInValue.entrySet()) {
+                        if (Objects.equals(value2.getKey(), "value")) {
+                            value = value2.getValue();
+                            break;
+                        }
+                    }
+                }
+                if (value instanceof String)
+                    blockNbt.putString(entry1.getKey(), (String) value);
+                if (value instanceof Integer)
+                    blockNbt.putInt(entry1.getKey(), (int) value);
+                if (value instanceof Short)
+                    blockNbt.putShort(entry1.getKey(), (short) value);
+                if (value instanceof Long)
+                    blockNbt.putLong(entry1.getKey(), (long) value);
+                if (value instanceof Double)
+                    blockNbt.putDouble(entry1.getKey(), (double) value);
+                if (value instanceof Float)
+                    blockNbt.putFloat(entry1.getKey(), (float) value);
+                if (value instanceof Boolean)
+                    blockNbt.putBoolean(entry1.getKey(), (boolean) value);
+                if (value instanceof Byte)
+                    blockNbt.putByte(entry1.getKey(), (byte) value);
+                if (value instanceof NbtCompound)
+                    blockNbt.put(entry1.getKey(), (NbtCompound) value);
             }
 
             posNbt.putInt("x", pos.getX());

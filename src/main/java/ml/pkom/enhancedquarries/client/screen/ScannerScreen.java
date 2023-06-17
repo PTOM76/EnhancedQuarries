@@ -21,8 +21,8 @@ public class ScannerScreen extends SimpleHandledScreen {
     public ScannerScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         playerInventoryTitleY = 72;
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 166;
+        setBackgroundWidth(176);
+        setBackgroundHeight(166);
     }
 
     @Override

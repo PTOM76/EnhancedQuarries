@@ -48,9 +48,9 @@ public class OptimumQuarryTile extends NormalQuarryTile {
         if (finishedQuarry) return true;
         if (getWorld() == null || getWorld().isClient()) return false;
         if (getPos1() == null)
-            setPos1(getRangePos1());
+            setPos1(getDefaultRangePos1());
         if (getPos2() == null)
-            setPos2(getRangePos2());
+            setPos2(getDefaultRangePos2());
         BlockPos pos1 = getPos1();
         BlockPos pos2 = getPos2();
         if (procX == null || procY == null || procZ == null) {

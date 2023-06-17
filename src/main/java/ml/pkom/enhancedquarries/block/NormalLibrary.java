@@ -41,6 +41,7 @@ public class NormalLibrary extends Library {
     public ActionResult onRightClick(BlockUseEvent e) {
         if (e.world.isClient())
             return ActionResult.SUCCESS;
+
         BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
         if (blockEntity instanceof LibraryTile) {
             LibraryTile tile = (LibraryTile) blockEntity;

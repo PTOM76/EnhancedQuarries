@@ -27,6 +27,7 @@ import reborncore.common.blocks.BlockMachineBase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Filler extends BlockMachineBase implements BlockEntityProvider {
 
@@ -97,10 +98,10 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
         super.onPlaced(worldIn, pos, fstate, placer, stack);
         BlockState state;
         state = (worldIn.getBlockState(pos) == null) ? fstate : worldIn.getBlockState(pos);
-        if (worldIn == null || worldIn.isClient()) return;
+        if (worldIn.isClient()) return;
         if (worldIn.getBlockEntity(pos) instanceof FillerTile) {
             FillerTile fillerTile = (FillerTile) worldIn.getBlockEntity(pos);
-            fillerTile.init();
+            Objects.requireNonNull(fillerTile).init();
             if (fillerTile.canSetPosByMarker()) {
                 BlockPos markerPos = null;
                 if (getFacing(state).equals(Direction.NORTH))
@@ -131,10 +132,9 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
                         if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
                         worldIn.breakBlock(markerSP.getBlockPos(), true);
                     }
-                    if ((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null) || markerList.size() <= 2 ) return;
-                    // ミスった仕様上 min min max、max max minという関数になってしまった。
-                    fillerTile.setPos1(new BlockPos(minPosX, minPosY, maxPosZ));
-                    fillerTile.setPos2(new BlockPos(maxPosX, maxPosY, minPosZ));
+                    if (markerList.size() <= 2) return;
+                    fillerTile.setPos1(new BlockPos(minPosX, minPosY, minPosZ));
+                    fillerTile.setPos2(new BlockPos(maxPosX, maxPosY, maxPosZ));
                 }
             }
         }

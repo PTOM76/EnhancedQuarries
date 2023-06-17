@@ -18,7 +18,7 @@ import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.Nullable;
 
 public class LibraryTile extends ExtendBlockEntity implements IInventory, NamedScreenHandlerFactory {
-    DefaultedList<ItemStack> inventory = DefaultedList.ofSize(4);
+    public DefaultedList<ItemStack> inventory = DefaultedList.ofSize(4, ItemStack.EMPTY);
 
     public DefaultedList<ItemStack> getInventory() {
         return inventory;
@@ -33,6 +33,7 @@ public class LibraryTile extends ExtendBlockEntity implements IInventory, NamedS
     @Override
     public void readNbtOverride(NbtCompound nbt) {
         super.readNbtOverride(nbt);
+        Inventories.readNbt(nbt, inventory);
     }
 
     public LibraryTile(BlockEntityType<?> type, TileCreateEvent event) {

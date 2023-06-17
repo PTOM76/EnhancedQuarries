@@ -7,8 +7,10 @@ import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -108,9 +110,9 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // TR
     // デフォルトコスト
-    private long defaultEnergyCost = 30;
-    private long defaultPlaceFrameEnergyCost = 40;
-    private long defaultReplaceFluidEnergyCost = 120;
+    private final long defaultEnergyCost = 30;
+    private final long defaultPlaceFrameEnergyCost = 40;
+    private final long defaultReplaceFluidEnergyCost = 120;
 
     // ブロック1回破壊分に対するエネルギーのコスト
     public long getEnergyCost() {
@@ -198,7 +200,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // ----
 
-    private double defaultBasicSpeed = 5;
+    private final double defaultBasicSpeed = 5;
 
     // 基準の速度
     public double getBasicSpeed() {
@@ -286,7 +288,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                                 getInventory().setStack(i, stack);
                             }
                             return true;
-                        } catch (NullPointerException e) {
+                        } catch (NullPointerException ignored) {
 
                         }
                     }
@@ -304,28 +306,22 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     public Inventory getAnyContainerBlock(int i) {
         if (getWorld().getBlockEntity(getPos().up()) instanceof Inventory) {
-            Inventory inventory = (Inventory) getWorld().getBlockEntity(getPos().up());
-            return inventory;
+            return (Inventory) getWorld().getBlockEntity(getPos().up());
         }
         if (getWorld().getBlockEntity(getPos().down()) instanceof Inventory) {
-            Inventory inventory = (Inventory) getWorld().getBlockEntity(getPos().down());
-            return inventory;
+            return (Inventory) getWorld().getBlockEntity(getPos().down());
         }
         if (getWorld().getBlockEntity(getPos().north()) instanceof Inventory) {
-            Inventory inventory = (Inventory) getWorld().getBlockEntity(getPos().north());
-            return inventory;
+            return (Inventory) getWorld().getBlockEntity(getPos().north());
         }
         if (getWorld().getBlockEntity(getPos().south()) instanceof Inventory) {
-            Inventory inventory = (Inventory) getWorld().getBlockEntity(getPos().south());
-            return inventory;
+            return (Inventory) getWorld().getBlockEntity(getPos().south());
         }
         if (getWorld().getBlockEntity(getPos().west()) instanceof Inventory) {
-            Inventory inventory = (Inventory) getWorld().getBlockEntity(getPos().west());
-            return inventory;
+            return (Inventory) getWorld().getBlockEntity(getPos().west());
         }
         if (getWorld().getBlockEntity(getPos().east()) instanceof Inventory) {
-            Inventory inventory = (Inventory) getWorld().getBlockEntity(getPos().east());
-            return inventory;
+            return (Inventory) getWorld().getBlockEntity(getPos().east());
         }
         return null;
     }
@@ -370,40 +366,46 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
         }
     }
 
-    public BlockPos getRangePos1() {
-        BlockPos blockPos = null;
+    public BlockPos getDefaultRangePos1() {
         // default
-        if (getFacing().equals(Direction.NORTH)) {
-            blockPos = new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() + 11);
+        switch (getFacing()) {
+            case NORTH -> {
+                return new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() + 1);
+            }
+            case SOUTH -> {
+                return new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() - 11);
+            }
+            case WEST -> {
+                return new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ() - 5);
+            }
+            case EAST -> {
+                return new BlockPos(getPos().getX() - 11, getPos().getY(), getPos().getZ() - 5);
+            }
+            default -> {
+                return null;
+            }
         }
-        if (getFacing().equals(Direction.SOUTH)) {
-            blockPos = new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() - 1);
-        }
-        if (getFacing().equals(Direction.WEST)) {
-            blockPos = new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ() + 5);
-        }
-        if (getFacing().equals(Direction.EAST)) {
-            blockPos = new BlockPos(getPos().getX() - 11, getPos().getY(), getPos().getZ() + 5);
-        }
-        return blockPos;
     }
 
-    public BlockPos getRangePos2() {
-        BlockPos blockPos = null;
+    public BlockPos getDefaultRangePos2() {
         // default
-        if (getFacing().equals(Direction.NORTH)) {
-            blockPos = new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ());
+        switch (getFacing()) {
+            case NORTH -> {
+                return new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ() + 12);
+            }
+            case SOUTH -> {
+                return new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ());
+            }
+            case WEST -> {
+                return new BlockPos(getPos().getX() + 12, getPos().getY() + 4, getPos().getZ() + 6);
+            }
+            case EAST -> {
+                return new BlockPos(getPos().getX(), getPos().getY() + 4, getPos().getZ() + 6);
+            }
+            default -> {
+                return null;
+            }
         }
-        if (getFacing().equals(Direction.SOUTH)) {
-            blockPos = new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ() - 12);
-        }
-        if (getFacing().equals(Direction.WEST)) {
-            blockPos = new BlockPos(getPos().getX() + 12, getPos().getY() + 4, getPos().getZ() - 6);
-        }
-        if (getFacing().equals(Direction.EAST)) {
-            blockPos = new BlockPos(getPos().getX(), getPos().getY() + 4, getPos().getZ() - 6);
-        }
-        return blockPos;
     }
 
     // マーカーによる範囲指定を許可するか？
@@ -435,9 +437,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
         if (isSetSilkTouch || isSetLuck) {
             if (drop) {
                 List<ItemStack> drops = Block.getDroppedStacks(getWorld().getBlockState(pos), (ServerWorld) getWorld(), pos, getWorld().getBlockEntity(pos), null, getQuarryStack());
-                drops.forEach((stack) -> {
-                    addStack(stack);
-                });
+                drops.forEach(this::addStack);
             }
             getWorld().breakBlock(pos, false);
         } else {
@@ -457,17 +457,13 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
     public void tryDeleteMob(BlockPos blockPos) {
         if (getWorld().isClient()) return;
         List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
-        mobs.forEach((mob) -> {
-            mob.discard();
-        });
+        mobs.forEach(Entity::discard);
     }
 
     public void tryKillMob(BlockPos blockPos) {
         if (getWorld().isClient()) return;
         List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
-        mobs.forEach((mob) -> {
-            mob.kill();
-        });
+        mobs.forEach(LivingEntity::kill);
     }
 
     public double tryFluidReplace(BlockPos blockPos) {
@@ -570,15 +566,15 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                     ((blockPos.getX() == pos1.getX()
                     || blockPos.getZ() == pos1.getZ()
                     || blockPos.getX() + 1 == pos2.getX()
-                    || blockPos.getZ() - 1 == pos2.getZ())
+                    || blockPos.getZ() + 1 == pos2.getZ())
                             && (blockPos.getY() == pos1.getY()
                             || blockPos.getY() == pos2.getY())
                     )
                     ||
                     (
                             (blockPos.getX() == pos1.getX() && blockPos.getZ() == pos1.getZ())
-                                    || (blockPos.getX() + 1 == pos2.getX() && blockPos.getZ() - 1 == pos2.getZ())
-                                    || (blockPos.getX() == pos1.getX() && blockPos.getZ() - 1 == pos2.getZ())
+                                    || (blockPos.getX() + 1 == pos2.getX() && blockPos.getZ() + 1 == pos2.getZ())
+                                    || (blockPos.getX() == pos1.getX() && blockPos.getZ() + 1 == pos2.getZ())
                                     || (blockPos.getX() + 1 == pos2.getX() && blockPos.getZ() == pos1.getZ())
                     )
             ) {
@@ -593,16 +589,16 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
     public boolean tryQuarrying() {
         if (getWorld() == null || getWorld().isClient()) return false;
         if (pos1 == null)
-            pos1 = getRangePos1();
+            pos1 = getDefaultRangePos1();
         if (pos2 == null)
-            pos2 = getRangePos2();
+            pos2 = getDefaultRangePos2();
         int procX;
         int procY;
         int procZ;
         for (procY = pos2.getY(); procY > getWorld().getBottomY(); procY--) {
             if (pos1.getY() - 1 >= procY) {
                 for (procX = pos1.getX() + 1; procX < pos2.getX() - 1; procX++) {
-                    for (procZ = pos1.getZ() - 1; procZ > pos2.getZ() + 1; procZ--) {
+                    for (procZ = pos1.getZ() + 1; procZ < pos2.getZ() - 1; procZ++) {
                         BlockPos procPos = new BlockPos(procX, procY, procZ);
                         if (getWorld().getBlockState(procPos) == null) continue;
                         Block procBlock = getWorld().getBlockState(procPos).getBlock();
@@ -653,7 +649,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
             else if (pos1.getY() <= procY && pos2.getY() >= procY) {
                 // procX < pos2.getX()を=<するとposのずれ問題は修正可能だが、別の方法で対処しているので、時間があればこっちで修正したい。
                 for (procX = pos1.getX(); procX < pos2.getX(); procX++) {
-                    for (procZ = pos1.getZ(); procZ > pos2.getZ(); procZ--) {
+                    for (procZ = pos1.getZ(); procZ < pos2.getZ(); procZ++) {
                         BlockPos procPos = new BlockPos(procX, procY, procZ);
                         if (getWorld().getBlockState(procPos) == null) continue;
                         Block procBlock = getWorld().getBlockState(procPos).getBlock();

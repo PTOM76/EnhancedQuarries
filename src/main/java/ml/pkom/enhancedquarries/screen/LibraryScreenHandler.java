@@ -45,10 +45,6 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
         Slot slot = this.slots.get(index);
-        if (slot instanceof LibrarySlot) {
-            //if (index != 9)
-            //    return ItemStack.EMPTY;
-        }
         if (slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
             if (index < 36) {

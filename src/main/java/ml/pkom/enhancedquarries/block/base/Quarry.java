@@ -28,6 +28,7 @@ import reborncore.common.blocks.BlockMachineBase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Quarry extends BlockMachineBase implements BlockEntityProvider {
 
@@ -123,10 +124,10 @@ public abstract class Quarry extends BlockMachineBase implements BlockEntityProv
         super.onPlaced(worldIn, pos, fstate, placer, stack);
         BlockState state;
         state = (worldIn.getBlockState(pos) == null) ? fstate : worldIn.getBlockState(pos);
-        if (worldIn == null || worldIn.isClient()) return;
+        if (worldIn.isClient()) return;
         if (worldIn.getBlockEntity(pos) instanceof QuarryTile) {
             QuarryTile quarryTile = (QuarryTile) worldIn.getBlockEntity(pos);
-            quarryTile.init();
+            Objects.requireNonNull(quarryTile).init();
             if (quarryTile.canSetPosByMarker()) {
                 BlockPos markerPos = null;
                 if (getFacing(state).equals(Direction.NORTH))
@@ -157,11 +158,11 @@ public abstract class Quarry extends BlockMachineBase implements BlockEntityProv
                         if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
                         worldIn.breakBlock(markerSP.getBlockPos(), true);
                     }
-                    if ((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null) || markerList.size() <= 2 ) return;
+                    if (markerList.size() <= 2 ) return;
                     if (maxPosY.equals(minPosY)) maxPosY += 4;
-                    // ミスった仕様上 min min max、max max minという関数になってしまった。
-                    quarryTile.setPos1(new BlockPos(minPosX, minPosY, maxPosZ));
-                    quarryTile.setPos2(new BlockPos(maxPosX + 1, maxPosY, minPosZ - 1));
+
+                    quarryTile.setPos1(new BlockPos(minPosX, minPosY, minPosZ));
+                    quarryTile.setPos2(new BlockPos(maxPosX + 1, maxPosY, maxPosZ + 1));
                 }
             }
         }
