@@ -328,11 +328,11 @@ public class BlueprintUtil {
 
         String json = config.toJson(false);
 
-        String compressed = Compressor.compress(json);
+        //String compressed = Compressor.compress(json);
         File dir = new File(configDir, "blueprint");
         if (!dir.exists()) dir.mkdirs();
 
-        FileControl.fileWriteContents(new File(dir, name + ".ebp"), compressed);
+        //FileControl.fileWriteContents(new File(dir, name + ".ebp"), compressed);
         FileControl.fileWriteContents(new File(dir, name + ".json"), json);
 
         return true;

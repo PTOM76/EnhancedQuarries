@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XZX",
+    "YBY",
+    "ACA"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:black_dye"
+    },
+    "Y": {
+      "item": "minecraft:yellow_dye"
+    },
+    "Z": {
+      "item": "enhanced_quarries:normal_marker"
+    },
+    "A": {
+      "item": "enhanced_quarries:enhanced_refined_gear"
+    },
+    "B": {
+      "item": "minecraft:crafting_table"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:normal_builder",
+    "count": 1
+  }
+}

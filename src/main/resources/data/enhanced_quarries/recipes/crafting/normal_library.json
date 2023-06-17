@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "YYY",
+    "YXY",
+    "YYY"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:bookshelf"
+    },
+    "Y": {
+      "item": "enhanced_quarries:empty_blueprint"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:normal_library",
+    "count": 1
+  }
+}

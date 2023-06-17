@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XZX",
+    "XBX",
+    "AYA"
+  ],
+  "key": {
+    "X": {
+      "item": "enhanced_quarries:enhanced_panel"
+    },
+    "Y": {
+      "item": "enhanced_quarries:empty_blueprint"
+    },
+    "Z": {
+      "item": "enhanced_quarries:normal_marker"
+    },
+    "A": {
+      "item": "enhanced_quarries:enhanced_refined_gear"
+    },
+    "B": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:normal_builder",
+    "count": 1
+  }
+}
