@@ -4,7 +4,6 @@ import ml.pkom.enhancedquarries.client.screen.*;
 import ml.pkom.mcpitanlibarch.api.client.registry.ArchRegistryClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 
 public class Screens {
     @Environment(EnvType.CLIENT)
