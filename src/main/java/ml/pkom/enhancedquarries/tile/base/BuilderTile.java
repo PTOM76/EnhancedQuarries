@@ -50,23 +50,19 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     }
 
     // エネルギーの容量
-    public long getBaseMaxPower() {
+    public long getMaxEnergy() {
         return 5000;
     }
 
     // エネルギーの最大出力(不要なので0)
-    public long getBaseMaxOutput() {
+    public long getMaxOutput() {
         return 0;
     }
 
     // エネルギーの最大入力
-    public long getBaseMaxInput() {
+    public long getMaxInput() {
         return 500;
     }
-
-    // エネルギーの生産をするか
-    public boolean canProvideEnergy(final Direction direction) { return false; }
-
     // ----
 
     // NBT
@@ -279,40 +275,40 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
 
     // クールダウンのエネルギー量による追加ボーナス
     public void coolTimeBonus() {
-        if (getBaseMaxPower() / 1.125 < getEnergy()) {
+        if (getMaxEnergy() / 1.125 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed() * 5;
         }
-        if (getBaseMaxPower() / 1.25 < getEnergy()) {
+        if (getMaxEnergy() / 1.25 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed() * 3;
         }
-        if (getBaseMaxPower() / 3 < getEnergy()) {
+        if (getMaxEnergy() / 3 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed() * 2;
         }
-        if (getBaseMaxPower() / 5 < getEnergy()) {
+        if (getMaxEnergy() / 5 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed();
         }
-        if (getBaseMaxPower() / 7 < getEnergy()) {
+        if (getMaxEnergy() / 7 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed();
         }
-        if (getBaseMaxPower() / 10 < getEnergy()) {
+        if (getMaxEnergy() / 10 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed();
         }
-        if (getBaseMaxPower() / 12 < getEnergy()) {
+        if (getMaxEnergy() / 12 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed();
         }
-        if (getBaseMaxPower() / 15 < getEnergy()) {
+        if (getMaxEnergy() / 15 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed();
         }
-        if (getBaseMaxPower() / 16 < getEnergy()) {
+        if (getMaxEnergy() / 16 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed();
         }
-        if (getBaseMaxPower() / 20 < getEnergy()) {
+        if (getMaxEnergy() / 20 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed();
         }
-        if (getBaseMaxPower() / 30 < getEnergy()) {
+        if (getMaxEnergy() / 30 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed();
         }
-        if (getBaseMaxPower() / 40 < getEnergy()) {
+        if (getMaxEnergy() / 40 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed();
         }
     }

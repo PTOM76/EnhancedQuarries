@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import ml.pkom.easyapi.FileControl;
 import ml.pkom.easyapi.config.JsonConfig;
-import ml.pkom.enhancedquarries.easyapi.Compressor;
 import ml.pkom.mcpitanlibarch.api.nbt.NbtTag;
 import ml.pkom.mcpitanlibarch.api.util.BlockUtil;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -28,7 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static ml.pkom.enhancedquarries.Configs.configDir;
+import static ml.pkom.enhancedquarries.Config.configDir;
 
 public class BlueprintUtil {
 

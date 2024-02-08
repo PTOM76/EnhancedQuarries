@@ -17,8 +17,8 @@ public class EnhancedPumpTile extends PumpTile {
         return super.getBasicSpeed() * 2;
     }
 
-    public long getBaseMaxPower() {
-        return super.getBaseMaxPower() * 2;
+    public long getMaxEnergy() {
+        return super.getMaxEnergy() * 2;
     }
 
     public long getEnergyCost() {

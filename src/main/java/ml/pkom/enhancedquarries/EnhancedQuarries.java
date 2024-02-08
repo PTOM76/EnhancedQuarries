@@ -1,11 +1,13 @@
 package ml.pkom.enhancedquarries;
 
+import ml.pkom.enhancedquarries.compat.RebornEnergyRegister;
 import ml.pkom.enhancedquarries.screen.LibraryScreenHandler;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.item.CreativeTabBuilder;
 import ml.pkom.mcpitanlibarch.api.network.ServerNetworking;
 import ml.pkom.mcpitanlibarch.api.registry.ArchRegistry;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -35,7 +37,7 @@ public class EnhancedQuarries implements ModInitializer {
         ScreenHandlers.init();
         FillerModules.init();
         FillerCraftingPatterns.init();
-        Configs.init();
+        Config.init();
 
         ServerNetworking.registerReceiver(id("blueprint_name"), ((server, p, buf) -> {
             String text = buf.readString();
@@ -45,7 +47,15 @@ public class EnhancedQuarries implements ModInitializer {
             screenHandler.setBlueprintName(text);
         }));
 
+        registerEnergyStorage();
+
         registry.allRegister();
+    }
+
+    public static void registerEnergyStorage() {
+        if (FabricLoader.getInstance().isModLoaded("team_reborn_energy")) {
+            RebornEnergyRegister.init();
+        }
     }
 
     public static void log(Level level, String message){

@@ -1,45 +1,73 @@
 package ml.pkom.enhancedquarries;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
-import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import ml.pkom.easyapi.FileControl;
+import ml.pkom.easyapi.config.YamlConfig;
 import ml.pkom.enhancedquarries.item.fillermodule.HorizontalLayerModule;
 import ml.pkom.enhancedquarries.item.fillermodule.VerticalLayerModule;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
-import net.minecraft.client.gui.screen.Screen;
-import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import net.fabricmc.loader.api.FabricLoader;
 
-public class Config implements ModMenuApi {
+import java.io.File;
 
-    public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-        return parent -> {
-            ConfigBuilder builder = ConfigBuilder.create()
-                    .setTitle(TextUtil.translatable("title.enhanced_quarries.config"))
-                    .setParentScreen(parent);
-            builder.setSavingRunnable(() -> {
-                Configs.configDir.mkdirs();
-                Configs.yamlConfig.set("torch_interval", FillerTile.moduleInterval);
-                Configs.yamlConfig.set("vertical_layer_interval", VerticalLayerModule.interval);
-                Configs.yamlConfig.set("horizontal_layer_interval", HorizontalLayerModule.interval);
-                Configs.yamlConfig.save(Configs.configFile, true);
-            });
-            ConfigCategory general = builder.getOrCreateCategory(TextUtil.translatable("category.enhanced_quarries.general"));
-            ConfigEntryBuilder entryBuilder = builder.entryBuilder();
-            general.addEntry(entryBuilder.startIntField(TextUtil.translatable("option.enhanced_quarries.torch_interval"), FillerTile.moduleInterval)
-                    .setDefaultValue(6)
-                    .setSaveConsumer(newValue -> FillerTile.moduleInterval = newValue)
-                    .build());
-            general.addEntry(entryBuilder.startIntField(TextUtil.translatable("option.enhanced_quarries.vertical_layer_interval"), VerticalLayerModule.interval)
-                    .setDefaultValue(6)
-                    .setSaveConsumer(newValue -> VerticalLayerModule.interval = newValue)
-                    .build());
-            general.addEntry(entryBuilder.startIntField(TextUtil.translatable("option.enhanced_quarries.horizontal_layer_interval"), HorizontalLayerModule.interval)
-                    .setDefaultValue(6)
-                    .setSaveConsumer(newValue -> HorizontalLayerModule.interval = newValue)
-                    .build());
-            return builder.build();
-        };
+public class Config {
+    public static File configDir = new File(FabricLoader.getInstance().getConfigDir().toFile(), "enhanced_quarries");
+    public static File configFile = new File(configDir, "config.yml");
+
+    public static YamlConfig config = new YamlConfig(configFile);
+
+    public static boolean initialized = false;
+    public static void init() {
+        if (initialized) return;
+        initialized = true;
+
+        if (!configDir.exists() || !configDir.isDirectory())
+            configDir.mkdirs();
+
+        if (config.configMap.containsKey("module_interval")) {
+            FillerTile.moduleInterval = config.getInt("module_interval");
+        } else {
+            config.setInt("module_interval", FillerTile.moduleInterval);
+        }
+
+        if (config.configMap.containsKey("vertical_layer_interval")) {
+            VerticalLayerModule.interval = config.getInt("vertical_layer_interval");
+        } else {
+            config.setInt("vertical_layer_interval", VerticalLayerModule.interval);
+        }
+
+        if (config.configMap.containsKey("horizontal_layer_interval")) {
+            HorizontalLayerModule.interval = config.getInt("horizontal_layer_interval");
+        } else {
+            config.setInt("horizontal_layer_interval", HorizontalLayerModule.interval);
+        }
+
+        if (!config.configMap.containsKey("reborn_energy_conversion_rate"))
+            config.setDouble("reborn_energy_conversion_rate", 1.0);
+
+        save();
+    }
+
+    public static boolean reload() {
+        if (FileControl.fileExists(getConfigFile())) {
+            config.load(getConfigFile());
+            return true;
+        }
+        return false;
+    }
+
+    public static File getConfigFile() {
+        return configFile;
+    }
+
+    public static void setConfigDir(File configDir) {
+        Config.configDir = configDir;
+    }
+
+    public static File getConfigDir() {
+        return configDir;
+    }
+
+    public static void save() {
+        config.save(getConfigFile(), true);
     }
 }

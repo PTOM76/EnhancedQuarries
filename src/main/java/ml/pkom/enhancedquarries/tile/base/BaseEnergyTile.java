@@ -1,6 +1,7 @@
 package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.block.base.BaseBlock;
+import ml.pkom.enhancedquarries.compat.IEnergyStorage;
 import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -13,6 +14,20 @@ import net.minecraft.world.World;
 public abstract class BaseEnergyTile extends ExtendBlockEntity implements BlockEntityTicker<BaseEnergyTile> {
     public BaseEnergyTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    private IEnergyStorage energyStorage = null;
+
+    public void setEnergyStorage(IEnergyStorage energyStorage) {
+        this.energyStorage = energyStorage;
+    }
+
+    public IEnergyStorage getEnergyStorage() {
+        return energyStorage;
+    }
+
+    public boolean hasEnergyStorage() {
+        return energyStorage != null;
     }
 
     @Override
@@ -38,19 +53,56 @@ public abstract class BaseEnergyTile extends ExtendBlockEntity implements BlockE
         holdEnergy = energy;
     }
 
-    public void addEnergy(long energy) {
-        holdEnergy += energy;
+    public boolean addEnergy(long energy) {
+        if (canAddEnergy(energy)) {
+            holdEnergy += energy;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeEnergy(long energy) {
+        return addEnergy(-energy);
+    }
+
+
+    public boolean canAddEnergy(long energy) {
+        return getMaxEnergy() > getEnergy() + energy && getEnergy() + energy >= 0;
+    }
+
+    public long insertEnergy(long amount) {
+        long usableCapacity = getUsableCapacity();
+        if (amount > usableCapacity) {
+            holdEnergy += usableCapacity;
+            return usableCapacity;
+        }
+        holdEnergy += amount;
+        return amount;
+    }
+
+    public long extractEnergy(long amount) {
+        if (amount > holdEnergy) {
+            long energy = this.holdEnergy;
+            this.holdEnergy = 0;
+            return energy;
+        }
+        holdEnergy -= amount;
+        return amount;
     }
 
     public void useEnergy(long energy) {
         setEnergy(getEnergy() - energy);
     }
 
-    public abstract long getBaseMaxPower();
+    public abstract long getMaxEnergy();
 
-    public abstract long getBaseMaxOutput();
+    public long getUsableCapacity() {
+        return getMaxEnergy() - getEnergy();
+    }
 
-    public abstract long getBaseMaxInput();
+    public abstract long getMaxOutput();
+
+    public abstract long getMaxInput();
 
     @Override
     public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {

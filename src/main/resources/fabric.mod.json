@@ -25,7 +25,7 @@
       "ml.pkom.enhancedquarries.EnhancedQuarriesClient"
     ],
     "modmenu": [
-      "ml.pkom.enhancedquarries.Config"
+      "ml.pkom.enhancedquarries.client.compat.ModMenuAddon"
     ]
   },
   "mixins": [

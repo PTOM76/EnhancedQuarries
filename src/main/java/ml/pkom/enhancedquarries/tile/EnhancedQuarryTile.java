@@ -30,22 +30,22 @@ public class EnhancedQuarryTile extends QuarryTile {
     @Override
     public void coolTimeBonus() {
         super.coolTimeBonus();
-        if (getBaseMaxPower() / 1.025 < getEnergy()) {
+        if (getMaxEnergy() / 1.025 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed() * 10;
         }
-        if (getBaseMaxPower() / 1.0125 < getEnergy()) {
+        if (getMaxEnergy() / 1.0125 < getEnergy()) {
             coolTime = coolTime - getBasicSpeed() * 25;
         }
     }
 
     @Override
-    public long getBaseMaxPower() {
+    public long getMaxEnergy() {
         return 10000;
     }
 
     @Override
-    public long getBaseMaxInput() {
-        return super.getBaseMaxInput() * 3;
+    public long getMaxInput() {
+        return super.getMaxInput() * 3;
     }
 
     @Override
