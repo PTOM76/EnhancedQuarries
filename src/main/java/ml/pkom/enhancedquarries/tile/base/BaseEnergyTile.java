@@ -3,7 +3,6 @@ package ml.pkom.enhancedquarries.tile.base;
 import ml.pkom.enhancedquarries.block.base.BaseBlock;
 import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;

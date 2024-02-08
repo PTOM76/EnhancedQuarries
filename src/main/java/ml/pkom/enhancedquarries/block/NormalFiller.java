@@ -1,24 +1,15 @@
 package ml.pkom.enhancedquarries.block;
 
 import ml.pkom.enhancedquarries.block.base.Filler;
+import ml.pkom.enhancedquarries.tile.NormalFillerTile;
+import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.enhancedquarries.screen.FillerScreenHandler;
-import ml.pkom.enhancedquarries.tile.NormalFillerTile;
-import ml.pkom.enhancedquarries.tile.base.FillerTile;
-import ml.pkom.mcpitanlibarch.api.util.TextUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class NormalFiller extends Filler {
 

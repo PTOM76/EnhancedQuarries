@@ -6,58 +6,34 @@ import ml.pkom.enhancedquarries.event.BlockStatePos;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
-import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import net.minecraft.block.BlockEntityProvider;
+import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Filler extends BaseBlock implements BlockEntityProvider {
+public abstract class Filler extends BaseBlock implements ExtendBlockEntityProvider {
 
     public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
             .of(CompatibleMaterial.METAL)
             .requiresTool()
-            //.breakByTool(FabricToolTags.PICKAXES, 0)
             .strength(2, 8);
 
-    // Custom Setting
     public Filler(CompatibleBlockSettings settings) {
         super(settings);
     }
 
-    // Default Setting
     public Filler() {
         this(defaultSettings);
-    }
-
-    // 1.17.1へのポート用
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return createBlockEntity(new TileCreateEvent(pos, state));
-    }
-
-    public BlockEntity createBlockEntity(BlockView world) {
-        return createBlockEntity(new TileCreateEvent(world));
-    }
-
-    public abstract BlockEntity createBlockEntity(TileCreateEvent event);
-
-    @Override
-    public ActionResult onRightClick(BlockUseEvent event) {
-        // ここでGUIを開けないように無効化しておく
-        return ActionResult.PASS;
     }
 
     @Override
