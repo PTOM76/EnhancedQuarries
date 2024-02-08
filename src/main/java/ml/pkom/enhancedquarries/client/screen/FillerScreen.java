@@ -30,7 +30,6 @@ public class FillerScreen extends BaseHandledScreen {
     @Override
     public void drawForegroundOverride(DrawForegroundArgs args) {
         super.drawForegroundOverride(args);
-        //ScreenUtil.RendererUtil.drawText(textRenderer, args.drawObjectDM, TextUtil.translatable("screen.enhanced_quarries.filler.title"), 45, 7, 4210752);
         ScreenUtil.RendererUtil.drawText(textRenderer, args.drawObjectDM, TextUtil.translatable("screen.enhanced_quarries.filler.title2"), 8, 75, 4210752);
     }
 }

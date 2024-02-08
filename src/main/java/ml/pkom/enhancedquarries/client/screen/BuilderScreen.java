@@ -15,7 +15,7 @@ public class BuilderScreen extends BaseHandledScreen {
 
     public BuilderScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        titleX = (backgroundWidth - 62) / 2 - MinecraftClient.getInstance().textRenderer.getWidth(title) / 2;
+        titleX = backgroundWidth / 2 - MinecraftClient.getInstance().textRenderer.getWidth(title) / 2;
         titleY = 7;
 
         playerInventoryTitleY = 142;
@@ -31,7 +31,6 @@ public class BuilderScreen extends BaseHandledScreen {
     @Override
     public void drawForegroundOverride(DrawForegroundArgs args) {
         super.drawForegroundOverride(args);
-        //ScreenUtil.RendererUtil.drawText(textRenderer, args.drawObjectDM, TextUtil.translatable("screen.enhanced_quarries.builder.title"), (backgroundWidth - 62) / 2 - textRenderer.getWidth(TextUtil.translatable("screen.enhanced_quarries.builder.title")) / 2, 7, 4210752);
         ScreenUtil.RendererUtil.drawText(textRenderer, args.drawObjectDM, TextUtil.translatable("screen.enhanced_quarries.builder.title2"), 8, 75, 4210752);
     }
 }

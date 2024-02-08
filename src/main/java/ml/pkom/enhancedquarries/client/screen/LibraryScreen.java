@@ -8,6 +8,7 @@ import ml.pkom.mcpitanlibarch.api.network.ClientNetworking;
 import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import ml.pkom.mcpitanlibarch.api.util.client.ScreenUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -21,7 +22,7 @@ public class LibraryScreen extends BaseHandledScreen {
 
     public LibraryScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        this.titleX = backgroundWidth / 2 - textRenderer.getWidth(title) / 2;
+        this.titleX = backgroundWidth / 2 - MinecraftClient.getInstance().textRenderer.getWidth(title) / 2;
         this.titleY = 6;
 
         playerInventoryTitleY = 72;
