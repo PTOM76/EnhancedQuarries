@@ -5,7 +5,6 @@ import ml.pkom.enhancedquarries.event.BlockStatePos;
 import ml.pkom.enhancedquarries.tile.base.ScannerTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
-import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Scanner extends BaseBlock implements ExtendBlockEntityProvider {
+public abstract class Scanner extends BaseBlock {
 
     public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
             .of(CompatibleMaterial.METAL)

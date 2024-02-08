@@ -99,27 +99,20 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
     public double coolTime = getSettingCoolTime();
 
     public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        // 1.--
         super.tick(world, pos, state, blockEntity);
-        if (getWorld() == null || getWorld().isClient())
-        {
-            return;
-        }
-        // ----
-        //BlockState state = getWorld().getBlockState(getPos());
+        if (world.isClient()) return;
 
         // レッドストーン受信で無効
         if (getWorld().isReceivingRedstonePower(getPos())) {
-            if (isActive()) {
+            if (isActive())
                 Scanner.setActive(false, getWorld(), getPos());
-            }
             return;
         }
         if (getEnergy() > getEnergyCost()) {
             // ここに処理を記入
             if ((
-                            getItems().get(0).getItem().equals(Items.EMPTY_BLUEPRINT)
-                                    || getItems().get(0).getItem().equals(Items.BLUEPRINT)
+                    getItems().get(0).getItem().equals(Items.EMPTY_BLUEPRINT)
+                            || getItems().get(0).getItem().equals(Items.BLUEPRINT)
                     ) && coolTime <= 0 && getItems().get(1).isEmpty()) {
                 coolTime = getSettingCoolTime();
                 Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();

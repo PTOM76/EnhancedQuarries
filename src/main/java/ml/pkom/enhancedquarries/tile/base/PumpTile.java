@@ -109,21 +109,14 @@ public class PumpTile extends BaseEnergyTile {
     public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
         super.tick(world, pos, state, blockEntity);
 
-        // 1.--
-        if (world == null || world.isClient())
-        {
-            return;
-        }
-        // ----
-        //BlockState state = getCachedState();
+        if (world.isClient()) return;
+
         if (!(state.getBlock() instanceof Pump)) return;
-        //Pump pump = (Pump) state.getBlock();
 
         // レッドストーン受信で無効
         if (world.isReceivingRedstonePower(getPos())) {
-            if (isActive()) {
+            if (isActive())
                  Pump.setActive(false, world, getPos());
-            }
             return;
         }
         if (getEnergy() > getEnergyCost()) {

@@ -150,26 +150,17 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     public double coolTime = getSettingCoolTime();
 
     public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        // 1.--
         super.tick(world, pos, state, blockEntity);
-        if (getWorld() == null || getWorld().isClient())
-        {
-            return;
-        }
-        // ----
-        //BlockState state = getWorld().getBlockState(getPos());
-        //Filler filler = (Filler) state.getBlock();
+        if (world.isClient()) return;
 
         // レッドストーン受信で無効
-        if (getWorld().isReceivingRedstonePower(getPos())) {
-            if (isActive()) {
-                Filler.setActive(false, getWorld(), getPos());
-            }
+        if (world.isReceivingRedstonePower(getPos())) {
+            if (isActive())
+                Filler.setActive(false, world, getPos());
             return;
         }
-        if (!hasModule()){
-            return;
-        }
+        if (!hasModule()) return;
+
         if (getEnergy() > getEnergyCost()) {
             // ここに処理を記入
             if (coolTime <= 0) {
@@ -181,10 +172,10 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive()) {
-                Filler.setActive(true, getWorld(), getPos());
+                Filler.setActive(true, world, getPos());
             }
         } else if (isActive()) {
-            Filler.setActive(false, getWorld(), getPos());
+            Filler.setActive(false, world, getPos());
         }
     }
 
@@ -505,7 +496,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     @Override
     public Text getDisplayName() {
-        return TextUtil.literal("screen.enhanced_quarries.filler.title");
+        return TextUtil.translatable("screen.enhanced_quarries.filler.title");
     }
 
     @Nullable

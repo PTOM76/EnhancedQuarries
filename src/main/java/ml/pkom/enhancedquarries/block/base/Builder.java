@@ -3,14 +3,13 @@ package ml.pkom.enhancedquarries.block.base;
 import ml.pkom.enhancedquarries.tile.base.BuilderTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
-import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class Builder extends BaseBlock implements ExtendBlockEntityProvider {
+public abstract class Builder extends BaseBlock {
 
     public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
             .of(CompatibleMaterial.METAL)

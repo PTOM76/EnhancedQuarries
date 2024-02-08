@@ -3,6 +3,7 @@ package ml.pkom.enhancedquarries.block;
 import ml.pkom.enhancedquarries.block.base.Library;
 import ml.pkom.enhancedquarries.tile.NormalLibraryTile;
 import ml.pkom.enhancedquarries.tile.base.LibraryTile;
+import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.Block;
@@ -16,7 +17,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-public class NormalLibrary extends Library {
+public class NormalLibrary extends Library implements ExtendBlockEntityProvider {
 
     public static DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 

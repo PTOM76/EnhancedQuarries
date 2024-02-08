@@ -199,21 +199,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     public double coolTime = getSettingCoolTime();
 
     public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        // 1.--
         super.tick(world, pos, state, blockEntity);
-        if (getWorld() == null || getWorld().isClient())
-        {
-            return;
-        }
-        // ----
-        //BlockState state = getWorld().getBlockState(getPos());
-        //Quarry quarry = (Quarry) state.getBlock();
+        if (world.isClient()) return;
 
         // レッドストーン受信で無効
         if (getWorld().isReceivingRedstonePower(getPos())) {
-            if (isActive()) {
+            if (isActive())
                 Quarry.setActive(false, getWorld(), getPos());
-            }
             return;
         }
 

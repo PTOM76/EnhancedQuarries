@@ -1,9 +1,14 @@
 package ml.pkom.enhancedquarries.block.base;
 
+import ml.pkom.enhancedquarries.tile.base.BaseEnergyTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
+import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -16,7 +21,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class BaseBlock extends ExtendBlock {
+public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider {
 
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
@@ -61,5 +66,15 @@ public class BaseBlock extends ExtendBlock {
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return ((world1, pos, state1, blockEntity) -> {
+            if (blockEntity instanceof BaseEnergyTile) {
+                BaseEnergyTile tile = (BaseEnergyTile) blockEntity;
+                tile.tick(world1, pos, state1, tile);
+            }
+        });
     }
 }

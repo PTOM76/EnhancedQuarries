@@ -114,21 +114,13 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     public Map<BlockPos, BlockState> blueprintMap = new LinkedHashMap<>();
 
     public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        // 1.--
         super.tick(world, pos, state, blockEntity);
-        if (getWorld() == null || getWorld().isClient())
-        {
-            return;
-        }
-        // ----
-        //BlockState state = getWorld().getBlockState(getPos());
-        Builder builder = (Builder) state.getBlock();
+        if (world.isClient()) return;
 
         // レッドストーン受信で無効
         if (getWorld().isReceivingRedstonePower(getPos())) {
-            if (isActive()) {
-                builder.setActive(false, getWorld(), getPos());
-            }
+            if (isActive())
+                Builder.setActive(false, getWorld(), getPos());
             return;
         }
         ItemStack blueprint = inventory.getStack(0);
@@ -184,10 +176,10 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive()) {
-                builder.setActive(true, getWorld(), getPos());
+                Builder.setActive(true, getWorld(), getPos());
             }
         } else if (isActive()) {
-            builder.setActive(false, getWorld(), getPos());
+            Builder.setActive(false, getWorld(), getPos());
         }
     }
 
@@ -371,7 +363,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
 
     @Override
     public Text getDisplayName() {
-        return TextUtil.literal("screen.enhanced_quarries.builder.title");
+        return TextUtil.translatable("screen.enhanced_quarries.builder.title");
     }
 
     @Nullable
