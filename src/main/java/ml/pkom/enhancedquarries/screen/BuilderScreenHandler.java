@@ -7,7 +7,6 @@ import ml.pkom.enhancedquarries.inventory.slot.BuilderSlot;
 import ml.pkom.enhancedquarries.inventory.slot.DisabledSlot;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -21,7 +20,6 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
     public Inventory builderInventory; // index0=Blueprint
     public Inventory needInventory;
 
-    @Deprecated
     public BuilderScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new BuilderInventory(), new DisabledInventory(27));
     }

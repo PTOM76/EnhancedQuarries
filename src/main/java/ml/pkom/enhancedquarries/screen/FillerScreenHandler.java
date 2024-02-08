@@ -16,7 +16,6 @@ public class FillerScreenHandler extends SimpleScreenHandler {
     public Inventory inventory;
     public Inventory craftingInventory;
 
-    @Deprecated
     public FillerScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new FillerInventory(), new FillerCraftingInventory());
     }
