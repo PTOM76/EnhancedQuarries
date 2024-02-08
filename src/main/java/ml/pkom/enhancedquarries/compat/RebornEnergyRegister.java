@@ -11,9 +11,10 @@ import java.util.List;
 import static ml.pkom.enhancedquarries.Tiles.*;
 
 public class RebornEnergyRegister {
-    private static final List<RegistryEvent<BlockEntityType<?>>> tileTypes = new ArrayList<>();
 
-    static {
+    public static void init() {
+        List<RegistryEvent<BlockEntityType<?>>> tileTypes = new ArrayList<>();
+
         tileTypes.add(NORMAL_QUARRY_TILE);
         tileTypes.add(NORMAL_FILLER_TILE);
         tileTypes.add(NORMAL_BUILDER_TILE);
@@ -25,9 +26,7 @@ public class RebornEnergyRegister {
         tileTypes.add(ENHANCED_FILLER_TILE);
         tileTypes.add(ENHANCED_FILLER_WITH_CHEST_TILE);
         tileTypes.add(ENHANCED_PUMP_TILE);
-    }
 
-    public static void init() {
         for (RegistryEvent<BlockEntityType<?>> registryEvent : tileTypes) {
             EnergyStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
                 if (!(blockEntity instanceof BaseEnergyTile)) return null;
