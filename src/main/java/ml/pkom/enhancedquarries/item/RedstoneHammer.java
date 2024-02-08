@@ -1,5 +1,6 @@
 package ml.pkom.enhancedquarries.item;
 
+import ml.pkom.enhancedquarries.tile.base.BaseEnergyTile;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
@@ -19,19 +20,27 @@ public class RedstoneHammer extends PickaxeItem {
     public ActionResult useOnBlock(ItemUsageContext context) {
         if (context.getWorld().getBlockEntity(context.getBlockPos()) != null) {
             BlockEntity blockEntity = context.getWorld().getBlockEntity(context.getBlockPos());
-            if (blockEntity instanceof reborncore.common.powerSystem.PowerAcceptorBlockEntity) {
-                if (FabricLoader.getInstance().isModLoaded("reborncore")) {
+            if (FabricLoader.getInstance().isModLoaded("reborncore")) {
+                if (blockEntity instanceof reborncore.common.powerSystem.PowerAcceptorBlockEntity) {
                     reborncore.common.powerSystem.PowerAcceptorBlockEntity energyStorage = (reborncore.common.powerSystem.PowerAcceptorBlockEntity) blockEntity;
-                    energyStorage.addEnergy(1);
+                    energyStorage.addEnergy(5);
                     return ActionResult.SUCCESS;
                 }
             }
+            if (blockEntity instanceof BaseEnergyTile) {
+                BaseEnergyTile energyStorage = (BaseEnergyTile) blockEntity;
+                energyStorage.addEnergy(5);
+                return ActionResult.SUCCESS;
+            }
         }
+        /*
         BlockState block = context.getWorld().getBlockState(context.getBlockPos());
         block.cycle(LeverBlock.POWERED);
         context.getWorld().updateNeighborsAlways(context.getBlockPos(), block.getBlock());
         block.cycle(LeverBlock.POWERED);
         context.getWorld().updateNeighborsAlways(context.getBlockPos(), block.getBlock());
+
+         */
         return super.useOnBlock(context);
     }
 }

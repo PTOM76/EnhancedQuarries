@@ -5,6 +5,9 @@ import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
@@ -28,6 +31,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInventory {
@@ -224,7 +228,6 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                 coolTime = getSettingCoolTime();
                 if (tryQuarrying()) {
                     useEnergy(getEnergyCost());
-                    //insertChest();
                 }
             }
             coolTimeBonus();
@@ -232,74 +235,58 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             if (!isActive()) {
                 Quarry.setActive(true, getWorld(), getPos());
             }
+            if (getWorld().getTime() % 2L == 0L)
+                insertChest();
         } else if (isActive()) {
             Quarry.setActive(false, getWorld(), getPos());
         }
     }
 
-    // この関数は失敗作なのでTRで処理することにした。
     public boolean insertChest() {
         // チェスト自動挿入
-        if (getAnyContainerBlock() != null) {
-            int i;
-            for (i = 0; i < getItems().size(); i++) {
-                ItemStack stack = getItems().get(i);
-                if (!stack.isEmpty()) {
-                    Inventory container = getAnyContainerBlock();
-                    if (getEmptyOrCanInsertIndex(container, stack) != null) {
-                        try {
-                            int canIndex = getEmptyOrCanInsertIndex(container, stack);
-                            ItemStack containerStack = container.getStack(canIndex);
-                            if (containerStack.isEmpty()) {
-                                container.setStack(canIndex, stack.copy());
-                                getItems().set(i, ItemStack.EMPTY);
-                            } else {
-                                int originInCount = containerStack.getCount();
-                                container.getStack(i).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
-                                if (stack.getMaxCount() >= stack.getCount() + originInCount) {
-                                    getItems().set(i, ItemStack.EMPTY);
-                                    return true;
-                                }
-                                stack.setCount(stack.getCount() + originInCount - stack.getMaxCount());
-                                getItems().set(i, stack);
-                            }
-                            return true;
-                        } catch (NullPointerException ignored) {
+        List<Direction> dirs = getDirsOfAnyContainerBlock();
+        if (!dirs.isEmpty()) {
+            for (int i = 0; i < getItems().size(); i++) {
+                for (Direction dir : dirs) {
+                    ItemStack stack = getItems().get(i);
+                    if (stack.isEmpty()) continue;
 
-                        }
-                    }
-
+                    long amount = StorageUtil.move(InventoryStorage.of(this, null).getSlot(i), ItemStorage.SIDED.find(getWorld(), getPos().offset(dir), dir.getOpposite()), (iv) -> true, Long.MAX_VALUE, null);
+                    if (amount < stack.getCount()) continue;
+                    return true;
                 }
-
             }
         }
         return false;
     }
 
     public Inventory getAnyContainerBlock() {
-        return getAnyContainerBlock(0);
-    }
+        BlockPos[] poses = new BlockPos[]{getPos().up(), getPos().down(), getPos().north(), getPos().south(), getPos().west(), getPos().east()};
 
-    public Inventory getAnyContainerBlock(int i) {
-        if (getWorld().getBlockEntity(getPos().up()) instanceof Inventory) {
-            return (Inventory) getWorld().getBlockEntity(getPos().up());
-        }
-        if (getWorld().getBlockEntity(getPos().down()) instanceof Inventory) {
-            return (Inventory) getWorld().getBlockEntity(getPos().down());
-        }
-        if (getWorld().getBlockEntity(getPos().north()) instanceof Inventory) {
-            return (Inventory) getWorld().getBlockEntity(getPos().north());
-        }
-        if (getWorld().getBlockEntity(getPos().south()) instanceof Inventory) {
-            return (Inventory) getWorld().getBlockEntity(getPos().south());
-        }
-        if (getWorld().getBlockEntity(getPos().west()) instanceof Inventory) {
-            return (Inventory) getWorld().getBlockEntity(getPos().west());
-        }
-        if (getWorld().getBlockEntity(getPos().east()) instanceof Inventory) {
-            return (Inventory) getWorld().getBlockEntity(getPos().east());
+        for (BlockPos pos : poses) {
+            if (getWorld().getBlockEntity(pos) instanceof Inventory) {
+                Inventory inventory = (Inventory) getWorld().getBlockEntity(pos);
+                if (inventory.isEmpty()) continue;
+                if (inventory.size() <= 0) continue;
+                return inventory;
+            }
         }
         return null;
+    }
+
+    public List<Direction> getDirsOfAnyContainerBlock() {
+        Direction[] dirs = new Direction[]{Direction.UP, Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+        List<Direction> usableDirs = new ArrayList<>();
+
+        for (Direction dir : dirs) {
+            BlockPos pos = getPos().offset(dir);
+            if (getWorld().getBlockEntity(pos) instanceof Inventory) {
+                Inventory inventory = (Inventory) getWorld().getBlockEntity(pos);
+                if (inventory.size() <= 0) continue;
+                usableDirs.add(dir);
+            }
+        }
+        return usableDirs;
     }
 
     // クールダウンのエネルギー量による追加ボーナス
