@@ -1,14 +1,13 @@
 package ml.pkom.enhancedquarries.inventory.slot;
 
-import ml.pkom.enhancedquarries.EnhancedQuarries;
 import ml.pkom.enhancedquarries.FillerCraftingPattern;
 import ml.pkom.enhancedquarries.FillerCraftingPatterns;
 import ml.pkom.enhancedquarries.item.base.FillerModule;
+import ml.pkom.mcpitanlibarch.api.gui.slot.CompatibleSlot;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
 
-public class FillerCraftingSlot extends Slot {
+public class FillerCraftingSlot extends CompatibleSlot {
 
     public int index;
 
@@ -27,8 +26,8 @@ public class FillerCraftingSlot extends Slot {
     boolean isCrafting = false;
 
     @Override
-    public void setStack(ItemStack stack) {
-        super.setStack(stack);
+    public void callSetStack(ItemStack stack) {
+        super.callSetStack(stack);
         if (isOutput) {
             if (stack.isEmpty() && !isCrafting) {
                 int i;
@@ -36,12 +35,28 @@ public class FillerCraftingSlot extends Slot {
                     inventory.setStack(i, ItemStack.EMPTY);
                 }
             }
-        } else {
-            // Input
-            isCrafting = true;
-            tryCraft();
-            isCrafting = false;
+            return;
         }
+
+        // Input
+        isCrafting = true;
+        tryCraft();
+        isCrafting = false;
+    }
+
+    @Override
+    public ItemStack callTakeStack(int amount) {
+        ItemStack stack = super.callTakeStack(amount);
+        if (isOutput) {
+            if (callGetStack().isEmpty() && !isCrafting) {
+                int i;
+                for (i = 0;i < 9;i++) {
+                    inventory.setStack(i, ItemStack.EMPTY);
+                }
+            }
+
+        }
+        return stack;
     }
 
     public void tryCraft() {

@@ -2,6 +2,7 @@ package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.enhancedquarries.block.Frame;
+import ml.pkom.enhancedquarries.tile.base.QuarryTile;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
@@ -67,6 +68,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                 if (procZ > pos2.getZ() + 1) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
                     if (getWorld().getBlockState(procPos) == null) return false;
+                    if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continueQuarrying();
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
                     if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak())) {
                         if (canReplaceFluid()) {

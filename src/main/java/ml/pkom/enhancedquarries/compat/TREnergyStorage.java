@@ -31,9 +31,12 @@ public class TREnergyStorage extends SnapshotParticipant<Long> implements Energy
             updateSnapshots(transaction);
             return (long) (tile.insertEnergy((long) (maxAmount * CONVERSION_RATE)) / CONVERSION_RATE);
         }
+        if (maxAmount > 0) {
+            updateSnapshots(transaction);
+            return (long) (tile.insertEnergy((long) (getUsableCapacity() * CONVERSION_RATE)) / CONVERSION_RATE);
+        }
 
         return 0;
-
     }
 
     @Override

@@ -90,12 +90,9 @@ public class FillerCraftingPattern {
 
     public boolean inputEquals(FillerCraftingPattern pattern) {
         if (pattern == this) return true;
-        //EnhancedQuarries.log(Level.INFO, pattern.toString());
-        //EnhancedQuarries.log(Level.INFO, this.toString());
 
         return (pattern.input1.getItem().equals(input1.getItem())) && (pattern.input2.getItem().equals(input2.getItem())) && (pattern.input3.getItem().equals(input3.getItem())) && (pattern.input4.getItem().equals(input4.getItem())) && (pattern.input5.getItem().equals(input5.getItem())) && (pattern.input6.getItem().equals(input6.getItem())) && (pattern.input7.getItem().equals(input7.getItem())) && (pattern.input8.getItem().equals(input8.getItem())) && (pattern.input9.getItem().equals(input9.getItem()));
     }
-
 
     @Override
     public int hashCode() {

@@ -16,15 +16,15 @@ public class RebornEnergyRegister {
         List<RegistryEvent<BlockEntityType<?>>> tileTypes = new ArrayList<>();
 
         tileTypes.add(NORMAL_QUARRY_TILE);
-        tileTypes.add(NORMAL_FILLER_TILE);
-        tileTypes.add(NORMAL_BUILDER_TILE);
-        tileTypes.add(NORMAL_SCANNER_TILE);
-        tileTypes.add(NORMAL_PUMP_TILE);
         tileTypes.add(OPTIMUM_QUARRY_TILE);
         tileTypes.add(ENHANCED_QUARRY_TILE);
         tileTypes.add(ENHANCED_OPTIMUM_QUARRY_TILE);
         tileTypes.add(ENHANCED_FILLER_TILE);
         tileTypes.add(ENHANCED_FILLER_WITH_CHEST_TILE);
+        tileTypes.add(NORMAL_FILLER_TILE);
+        tileTypes.add(NORMAL_BUILDER_TILE);
+        tileTypes.add(NORMAL_SCANNER_TILE);
+        tileTypes.add(NORMAL_PUMP_TILE);
         tileTypes.add(ENHANCED_PUMP_TILE);
         tileTypes.add(FLUID_QUARRY_TILE);
         tileTypes.add(FLUID_OPTIMUM_QUARRY_TILE);

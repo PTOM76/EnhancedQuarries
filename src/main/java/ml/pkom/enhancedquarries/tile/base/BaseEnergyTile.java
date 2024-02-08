@@ -65,7 +65,6 @@ public abstract class BaseEnergyTile extends ExtendBlockEntity implements BlockE
         return addEnergy(-energy);
     }
 
-
     public boolean canAddEnergy(long energy) {
         return getMaxEnergy() > getEnergy() + energy && getEnergy() + energy >= 0;
     }

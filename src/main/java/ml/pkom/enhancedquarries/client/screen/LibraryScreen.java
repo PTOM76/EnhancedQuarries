@@ -22,7 +22,7 @@ public class LibraryScreen extends BaseHandledScreen {
 
     public LibraryScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        this.titleX = backgroundWidth / 2 - MinecraftClient.getInstance().textRenderer.getWidth(title) / 2;
+        this.titleX = backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2;
         this.titleY = 6;
 
         playerInventoryTitleY = 72;

@@ -200,11 +200,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         return 5;
     }
 
-    public double defaultSettingCoolTime = 300;
-
     // クールダウンの基準
     public double getSettingCoolTime() {
-        return defaultSettingCoolTime;
+        return 300;
     }
 
     public double coolTime = getSettingCoolTime();
@@ -237,8 +235,6 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         } else if (isActive()) {
             Quarry.setActive(false, getWorld(), getPos());
         }
-
-
     }
 
     // この関数は失敗作なのでTRで処理することにした。
@@ -414,6 +410,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public void breakBlock(BlockPos pos, boolean drop) {
         if (getWorld().isClient()) return;
+
         if (isSetSilkTouch || isSetLuck) {
             if (drop) {
                 List<ItemStack> drops = Block.getDroppedStacks(getWorld().getBlockState(pos), (ServerWorld) getWorld(), pos, getWorld().getBlockEntity(pos), null, getQuarryStack());
@@ -582,6 +579,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                         BlockPos procPos = new BlockPos(procX, procY, procZ);
                         if (getWorld().getBlockState(procPos) == null) continue;
                         Block procBlock = getWorld().getBlockState(procPos).getBlock();
+
+                        if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
                         if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) {
                             if (canReplaceFluid()) {
                                 double time = tryFluidReplace(procPos);

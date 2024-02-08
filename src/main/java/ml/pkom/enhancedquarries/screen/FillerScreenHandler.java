@@ -4,8 +4,8 @@ import ml.pkom.enhancedquarries.ScreenHandlers;
 import ml.pkom.enhancedquarries.inventory.FillerCraftingInventory;
 import ml.pkom.enhancedquarries.inventory.slot.FillerCraftingSlot;
 import ml.pkom.enhancedquarries.inventory.FillerInventory;
+import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -53,12 +53,12 @@ public class FillerScreenHandler extends SimpleScreenHandler {
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
-        return inventory.canPlayerUse(player);
+    public boolean canUse(Player player) {
+        return inventory.canPlayerUse(player.getPlayerEntity());
     }
 
     @Override
-    public ItemStack quickMoveOverride(PlayerEntity player, int invSlot) {
+    public ItemStack quickMoveOverride(Player player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(invSlot);
         if (slot instanceof FillerCraftingSlot) {
@@ -69,10 +69,10 @@ public class FillerScreenHandler extends SimpleScreenHandler {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
             if (invSlot < inventory.size() + craftingInventory.size()) {
-                if (!this.insertItem(originalStack, inventory.size() + craftingInventory.size(), this.slots.size(), true)) {
+                if (!this.callInsertItem(originalStack, inventory.size() + craftingInventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, craftingInventory.size(),craftingInventory.size() + inventory.size(), false)) {
+            } else if (!this.callInsertItem(originalStack, craftingInventory.size(),craftingInventory.size() + inventory.size(), false)) {
                 return ItemStack.EMPTY;
             }
 

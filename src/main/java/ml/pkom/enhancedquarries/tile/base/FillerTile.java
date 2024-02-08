@@ -79,7 +79,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         return 5000;
     }
 
-    // エネルギーの最大出力(不要なので0)
+    // エネルギーの最大出力
     public long getMaxOutput() {
         return 0;
     }
@@ -185,9 +185,9 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
             }
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
-            if (!isActive()) {
+            if (!isActive())
                 Filler.setActive(true, world, getPos());
-            }
+
         } else if (isActive()) {
             Filler.setActive(false, world, getPos());
         }
@@ -220,13 +220,6 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     public static int moduleInterval = 6;
 
     public int getModuleInterval() {
-        /*
-        if (!getModule().hasTag()) return 6;
-        NbtCompound tag = getModule().getTag();
-        if (!tag.contains("interval")) return 6;
-        return tag.getInt("interval");
-
-         */
         return moduleInterval;
     }
 
@@ -266,11 +259,13 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         int procY;
         int procZ;
         //procY = pos1.getY(); procY <= pos2.getY(); procY++
-        for (procY = getWorld().getBottomY(); procY <= getWorld().getDimension().height(); procY++) {
+        for (procY = WorldUtil.getBottomY(getWorld()); procY <= getWorld().getDimension().height(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
+                    if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
+
                     if ( procY <= pos2.getY() && procY >= pos1.getY()) {
                         // 埋め立てモジュール
                         if (item.equals(Items.fillerALL_FILL)) {

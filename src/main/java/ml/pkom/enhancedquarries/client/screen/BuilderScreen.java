@@ -5,7 +5,6 @@ import ml.pkom.enhancedquarries.client.screen.base.BaseHandledScreen;
 import ml.pkom.mcpitanlibarch.api.client.render.handledscreen.DrawForegroundArgs;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import ml.pkom.mcpitanlibarch.api.util.client.ScreenUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -15,7 +14,7 @@ public class BuilderScreen extends BaseHandledScreen {
 
     public BuilderScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        titleX = backgroundWidth / 2 - MinecraftClient.getInstance().textRenderer.getWidth(title) / 2;
+        titleX = backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2;
         titleY = 7;
 
         playerInventoryTitleY = 142;

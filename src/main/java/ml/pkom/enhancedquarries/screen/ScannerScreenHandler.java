@@ -3,8 +3,8 @@ package ml.pkom.enhancedquarries.screen;
 import ml.pkom.enhancedquarries.ScreenHandlers;
 import ml.pkom.enhancedquarries.inventory.ScannerInventory;
 import ml.pkom.enhancedquarries.inventory.slot.ScannerSlot;
+import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -33,12 +33,12 @@ public class ScannerScreenHandler extends SimpleScreenHandler {
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
+    public boolean canUse(Player player) {
         return true;
     }
 
     @Override
-    public ItemStack quickMoveOverride(PlayerEntity player, int index) {
+    public ItemStack quickMoveOverride(Player player, int index) {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot.hasStack()) {

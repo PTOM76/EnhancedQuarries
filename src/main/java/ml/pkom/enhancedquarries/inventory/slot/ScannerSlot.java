@@ -1,10 +1,10 @@
 package ml.pkom.enhancedquarries.inventory.slot;
 
+import ml.pkom.mcpitanlibarch.api.gui.slot.CompatibleSlot;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
 
-public class ScannerSlot extends Slot {
+public class ScannerSlot extends CompatibleSlot {
     public ScannerSlot(Inventory inventory, int index, int x, int y) {
         super(inventory, index, x, y);
     }
