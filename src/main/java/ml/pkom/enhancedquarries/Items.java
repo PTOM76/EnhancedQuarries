@@ -87,9 +87,9 @@ public class Items {
     public static Item BLUEPRINT = new Blueprint(new ExtendSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("blueprint")));
     public static Item EMPTY_BLUEPRINT = new Blueprint(new ExtendSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("empty_blueprint")));
 
-    // ゆっくり饅頭
-    public static Item REIMU_BUN = new Item(new ExtendSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("reimu_bun")).food(FoodComponents.COOKIE));
-    public static Item MARISA_BUN = new Item(new ExtendSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("marisa_bun")).food(FoodComponents.COOKIE));
+    // ゆっくり饅頭 (未実装)
+    //public static Item REIMU_BUN = new Item(new ExtendSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("reimu_bun")).food(FoodComponents.COOKIE));
+    //public static Item MARISA_BUN = new Item(new ExtendSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("marisa_bun")).food(FoodComponents.COOKIE));
 
 
     public static void init() {
@@ -146,7 +146,7 @@ public class Items {
         registry.registerItem(EnhancedQuarries.id("empty_blueprint"), () -> EMPTY_BLUEPRINT);
         registry.registerItem(EnhancedQuarries.id("blueprint"), () -> BLUEPRINT);
 
-        registry.registerItem(EnhancedQuarries.id("reimu_bun"), () -> REIMU_BUN);
-        registry.registerItem(EnhancedQuarries.id("marisa_bun"), () -> MARISA_BUN);
+        //registry.registerItem(EnhancedQuarries.id("reimu_bun"), () -> REIMU_BUN);
+        //registry.registerItem(EnhancedQuarries.id("marisa_bun"), () -> MARISA_BUN);
     }
 }
