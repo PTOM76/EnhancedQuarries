@@ -1,25 +1,23 @@
 package ml.pkom.enhancedquarries.item;
 
 import ml.pkom.enhancedquarries.tile.base.BaseEnergyTile;
+import ml.pkom.mcpitanlibarch.api.event.item.ItemUseOnBlockEvent;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
+import ml.pkom.mcpitanlibarch.api.item.tool.CompatiblePickaxeItem;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeverBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.ActionResult;
 
-public class RedstoneHammer extends PickaxeItem {
+public class RedstoneHammer extends CompatiblePickaxeItem {
     public RedstoneHammer(CompatibleItemSettings settings) {
-        super(ToolMaterials.STONE, 1, -3f, settings.build());
+        super(1, -3f, ToolMaterials.STONE, settings);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        if (context.getWorld().getBlockEntity(context.getBlockPos()) != null) {
-            BlockEntity blockEntity = context.getWorld().getBlockEntity(context.getBlockPos());
+    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e, Options options) {
+        if (e.getWorld().getBlockEntity(e.getBlockPos()) != null) {
+            BlockEntity blockEntity = e.getWorld().getBlockEntity(e.getBlockPos());
             if (FabricLoader.getInstance().isModLoaded("reborncore")) {
                 if (blockEntity instanceof reborncore.common.powerSystem.PowerAcceptorBlockEntity) {
                     reborncore.common.powerSystem.PowerAcceptorBlockEntity energyStorage = (reborncore.common.powerSystem.PowerAcceptorBlockEntity) blockEntity;
@@ -41,6 +39,6 @@ public class RedstoneHammer extends PickaxeItem {
         context.getWorld().updateNeighborsAlways(context.getBlockPos(), block.getBlock());
 
          */
-        return super.useOnBlock(context);
+        return super.onRightClickOnBlock(e, options);
     }
 }

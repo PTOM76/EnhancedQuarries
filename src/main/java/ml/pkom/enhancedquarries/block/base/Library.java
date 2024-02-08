@@ -4,6 +4,7 @@ import ml.pkom.enhancedquarries.tile.base.LibraryTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
+import ml.pkom.mcpitanlibarch.api.event.block.StateReplacedEvent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ItemScatterer;
@@ -22,14 +23,14 @@ public abstract class Library extends ExtendBlock {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() != newState.getBlock()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+    public void onStateReplaced(StateReplacedEvent e) {
+        if (e.state.getBlock() != e.newState.getBlock()) {
+            BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
             if (blockEntity instanceof LibraryTile) {
                 LibraryTile library = (LibraryTile)blockEntity;
-                ItemScatterer.spawn(world, pos, library.getInventory());
+                ItemScatterer.spawn(e.world, e.pos, library.getInventory());
             }
-            super.onStateReplaced(state, world, pos, newState, moved);
+            super.onStateReplaced(e);
         }
     }
 }

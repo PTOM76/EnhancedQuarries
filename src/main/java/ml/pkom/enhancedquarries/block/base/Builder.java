@@ -3,11 +3,9 @@ package ml.pkom.enhancedquarries.block.base;
 import ml.pkom.enhancedquarries.tile.base.BuilderTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
-import net.minecraft.block.BlockState;
+import ml.pkom.mcpitanlibarch.api.event.block.StateReplacedEvent;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public abstract class Builder extends BaseBlock {
 
@@ -25,14 +23,14 @@ public abstract class Builder extends BaseBlock {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() != newState.getBlock()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+    public void onStateReplaced(StateReplacedEvent e) {
+        if (e.state.getBlock() != e.newState.getBlock()) {
+            BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
             if (blockEntity instanceof BuilderTile) {
                 BuilderTile builder = (BuilderTile) blockEntity;
-                ItemScatterer.spawn(world, pos, builder);
+                ItemScatterer.spawn(e.world, e.pos, builder);
             }
-            super.onStateReplaced(state, world, pos, newState, moved);
+            super.onStateReplaced(e);
         }
     }
 }

@@ -7,6 +7,7 @@ import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockPlacedEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.StateReplacedEvent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
@@ -36,21 +37,21 @@ public abstract class Filler extends BaseBlock {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() != newState.getBlock()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+    public void onStateReplaced(StateReplacedEvent e) {
+        if (e.state.getBlock() != e.newState.getBlock()) {
+            BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
             if (blockEntity instanceof FillerTile) {
                 FillerTile filler = (FillerTile)blockEntity;
-                ItemScatterer.spawn(world, pos, filler.inventory);
+                ItemScatterer.spawn(e.world, e.pos, filler.inventory);
                 filler.getCraftingInventory().setStack(9, ItemStack.EMPTY);
-                ItemScatterer.spawn(world, pos, filler.getCraftingInventory());
+                ItemScatterer.spawn(e.world, e.pos, filler.getCraftingInventory());
 
                 // モジュールの返却
                 if (filler.canBedrockBreak()) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.BEDROCK_BREAK_MODULE, 1)));
+                    e.world.spawnEntity(new ItemEntity(e.world, e.pos.getX(), e.pos.getY(), e.pos.getZ(), new ItemStack(Items.BEDROCK_BREAK_MODULE, 1)));
                 }
             }
-            super.onStateReplaced(state, world, pos, newState, moved);
+            super.onStateReplaced(e);
         }
     }
 

@@ -8,6 +8,7 @@ import ml.pkom.enhancedquarries.tile.base.QuarryTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockPlacedEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.StateReplacedEvent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
@@ -37,8 +38,12 @@ public abstract class Quarry extends BaseBlock {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() != newState.getBlock()) {
+    public void onStateReplaced(StateReplacedEvent e) {
+        World world = e.world;
+        BlockPos pos = e.pos;
+        BlockState state = e.state;
+
+        if (state.getBlock() != e.newState.getBlock() && state.getBlock() != null && e.newState.getBlock() != null) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof QuarryTile) {
                 QuarryTile quarry = (QuarryTile)blockEntity;
@@ -76,7 +81,7 @@ public abstract class Quarry extends BaseBlock {
                         Frame.breakConnectFrames(world, framePos);
                     }
             }
-            super.onStateReplaced(state, world, pos, newState, moved);
+            super.onStateReplaced(e);
         }
     }
 

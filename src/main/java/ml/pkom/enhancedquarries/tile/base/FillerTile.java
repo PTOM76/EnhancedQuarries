@@ -259,7 +259,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         int procY;
         int procZ;
         //procY = pos1.getY(); procY <= pos2.getY(); procY++
-        for (procY = WorldUtil.getBottomY(getWorld()); procY <= getWorld().getDimension().height(); procY++) {
+        for (procY = WorldUtil.getBottomY(getWorld()); procY <= WorldUtil.getDimensionHeight(getWorld()); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);

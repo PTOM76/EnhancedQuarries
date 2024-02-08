@@ -5,10 +5,12 @@ import ml.pkom.enhancedquarries.block.base.Builder;
 import ml.pkom.enhancedquarries.inventory.DisabledInventory;
 import ml.pkom.enhancedquarries.screen.BuilderScreenHandler;
 import ml.pkom.enhancedquarries.util.BlueprintUtil;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockPlacedEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
+import ml.pkom.mcpitanlibarch.api.util.event.BlockEventGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -222,7 +224,8 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
         if (getInventoryStack(state.getBlock()).isEmpty()) return false;
 
         if (getWorld().setBlockState(blockPos, state)) {
-            state.getBlock().onPlaced(getWorld(), blockPos, state, null, latestGotStack);
+            BlockEventGenerator.onPlaced(state.getBlock(), new BlockPlacedEvent(getWorld(), blockPos, state, null, latestGotStack));
+            //state.getBlock().onPlaced(getWorld(), blockPos, state, null, latestGotStack);
             getWorld().playSound(null, blockPos, state.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
                 NbtCompound tag = latestGotStack.getNbt();

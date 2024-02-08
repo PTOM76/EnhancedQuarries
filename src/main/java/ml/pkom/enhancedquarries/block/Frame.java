@@ -68,11 +68,6 @@ public class Frame extends ExtendBlock {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return CENTER;
-    }
-
-    @Override
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
         return true;
     }
