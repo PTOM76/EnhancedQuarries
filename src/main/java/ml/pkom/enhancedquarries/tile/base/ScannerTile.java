@@ -11,6 +11,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -18,7 +19,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +55,10 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
     // NBT
 
     public void writeNbtOverride(NbtCompound tag) {
+        NbtCompound itemsNbt = new NbtCompound();
+        Inventories.writeNbt(itemsNbt, getItems());
+        tag.put("Items", itemsNbt);
+
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
@@ -71,6 +75,10 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
 
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
+        if (tag.contains("Items")) {
+            NbtCompound itemsNbt = tag.getCompound("Items");
+            Inventories.readNbt(itemsNbt, getItems());
+        }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("rangePos1X")

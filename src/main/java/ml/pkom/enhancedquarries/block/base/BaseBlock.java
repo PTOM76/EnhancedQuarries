@@ -68,12 +68,13 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
+    @Nullable
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return ((world1, pos, state1, blockEntity) -> {
             if (blockEntity instanceof BaseEnergyTile) {
-                BaseEnergyTile tile = (BaseEnergyTile) blockEntity;
-                tile.tick(world1, pos, state1, tile);
+                BaseEnergyTile baseEnergyTile = (BaseEnergyTile) blockEntity;
+                baseEnergyTile.tick(world1, pos, state1, baseEnergyTile);
             }
         });
     }

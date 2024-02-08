@@ -96,6 +96,11 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         NbtCompound invTag = new NbtCompound();
         Inventories.writeNbt(invTag, craftingInvItems);
         tag.put("craftingInv", invTag);
+
+        NbtCompound itemsNbt = new NbtCompound();
+        Inventories.writeNbt(itemsNbt, getItems());
+        tag.put("Items", itemsNbt);
+
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
@@ -110,13 +115,21 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
         if (canBedrockBreak)
             tag.putBoolean("module_bedrock_break", true);
+
         super.writeNbtOverride(tag);
     }
 
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
-        NbtCompound invTag = tag.getCompound("craftingInv");
-        Inventories.readNbt(invTag, craftingInvItems);
+        if (tag.contains("craftingInv")) {
+            NbtCompound invTag = tag.getCompound("craftingInv");
+            Inventories.readNbt(invTag, craftingInvItems);
+        }
+
+        if (tag.contains("Items")) {
+            NbtCompound itemsNbt = tag.getCompound("Items");
+            Inventories.readNbt(itemsNbt, getItems());
+        }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("rangePos1X")

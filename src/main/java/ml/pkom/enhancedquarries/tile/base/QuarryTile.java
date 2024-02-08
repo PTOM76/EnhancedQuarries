@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
@@ -137,6 +138,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     // NBT
 
     public void writeNbtOverride(NbtCompound tag) {
+        NbtCompound itemsNbt = new NbtCompound();
+        Inventories.writeNbt(itemsNbt, getItems());
+        tag.put("Items", itemsNbt);
+
         tag.putDouble("coolTime", coolTime);
         if (canBedrockBreak)
             tag.putBoolean("module_bedrock_break", true);
@@ -159,11 +164,17 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             tag.putInt("rangePos2Y", getPos2().getY());
             tag.putInt("rangePos2Z", getPos2().getZ());
         }
+
         super.writeNbtOverride(tag);
     }
 
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
+        if (tag.contains("Items")) {
+            NbtCompound itemsNbt = tag.getCompound("Items");
+            Inventories.readNbt(itemsNbt, getItems());
+        }
+
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("module_bedrock_break")) canBedrockBreak = tag.getBoolean("module_bedrock_break");
         if (tag.contains("module_mob_delete")) isSetMobDelete = tag.getBoolean("module_mob_delete");
@@ -179,7 +190,6 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             setPos1(new BlockPos(tag.getInt("rangePos1X"), tag.getInt("rangePos1Y"), tag.getInt("rangePos1Z")));
             setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
         }
-
     }
 
     // ----
