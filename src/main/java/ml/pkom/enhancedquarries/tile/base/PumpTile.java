@@ -2,6 +2,7 @@ package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.block.base.Pump;
 import ml.pkom.enhancedquarries.event.BlockStatePos;
+import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
@@ -114,7 +115,7 @@ public class PumpTile extends BaseEnergyTile {
         if (!(state.getBlock() instanceof Pump)) return;
 
         // レッドストーン受信で無効
-        if (world.isReceivingRedstonePower(getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(world, getPos())) {
             if (isActive())
                  Pump.setActive(false, world, getPos());
             return;

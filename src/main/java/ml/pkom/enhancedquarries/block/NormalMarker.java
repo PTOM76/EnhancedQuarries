@@ -5,6 +5,7 @@ import ml.pkom.enhancedquarries.event.BlockStatePos;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockBreakEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -155,9 +156,12 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
-        if (world.isClient()) return;
+    public BlockState onBreak(BlockBreakEvent e) {
+        BlockState state = super.onBreak(e);
+        World world = e.world;
+        BlockPos pos = e.getPos();
+
+        if (world.isClient()) return state;
         if (getActive(state)) {
             List<BlockStatePos> markerList = new ArrayList<>();
             markerList.add(new BlockStatePos(state, pos, world));
@@ -177,6 +181,7 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
             }
             setActive(!((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null ) || markerList.size() <= 2) , world, pos);
         }
+        return state;
     }
 
     public static void setFacing(Direction facing, World world, BlockPos pos) {

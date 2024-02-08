@@ -2,6 +2,7 @@ package ml.pkom.enhancedquarries.item.base;
 
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
+import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 
 public abstract class FillerModuleItem extends FillerModule {
 
@@ -20,7 +21,7 @@ public abstract class FillerModuleItem extends FillerModule {
         return FillerModuleReturn.NOTHING;
     }
 
-    public FillerModuleItem(Settings settings) {
+    public FillerModuleItem(CompatibleItemSettings settings) {
         super(settings);
     }
 }

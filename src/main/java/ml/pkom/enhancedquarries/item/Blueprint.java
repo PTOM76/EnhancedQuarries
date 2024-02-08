@@ -1,10 +1,11 @@
 package ml.pkom.enhancedquarries.item;
 
-import net.minecraft.item.Item;
+import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
+import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
 
-public class Blueprint extends Item {
+public class Blueprint extends ExtendItem {
 
-    public Blueprint(Settings settings) {
+    public Blueprint(CompatibleItemSettings settings) {
         super(settings);
     }
 }

@@ -3,8 +3,9 @@ package ml.pkom.enhancedquarries.block;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockBreakEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.OutlineShapeEvent;
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -62,7 +63,7 @@ public class Frame extends ExtendBlock {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getOutlineShape(OutlineShapeEvent event) {
         return CENTER;
     }
 
@@ -123,9 +124,10 @@ public class Frame extends ExtendBlock {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
-        breakConnectFrames(world, pos);
+    public BlockState onBreak(BlockBreakEvent e) {
+        BlockState state = super.onBreak(e);
+        breakConnectFrames(e.world, e.pos);
+        return state;
     }
 
     public static void breakConnectFrames(World world, BlockPos pos) {

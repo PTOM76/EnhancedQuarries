@@ -8,6 +8,7 @@ import ml.pkom.enhancedquarries.util.BlueprintUtil;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -127,7 +128,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
         if (world.isClient()) return;
 
         // レッドストーン受信で無効
-        if (getWorld().isReceivingRedstonePower(getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(getWorld(), getPos())) {
             if (isActive())
                 Builder.setActive(false, getWorld(), getPos());
             return;

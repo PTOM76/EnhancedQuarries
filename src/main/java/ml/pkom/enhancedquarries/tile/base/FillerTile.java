@@ -9,6 +9,7 @@ import ml.pkom.enhancedquarries.screen.FillerScreenHandler;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -167,7 +168,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         if (world.isClient()) return;
 
         // レッドストーン受信で無効
-        if (world.isReceivingRedstonePower(getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(world, getPos())) {
             if (isActive())
                 Filler.setActive(false, world, getPos());
             return;

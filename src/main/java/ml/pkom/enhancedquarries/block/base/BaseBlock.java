@@ -4,13 +4,12 @@ import ml.pkom.enhancedquarries.tile.base.BaseEnergyTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockPlacedEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -50,10 +49,10 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
     }
 
     @Override
-    public void onPlaced(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onPlaced(worldIn, pos, state, placer, stack);
-        if(placer != null) {
-            setFacing(placer.getHorizontalFacing().getOpposite(), worldIn, pos);
+    public void onPlaced(BlockPlacedEvent e) {
+        super.onPlaced(e);
+        if(e.placer != null) {
+            setFacing(e.placer.getHorizontalFacing().getOpposite(), e.world, e.pos);
         }
     }
 

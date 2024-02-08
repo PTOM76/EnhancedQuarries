@@ -1,5 +1,6 @@
 package ml.pkom.enhancedquarries.item;
 
+import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeverBlock;
@@ -10,8 +11,8 @@ import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.ActionResult;
 
 public class RedstoneHammer extends PickaxeItem {
-    public RedstoneHammer(Settings settings) {
-        super(ToolMaterials.STONE, 1, -3f, settings);
+    public RedstoneHammer(CompatibleItemSettings settings) {
+        super(ToolMaterials.STONE, 1, -3f, settings.build());
     }
 
     @Override

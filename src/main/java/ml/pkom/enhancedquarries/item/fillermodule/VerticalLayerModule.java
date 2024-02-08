@@ -3,6 +3,7 @@ package ml.pkom.enhancedquarries.item.fillermodule;
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
 import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
+import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FluidBlock;
@@ -10,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 
 public class VerticalLayerModule extends FillerModuleItem {
-    public VerticalLayerModule(Settings settings) {
+    public VerticalLayerModule(CompatibleItemSettings settings) {
         super(settings);
     }
 

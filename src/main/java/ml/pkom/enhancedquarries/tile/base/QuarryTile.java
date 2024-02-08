@@ -4,6 +4,7 @@ import ml.pkom.enhancedquarries.block.Frame;
 import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
+import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
@@ -213,7 +214,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         if (world.isClient()) return;
 
         // レッドストーン受信で無効
-        if (getWorld().isReceivingRedstonePower(getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(getWorld(), getPos())) {
             if (isActive())
                 Quarry.setActive(false, getWorld(), getPos());
             return;

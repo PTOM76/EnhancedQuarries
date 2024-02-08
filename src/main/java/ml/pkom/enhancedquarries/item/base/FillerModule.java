@@ -1,10 +1,11 @@
 package ml.pkom.enhancedquarries.item.base;
 
-import net.minecraft.item.Item;
+import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
+import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
 
-public class FillerModule extends Item {
+public class FillerModule extends ExtendItem {
 
-    public FillerModule(Settings settings) {
+    public FillerModule(CompatibleItemSettings settings) {
         super(settings);
     }
 }

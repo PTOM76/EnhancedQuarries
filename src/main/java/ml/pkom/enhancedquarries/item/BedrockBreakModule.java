@@ -4,33 +4,35 @@ import ml.pkom.enhancedquarries.block.base.Filler;
 import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import ml.pkom.enhancedquarries.tile.base.QuarryTile;
+import ml.pkom.mcpitanlibarch.api.event.item.ItemUseOnBlockEvent;
+import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
+import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BedrockBreakModule extends Item {
-    public BedrockBreakModule(Settings settings) {
+public class BedrockBreakModule extends ExtendItem {
+    public BedrockBreakModule(CompatibleItemSettings settings) {
         super(settings);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
+    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
+        World world = e.getWorld();
         if (world.isClient())
-            return super.useOnBlock(context);
-        BlockPos blockPos = context.getBlockPos();
+            return super.onRightClickOnBlock(e);
+        BlockPos blockPos = e.getBlockPos();
+
         if (world.getBlockState(blockPos).getBlock() instanceof Quarry) {
             if (world.getBlockEntity(blockPos) != null && world.getBlockEntity(blockPos) instanceof QuarryTile) {
                 QuarryTile quarry = (QuarryTile) world.getBlockEntity(blockPos);
                 if (quarry.canBedrockBreak()) {
-                    context.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.bedrock_break_module.1"), false);
+                    e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.bedrock_break_module.1"));
                     return ActionResult.PASS;
                 }
                 quarry.setBedrockBreak(true);
-                context.getStack().setCount(context.getStack().getCount() - 1);
+                e.getStack().setCount(e.getStack().getCount() - 1);
                 return ActionResult.SUCCESS;
             }
         }
@@ -38,14 +40,14 @@ public class BedrockBreakModule extends Item {
             if (world.getBlockEntity(blockPos) != null && world.getBlockEntity(blockPos) instanceof FillerTile) {
                 FillerTile filler = (FillerTile) world.getBlockEntity(blockPos);
                 if (filler.canBedrockBreak()) {
-                    context.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.bedrock_break_module.1"), false);
+                    e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.bedrock_break_module.1"));
                     return ActionResult.PASS;
                 }
                 filler.setBedrockBreak(true);
-                context.getStack().setCount(context.getStack().getCount() - 1);
+                e.getStack().setCount(e.getStack().getCount() - 1);
                 return ActionResult.SUCCESS;
             }
         }
-        return super.useOnBlock(context);
+        return super.onRightClickOnBlock(e);
     }
 }

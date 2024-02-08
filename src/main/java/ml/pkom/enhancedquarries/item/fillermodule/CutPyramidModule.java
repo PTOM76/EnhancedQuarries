@@ -3,10 +3,11 @@ package ml.pkom.enhancedquarries.item.fillermodule;
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
 import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
+import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import net.minecraft.block.AirBlock;
 
 public class CutPyramidModule extends FillerModuleItem {
-    public CutPyramidModule(Settings settings) {
+    public CutPyramidModule(CompatibleItemSettings settings) {
         super(settings);
     }
 

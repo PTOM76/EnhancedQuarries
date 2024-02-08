@@ -3,11 +3,12 @@ package ml.pkom.enhancedquarries.item.fillermodule;
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
 import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
+import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public class FloorReplaceModule extends FillerModuleItem {
-    public FloorReplaceModule(Settings settings) {
+    public FloorReplaceModule(CompatibleItemSettings settings) {
         super(settings);
     }
 

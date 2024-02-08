@@ -6,6 +6,7 @@ import ml.pkom.enhancedquarries.screen.ScannerScreenHandler;
 import ml.pkom.enhancedquarries.util.BlueprintUtil;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
@@ -111,7 +112,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
         if (world.isClient()) return;
 
         // レッドストーン受信で無効
-        if (getWorld().isReceivingRedstonePower(getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(getWorld(), getPos())) {
             if (isActive())
                 Scanner.setActive(false, getWorld(), getPos());
             return;
