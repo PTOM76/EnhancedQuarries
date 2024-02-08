@@ -57,7 +57,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
 
     // NBT
 
-    public void writeNbt(NbtCompound tag) {
+    public void writeNbtOverride(NbtCompound tag) {
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
@@ -69,11 +69,11 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
             tag.putInt("rangePos2Y", getPos2().getY());
             tag.putInt("rangePos2Z", getPos2().getZ());
         }
-        super.writeNbt(tag);
+        super.writeNbtOverride(tag);
     }
 
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbtOverride(NbtCompound tag) {
+        super.readNbtOverride(tag);
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("rangePos1X")
