@@ -15,10 +15,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import reborncore.api.blockentity.IMachineGuiHandler;
-import reborncore.common.blocks.BlockMachineBase;
 
-public abstract class Builder extends BlockMachineBase implements BlockEntityProvider {
+public abstract class Builder extends BaseBlock implements BlockEntityProvider {
 
     public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
             .of(CompatibleMaterial.METAL)
@@ -27,7 +25,7 @@ public abstract class Builder extends BlockMachineBase implements BlockEntityPro
             .strength(2, 8);
 
     public Builder() {
-        super(defaultSettings.build());
+        super(defaultSettings);
     }
 
     // 1.17.1へのポート用
@@ -40,11 +38,6 @@ public abstract class Builder extends BlockMachineBase implements BlockEntityPro
     }
 
     public abstract BlockEntity createBlockEntity(TileCreateEvent event);
-
-    // TechReborn
-    public IMachineGuiHandler getGui() {
-        return null;
-    }
 
     public ActionResult onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockHitResult hitResult) {
         // ここでGUIを開けないように無効化しておく

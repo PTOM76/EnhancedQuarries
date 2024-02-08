@@ -57,6 +57,6 @@ public class EnhancedFillerWithChest extends Filler {
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
         FillerTile fillerTile = (FillerTile) world.getBlockEntity(pos);
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new FillerWithChestScreenHandler(i, playerInventory, fillerTile.getInventory(), fillerTile.getCraftingInventory()), TextUtil.literal(""));
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new FillerWithChestScreenHandler(i, playerInventory, fillerTile.inventory, fillerTile.getCraftingInventory()), TextUtil.literal(""));
     }
 }

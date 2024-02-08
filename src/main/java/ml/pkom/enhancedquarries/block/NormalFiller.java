@@ -1,6 +1,8 @@
 package ml.pkom.enhancedquarries.block;
 
 import ml.pkom.enhancedquarries.block.base.Filler;
+import ml.pkom.mcpitanlibarch.api.entity.Player;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.screen.FillerScreenHandler;
 import ml.pkom.enhancedquarries.tile.NormalFillerTile;
@@ -42,21 +44,16 @@ public class NormalFiller extends Filler {
     // ----
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        if (world.isClient())
-            return ActionResult.SUCCESS;
-        NamedScreenHandlerFactory namedScreenHandlerFactory = createScreenHandlerFactory(state, world, pos);
-        if (namedScreenHandlerFactory != null) {
-            player.openHandledScreen(namedScreenHandlerFactory);
-        }
+    public ActionResult onRightClick(BlockUseEvent event) {
+        World world = event.getWorld();
+        Player player = event.getPlayer();
+        BlockPos pos = event.getPos();
+
+        if (world.isClient()) return ActionResult.SUCCESS;
+
+        if (world.getBlockEntity(pos) instanceof FillerTile)
+            player.openGuiScreen((FillerTile) world.getBlockEntity(pos));
 
         return ActionResult.CONSUME;
-    }
-
-    @Nullable
-    @Override
-    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        FillerTile fillerTile = (FillerTile) world.getBlockEntity(pos);
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new FillerScreenHandler(i, playerInventory, fillerTile.getInventory(), fillerTile.getCraftingInventory()), TextUtil.literal(""));
     }
 }

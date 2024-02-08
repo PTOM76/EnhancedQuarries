@@ -13,15 +13,13 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import reborncore.common.blockentity.MachineBaseBlockEntity;
-import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
 
 import java.util.HashSet;
 import java.util.Set;
 
 // reference: Kibe Utilities's tank
 @SuppressWarnings("UnstableApiUsage")
-public class PumpTile extends PowerAcceptorBlockEntity {
+public class PumpTile extends BaseEnergyTile {
     private SingleVariantStorage<FluidVariant> storedFluid = new SingleVariantStorage<>() {
 
         @Override
@@ -49,12 +47,9 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         this.storedFluid = storedFluid;
     }
 
-    // デフォルトコスト
-    private long defaultEnergyCost = 30;
-
     // ブロック1回設置分に対するエネルギーのコスト
     public long getEnergyCost() {
-        return defaultEnergyCost;
+        return 30;
     }
 
     public PumpTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -77,9 +72,9 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         return 500;
     }
 
-    public void readNbt(NbtCompound nbt) {
+    public void readNbtOverride(NbtCompound nbt) {
 
-        super.readNbt(nbt);
+        super.readNbtOverride(nbt);
         if (nbt.contains("variant")) {
             storedFluid.variant = FluidVariant.fromNbt(nbt.getCompound("variant"));
             storedFluid.amount = nbt.getLong("amount");
@@ -87,8 +82,8 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         //setStoredFluid(FluidVolume.fromTag(tag.getCompound("fluid")));
     }
 
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public void writeNbtOverride(NbtCompound nbt) {
+        super.writeNbtOverride(nbt);
         if(!storedFluid.isResourceBlank() && !fluidIsEmpty()) {
             nbt.put("variant", storedFluid.getResource().toNbt());
             nbt.putLong("amount", storedFluid.getAmount());
@@ -99,23 +94,19 @@ public class PumpTile extends PowerAcceptorBlockEntity {
         return storedFluid.getAmount() == 0;
     }
 
-    private double defaultBasicSpeed = 5;
-
     // 基準の速度
     public double getBasicSpeed() {
-        return defaultBasicSpeed;
+        return 5;
     }
-
-    public double defaultSettingCoolTime = 250;
 
     // クールダウンの基準
     public double getSettingCoolTime() {
-        return defaultSettingCoolTime;
+        return 250;
     }
 
     public double coolTime = getSettingCoolTime();
 
-    public void tick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
+    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
         super.tick(world, pos, state, blockEntity);
 
         // 1.--
@@ -135,7 +126,7 @@ public class PumpTile extends PowerAcceptorBlockEntity {
             }
             return;
         }
-        if (getEnergy() > getEuPerTick(getEnergyCost())) {
+        if (getEnergy() > getEnergyCost()) {
             // ここに処理を記入
             if (coolTime <= 0) {
                 coolTime = getSettingCoolTime();
@@ -251,6 +242,4 @@ public class PumpTile extends PowerAcceptorBlockEntity {
             coolTime = coolTime - getBasicSpeed();
         }
     }
-
-
 }

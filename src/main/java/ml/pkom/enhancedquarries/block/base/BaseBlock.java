@@ -1,5 +1,7 @@
 package ml.pkom.enhancedquarries.block.base;
 
+import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
+import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -14,12 +16,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class BaseBlock extends Block {
+public class BaseBlock extends ExtendBlock {
 
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
 
-    public BaseBlock(Settings settings) {
+    public BaseBlock(CompatibleBlockSettings settings) {
         super(settings);
         setDefaultState(getDefaultState().with(ACTIVE, false).with(FACING, Direction.NORTH));
     }

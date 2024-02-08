@@ -81,7 +81,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         if (procBlock instanceof FluidBlock) {
                             if (canReplaceFluid()
                                     && getWorld().getFluidState(procPos).isStill()
-                                    && getEnergy() > getEuPerTick(getReplaceFluidEnergyCost())) {
+                                    && getEnergy() > getReplaceFluidEnergyCost()) {
                                 getWorld().setBlockState(procPos, getReplaceFluidWithBlock().getDefaultState());
                                 useEnergy(getReplaceFluidEnergyCost());
                             } else {

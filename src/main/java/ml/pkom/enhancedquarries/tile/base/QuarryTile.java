@@ -2,7 +2,7 @@ package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.block.Frame;
 import ml.pkom.enhancedquarries.block.base.Quarry;
-import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
+import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
@@ -13,31 +13,26 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import reborncore.api.blockentity.InventoryProvider;
-import reborncore.common.blockentity.MachineBaseBlockEntity;
-import reborncore.common.blockentity.SlotConfiguration;
-import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
-import reborncore.common.util.RebornInventory;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
+public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInventory {
     // Container
-    public RebornInventory<QuarryTile> inventory = new RebornInventory<>(27, "QuarryTile", 64, this);
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
-    public RebornInventory<QuarryTile> getInventory() {
-        return inventory;
-    }
-    // ----
+    public IInventory inventory = this;
 
     // モジュール
 
@@ -108,27 +103,20 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
         return Blocks.GLASS;
     }
 
-    // TR
-    // デフォルトコスト
-    private final long defaultEnergyCost = 30;
-    private final long defaultPlaceFrameEnergyCost = 40;
-    private final long defaultReplaceFluidEnergyCost = 120;
-
     // ブロック1回破壊分に対するエネルギーのコスト
     public long getEnergyCost() {
-        return defaultEnergyCost;
+        return 30;
     }
 
     // フレーム設置に必要なエネルギーのコスト
     public long getPlaceFrameEnergyCost() {
-        return defaultPlaceFrameEnergyCost;
+        return 40;
     }
 
     // 液体をガラスに置き換えるエネルギーのコスト
     public long getReplaceFluidEnergyCost() {
-        return defaultReplaceFluidEnergyCost;
+        return 120;
     }
-
 
     // エネルギーの容量
     public long getBaseMaxPower() {
@@ -145,14 +133,14 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
         return 500;
     }
 
-    // エネルギーの生産をするか？→false
+    // エネルギーの生産をするか
     public boolean canProvideEnergy(final Direction direction) { return false; }
 
     // ----
 
     // NBT
 
-    public void writeNbt(NbtCompound tag) {
+    public void writeNbtOverride(NbtCompound tag) {
         tag.putDouble("coolTime", coolTime);
         if (canBedrockBreak)
             tag.putBoolean("module_bedrock_break", true);
@@ -175,11 +163,11 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
             tag.putInt("rangePos2Y", getPos2().getY());
             tag.putInt("rangePos2Z", getPos2().getZ());
         }
-        super.writeNbt(tag);
+        super.writeNbtOverride(tag);
     }
 
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbtOverride(NbtCompound tag) {
+        super.readNbtOverride(tag);
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("module_bedrock_break")) canBedrockBreak = tag.getBoolean("module_bedrock_break");
         if (tag.contains("module_mob_delete")) isSetMobDelete = tag.getBoolean("module_mob_delete");
@@ -200,16 +188,9 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // ----
 
-    private final double defaultBasicSpeed = 5;
-
     // 基準の速度
     public double getBasicSpeed() {
-        return defaultBasicSpeed;
-    }
-
-    // TR用のTick
-    public void TRTick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity2) {
-        super.tick(world, pos, state, blockEntity2);
+        return 5;
     }
 
     public double defaultSettingCoolTime = 300;
@@ -221,7 +202,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     public double coolTime = getSettingCoolTime();
 
-    public void tick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
+    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
         // 1.--
         super.tick(world, pos, state, blockEntity);
         if (getWorld() == null || getWorld().isClient())
@@ -230,17 +211,17 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
         }
         // ----
         //BlockState state = getWorld().getBlockState(getPos());
-        Quarry quarry = (Quarry) state.getBlock();
+        //Quarry quarry = (Quarry) state.getBlock();
 
         // レッドストーン受信で無効
         if (getWorld().isReceivingRedstonePower(getPos())) {
             if (isActive()) {
-                quarry.setActive(false, getWorld(), getPos());
+                Quarry.setActive(false, getWorld(), getPos());
             }
             return;
         }
 
-        if (getEnergy() > getEuPerTick(getEnergyCost())) {
+        if (getEnergy() > getEnergyCost()) {
             // ここに処理を記入
             if (coolTime <= 0) {
                 coolTime = getSettingCoolTime();
@@ -252,10 +233,10 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive()) {
-                quarry.setActive(true, getWorld(), getPos());
+                Quarry.setActive(true, getWorld(), getPos());
             }
         } else if (isActive()) {
-            quarry.setActive(false, getWorld(), getPos());
+            Quarry.setActive(false, getWorld(), getPos());
         }
 
 
@@ -266,8 +247,8 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
         // チェスト自動挿入
         if (getAnyContainerBlock() != null) {
             int i;
-            for (i = 0; i < getInventory().size(); i++) {
-                ItemStack stack = getInventory().getStack(i);
+            for (i = 0; i < getItems().size(); i++) {
+                ItemStack stack = getItems().get(i);
                 if (!stack.isEmpty()) {
                     Inventory container = getAnyContainerBlock();
                     if (getEmptyOrCanInsertIndex(container, stack) != null) {
@@ -276,16 +257,16 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                             ItemStack containerStack = container.getStack(canIndex);
                             if (containerStack.isEmpty()) {
                                 container.setStack(canIndex, stack.copy());
-                                getInventory().setStack(i, ItemStack.EMPTY);
+                                getItems().set(i, ItemStack.EMPTY);
                             } else {
                                 int originInCount = containerStack.getCount();
                                 container.getStack(i).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {
-                                    getInventory().setStack(i, ItemStack.EMPTY);
+                                    getItems().set(i, ItemStack.EMPTY);
                                     return true;
                                 }
                                 stack.setCount(stack.getCount() + originInCount - stack.getMaxCount());
-                                getInventory().setStack(i, stack);
+                                getItems().set(i, stack);
                             }
                             return true;
                         } catch (NullPointerException ignored) {
@@ -480,7 +461,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
             if (i == 3)
                 tmpPos = blockPos.add(0 , 0, -1);
             if (getWorld().getBlockState(tmpPos).getBlock() instanceof FluidBlock
-                    && getEnergy() > getEuPerTick(getReplaceFluidEnergyCost())) {
+                    && getEnergy() > getReplaceFluidEnergyCost()) {
                 if (getWorld().getFluidState(tmpPos).isStill()) {
                     getWorld().setBlockState(tmpPos, getReplaceFluidWithBlock().getDefaultState());
                     time++;
@@ -488,7 +469,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                 }
             }
             if (!getWorld().getFluidState(tmpPos).isEmpty() || getWorld().getBlockState(tmpPos).getBlock() instanceof FluidBlock) {
-                if (i == 0 && getEnergy() > getEuPerTick(getReplaceFluidEnergyCost())) {
+                if (i == 0 && getEnergy() > getReplaceFluidEnergyCost()) {
                     if (tmpPos.getX() + 1 == pos2.getX()) {
                         BlockState tmpBlock = getWorld().getBlockState(tmpPos);
                         if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
@@ -504,7 +485,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                         time++;
                     }
                 }
-                if (i == 1 && getEnergy() > getEuPerTick(getReplaceFluidEnergyCost())) {
+                if (i == 1 && getEnergy() > getReplaceFluidEnergyCost()) {
                     if (tmpPos.getX() == pos1.getX()) {
                         BlockState tmpBlock = getWorld().getBlockState(tmpPos);
                         if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
@@ -520,7 +501,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                         time++;
                     }
                 }
-                if (i == 2 && getEnergy() > getEuPerTick(getReplaceFluidEnergyCost())) {
+                if (i == 2 && getEnergy() > getReplaceFluidEnergyCost()) {
                     if (tmpPos.getZ() == pos1.getZ()) {
                         BlockState tmpBlock = getWorld().getBlockState(tmpPos);
                         if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
@@ -536,7 +517,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                         time++;
                     }
                 }
-                if (i == 3 && getEnergy() > getEuPerTick(getReplaceFluidEnergyCost())) {
+                if (i == 3 && getEnergy() > getReplaceFluidEnergyCost()) {
                     if (tmpPos.getZ() - 1 == pos2.getZ()) {
                         BlockState tmpBlock = getWorld().getBlockState(tmpPos);
                         if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
@@ -559,7 +540,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
     }
 
     public boolean tryPlaceFrame(BlockPos blockPos) {
-        if (getEnergy() > getEuPerTick(getPlaceFrameEnergyCost())) {
+        if (getEnergy() > getPlaceFrameEnergyCost()) {
             Block block = getWorld().getBlockState(blockPos).getBlock();
             if (block instanceof Frame) return false;
             if (
@@ -578,7 +559,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                                     || (blockPos.getX() + 1 == pos2.getX() && blockPos.getZ() == pos1.getZ())
                     )
             ) {
-                getWorld().setBlockState(blockPos, Frame.getPlacementStateByTile(world, blockPos));
+                getWorld().setBlockState(blockPos, Frame.getPlacementStateByTile(getWorld(), blockPos));
                 return true;
             }
 
@@ -615,7 +596,7 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
                             if ( procBlock instanceof FluidBlock) {
                                 if (canReplaceFluid()
                                         && getWorld().getFluidState(procPos).isStill()
-                                        && getEnergy() > getEuPerTick(getReplaceFluidEnergyCost())) {
+                                        && getEnergy() > getReplaceFluidEnergyCost()) {
                                     getWorld().setBlockState(procPos, getReplaceFluidWithBlock().getDefaultState());
                                     useEnergy(getReplaceFluidEnergyCost());
                                 } else {
@@ -693,14 +674,14 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     public Integer getEmptyOrCanInsertIndex(Inventory inventory, ItemStack stack) {
         int index = 0;
-        for (; index < getInventory().size(); index++) {
+        for (; index < getItems().size(); index++) {
             if (inventory.getStack(index).isEmpty()) {
                 return index;
             }
-            ItemStack inStack = getInventory().getStack(index);
+            ItemStack inStack = getItems().get(index);
             if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
-                int originInCount = getInventory().getStack(index).getCount();
-                getInventory().getStack(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
+                int originInCount = getItems().get(index).getCount();
+                getItems().get(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {
                     return index;
                 }
@@ -713,16 +694,16 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
     public void addStack(ItemStack stack) {
         if (getWorld() == null || getWorld().isClient()) return;
         int index = 0;
-        for (;index < getInventory().size();index++) {
+        for (; index < getItems().size(); index++) {
             if (stack.isEmpty() || stack.getCount() == 0) return;
-            if (getInventory().getStack(index).isEmpty()) {
-                getInventory().setStack(index, stack);
+            if (getItems().get(index).isEmpty()) {
+                getItems().set(index, stack);
                 return;
             }
-            ItemStack inStack = getInventory().getStack(index);
+            ItemStack inStack = getItems().get(index);
             if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
-                int originInCount = getInventory().getStack(index).getCount();
-                getInventory().getStack(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
+                int originInCount = getItems().get(index).getCount();
+                getItems().get(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {
                     return;
                 }
@@ -737,10 +718,11 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
     }
 
     public void init() {
+        /*
         int index = 0;
         SlotConfiguration.SlotIO slotIO = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.OUTPUT);
         SlotConfiguration slotConfig = new SlotConfiguration(getInventory());
-        for (;index < getInventory().size();index++){
+        for (;index < stacks.size();index++){
             slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.NORTH, slotIO, index));
             slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.SOUTH, slotIO, index));
             slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.EAST, slotIO, index));
@@ -752,5 +734,31 @@ public class QuarryTile extends PowerAcceptorBlockEntity implements InventoryPro
         }
         ((MachineBaseBlockEntityAccessor) this).setSlotConfiguration(slotConfig);
         //FillerPlus.log(Level.INFO, "north output: " + slotConfig.getSlotDetails(0).getSideDetail(Direction.NORTH).getSlotIO().getIoConfig().name());
+
+         */
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return invItems;
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        int[] result = new int[getItems().size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = i;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return true;
     }
 }

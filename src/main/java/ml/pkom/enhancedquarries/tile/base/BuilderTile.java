@@ -3,54 +3,50 @@ package ml.pkom.enhancedquarries.tile.base;
 import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.base.Builder;
 import ml.pkom.enhancedquarries.inventory.DisabledInventory;
-import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
+import ml.pkom.enhancedquarries.screen.BuilderScreenHandler;
 import ml.pkom.enhancedquarries.util.BlueprintUtil;
+import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.DoorBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.enums.StairShape;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import reborncore.api.blockentity.InventoryProvider;
-import reborncore.common.blockentity.MachineBaseBlockEntity;
-import reborncore.common.blockentity.SlotConfiguration;
-import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
-import reborncore.common.util.RebornInventory;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
+public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
 
     // Container
-    public RebornInventory<BuilderTile> inventory = new RebornInventory<>(28, "BuilderTile", 64, this);
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(28, ItemStack.EMPTY);
 
-    public RebornInventory<BuilderTile> getInventory() {
-        return inventory;
-    }
+    public IInventory inventory = this;
 
     public Inventory needInventory = new DisabledInventory(27);
 
-    // TR
-    // デフォルトコスト
-    private long defaultEnergyCost = 30;
-
     // ブロック1回設置分に対するエネルギーのコスト
     public long getEnergyCost() {
-        return defaultEnergyCost;
+        return 30;
     }
 
     // エネルギーの容量
@@ -68,14 +64,14 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
         return 500;
     }
 
-    // エネルギーの生産をするか？→false
+    // エネルギーの生産をするか
     public boolean canProvideEnergy(final Direction direction) { return false; }
 
     // ----
 
     // NBT
 
-    public void writeNbt(NbtCompound tag) {
+    public void writeNbtOverride(NbtCompound tag) {
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
@@ -87,11 +83,11 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
             tag.putInt("rangePos2Y", getPos2().getY());
             tag.putInt("rangePos2Z", getPos2().getZ());
         }
-        super.writeNbt(tag);
+        super.writeNbtOverride(tag);
     }
 
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbtOverride(NbtCompound tag) {
+        super.readNbtOverride(tag);
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
         if (tag.contains("rangePos1X")
@@ -107,30 +103,21 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
 
     // ----
 
-    private double defaultBasicSpeed = 5;
-
     // 基準の速度
     public double getBasicSpeed() {
-        return defaultBasicSpeed;
+        return 5;
     }
-
-    // TR用のTick
-    public void TRTick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
-        super.tick(world, pos, state, blockEntity);
-    }
-
-    public double defaultSettingCoolTime = 300;
 
     // クールダウンの基準
     public double getSettingCoolTime() {
-        return defaultSettingCoolTime;
+        return 300;
     }
 
     public double coolTime = getSettingCoolTime();
 
     public Map<BlockPos, BlockState> blueprintMap = new LinkedHashMap<>();
 
-    public void tick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
+    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
         // 1.--
         super.tick(world, pos, state, blockEntity);
         if (getWorld() == null || getWorld().isClient())
@@ -190,7 +177,7 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
         if (inventory.isEmpty()) return;
 
         if (blueprintMap.isEmpty()) return;
-        if (getEnergy() > getEuPerTick(getEnergyCost())) {
+        if (getEnergy() > getEnergyCost()) {
             // ここに処理を記入
             if (coolTime <= 0) {
                 coolTime = getSettingCoolTime();
@@ -215,16 +202,16 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
     }
 
     public ItemStack getInventoryStack(Block block) {
-        for (ItemStack stack : getInventory().getStacks()) {
+        for (ItemStack stack : getItems()) {
             if (stack.isEmpty()) continue;
 
             latestGotStack = stack;
             if (stack.getItem() instanceof BlockItem && stack.getItem() == block.asItem()) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
-                NbtCompound tag = stack.getNbt();
-                if (tag.contains("StorageItemData")) {
-                    ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("StorageItemData"));
+                NbtCompound nbt = stack.getNbt();
+                if (nbt.contains("StorageItemData")) {
+                    ItemStack itemInBox = ItemStack.fromNbt(nbt.getCompound("StorageItemData"));
                     if (itemInBox.getItem() instanceof BlockItem && itemInBox.getItem() == block.asItem()) return itemInBox;
                 }
             }
@@ -359,19 +346,41 @@ public class BuilderTile extends PowerAcceptorBlockEntity implements InventoryPr
     }
 
     public void init() {
-        int index = 0;
-        SlotConfiguration.SlotIO output = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.OUTPUT);
-        SlotConfiguration.SlotIO input = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.INPUT);
-        SlotConfiguration slotConfig = new SlotConfiguration(getInventory());
-        for (;index < getInventory().size();index++){
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.NORTH, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.SOUTH, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.EAST, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.WEST, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.UP, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.DOWN, output, index));
-            markDirty();
+
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return invItems;
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        int[] result = new int[getItems().size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = i;
         }
-        ((MachineBaseBlockEntityAccessor) this).setSlotConfiguration(slotConfig);
+        return result;
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        return dir != Direction.DOWN;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return dir == Direction.DOWN;
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return TextUtil.literal("screen.enhanced_quarries.builder.title");
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new BuilderScreenHandler(syncId, playerInventory, inventory, needInventory);
     }
 }

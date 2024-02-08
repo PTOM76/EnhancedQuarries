@@ -22,7 +22,7 @@ public abstract class Pump extends BaseBlock implements BlockEntityProvider {
 
     // Custom Setting
     public Pump(CompatibleBlockSettings settings) {
-        super(settings.build());
+        super(settings);
     }
 
     // Default Setting

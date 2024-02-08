@@ -8,6 +8,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.slot.Slot;
 
 public class FillerWithChestScreenHandler extends FillerScreenHandler {
+    @Deprecated
     public FillerWithChestScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new FillerInventory(54), new FillerCraftingInventory());
     }

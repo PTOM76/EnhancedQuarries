@@ -2,47 +2,37 @@ package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.base.Scanner;
-import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
+import ml.pkom.enhancedquarries.screen.ScannerScreenHandler;
 import ml.pkom.enhancedquarries.util.BlueprintUtil;
-import ml.pkom.mcpitanlibarch.api.util.BlockUtil;
-import net.minecraft.block.Block;
+import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Text;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import reborncore.api.blockentity.InventoryProvider;
-import reborncore.common.blockentity.MachineBaseBlockEntity;
-import reborncore.common.blockentity.SlotConfiguration;
-import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
-import reborncore.common.util.RebornInventory;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
+public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScreenHandlerFactory {
 
     // Container
-    public RebornInventory<ScannerTile> inventory = new RebornInventory<>(27, "ScannerTile", 64, this);
-
-    public RebornInventory<ScannerTile> getInventory() {
-        return inventory;
-    }
-
-
-    // TR
-    // デフォルトコスト
-    private long defaultEnergyCost = 30;
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
     // ブロック1回設置分に対するエネルギーのコスト
     public long getEnergyCost() {
-        return defaultEnergyCost;
+        return 30;
     }
 
     // エネルギーの容量
@@ -99,28 +89,19 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
 
     // ----
 
-    private double defaultBasicSpeed = 5;
-
     // 基準の速度
     public double getBasicSpeed() {
-        return defaultBasicSpeed;
+        return 5;
     }
-
-    // TR用のTick
-    public void TRTick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
-        super.tick(world, pos, state, blockEntity);
-    }
-
-    public double defaultSettingCoolTime = 300;
 
     // クールダウンの基準
     public double getSettingCoolTime() {
-        return defaultSettingCoolTime;
+        return 300;
     }
 
     public double coolTime = getSettingCoolTime();
 
-    public void tick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
+    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
         // 1.--
         super.tick(world, pos, state, blockEntity);
         if (getWorld() == null || getWorld().isClient())
@@ -129,28 +110,27 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
         }
         // ----
         //BlockState state = getWorld().getBlockState(getPos());
-        Scanner scanner = (Scanner) state.getBlock();
 
         // レッドストーン受信で無効
         if (getWorld().isReceivingRedstonePower(getPos())) {
             if (isActive()) {
-                scanner.setActive(false, getWorld(), getPos());
+                Scanner.setActive(false, getWorld(), getPos());
             }
             return;
         }
-        if (getEnergy() > getEuPerTick(getEnergyCost())) {
+        if (getEnergy() > getEnergyCost()) {
             // ここに処理を記入
             if ((
-                            inventory.getStack(0).getItem().equals(Items.EMPTY_BLUEPRINT)
-                                    || inventory.getStack(0).getItem().equals(Items.BLUEPRINT)
-                    ) && coolTime <= 0 && inventory.getStack(1).isEmpty()) {
+                            getItems().get(0).getItem().equals(Items.EMPTY_BLUEPRINT)
+                                    || getItems().get(0).getItem().equals(Items.BLUEPRINT)
+                    ) && coolTime <= 0 && getItems().get(1).isEmpty()) {
                 coolTime = getSettingCoolTime();
                 Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
                 if (tryScanning(blocks)) {
-                    ItemStack stack = new ItemStack(Items.BLUEPRINT, inventory.getStack(0).getCount());
+                    ItemStack stack = new ItemStack(Items.BLUEPRINT, getItems().get(0).getCount());
                     BlueprintUtil.writeNbt(stack, blocks);
-                    inventory.setStack(1, stack);
-                    inventory.setStack(0, ItemStack.EMPTY);
+                    getItems().set(1, stack);
+                    getItems().set(0, ItemStack.EMPTY);
                     useEnergy(getEnergyCost());
                 }
 
@@ -158,10 +138,10 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive()) {
-                scanner.setActive(true, getWorld(), getPos());
+                Scanner.setActive(true, getWorld(), getPos());
             }
         } else if (isActive()) {
-            scanner.setActive(false, getWorld(), getPos());
+            Scanner.setActive(false, getWorld(), getPos());
         }
     }
 
@@ -258,6 +238,7 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
     }
 
     public void init() {
+        /*
         int index = 0;
         SlotConfiguration.SlotIO output = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.OUTPUT);
         SlotConfiguration.SlotIO input = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.INPUT);
@@ -272,5 +253,23 @@ public class ScannerTile extends PowerAcceptorBlockEntity implements InventoryPr
             markDirty();
         }
         ((MachineBaseBlockEntityAccessor) this).setSlotConfiguration(slotConfig);
+        
+         */
+    }
+    
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return invItems;
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return TextUtil.translatable("screen.enhanced_quarries.scanner.title");
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new ScannerScreenHandler(syncId, playerInventory, this);
     }
 }

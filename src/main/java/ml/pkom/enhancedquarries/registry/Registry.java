@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Registry {
-    private static Registry INSTANCE = new Registry();
-    private List<RegistryData> modules = new ArrayList<>();
+    private static final Registry INSTANCE = new Registry();
+    private final List<RegistryData> modules = new ArrayList<>();
 
     public static Registry getINSTANCE() {
         return INSTANCE;
@@ -40,7 +40,7 @@ public class Registry {
         return false;
     }
 
-    private static class RegistryData {
+    public static class RegistryData {
         public FillerModuleItem module;
         public Identifier identifier;
         public RegistryData(FillerModuleItem m, Identifier id) {

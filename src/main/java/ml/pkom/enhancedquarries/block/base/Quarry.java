@@ -23,14 +23,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import reborncore.api.blockentity.IMachineGuiHandler;
-import reborncore.common.blocks.BlockMachineBase;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Quarry extends BlockMachineBase implements BlockEntityProvider {
+public abstract class Quarry extends BaseBlock implements BlockEntityProvider {
 
     public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
             .of(CompatibleMaterial.METAL)
@@ -40,7 +38,7 @@ public abstract class Quarry extends BlockMachineBase implements BlockEntityProv
 
     // Custom Setting
     public Quarry(CompatibleBlockSettings settings) {
-        super(settings.build());
+        super(settings);
     }
 
     // Default Setting
@@ -59,21 +57,10 @@ public abstract class Quarry extends BlockMachineBase implements BlockEntityProv
 
     public abstract BlockEntity createBlockEntity(TileCreateEvent event);
 
-    // TechReborn
-    public IMachineGuiHandler getGui() {
-        return null;
-    }
-
     public ActionResult onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockHitResult hitResult) {
         // ここでGUIを開けないように無効化しておく
         return ActionResult.PASS;
     }
-
-    // もし、TRを使ったGUIをつくる機会のために関数をつくっておく
-    public ActionResult onUseTR(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockHitResult hitResult) {
-        return super.onUse(state, worldIn, pos, playerIn, hand, hitResult);
-    }
-    // ----
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {

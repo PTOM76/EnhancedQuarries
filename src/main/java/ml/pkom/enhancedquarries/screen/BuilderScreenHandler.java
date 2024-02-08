@@ -5,6 +5,7 @@ import ml.pkom.enhancedquarries.inventory.BuilderInventory;
 import ml.pkom.enhancedquarries.inventory.DisabledInventory;
 import ml.pkom.enhancedquarries.inventory.slot.BuilderSlot;
 import ml.pkom.enhancedquarries.inventory.slot.DisabledSlot;
+import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,6 +21,7 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
     public Inventory builderInventory; // index0=Blueprint
     public Inventory needInventory;
 
+    @Deprecated
     public BuilderScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new BuilderInventory(), new DisabledInventory(27));
     }
@@ -66,12 +68,12 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
+    public boolean canUse(Player player) {
         return true;
     }
 
     @Override
-    public ItemStack quickMoveOverride(PlayerEntity player, int index) {
+    public ItemStack quickMoveOverride(Player player, int index) {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot.inventory instanceof DisabledInventory) {

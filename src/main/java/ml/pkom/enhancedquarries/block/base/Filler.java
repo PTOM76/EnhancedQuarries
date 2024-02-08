@@ -3,33 +3,29 @@ package ml.pkom.enhancedquarries.block.base;
 import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.NormalMarker;
 import ml.pkom.enhancedquarries.event.BlockStatePos;
+import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.enhancedquarries.tile.base.FillerTile;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import reborncore.api.blockentity.IMachineGuiHandler;
-import reborncore.common.blocks.BlockMachineBase;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Filler extends BlockMachineBase implements BlockEntityProvider {
+public abstract class Filler extends BaseBlock implements BlockEntityProvider {
 
     public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
             .of(CompatibleMaterial.METAL)
@@ -39,7 +35,7 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
 
     // Custom Setting
     public Filler(CompatibleBlockSettings settings) {
-        super(settings.build());
+        super(settings);
     }
 
     // Default Setting
@@ -58,21 +54,11 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
 
     public abstract BlockEntity createBlockEntity(TileCreateEvent event);
 
-    // TechReborn
-    public IMachineGuiHandler getGui() {
-        return null;
-    }
-
-    public ActionResult onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockHitResult hitResult) {
+    @Override
+    public ActionResult onRightClick(BlockUseEvent event) {
         // ここでGUIを開けないように無効化しておく
         return ActionResult.PASS;
     }
-
-    // もし、TRを使ったGUIをつくる機会のために関数をつくっておく
-    public ActionResult onUseTR(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockHitResult hitResult) {
-        return super.onUse(state, worldIn, pos, playerIn, hand, hitResult);
-    }
-    // ----
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
@@ -80,7 +66,7 @@ public abstract class Filler extends BlockMachineBase implements BlockEntityProv
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof FillerTile) {
                 FillerTile filler = (FillerTile)blockEntity;
-                ItemScatterer.spawn(world, pos, filler.getInventory());
+                ItemScatterer.spawn(world, pos, filler.inventory);
                 filler.getCraftingInventory().setStack(9, ItemStack.EMPTY);
                 ItemScatterer.spawn(world, pos, filler.getCraftingInventory());
 

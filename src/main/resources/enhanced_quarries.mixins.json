@@ -4,7 +4,7 @@
   "package": "ml.pkom.enhancedquarries.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MachineBaseBlockEntityAccessor"
+
   ],
   "injectors": {
     "defaultRequire": 1

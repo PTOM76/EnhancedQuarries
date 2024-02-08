@@ -4,43 +4,40 @@ import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.base.Filler;
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
-import ml.pkom.enhancedquarries.inventory.ImplementedInventory;
 import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
-import ml.pkom.enhancedquarries.mixin.MachineBaseBlockEntityAccessor;
+import ml.pkom.enhancedquarries.screen.FillerScreenHandler;
+import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import reborncore.api.blockentity.InventoryProvider;
-import reborncore.common.blockentity.MachineBaseBlockEntity;
-import reborncore.common.blockentity.SlotConfiguration;
-import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
-import reborncore.common.util.RebornInventory;
+import org.jetbrains.annotations.Nullable;
 
-public class FillerTile extends PowerAcceptorBlockEntity implements InventoryProvider {// implements IInventory {
+public class FillerTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
 
     // Container
-    public RebornInventory<FillerTile> inventory = new RebornInventory<>(27, "FillerTile", 64, this);
-
-    //public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
     public DefaultedList<ItemStack> craftingInvItems = DefaultedList.ofSize(10, ItemStack.EMPTY);
 
-    //public ImplementedInventory inventory = () -> invItems;
-    public ImplementedInventory craftingInventory = () -> craftingInvItems;
-
-    public RebornInventory<FillerTile> getInventory() {
-        return inventory;
-    }
+    public IInventory craftingInventory = () -> craftingInvItems;
+    public IInventory inventory = this;
 
     public Inventory getCraftingInventory() {
         return craftingInventory;
@@ -71,14 +68,9 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // ----
 
-
-    // TR
-    // デフォルトコスト
-    private final long defaultEnergyCost = 30;
-
     // ブロック1回設置分に対するエネルギーのコスト
     public long getEnergyCost() {
-        return defaultEnergyCost;
+        return 30;
     }
 
     // エネルギーの容量
@@ -103,7 +95,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // NBT
 
-    public void writeNbt(NbtCompound tag) {
+    public void writeNbtOverride(NbtCompound tag) {
         NbtCompound invTag = new NbtCompound();
         Inventories.writeNbt(invTag, craftingInvItems);
         tag.put("craftingInv", invTag);
@@ -121,11 +113,11 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
         if (canBedrockBreak)
             tag.putBoolean("module_bedrock_break", true);
-        super.writeNbt(tag);
+        super.writeNbtOverride(tag);
     }
 
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbtOverride(NbtCompound tag) {
+        super.readNbtOverride(tag);
         NbtCompound invTag = tag.getCompound("craftingInv");
         Inventories.readNbt(invTag, craftingInvItems);
 
@@ -146,16 +138,9 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     // ----
 
-    private final double defaultBasicSpeed = 5;
-
     // 基準の速度
     public double getBasicSpeed() {
-        return defaultBasicSpeed;
-    }
-
-    // TR用のTick
-    public void TRTick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
-        super.tick(world, pos, state, blockEntity);
+        return 5;
     }
 
     public double defaultSettingCoolTime = 300;
@@ -167,7 +152,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
 
     public double coolTime = getSettingCoolTime();
 
-    public void tick(World world, BlockPos pos, BlockState state, MachineBaseBlockEntity blockEntity) {
+    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
         // 1.--
         super.tick(world, pos, state, blockEntity);
         if (getWorld() == null || getWorld().isClient())
@@ -176,19 +161,19 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         }
         // ----
         //BlockState state = getWorld().getBlockState(getPos());
-        Filler filler = (Filler) state.getBlock();
+        //Filler filler = (Filler) state.getBlock();
 
         // レッドストーン受信で無効
         if (getWorld().isReceivingRedstonePower(getPos())) {
             if (isActive()) {
-                filler.setActive(false, getWorld(), getPos());
+                Filler.setActive(false, getWorld(), getPos());
             }
             return;
         }
         if (!hasModule()){
             return;
         }
-        if (getEnergy() > getEuPerTick(getEnergyCost())) {
+        if (getEnergy() > getEnergyCost()) {
             // ここに処理を記入
             if (coolTime <= 0) {
                 coolTime = getSettingCoolTime();
@@ -199,10 +184,10 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive()) {
-                filler.setActive(true, getWorld(), getPos());
+                Filler.setActive(true, getWorld(), getPos());
             }
         } else if (isActive()) {
-            filler.setActive(false, getWorld(), getPos());
+            Filler.setActive(false, getWorld(), getPos());
         }
     }
 
@@ -213,7 +198,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
     }
 
     public ItemStack getInventoryStack() {
-        for (ItemStack stack : getInventory().getStacks()) {
+        for (ItemStack stack : getItems()) {
             latestGotStack = stack;
             if (stack.isEmpty()) continue;
             if (stack.getItem() instanceof BlockItem) return stack;
@@ -279,7 +264,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
         int procY;
         int procZ;
         //procY = pos1.getY(); procY <= pos2.getY(); procY++
-        for (procY = world.getBottomY(); procY <= getWorld().getDimension().height(); procY++) {
+        for (procY = getWorld().getBottomY(); procY <= getWorld().getDimension().height(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = new BlockPos(procX, procY, procZ);
@@ -391,7 +376,7 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
                         // ----
                     }
                     // 選択範囲より下～0
-                    if (procY >= world.getBottomY() && procY <= pos1.getY() - 1) {
+                    if (procY >= getWorld().getBottomY() && procY <= pos1.getY() - 1) {
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
                             if (procBlock instanceof AirBlock || procBlock instanceof FluidBlock) {
@@ -494,19 +479,41 @@ public class FillerTile extends PowerAcceptorBlockEntity implements InventoryPro
     }
 
     public void init() {
-        int index = 0;
-        SlotConfiguration.SlotIO output = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.OUTPUT);
-        SlotConfiguration.SlotIO input = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.INPUT);
-        SlotConfiguration slotConfig = new SlotConfiguration(getInventory());
-        for (;index < getInventory().size();index++){
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.NORTH, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.SOUTH, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.EAST, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.WEST, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.UP, input, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.DOWN, output, index));
-            markDirty();
+
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return invItems;
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        int[] result = new int[getItems().size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = i;
         }
-        ((MachineBaseBlockEntityAccessor) this).setSlotConfiguration(slotConfig);
+        return result;
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        return dir != Direction.DOWN;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return dir == Direction.DOWN;
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return TextUtil.literal("screen.enhanced_quarries.filler.title");
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new FillerScreenHandler(syncId, playerInventory, this, getCraftingInventory());
     }
 }
