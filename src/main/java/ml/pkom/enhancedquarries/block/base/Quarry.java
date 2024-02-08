@@ -43,7 +43,8 @@ public abstract class Quarry extends BaseBlock {
         BlockPos pos = e.pos;
         BlockState state = e.state;
 
-        if (state.getBlock() != e.newState.getBlock() && state.getBlock() != null && e.newState.getBlock() != null) {
+        if (state == null) return;
+        if (state.getBlock() != e.newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof QuarryTile) {
                 QuarryTile quarry = (QuarryTile)blockEntity;

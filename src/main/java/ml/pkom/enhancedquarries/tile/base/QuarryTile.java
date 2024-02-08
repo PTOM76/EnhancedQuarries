@@ -559,15 +559,15 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         int procX;
         int procY;
         int procZ;
-        for (procY = pos2.getY(); procY > getWorld().getBottomY(); procY--) {
+        for (procY = pos2.getY(); procY > WorldUtil.getBottomY(getWorld()); procY--) {
             if (pos1.getY() - 1 >= procY) {
                 for (procX = pos1.getX() + 1; procX < pos2.getX() - 1; procX++) {
                     for (procZ = pos1.getZ() + 1; procZ < pos2.getZ() - 1; procZ++) {
                         BlockPos procPos = new BlockPos(procX, procY, procZ);
                         if (getWorld().getBlockState(procPos) == null) continue;
-                        Block procBlock = getWorld().getBlockState(procPos).getBlock();
-
                         if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
+
+                        Block procBlock = getWorld().getBlockState(procPos).getBlock();
                         if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) {
                             if (canReplaceFluid()) {
                                 double time = tryFluidReplace(procPos);
@@ -618,6 +618,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                     for (procZ = pos1.getZ(); procZ < pos2.getZ(); procZ++) {
                         BlockPos procPos = new BlockPos(procX, procY, procZ);
                         if (getWorld().getBlockState(procPos) == null) continue;
+                        if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
+
                         Block procBlock = getWorld().getBlockState(procPos).getBlock();
                         if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) {
                             if (tryPlaceFrame(procPos)) {
