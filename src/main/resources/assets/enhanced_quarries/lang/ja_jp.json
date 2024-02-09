@@ -24,6 +24,7 @@
     "item.enhanced_quarries.luck_enchant_module": "幸運モジュール",
     "item.enhanced_quarries.mob_delete_module": "モブ消去モジュール",
     "item.enhanced_quarries.mob_kill_module": "モブ殺害モジュール",
+    "item.enhanced_quarries.exp_collect_module": "経験値回収モジュール",
 
     "item.enhanced_quarries.filler_all_fill": "埋め立てモジュール",
     "item.enhanced_quarries.filler_all_delete": "消去モジュール",
@@ -58,6 +59,7 @@
     "message.enhanced_quarries.mob_delete_module.2": "モブ消去モジュールとモブ殺害モジュールは共存できません。",
     "message.enhanced_quarries.mob_kill_module.1": "そのマシンは既にモブ殺害モジュールが適用されています。",
     "message.enhanced_quarries.mob_kill_module.2": "モブ殺害モジュールとモブ消去モジュールは共存できません。",
+    "message.enhanced_quarries.exp_collect_module.1": "そのマシンは既に経験値回収モジュールが適用されています。",
 
     "title.enhanced_quarries.config": "Enhanced Quarriesの設定",
     "category.enhanced_quarries.general": "一般",

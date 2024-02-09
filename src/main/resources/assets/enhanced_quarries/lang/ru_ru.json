@@ -24,8 +24,9 @@
     "item.enhanced_quarries.luck_enchant_module": "Модуль «Удача»",
     "item.enhanced_quarries.mob_delete_module": "Модуль «Удаление мобов»",
     "item.enhanced_quarries.mob_kill_module": "Модуль «Убийство мобов»",
+    "item.enhanced_quarries.exp_collect_module": "Модуль «Сбор опыта»",
 
-    "item.enhanced_quarries.filler_all_fill": "Модуль «Заполнение»",
+    "item.enhanced_quarries.filler_all_fill",: "Модуль «Заполнение»",
     "item.enhanced_quarries.filler_all_delete": "Модуль «Удаление»",
     "item.enhanced_quarries.filler_all_remove": "Модуль «Разрушение»",
     "item.enhanced_quarries.filler_leveling": "Модуль «Выравнивание»",
@@ -55,6 +56,7 @@
     "message.enhanced_quarries.mob_delete_module.2": "Модули «Удаление мобов» и «Убийство мобов» не возможно установить одновременно.",
     "message.enhanced_quarries.mob_kill_module.1": "Модуль «Убийство мобов» уже установлен.",
     "message.enhanced_quarries.mob_kill_module.2": "Модули «Убийство мобов» и «Удаление мобов» не возможно установить одновременно.",
+    "message.enhanced_quarries.exp_collect_module.1": "Модуль «Сбор опыта» уже установлен.",
 
     "screen.enhanced_quarries.filler.title": "Заполнитель",
     "screen.enhanced_quarries.filler.title2": "Ресурсы для заполнения",

@@ -42,6 +42,7 @@ public class Items {
     public static Item LUCK_MODULE = new LuckEnchantModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("luck_enchant_module")));
     public static Item MOB_KILL_MODULE = new MobKillModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("mob_kill_module")));
     public static Item MOB_DELETE_MODULE = new MobDeleteModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("mob_delete_module")));
+    public static Item EXP_COLLECT_MODULE = new ExpCollectModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("exp_collect_module")));
 
     // 全配置
     public static Item fillerALL_FILL = new FillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_all_fill")));
@@ -125,6 +126,7 @@ public class Items {
         registry.registerItem(EnhancedQuarries.id("luck_enchant_module"), () -> LUCK_MODULE);
         registry.registerItem(EnhancedQuarries.id("mob_kill_module"), () -> MOB_KILL_MODULE);
         registry.registerItem(EnhancedQuarries.id("mob_delete_module"), () -> MOB_DELETE_MODULE);
+        registry.registerItem(EnhancedQuarries.id("exp_collect_module"), () -> EXP_COLLECT_MODULE);
 
         registry.registerItem(EnhancedQuarries.id("filler_all_fill"), () -> fillerALL_FILL);
         registry.registerItem(EnhancedQuarries.id("filler_all_delete"), () -> fillerALL_DELETE);

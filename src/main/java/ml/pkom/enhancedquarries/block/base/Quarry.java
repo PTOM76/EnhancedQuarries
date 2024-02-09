@@ -8,11 +8,13 @@ import ml.pkom.enhancedquarries.tile.base.QuarryTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockPlacedEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.StateReplacedEvent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -35,6 +37,26 @@ public abstract class Quarry extends BaseBlock {
 
     public Quarry() {
         this(defaultSettings);
+    }
+
+    @Override
+    public ActionResult onRightClick(BlockUseEvent e) {
+        ItemStack stack = e.player.getMainHandStack();
+        if (stack != null && stack.getItem() == net.minecraft.item.Items.GLASS_BOTTLE) {
+            if (e.world.isClient()) return ActionResult.SUCCESS;
+            if (e.world.getBlockEntity(e.pos) instanceof QuarryTile) {
+                QuarryTile quarry = (QuarryTile) e.world.getBlockEntity(e.pos);
+                if (quarry.storedExp >= 4) {
+                    e.player.giveStack(new ItemStack(net.minecraft.item.Items.EXPERIENCE_BOTTLE, 1));
+                    stack.decrement(1);
+                    quarry.storedExp -= 4;
+                    return ActionResult.SUCCESS;
+                }
+                return ActionResult.PASS;
+            }
+        }
+
+        return ActionResult.PASS;
     }
 
     @Override
@@ -65,6 +87,9 @@ public abstract class Quarry extends BaseBlock {
                 }
                 if (quarry.isSetMobKill()) {
                     world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.MOB_KILL_MODULE, 1)));
+                }
+                if (quarry.isSetExpCollect()) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.EXP_COLLECT_MODULE, 1)));
                 }
 
                 // フレーム破壊

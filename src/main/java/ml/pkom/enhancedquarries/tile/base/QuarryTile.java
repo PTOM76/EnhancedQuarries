@@ -12,10 +12,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
@@ -41,6 +38,16 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public IInventory inventory = this;
 
+    public int storedExp = 0;
+
+    public int getMaxStoredExp() {
+        return 10_000;
+    }
+
+    public int getStoredExp() {
+        return storedExp;
+    }
+
     // モジュール
 
     // - 岩盤破壊モジュール
@@ -63,6 +70,17 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public void setSilkTouchModule(boolean isSetSilkTouch) {
         this.isSetSilkTouch = isSetSilkTouch;
+    }
+
+    // - 経験値採取モジュール
+    private boolean isSetExpCollect = false;
+
+    public boolean isSetExpCollect() {
+        return isSetExpCollect;
+    }
+
+    public void setExpCollectModule(boolean isSetExpCollect) {
+        this.isSetExpCollect = isSetExpCollect;
     }
 
     // - 幸運モジュール
@@ -157,6 +175,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             tag.putBoolean("module_silk_touch", true);
         if (isSetMobDelete)
             tag.putBoolean("module_mob_delete", true);
+        if (isSetExpCollect)
+            tag.putBoolean("module_exp_collect", true);
 
         if (pos1 != null) {
             tag.putInt("rangePos1X", getPos1().getX());
@@ -168,6 +188,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             tag.putInt("rangePos2Y", getPos2().getY());
             tag.putInt("rangePos2Z", getPos2().getZ());
         }
+
+        tag.putInt("storedExp", getStoredExp());
 
         super.writeNbtOverride(tag);
     }
@@ -184,6 +206,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         if (tag.contains("module_mob_kill")) isSetMobKill = tag.getBoolean("module_mob_kill");
         if (tag.contains("module_luck")) isSetLuck = tag.getBoolean("module_luck");
         if (tag.contains("module_silk_touch")) isSetSilkTouch = tag.getBoolean("module_silk_touch");
+        if (tag.contains("module_exp_collect")) isSetExpCollect = tag.getBoolean("module_exp_collect");
         if (tag.contains("rangePos1X")
                 && tag.contains("rangePos1Y")
                 && tag.contains("rangePos1Z")
@@ -193,6 +216,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             setPos1(new BlockPos(tag.getInt("rangePos1X"), tag.getInt("rangePos1Y"), tag.getInt("rangePos1Z")));
             setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
         }
+
+        if (tag.contains("storedExp")) storedExp = tag.getInt("storedExp");
     }
 
     // ----
@@ -417,15 +442,25 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public void tryDeleteMob(BlockPos blockPos) {
-        if (getWorld().isClient()) return;
+        if (getWorld() == null || getWorld().isClient()) return;
         List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
         mobs.forEach(Entity::discard);
     }
 
     public void tryKillMob(BlockPos blockPos) {
-        if (getWorld().isClient()) return;
+        if (getWorld() == null || getWorld().isClient()) return;
         List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
         mobs.forEach(LivingEntity::kill);
+    }
+
+    public void tryCollectExp(BlockPos blockPos) {
+        if (getWorld() == null || getWorld().isClient()) return;
+        List<ExperienceOrbEntity> entities = getWorld().getEntitiesByType(EntityType.EXPERIENCE_ORB, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
+        entities.forEach((entity) -> {
+            if (getStoredExp() + entity.getExperienceAmount() > getMaxStoredExp()) return;
+            storedExp += entity.getExperienceAmount();
+            entity.kill();
+        });
     }
 
     public double tryFluidReplace(BlockPos blockPos) {
@@ -643,6 +678,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                         }
                         if (isSetMobKill) {
                             tryKillMob(procPos);
+                        }
+                        if (isSetExpCollect) {
+                            tryCollectExp(procPos);
                         }
                         if (procBlock instanceof FluidBlock && !getWorld().getFluidState(procPos).isStill()) {
                             continue;

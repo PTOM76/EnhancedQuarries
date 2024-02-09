@@ -24,6 +24,7 @@
     "item.enhanced_quarries.luck_enchant_module": "Luck Module",
     "item.enhanced_quarries.mob_delete_module": "Mob Delete Module",
     "item.enhanced_quarries.mob_kill_module": "Mob Kill Module",
+    "item.enhanced_quarries.exp_collect_module": "Experience Collect Module",
 
     "item.enhanced_quarries.filler_all_fill": "Fill Module",
     "item.enhanced_quarries.filler_all_delete": "Delete Module",
@@ -58,6 +59,7 @@
     "message.enhanced_quarries.mob_delete_module.2": "\"Mob Delete Module\" And \"Mob Kill Module\" cannot coexist.",
     "message.enhanced_quarries.mob_kill_module.1": "The \"Mob Kill Module\" has already been applied to the machine.",
     "message.enhanced_quarries.mob_kill_module.2": "\"Mob Kill Module\" And \"Mob Delete Module\" cannot coexist.",
+    "message.enhanced_quarries.exp_collect_module.1": "The \"Experience Collect Module\" has already been applied to the machine.",
 
     "screen.enhanced_quarries.filler.title": "Filler",
     "screen.enhanced_quarries.filler.title2": "Filling Resources",
