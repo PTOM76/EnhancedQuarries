@@ -1,23 +1,17 @@
 package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.PumpTile;
-import net.minecraft.block.BlockState;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
 
 public class NormalPumpTile extends PumpTile {
 
-    public NormalPumpTile(BlockPos pos, BlockState state) {
-        this(Tiles.NORMAL_PUMP_TILE.getOrNull(), pos, state);
-    }
-
-    public NormalPumpTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public NormalPumpTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public NormalPumpTile(TileCreateEvent event) {
-        this(event.getBlockPos(), event.getBlockState());
+        this(Tiles.NORMAL_PUMP_TILE.getOrNull(), event);
     }
 }

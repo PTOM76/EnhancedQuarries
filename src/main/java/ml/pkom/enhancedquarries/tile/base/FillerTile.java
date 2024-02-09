@@ -6,6 +6,7 @@ import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
 import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
 import ml.pkom.enhancedquarries.screen.FillerScreenHandler;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
@@ -468,8 +469,8 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         this.pos2 = pos2;
     }
 
-    public FillerTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public FillerTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public void init() {

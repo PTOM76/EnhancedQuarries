@@ -1,35 +1,41 @@
 package ml.pkom.enhancedquarries.screen;
 
 import ml.pkom.enhancedquarries.ScreenHandlers;
-import ml.pkom.enhancedquarries.inventory.ScannerInventory;
-import ml.pkom.enhancedquarries.inventory.slot.ScannerSlot;
+import ml.pkom.enhancedquarries.inventory.slot.FuelSlot;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
-import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
+import ml.pkom.mcpitanlibarch.api.gui.ExtendedScreenHandler;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
-public class ScannerScreenHandler extends SimpleScreenHandler {
-    public Inventory scannerInventory;
+public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
+    public Inventory inventory;
+    public long energy = 0;
+    public long maxEnergy = 0;
 
-    public ScannerScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new ScannerInventory());
+    public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
+        this(syncId, playerInventory, new SimpleInventory(1));
+        if (buf == null) return;
+        energy = buf.readLong();
+        maxEnergy = buf.readLong();
     }
 
-    public ScannerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory scannerInventory) {
-        this(ScreenHandlers.SCANNER_SCREEN_HANDLER_TYPE, syncId, playerInventory, scannerInventory);
+    public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, syncId, playerInventory, inventory);
     }
 
-    public ScannerScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory scannerInventory) {
+    public EnergyGeneratorScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(type, syncId);
-        this.scannerInventory = scannerInventory;
+        this.inventory = inventory;
 
         addPlayerMainInventorySlots(playerInventory, 8, 84);
         addPlayerHotbarSlots(playerInventory, 8, 142);
-        callAddSlot(new ScannerSlot(scannerInventory, 0, 53, 34));
-        callAddSlot(new ScannerSlot(scannerInventory, 1, 107, 34));
+
+        callAddSlot(new FuelSlot(inventory, 0, 80, 24));
     }
 
     @Override

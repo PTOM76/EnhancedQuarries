@@ -65,6 +65,7 @@
     "screen.enhanced_quarries.builder.title": "Builder",
     "screen.enhanced_quarries.builder.title2": "Building Resources",
     "screen.enhanced_quarries.library.title": "Library",
+    "screen.enhanced_quarries.energy_generator.title": "Generator",
 
     "title.enhanced_quarries.config": "Enhanced Quarries' Settings",
     "category.enhanced_quarries.general": "General",

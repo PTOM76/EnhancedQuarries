@@ -13,5 +13,6 @@ public class Screens {
         ArchRegistryClient.registerScreen(ScreenHandlers.SCANNER_SCREEN_HANDLER_TYPE, ScannerScreen::new);
         ArchRegistryClient.registerScreen(ScreenHandlers.BUILDER_SCREEN_HANDLER_TYPE, BuilderScreen::new);
         ArchRegistryClient.registerScreen(ScreenHandlers.LIBRARY_SCREEN_HANDLER_TYPE, LibraryScreen::new);
+        ArchRegistryClient.registerScreen(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, EnergyGeneratorScreen::new);
     }
 }

@@ -31,9 +31,12 @@ public class Items {
     public static Item NORMAL_BUILDER = ItemUtil.ofBlock(Blocks.NORMAL_BUILDER, new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("normal_builder")));
     public static Item NORMAL_LIBRARY = ItemUtil.ofBlock(Blocks.NORMAL_LIBRARY, new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("normal_library")));
 
+    public static Item ENERGY_GENERATOR = ItemUtil.ofBlock(Blocks.ENERGY_GENERATOR, new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("energy_generator")));
 
     public static Item NORMAL_MARKER = ItemUtil.ofBlock(Blocks.NORMAL_MARKER, new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("normal_marker")));
     public static Item FRAME = ItemUtil.ofBlock(Blocks.FRAME, new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("frame")));
+
+
     public static Item BEDROCK_BREAK_MODULE = new BedrockBreakModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("bedrock_break_module")));
     public static Item SILK_TOUCH_MODULE = new SilkTouchModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("silk_touch_module")));
     public static Item LUCK_MODULE = new LuckEnchantModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("luck_enchant_module")));
@@ -111,8 +114,11 @@ public class Items {
         registry.registerItem(EnhancedQuarries.id("normal_builder"), () -> NORMAL_BUILDER);
         registry.registerItem(EnhancedQuarries.id("normal_library"), () -> NORMAL_LIBRARY);
 
+        registry.registerItem(EnhancedQuarries.id("energy_generator"), () -> ENERGY_GENERATOR);
+
         registry.registerItem(EnhancedQuarries.id("normal_marker"), () -> NORMAL_MARKER);
         registry.registerItem(EnhancedQuarries.id("frame"), () -> FRAME);
+
 
         registry.registerItem(EnhancedQuarries.id("bedrock_break_module"), () -> BEDROCK_BREAK_MODULE);
         registry.registerItem(EnhancedQuarries.id("silk_touch_module"), () -> SILK_TOUCH_MODULE);

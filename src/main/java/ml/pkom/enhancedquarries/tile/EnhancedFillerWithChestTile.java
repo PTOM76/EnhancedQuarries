@@ -5,7 +5,6 @@ import ml.pkom.enhancedquarries.screen.FillerWithChestScreenHandler;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,16 +29,12 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
         return invItems;
     }
 
-    public EnhancedFillerWithChestTile(BlockPos pos, BlockState state) {
-        super(Tiles.ENHANCED_FILLER_WITH_CHEST_TILE.getOrNull(), pos, state);
-    }
-
-    public EnhancedFillerWithChestTile(BlockEntityType type,BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public EnhancedFillerWithChestTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public EnhancedFillerWithChestTile(TileCreateEvent event) {
-        this(event.getBlockPos(), event.getBlockState());
+        this(Tiles.ENHANCED_FILLER_WITH_CHEST_TILE.getOrNull(), event);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ml.pkom.enhancedquarries;
 
 import ml.pkom.enhancedquarries.screen.*;
+import ml.pkom.mcpitanlibarch.api.gui.ExtendedScreenHandlerTypeBuilder;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandlerTypeBuilder;
 import net.minecraft.screen.ScreenHandlerType;
 
@@ -12,6 +13,7 @@ public class ScreenHandlers {
     public static ScreenHandlerType<ScannerScreenHandler> SCANNER_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(ScannerScreenHandler::new).build();
     public static ScreenHandlerType<BuilderScreenHandler> BUILDER_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(BuilderScreenHandler::new).build();
     public static ScreenHandlerType<LibraryScreenHandler> LIBRARY_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(LibraryScreenHandler::new).build();
+    public static ScreenHandlerType<EnergyGeneratorScreenHandler> ENERGY_GENERATOR_SCREEN_HANDLER_TYPE = new ExtendedScreenHandlerTypeBuilder<>(EnergyGeneratorScreenHandler::new).build();
 
     public static void init() {
         registry.registerScreenHandlerType(EnhancedQuarries.id("filler"), () -> FILLER_SCREEN_HANDLER_TYPE);
@@ -19,5 +21,6 @@ public class ScreenHandlers {
         registry.registerScreenHandlerType(EnhancedQuarries.id("scanner"), () -> SCANNER_SCREEN_HANDLER_TYPE);
         registry.registerScreenHandlerType(EnhancedQuarries.id("builder"), () -> BUILDER_SCREEN_HANDLER_TYPE);
         registry.registerScreenHandlerType(EnhancedQuarries.id("library"), () -> LIBRARY_SCREEN_HANDLER_TYPE);
+        registry.registerScreenHandlerType(EnhancedQuarries.id("energy_generator"), () -> ENERGY_GENERATOR_SCREEN_HANDLER_TYPE);
     }
 }

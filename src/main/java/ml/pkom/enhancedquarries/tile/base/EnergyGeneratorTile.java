@@ -2,10 +2,12 @@ package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.enhancedquarries.block.base.EnergyGenerator;
+import ml.pkom.enhancedquarries.screen.EnergyGeneratorScreenHandler;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -16,8 +18,9 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
@@ -29,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
+public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, SidedInventory, ExtendedScreenHandlerFactory {
     public EnergyGeneratorTile(BlockEntityType<?> type, TileCreateEvent event) {
         super(type, event);
     }
@@ -169,6 +172,12 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return null;
+        return new EnergyGeneratorScreenHandler(syncId, playerInventory, this);
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+        buf.writeLong(getEnergy());
+        buf.writeLong(getMaxEnergy());
     }
 }

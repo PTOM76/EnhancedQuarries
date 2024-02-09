@@ -26,10 +26,10 @@ public class Blocks {
     public static Builder NORMAL_BUILDER = NormalBuilder.getBuilder();
     public static Library NORMAL_LIBRARY = NormalLibrary.getLibrary();
 
+    public static Block ENERGY_GENERATOR = EnergyGenerator.getEnergyGenerator();
+
     public static Block NORMAL_MARKER = NormalMarker.getBlock();
     public static Block FRAME = Frame.getBlock();
-
-    public static Block ENERGY_GENERATOR = EnergyGenerator.getEnergyGenerator();
 
     public static void init() {
         registry.registerBlock(EnhancedQuarries.id("normal_quarry"), () -> NORMAL_QUARRY);
@@ -50,9 +50,9 @@ public class Blocks {
         registry.registerBlock(EnhancedQuarries.id("normal_builder"), () -> NORMAL_BUILDER);
         registry.registerBlock(EnhancedQuarries.id("normal_library"), () -> NORMAL_LIBRARY);
 
+        registry.registerBlock(EnhancedQuarries.id("energy_generator"), () -> ENERGY_GENERATOR);
+
         registry.registerBlock(EnhancedQuarries.id("normal_marker"), () -> NORMAL_MARKER);
         registry.registerBlock(EnhancedQuarries.id("frame"), () -> FRAME);
-
-        registry.registerBlock(EnhancedQuarries.id("energy_generator"), () -> ENERGY_GENERATOR);
     }
 }

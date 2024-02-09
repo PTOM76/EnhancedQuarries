@@ -4,6 +4,7 @@ import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.base.Scanner;
 import ml.pkom.enhancedquarries.screen.ScannerScreenHandler;
 import ml.pkom.enhancedquarries.util.BlueprintUtil;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
@@ -229,8 +230,8 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
         this.pos2 = pos2;
     }
 
-    public ScannerTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public ScannerTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public void init() {

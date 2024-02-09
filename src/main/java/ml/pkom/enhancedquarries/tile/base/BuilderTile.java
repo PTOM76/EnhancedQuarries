@@ -6,6 +6,7 @@ import ml.pkom.enhancedquarries.inventory.DisabledInventory;
 import ml.pkom.enhancedquarries.screen.BuilderScreenHandler;
 import ml.pkom.enhancedquarries.util.BlueprintUtil;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockPlacedEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
@@ -73,7 +74,6 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
 
     public void writeNbtOverride(NbtCompound tag) {
         Inventories.writeNbt(tag, getItems());
-        tag.put("Items", tag);
 
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
@@ -340,8 +340,8 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
         this.pos2 = pos2;
     }
 
-    public BuilderTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public BuilderTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public void init() {

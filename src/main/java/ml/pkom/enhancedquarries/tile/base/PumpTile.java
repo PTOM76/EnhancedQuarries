@@ -2,6 +2,7 @@ package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.block.base.Pump;
 import ml.pkom.enhancedquarries.event.BlockStatePos;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -53,9 +54,8 @@ public class PumpTile extends BaseEnergyTile {
         return 30;
     }
 
-    public PumpTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
-        //this(type);
+    public PumpTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     @Override

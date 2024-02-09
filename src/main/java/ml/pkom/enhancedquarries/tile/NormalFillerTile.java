@@ -1,18 +1,17 @@
 package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
+import net.minecraft.block.entity.BlockEntityType;
 
 public class NormalFillerTile extends FillerTile {
 
-    public NormalFillerTile(BlockPos pos, BlockState state) {
-        super(Tiles.NORMAL_FILLER_TILE.getOrNull(), pos, state);
+    public NormalFillerTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public NormalFillerTile(TileCreateEvent event) {
-        this(event.getBlockPos(), event.getBlockState());
+        this(Tiles.NORMAL_FILLER_TILE.getOrNull(), event);
     }
 }

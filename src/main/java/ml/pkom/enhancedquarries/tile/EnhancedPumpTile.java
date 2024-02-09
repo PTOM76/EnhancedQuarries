@@ -1,11 +1,9 @@
 package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.PumpTile;
-import net.minecraft.block.BlockState;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
 
 public class EnhancedPumpTile extends PumpTile {
 
@@ -25,15 +23,11 @@ public class EnhancedPumpTile extends PumpTile {
         return 40;
     }
 
-    public EnhancedPumpTile(BlockPos pos, BlockState state) {
-        this(Tiles.ENHANCED_PUMP_TILE.getOrNull(), pos, state);
-    }
-
-    public EnhancedPumpTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public EnhancedPumpTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public EnhancedPumpTile(TileCreateEvent event) {
-        this(event.getBlockPos(), event.getBlockState());
+        this(Tiles.ENHANCED_PUMP_TILE.getOrNull(), event);
     }
 }
