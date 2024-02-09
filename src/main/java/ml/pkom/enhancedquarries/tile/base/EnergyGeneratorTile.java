@@ -44,8 +44,8 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(1, ItemStack.EMPTY);
 
-    public int burnTime;
-    public boolean burning;
+    public int burnTime = 0;
+    public boolean burning = false;
 
     @Override
     public long getMaxEnergy() {
@@ -119,6 +119,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
         } else if (isActive()) {
             burning = false;
         }
+
         outputEnergy(this, world, pos);
     }
 
@@ -175,6 +176,9 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     @Override
     public void writeNbtOverride(NbtCompound nbt) {
         super.writeNbtOverride(nbt);
+        nbt.putInt("BurnTime", burnTime);
+        nbt.putBoolean("Burning", burning);
+        Inventories.writeNbt(nbt, invItems);
     }
 
     @Override
