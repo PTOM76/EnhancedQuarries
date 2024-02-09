@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "enhanced_quarries:block/energy_generator/side",
+        "down": "enhanced_quarries:block/energy_generator/side",
+        "up": "enhanced_quarries:block/energy_generator/top",
+        "north": "enhanced_quarries:block/energy_generator/front",
+        "east": "enhanced_quarries:block/energy_generator/side",
+        "south": "enhanced_quarries:block/energy_generator/side",
+        "west": "enhanced_quarries:block/energy_generator/side"
+    }
+}
