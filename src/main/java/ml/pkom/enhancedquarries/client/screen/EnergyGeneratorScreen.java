@@ -24,9 +24,8 @@ public class EnergyGeneratorScreen extends BaseHandledScreen {
         playerInventoryTitleY = 72;
         setBackgroundWidth(176);
         setBackgroundHeight(166);
-        if (handler instanceof EnergyGeneratorScreenHandler) {
+        if (handler instanceof EnergyGeneratorScreenHandler)
             screenHandler = (EnergyGeneratorScreenHandler) handler;
-        }
     }
 
     @Override
@@ -37,7 +36,8 @@ public class EnergyGeneratorScreen extends BaseHandledScreen {
     @Override
     public void drawForegroundOverride(DrawForegroundArgs args) {
         super.drawForegroundOverride(args);
-        ScreenUtil.RendererUtil.drawText(textRenderer, args.drawObjectDM, TextUtil.literal(String.format("%d / %d", screenHandler.energy, screenHandler.maxEnergy)), 48, 60, 4210752);
+        int textWidth = ScreenUtil.getWidth(TextUtil.literal(String.format("%d / %d", screenHandler.energy, screenHandler.maxEnergy)));
+        ScreenUtil.RendererUtil.drawText(textRenderer, args.drawObjectDM, TextUtil.literal(String.format("%d / %d EU", screenHandler.energy, screenHandler.maxEnergy)), 54 - textWidth / 2, 60, 4210752);
     }
 
     @Override
@@ -47,14 +47,14 @@ public class EnergyGeneratorScreen extends BaseHandledScreen {
     }
 
     public void drawEnergyBar(DrawBackgroundArgs args) {
-        int x = 48;
-        int y = 12;
-        int width = 12;
-        int height = 44;
+        int x = 47 + this.x;
+        int y = 11 + this.y;
+        int width = 13;
+        int height = 45;
         long energy = screenHandler.energy;
         long maxEnergy = screenHandler.maxEnergy;
         int energyBarHeight = (int) ((double) energy / (double) maxEnergy * (double) height);
         int energyBarY = y + height - energyBarHeight;
-        callDrawTexture(args.drawObjectDM, getTexture(), x, energyBarY, 192, 0, width, energyBarHeight);
+        callDrawTexture(args.drawObjectDM, getTexture(), x, energyBarY, 176, 0, width, energyBarHeight);
     }
 }

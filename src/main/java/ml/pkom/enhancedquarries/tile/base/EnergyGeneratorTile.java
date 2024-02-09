@@ -72,7 +72,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     @Override
     public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
         super.tick(world, pos, state, blockEntity);
-        if (world == null || world.isClient()) return;
+        if (world == null) return;
 
         // レッドストーン受信で無効
         if (WorldUtil.isReceivingRedstonePower(world, getPos())) {
@@ -85,7 +85,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
             EnergyGenerator.setActive(isBurning(), world, getPos());
 
         // 燃焼時間が0の場合
-        if (burnTime == 0) {
+        if (burnTime == 0 && !world.isClient()) {
             burnTime = getBurnTimeFrom(getItems().get(0));
             if (burnTime > 0) {
                 ItemStack stack = getItems().get(0);
