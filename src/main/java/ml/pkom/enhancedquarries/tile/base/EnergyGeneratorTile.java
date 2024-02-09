@@ -130,7 +130,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
             if (!(dirTile instanceof BaseEnergyTile)) continue;
 
             BaseEnergyTile targetEntity = (BaseEnergyTile)dirTile;
-            long output = outputEnergy(blockEntity, targetEntity);
+            long output = getOutputEnergy(blockEntity, targetEntity);
             if (output > 0) {
                 blockEntity.useEnergy(output);
                 targetEntity.insertEnergy(output);
@@ -138,21 +138,19 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
         }
     }
 
-    private static long outputEnergy(EnergyGeneratorTile blockEntity, BaseEnergyTile targetEntity) {
+    private static long getOutputEnergy(EnergyGeneratorTile blockEntity, BaseEnergyTile targetEntity) {
         long maxInput = targetEntity.getMaxInput();
-        long maxEnergy = targetEntity.getMaxEnergy();
-        long energy = targetEntity.getEnergy();
-        long usableCapacity = maxEnergy - energy;
+        long usableCapacity = targetEntity.getUsableCapacity();
         long output = blockEntity.getMaxOutput();
-        if (usableCapacity < output) {
+        if (usableCapacity < output)
             output = usableCapacity;
-        }
-        if (output > blockEntity.getEnergy()) {
+
+        if (output > blockEntity.getEnergy())
             output = blockEntity.getEnergy();
-        }
-        if (output > maxInput) {
+
+        if (output > maxInput)
             output = maxInput;
-        }
+
         return output;
     }
 
