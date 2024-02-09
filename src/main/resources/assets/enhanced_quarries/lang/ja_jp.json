@@ -14,6 +14,7 @@
     "block.enhanced_quarries.normal_scanner": "スキャナー (experiment)",
     "block.enhanced_quarries.normal_builder": "ビルダー (experiment)",
     "block.enhanced_quarries.normal_library": "ライブラリ (experiment)",
+    "block.enhanced_quarries.energy_generator": "エネルギー発電機",
 
     "block.enhanced_quarries.normal_marker": "ノーマル マーカー",
     "block.enhanced_quarries.frame": "フレーム",
@@ -45,9 +46,6 @@
 
     "item.enhanced_quarries.empty_blueprint": "製図用紙",
     "item.enhanced_quarries.blueprint": "設計図",
-
-    "item.enhanced_quarries.reimu_bun": "ゆっくり霊夢",
-    "item.enhanced_quarries.marisa_bun": "ゆっくり魔理沙",
 
     "item.enhanced_quarries.refined_gear": "洗練されたギア",
     "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",

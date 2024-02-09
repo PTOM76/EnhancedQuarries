@@ -56,9 +56,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
     // NBT
 
     public void writeNbtOverride(NbtCompound tag) {
-        NbtCompound itemsNbt = new NbtCompound();
-        Inventories.writeNbt(itemsNbt, getItems());
-        tag.put("Items", itemsNbt);
+        Inventories.writeNbt(tag, getItems());
 
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
@@ -77,8 +75,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
         if (tag.contains("Items")) {
-            NbtCompound itemsNbt = tag.getCompound("Items");
-            Inventories.readNbt(itemsNbt, getItems());
+            Inventories.readNbt(tag, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");

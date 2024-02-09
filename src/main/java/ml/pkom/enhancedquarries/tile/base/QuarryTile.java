@@ -2,6 +2,7 @@ package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.block.Frame;
 import ml.pkom.enhancedquarries.block.base.Quarry;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
@@ -143,9 +144,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     // NBT
 
     public void writeNbtOverride(NbtCompound tag) {
-        NbtCompound itemsNbt = new NbtCompound();
-        Inventories.writeNbt(itemsNbt, getItems());
-        tag.put("Items", itemsNbt);
+        Inventories.writeNbt(tag, getItems());
 
         tag.putDouble("coolTime", coolTime);
         if (canBedrockBreak)
@@ -176,8 +175,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
         if (tag.contains("Items")) {
-            NbtCompound itemsNbt = tag.getCompound("Items");
-            Inventories.readNbt(itemsNbt, getItems());
+            Inventories.readNbt(tag, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
@@ -700,29 +698,12 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         getWorld().spawnEntity(new ItemEntity(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ(), stack));
     }
 
-    public QuarryTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public QuarryTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public void init() {
-        /*
-        int index = 0;
-        SlotConfiguration.SlotIO slotIO = new SlotConfiguration.SlotIO(SlotConfiguration.ExtractConfig.OUTPUT);
-        SlotConfiguration slotConfig = new SlotConfiguration(getInventory());
-        for (;index < stacks.size();index++){
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.NORTH, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.SOUTH, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.EAST, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.WEST, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.UP, slotIO, index));
-            slotConfig.getSlotDetails(index).updateSlotConfig(new SlotConfiguration.SlotConfig(Direction.DOWN, slotIO, index));
-            slotConfig.getSlotDetails(index).setOutput(true);
-            markDirty();
-        }
-        ((MachineBaseBlockEntityAccessor) this).setSlotConfiguration(slotConfig);
-        //FillerPlus.log(Level.INFO, "north output: " + slotConfig.getSlotDetails(0).getSideDetail(Direction.NORTH).getSlotIO().getIoConfig().name());
 
-         */
     }
 
     @Override

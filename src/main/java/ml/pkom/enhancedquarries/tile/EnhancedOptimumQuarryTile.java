@@ -2,22 +2,16 @@ package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
 
 public class EnhancedOptimumQuarryTile extends OptimumQuarryTile {
 
-    public EnhancedOptimumQuarryTile(BlockPos pos, BlockState state) {
-        super(Tiles.ENHANCED_OPTIMUM_QUARRY_TILE.getOrNull(), pos, state);
-    }
-
-    public EnhancedOptimumQuarryTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public EnhancedOptimumQuarryTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public EnhancedOptimumQuarryTile(TileCreateEvent event) {
-        this(event.getBlockPos(), event.getBlockState());
+        this(Tiles.ENHANCED_OPTIMUM_QUARRY_TILE.getOrNull(), event);
     }
 
     @Override

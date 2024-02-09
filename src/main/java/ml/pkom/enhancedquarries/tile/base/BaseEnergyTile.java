@@ -2,6 +2,7 @@ package ml.pkom.enhancedquarries.tile.base;
 
 import ml.pkom.enhancedquarries.block.base.BaseBlock;
 import ml.pkom.enhancedquarries.compat.IEnergyStorage;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -14,6 +15,10 @@ import net.minecraft.world.World;
 public abstract class BaseEnergyTile extends ExtendBlockEntity implements BlockEntityTicker<BaseEnergyTile> {
     public BaseEnergyTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public BaseEnergyTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
     private IEnergyStorage energyStorage = null;

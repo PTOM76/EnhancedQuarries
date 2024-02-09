@@ -17,16 +17,12 @@ import java.util.List;
 
 public class OptimumQuarryTile extends NormalQuarryTile {
 
-    public OptimumQuarryTile(BlockPos pos, BlockState state) {
-        super(Tiles.OPTIMUM_QUARRY_TILE.getOrNull(), pos, state);
-    }
-
-    public OptimumQuarryTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public OptimumQuarryTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public OptimumQuarryTile(TileCreateEvent event) {
-        this(event.getBlockPos(), event.getBlockState());
+        this(Tiles.OPTIMUM_QUARRY_TILE.getOrNull(), event);
     }
 
     boolean finishedQuarry = false;

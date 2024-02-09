@@ -2,23 +2,17 @@ package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
 
 public class FluidQuarryTile extends EnhancedQuarryTile {
 
-    public FluidQuarryTile(BlockPos pos, BlockState state) {
-        super(Tiles.FLUID_QUARRY_TILE.getOrNull(), pos, state);
-    }
-
     // 継承のため
-    public FluidQuarryTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public FluidQuarryTile(BlockEntityType<?> type, TileCreateEvent event) {
+        super(type, event);
     }
 
     public FluidQuarryTile(TileCreateEvent event) {
-        this(event.getBlockPos(), event.getBlockState());
+        this(Tiles.FLUID_QUARRY_TILE.getOrNull(), event);
     }
 
     @Override

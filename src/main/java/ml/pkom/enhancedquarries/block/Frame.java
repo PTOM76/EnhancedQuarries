@@ -5,6 +5,7 @@ import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockBreakEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.OutlineShapeEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.result.BlockBreakResult;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -124,10 +125,10 @@ public class Frame extends ExtendBlock {
     }
 
     @Override
-    public BlockState onBreak(BlockBreakEvent e) {
-        BlockState state = super.onBreak(e);
+    public BlockBreakResult onBreak(BlockBreakEvent e) {
+        BlockBreakResult result = super.onBreak(e);
         breakConnectFrames(e.world, e.pos);
-        return state;
+        return result;
     }
 
     public static void breakConnectFrames(World world, BlockPos pos) {

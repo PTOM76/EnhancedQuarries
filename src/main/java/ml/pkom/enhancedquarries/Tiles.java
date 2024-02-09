@@ -1,6 +1,7 @@
 package ml.pkom.enhancedquarries;
 
 import ml.pkom.enhancedquarries.tile.*;
+import ml.pkom.enhancedquarries.tile.base.EnergyGeneratorTile;
 import ml.pkom.mcpitanlibarch.api.event.registry.RegistryEvent;
 import ml.pkom.mcpitanlibarch.api.tile.BlockEntityTypeBuilder;
 import net.minecraft.block.Block;
@@ -31,6 +32,8 @@ public class Tiles {
 
     public static RegistryEvent<BlockEntityType<?>> NORMAL_MARKER;
 
+    public static RegistryEvent<BlockEntityType<?>> ENERGY_GENERATOR_TILE;
+
     public static void init() {
         NORMAL_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries.id("normal_quarry_tile"), () -> create(NormalQuarryTile::new, Blocks.NORMAL_QUARRY));
         ENHANCED_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries.id("enhanced_quarry_tile"), () -> create(EnhancedQuarryTile::new, Blocks.ENHANCED_QUARRY));
@@ -52,6 +55,8 @@ public class Tiles {
         NORMAL_LIBRARY_TILE = registry.registerBlockEntityType(EnhancedQuarries.id("normal_library"), () -> create(NormalLibraryTile::new, Blocks.NORMAL_LIBRARY));
 
         NORMAL_MARKER = registry.registerBlockEntityType(EnhancedQuarries.id("normal_marker"), () -> create(MarkerTile::new, Blocks.NORMAL_MARKER));
+
+        ENERGY_GENERATOR_TILE = registry.registerBlockEntityType(EnhancedQuarries.id("energy_generator_tile"), () -> create(EnergyGeneratorTile::new, Blocks.ENERGY_GENERATOR));
     }
 
     public static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityTypeBuilder.Factory<T> supplier, Block... blocks) {

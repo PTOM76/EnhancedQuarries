@@ -29,6 +29,8 @@ public class Blocks {
     public static Block NORMAL_MARKER = NormalMarker.getBlock();
     public static Block FRAME = Frame.getBlock();
 
+    public static Block ENERGY_GENERATOR = EnergyGenerator.getEnergyGenerator();
+
     public static void init() {
         registry.registerBlock(EnhancedQuarries.id("normal_quarry"), () -> NORMAL_QUARRY);
         registry.registerBlock(EnhancedQuarries.id("enhanced_quarry"), () -> ENHANCED_QUARRY);
@@ -50,5 +52,7 @@ public class Blocks {
 
         registry.registerBlock(EnhancedQuarries.id("normal_marker"), () -> NORMAL_MARKER);
         registry.registerBlock(EnhancedQuarries.id("frame"), () -> FRAME);
+
+        registry.registerBlock(EnhancedQuarries.id("energy_generator"), () -> ENERGY_GENERATOR);
     }
 }

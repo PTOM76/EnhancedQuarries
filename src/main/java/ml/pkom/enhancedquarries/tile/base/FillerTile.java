@@ -98,9 +98,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         Inventories.writeNbt(invTag, craftingInvItems);
         tag.put("craftingInv", invTag);
 
-        NbtCompound itemsNbt = new NbtCompound();
-        Inventories.writeNbt(itemsNbt, getItems());
-        tag.put("Items", itemsNbt);
+        Inventories.writeNbt(tag, getItems());
 
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
@@ -128,8 +126,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         }
 
         if (tag.contains("Items")) {
-            NbtCompound itemsNbt = tag.getCompound("Items");
-            Inventories.readNbt(itemsNbt, getItems());
+            Inventories.readNbt(tag, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");

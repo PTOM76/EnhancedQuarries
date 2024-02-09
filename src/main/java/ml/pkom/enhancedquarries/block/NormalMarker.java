@@ -6,18 +6,18 @@ import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockBreakEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.OutlineShapeEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.result.BlockBreakResult;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -55,13 +55,15 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
     protected static VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
     protected static VoxelShape WEST_SHAPE = Block.createCuboidShape(6.0D, 6.0D, 6.0D, 16.0D, 10.0D, 10.0D);
 
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        if (getFacing(state).equals(Direction.UP)) return UP_SHAPE;
-        if (getFacing(state).equals(Direction.DOWN)) return DOWN_SHAPE;
-        if (getFacing(state).equals(Direction.NORTH)) return NORTH_SHAPE;
-        if (getFacing(state).equals(Direction.SOUTH)) return SOUTH_SHAPE;
-        if (getFacing(state).equals(Direction.EAST)) return EAST_SHAPE;
-        if (getFacing(state).equals(Direction.WEST)) return WEST_SHAPE;
+
+    @Override
+    public VoxelShape getOutlineShape(OutlineShapeEvent e) {
+        if (getFacing(e.state).equals(Direction.UP)) return UP_SHAPE;
+        if (getFacing(e.state).equals(Direction.DOWN)) return DOWN_SHAPE;
+        if (getFacing(e.state).equals(Direction.NORTH)) return NORTH_SHAPE;
+        if (getFacing(e.state).equals(Direction.SOUTH)) return SOUTH_SHAPE;
+        if (getFacing(e.state).equals(Direction.EAST)) return EAST_SHAPE;
+        if (getFacing(e.state).equals(Direction.WEST)) return WEST_SHAPE;
         return UP_SHAPE;
     }
 
@@ -125,7 +127,11 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onRightClick(BlockUseEvent e) {
+        World world = e.world;
+        BlockPos pos = e.getPos();
+        BlockState state = e.state;
+
         if (world.isClient()) return ActionResult.SUCCESS;
         List<BlockStatePos> markerList = new ArrayList<>();
         markerList.add(new BlockStatePos(state, pos, world));
@@ -156,12 +162,13 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
     }
 
     @Override
-    public BlockState onBreak(BlockBreakEvent e) {
-        BlockState state = super.onBreak(e);
+    public BlockBreakResult onBreak(BlockBreakEvent e) {
+        BlockBreakResult result = super.onBreak(e);
         World world = e.world;
         BlockPos pos = e.getPos();
+        BlockState state = e.state;
 
-        if (world.isClient()) return state;
+        if (world.isClient()) return result;
         if (getActive(state)) {
             List<BlockStatePos> markerList = new ArrayList<>();
             markerList.add(new BlockStatePos(state, pos, world));
@@ -181,7 +188,7 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
             }
             setActive(!((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null ) || markerList.size() <= 2) , world, pos);
         }
-        return state;
+        return result;
     }
 
     public static void setFacing(Direction facing, World world, BlockPos pos) {

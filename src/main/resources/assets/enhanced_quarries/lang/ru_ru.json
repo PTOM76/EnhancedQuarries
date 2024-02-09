@@ -11,6 +11,10 @@
     "block.enhanced_quarries.fluid_optimum_quarry": " Карьер для удаления Optimum Process Quarry",
     "block.enhanced_quarries.normal_pump": "Обычная помпа",
     "block.enhanced_quarries.enhanced_pump": "Улучшенная помпа",
+    "block.enhanced_quarries.normal_scanner": "Сканер (эксперимент)",
+    "block.enhanced_quarries.normal_builder": "Строитель (эксперимент)",
+    "block.enhanced_quarries.normal_library": "Библиотека (эксперимент)",
+    "block.enhanced_quarries.energy_generator": "Генератор энергии",
 
     "block.enhanced_quarries.normal_marker": "Маркер",
     "block.enhanced_quarries.frame": "Рамка",
