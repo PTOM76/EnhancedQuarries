@@ -28,6 +28,7 @@ public class RebornEnergyRegister {
         tileTypes.add(ENHANCED_PUMP_TILE);
         tileTypes.add(FLUID_QUARRY_TILE);
         tileTypes.add(FLUID_OPTIMUM_QUARRY_TILE);
+        tileTypes.add(ENERGY_GENERATOR_TILE);
 
         for (RegistryEvent<BlockEntityType<?>> registryEvent : tileTypes) {
             EnergyStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {

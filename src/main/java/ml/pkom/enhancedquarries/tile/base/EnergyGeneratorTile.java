@@ -10,6 +10,7 @@ import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -112,13 +113,47 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
                 burning = true;
                 --burnTime;
                 insertEnergy(getGenerateEnergy());
-
             } else {
                 burning = false;
             }
         } else if (isActive()) {
             burning = false;
         }
+        outputEnergy(this, world, pos);
+    }
+
+    public static void outputEnergy(EnergyGeneratorTile blockEntity, World world, BlockPos pos) {
+        if (blockEntity.getEnergy() <= 0) return;
+        for (Direction direction : Direction.values()) {
+            BlockPos targetPos = pos.offset(direction);
+            BlockEntity dirTile = world.getBlockEntity(targetPos);
+            if (!(dirTile instanceof BaseEnergyTile)) continue;
+
+            BaseEnergyTile targetEntity = (BaseEnergyTile)dirTile;
+            long output = outputEnergy(blockEntity, targetEntity);
+            if (output > 0) {
+                blockEntity.useEnergy(output);
+                targetEntity.insertEnergy(output);
+            }
+        }
+    }
+
+    private static long outputEnergy(EnergyGeneratorTile blockEntity, BaseEnergyTile targetEntity) {
+        long maxInput = targetEntity.getMaxInput();
+        long maxEnergy = targetEntity.getMaxEnergy();
+        long energy = targetEntity.getEnergy();
+        long usableCapacity = maxEnergy - energy;
+        long output = blockEntity.getMaxOutput();
+        if (usableCapacity < output) {
+            output = usableCapacity;
+        }
+        if (output > blockEntity.getEnergy()) {
+            output = blockEntity.getEnergy();
+        }
+        if (output > maxInput) {
+            output = maxInput;
+        }
+        return output;
     }
 
     public static int getBurnTimeFrom(@NotNull ItemStack stack) {
