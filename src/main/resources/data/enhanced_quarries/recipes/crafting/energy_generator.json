@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AYA",
+    "ZXZ",
+    "AZA"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:redstone_block"
+    },
+    "Y": {
+      "item": "minecraft:furnace"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "A": {
+      "item": "enhanced_quarries:refined_gear"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:energy_generator",
+    "count": 1
+  }
+}

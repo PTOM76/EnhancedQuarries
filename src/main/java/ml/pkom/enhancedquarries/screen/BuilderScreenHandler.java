@@ -7,6 +7,7 @@ import ml.pkom.enhancedquarries.inventory.slot.BuilderSlot;
 import ml.pkom.enhancedquarries.inventory.slot.DisabledSlot;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
+import ml.pkom.mcpitanlibarch.api.util.SlotUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -81,17 +82,17 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
             if (index < 36) {
-                if (!this.insertItem(originalStack, 36,  36 + builderInventory.size() - 1, false)) {
+                if (!this.callInsertItem(originalStack, 36,  36 + builderInventory.size() - 1, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (!this.insertItem(originalStack, 0, 35, false)) {
+                if (!this.callInsertItem(originalStack, 0, 35, false)) {
                     return ItemStack.EMPTY;
                 }
             }
 
             if (originalStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStack.EMPTY);
             } else {
                 slot.markDirty();
             }

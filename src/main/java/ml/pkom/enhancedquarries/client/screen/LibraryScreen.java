@@ -8,7 +8,6 @@ import ml.pkom.mcpitanlibarch.api.network.ClientNetworking;
 import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import ml.pkom.mcpitanlibarch.api.util.client.ScreenUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -52,7 +51,7 @@ public class LibraryScreen extends BaseHandledScreen {
         if (nameBox.isFocused()) {
             if (args.keyCode != 256) {
                 PacketByteBuf buf = PacketByteUtil.create();
-                buf.writeString(nameBox.getText());
+                PacketByteUtil.writeString(buf, nameBox.getText());
                 ClientNetworking.send(EnhancedQuarries.id("blueprint_name"), buf);
                 ((LibraryScreenHandler) handler).setBlueprintName(nameBox.getText());
             }

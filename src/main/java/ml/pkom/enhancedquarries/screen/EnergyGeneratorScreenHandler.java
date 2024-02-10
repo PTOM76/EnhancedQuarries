@@ -4,6 +4,8 @@ import ml.pkom.enhancedquarries.ScreenHandlers;
 import ml.pkom.enhancedquarries.inventory.slot.FuelSlot;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.gui.ExtendedScreenHandler;
+import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
+import ml.pkom.mcpitanlibarch.api.util.SlotUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -20,8 +22,8 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
     public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
         this(syncId, playerInventory, new SimpleInventory(1));
         if (buf == null) return;
-        energy = buf.readLong();
-        maxEnergy = buf.readLong();
+        energy = PacketByteUtil.readLong(buf);
+        maxEnergy = PacketByteUtil.readLong(buf);
     }
 
     public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
@@ -61,7 +63,7 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
             }
 
             if (originalStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStack.EMPTY);
             } else {
                 slot.markDirty();
             }

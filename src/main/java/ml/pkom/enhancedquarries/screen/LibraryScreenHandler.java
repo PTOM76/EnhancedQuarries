@@ -4,6 +4,7 @@ import ml.pkom.enhancedquarries.ScreenHandlers;
 import ml.pkom.enhancedquarries.inventory.slot.LibrarySlot;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
+import ml.pkom.mcpitanlibarch.api.util.SlotUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -58,7 +59,7 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
             }
 
             if (originalStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStack.EMPTY);
             } else {
                 slot.markDirty();
             }

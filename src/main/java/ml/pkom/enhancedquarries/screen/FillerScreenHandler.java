@@ -6,6 +6,7 @@ import ml.pkom.enhancedquarries.inventory.slot.FillerCraftingSlot;
 import ml.pkom.enhancedquarries.inventory.FillerInventory;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
+import ml.pkom.mcpitanlibarch.api.util.SlotUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -77,7 +78,7 @@ public class FillerScreenHandler extends SimpleScreenHandler {
             }
 
             if (originalStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStack.EMPTY);
             } else {
                 slot.markDirty();
             }

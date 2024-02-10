@@ -38,8 +38,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public IInventory inventory = this;
 
+    // 経験値の量
     public int storedExp = 0;
 
+    // 経験値の最大量
     public int getMaxStoredExp() {
         return 10_000;
     }
@@ -253,6 +255,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                     useEnergy(getEnergyCost());
                 }
             }
+            // エネルギーが多いほどクールダウンが早くなる
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive()) {
@@ -455,11 +458,11 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public void tryCollectExp(BlockPos blockPos) {
         if (getWorld() == null || getWorld().isClient()) return;
-        List<ExperienceOrbEntity> entities = getWorld().getEntitiesByType(EntityType.EXPERIENCE_ORB, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
+        List<ExperienceOrbEntity> entities = getWorld().getEntitiesByClass(ExperienceOrbEntity.class, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
         entities.forEach((entity) -> {
             if (getStoredExp() + entity.getExperienceAmount() > getMaxStoredExp()) return;
             storedExp += entity.getExperienceAmount();
-            entity.kill();
+            entity.discard();
         });
     }
 
@@ -632,6 +635,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                             }
                             if (isSetMobKill) {
                                 tryKillMob(procPos);
+                            }
+                            if (isSetExpCollect) {
+                                tryCollectExp(procPos);
                             }
                             breakBlock(procPos, true);
                             List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, new Box(new BlockPos(procX - 1, procY - 1, procZ - 1), new BlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);

@@ -5,6 +5,7 @@ import ml.pkom.enhancedquarries.block.base.EnergyGenerator;
 import ml.pkom.enhancedquarries.screen.EnergyGeneratorScreenHandler;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
+import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -214,7 +215,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        buf.writeLong(getEnergy());
-        buf.writeLong(getMaxEnergy());
+        PacketByteUtil.writeLong(buf, getEnergy());
+        PacketByteUtil.writeLong(buf, getMaxEnergy());
     }
 }
