@@ -18,12 +18,10 @@ public class EnhancedQuarriesClient implements ClientModInitializer {
 
         ClientNetworking.registerReceiver(EnhancedQuarries.id("energy_generator"), (client, p, buf) -> {
             long energy = PacketByteUtil.readLong(buf);
-            long maxEnergy = PacketByteUtil.readLong(buf);
             if (p == null) return;
             if (p.currentScreenHandler instanceof EnergyGeneratorScreenHandler) {
                 EnergyGeneratorScreenHandler screenHandler = (EnergyGeneratorScreenHandler) p.currentScreenHandler;
                 screenHandler.energy = energy;
-                screenHandler.maxEnergy = maxEnergy;
             }
         });
     }
