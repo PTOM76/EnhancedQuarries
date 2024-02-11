@@ -23,23 +23,11 @@ public class Config {
         if (!configDir.exists() || !configDir.isDirectory())
             configDir.mkdirs();
 
-        if (config.configMap.containsKey("module_interval")) {
-            FillerTile.moduleInterval = config.getInt("module_interval");
-        } else {
-            config.setInt("module_interval", FillerTile.moduleInterval);
-        }
+        FillerTile.moduleInterval = config.getIntOrDefault("module_interval", 6);
 
-        if (config.configMap.containsKey("vertical_layer_interval")) {
-            VerticalLayerModule.interval = config.getInt("vertical_layer_interval");
-        } else {
-            config.setInt("vertical_layer_interval", VerticalLayerModule.interval);
-        }
+        VerticalLayerModule.interval = config.getIntOrDefault("vertical_layer_interval", 6);
 
-        if (config.configMap.containsKey("horizontal_layer_interval")) {
-            HorizontalLayerModule.interval = config.getInt("horizontal_layer_interval");
-        } else {
-            config.setInt("horizontal_layer_interval", HorizontalLayerModule.interval);
-        }
+        HorizontalLayerModule.interval = config.getIntOrDefault("horizontal_layer_interval", 6);
 
         if (!config.configMap.containsKey("reborn_energy_conversion_rate"))
             config.setDouble("reborn_energy_conversion_rate", 1.0);

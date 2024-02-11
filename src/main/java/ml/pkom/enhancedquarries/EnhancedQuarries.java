@@ -1,8 +1,10 @@
 package ml.pkom.enhancedquarries;
 
+import ml.pkom.enhancedquarries.cmd.EnhancedQuarriesCommand;
 import ml.pkom.enhancedquarries.compat.RebornEnergyRegister;
 import ml.pkom.enhancedquarries.screen.LibraryScreenHandler;
 import ml.pkom.enhancedquarries.tile.base.QuarryTile;
+import ml.pkom.mcpitanlibarch.api.command.CommandRegistry;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.item.CreativeTabBuilder;
 import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
@@ -51,6 +53,8 @@ public class EnhancedQuarries implements ModInitializer {
         }));
 
         registerEnergyStorage();
+
+        CommandRegistry.register("enhancedquarries", new EnhancedQuarriesCommand());
 
         registry.allRegister();
     }
