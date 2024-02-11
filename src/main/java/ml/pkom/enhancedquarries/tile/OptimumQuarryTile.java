@@ -4,6 +4,7 @@ import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.enhancedquarries.block.Frame;
 import ml.pkom.enhancedquarries.tile.base.QuarryTile;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
+import ml.pkom.mcpitanlibarch.api.util.math.BoxUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
@@ -11,7 +12,6 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 
 import java.util.List;
 
@@ -99,7 +99,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                             tryKillMob(procPos);
                         }
                         breakBlock(procPos, true);
-                        List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, new Box(new BlockPos(procX - 1, procY - 1, procZ - 1), new BlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
+                        List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(procX - 1, procY - 1, procZ - 1), new BlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
                         if (entities.isEmpty()) return true;
                         for (ItemEntity itemEntity : entities) {
                             addStack(itemEntity.getStack());

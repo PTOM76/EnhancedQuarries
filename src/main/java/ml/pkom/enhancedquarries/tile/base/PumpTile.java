@@ -22,7 +22,7 @@ import java.util.Set;
 // reference: Kibe Utilities's tank
 @SuppressWarnings("UnstableApiUsage")
 public class PumpTile extends BaseEnergyTile {
-    private SingleVariantStorage<FluidVariant> storedFluid = new SingleVariantStorage<>() {
+    private SingleVariantStorage<FluidVariant> storedFluid = new SingleVariantStorage<FluidVariant>() {
 
         @Override
         protected FluidVariant getBlankVariant() {

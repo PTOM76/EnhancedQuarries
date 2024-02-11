@@ -348,7 +348,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
                         // ----
                     }
                     // 選択範囲より上～最高域
-                    if (procY <= getWorld().getDimension().height() && procY >= pos2.getY() + 1) {
+                    if (procY <= WorldUtil.getDimensionHeight(getWorld()) && procY >= pos2.getY() + 1) {
                         // 整地モジュール
                         if (item.equals(Items.fillerLEVELING)) {
                             if (!(procBlock instanceof AirBlock))

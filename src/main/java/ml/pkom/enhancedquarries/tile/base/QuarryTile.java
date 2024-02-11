@@ -6,6 +6,7 @@ import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
+import ml.pkom.mcpitanlibarch.api.util.math.BoxUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
@@ -24,7 +25,6 @@ import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -415,42 +415,33 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     public BlockPos getDefaultRangePos1() {
         // default
         switch (getFacing()) {
-            case NORTH -> {
+            case NORTH:
                 return new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() + 1);
-            }
-            case SOUTH -> {
+            case SOUTH:
                 return new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() - 11);
-            }
-            case WEST -> {
+            case WEST:
                 return new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ() - 5);
-            }
-            case EAST -> {
+            case EAST:
                 return new BlockPos(getPos().getX() - 11, getPos().getY(), getPos().getZ() - 5);
-            }
-            default -> {
+            default:
                 return null;
-            }
         }
     }
 
     public BlockPos getDefaultRangePos2() {
         // default
         switch (getFacing()) {
-            case NORTH -> {
+            case NORTH:
                 return new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ() + 12);
-            }
-            case SOUTH -> {
+            case SOUTH:
                 return new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ());
-            }
-            case WEST -> {
+
+            case WEST:
                 return new BlockPos(getPos().getX() + 12, getPos().getY() + 4, getPos().getZ() + 6);
-            }
-            case EAST -> {
+            case EAST:
                 return new BlockPos(getPos().getX(), getPos().getY() + 4, getPos().getZ() + 6);
-            }
-            default -> {
+            default:
                 return null;
-            }
         }
     }
 
@@ -503,19 +494,19 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public void tryDeleteMob(BlockPos blockPos) {
         if (getWorld() == null || getWorld().isClient()) return;
-        List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
+        List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
         mobs.forEach(Entity::discard);
     }
 
     public void tryKillMob(BlockPos blockPos) {
         if (getWorld() == null || getWorld().isClient()) return;
-        List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
+        List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
         mobs.forEach(LivingEntity::kill);
     }
 
     public void tryCollectExp(BlockPos blockPos) {
         if (getWorld() == null || getWorld().isClient()) return;
-        List<ExperienceOrbEntity> entities = getWorld().getEntitiesByClass(ExperienceOrbEntity.class, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
+        List<ExperienceOrbEntity> entities = getWorld().getEntitiesByClass(ExperienceOrbEntity.class, BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
         entities.forEach((entity) -> {
             if (getStoredExp() + entity.getExperienceAmount() > getMaxStoredExp()) return;
             addStoredExp(entity.getExperienceAmount());
@@ -550,7 +541,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                         BlockState tmpBlock = getWorld().getBlockState(tmpPos);
                         if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
                             breakBlock(tmpPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, new Box(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
+                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
                             if (!entities.isEmpty())
                                 for(ItemEntity itemEntity : entities) {
                                     addStack(itemEntity.getStack());
@@ -566,7 +557,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                         BlockState tmpBlock = getWorld().getBlockState(tmpPos);
                         if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
                             breakBlock(tmpPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, new Box(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
+                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
                             if (!entities.isEmpty())
                                 for(ItemEntity itemEntity : entities) {
                                     addStack(itemEntity.getStack());
@@ -582,7 +573,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                         BlockState tmpBlock = getWorld().getBlockState(tmpPos);
                         if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
                             breakBlock(tmpPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, new Box(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
+                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
                             if (!entities.isEmpty())
                                 for(ItemEntity itemEntity : entities) {
                                     addStack(itemEntity.getStack());
@@ -598,7 +589,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                         BlockState tmpBlock = getWorld().getBlockState(tmpPos);
                         if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
                             breakBlock(tmpPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, new Box(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
+                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
                             if (!entities.isEmpty())
                                 for(ItemEntity itemEntity : entities) {
                                     addStack(itemEntity.getStack());
@@ -697,7 +688,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                                 tryCollectExp(procPos);
                             }
                             breakBlock(procPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, new Box(new BlockPos(procX - 1, procY - 1, procZ - 1), new BlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
+                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(procX - 1, procY - 1, procZ - 1), new BlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
                             if (entities.isEmpty()) return true;
                             for(ItemEntity itemEntity : entities) {
                                 addStack(itemEntity.getStack());
