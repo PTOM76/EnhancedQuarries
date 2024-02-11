@@ -1,5 +1,5 @@
 {
-    "itemGroup.enhanced_quarries.all": "EnhancedQuarries",
+    "itemGroup.enhanced_quarries.all": "Enhanced Quarries",
     "block.enhanced_quarries.normal_filler": "Normal Filler",
     "block.enhanced_quarries.enhanced_filler": "Enhanced Filler",
     "block.enhanced_quarries.enhanced_filler_with_chest": "Enhanced Filler With Chest",
@@ -11,9 +11,9 @@
     "block.enhanced_quarries.fluid_optimum_quarry": "Fluid Delete Type Optimum Process Quarry",
     "block.enhanced_quarries.normal_pump": "Normal Pump",
     "block.enhanced_quarries.enhanced_pump": "Enhanced Pump",
-    "block.enhanced_quarries.normal_scanner": "Scanner (experiment)",
-    "block.enhanced_quarries.normal_builder": "Builder (experiment)",
-    "block.enhanced_quarries.normal_library": "Library (experiment)",
+    "block.enhanced_quarries.normal_scanner": "Scanner §c(experiment)",
+    "block.enhanced_quarries.normal_builder": "Builder §c(experiment)",
+    "block.enhanced_quarries.normal_library": "Library §c(experiment)",
     "block.enhanced_quarries.energy_generator": "Energy Generator",
 
     "block.enhanced_quarries.normal_marker": "Normal Marker",

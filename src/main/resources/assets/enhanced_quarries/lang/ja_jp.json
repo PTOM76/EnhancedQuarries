@@ -1,5 +1,5 @@
 {
-    "itemGroup.enhanced_quarries.all": "EnhancedQuarries",
+    "itemGroup.enhanced_quarries.all": "Enhanced Quarries",
     "block.enhanced_quarries.normal_filler": "ノーマル フィラー",
     "block.enhanced_quarries.enhanced_filler": "強化型フィラー",
     "block.enhanced_quarries.enhanced_filler_with_chest": "チェスト付き強化型フィラー",
@@ -11,9 +11,9 @@
     "block.enhanced_quarries.fluid_optimum_quarry": "液体除去型軽量処理クァーリー",
     "block.enhanced_quarries.normal_pump": "ノーマル ポンプ",
     "block.enhanced_quarries.enhanced_pump": "強化型ポンプ",
-    "block.enhanced_quarries.normal_scanner": "スキャナー (experiment)",
-    "block.enhanced_quarries.normal_builder": "ビルダー (experiment)",
-    "block.enhanced_quarries.normal_library": "ライブラリ (experiment)",
+    "block.enhanced_quarries.normal_scanner": "スキャナー §c(experiment)",
+    "block.enhanced_quarries.normal_builder": "ビルダー §c(experiment)",
+    "block.enhanced_quarries.normal_library": "ライブラリ §c(experiment)",
     "block.enhanced_quarries.energy_generator": "エネルギー発電機",
 
     "block.enhanced_quarries.normal_marker": "ノーマル マーカー",
@@ -24,7 +24,7 @@
     "item.enhanced_quarries.luck_enchant_module": "幸運モジュール",
     "item.enhanced_quarries.mob_delete_module": "モブ消去モジュール",
     "item.enhanced_quarries.mob_kill_module": "モブ殺害モジュール",
-    "item.enhanced_quarries.exp_collect_module": "経験値回収モジュール",
+    "item.enhanced_quarries.exp_collect_module": "経験値採取モジュール",
 
     "item.enhanced_quarries.filler_all_fill": "埋め立てモジュール",
     "item.enhanced_quarries.filler_all_delete": "消去モジュール",
