@@ -1,19 +1,17 @@
 package ml.pkom.enhancedquarries.block;
 
 import ml.pkom.enhancedquarries.block.base.Filler;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.screen.FillerWithChestScreenHandler;
 import ml.pkom.enhancedquarries.tile.EnhancedFillerWithChestTile;
 import ml.pkom.enhancedquarries.tile.base.FillerTile;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -41,14 +39,13 @@ public class EnhancedFillerWithChest extends Filler {
     }
     // ----
 
+
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        if (world.isClient())
-            return ActionResult.SUCCESS;
-        NamedScreenHandlerFactory namedScreenHandlerFactory = createScreenHandlerFactory(state, world, pos);
-        if (namedScreenHandlerFactory != null) {
-            player.openHandledScreen(namedScreenHandlerFactory);
-        }
+    public ActionResult onRightClick(BlockUseEvent e) {
+        if (e.isClient()) return ActionResult.SUCCESS;
+        NamedScreenHandlerFactory namedScreenHandlerFactory = createScreenHandlerFactory(e.state, e.world, e.pos);
+        if (namedScreenHandlerFactory != null)
+            e.player.openGuiScreen(namedScreenHandlerFactory);
 
         return ActionResult.CONSUME;
     }

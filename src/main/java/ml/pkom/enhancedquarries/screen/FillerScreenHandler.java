@@ -33,23 +33,23 @@ public class FillerScreenHandler extends SimpleScreenHandler {
         int i = 0;
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 3; ++l) {
-                addSlot(new FillerCraftingSlot(craftingInventory, i, 30 + l * 18, 17 + m * 18));
+                callAddSlot(new FillerCraftingSlot(craftingInventory, i, 30 + l * 18, 17 + m * 18));
                 i++;
             }
         }
-        addSlot(new FillerCraftingSlot(craftingInventory, 9, 124, 35, true));
+        callAddSlot(new FillerCraftingSlot(craftingInventory, 9, 124, 35, true));
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {
-                addSlot(new Slot(inventory, l + m * 9, 8 + l * 18, 85 + m * 18));
+                callAddSlot(new Slot(inventory, l + m * 9, 8 + l * 18, 85 + m * 18));
             }
         }
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {
-                addSlot(new Slot(playerInventory, l + m * 9 + 9, 8 + l * 18, 153 + m * 18));
+                callAddSlot(new Slot(playerInventory, l + m * 9 + 9, 8 + l * 18, 153 + m * 18));
             }
         }
         for (m = 0; m < 9; ++m) {
-            addSlot(new Slot(playerInventory, m, 8 + m * 18, 211));
+            callAddSlot(new Slot(playerInventory, m, 8 + m * 18, 211));
         }
     }
 

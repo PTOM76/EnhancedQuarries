@@ -10,8 +10,6 @@ import ml.pkom.mcpitanlibarch.api.network.ServerNetworking;
 import ml.pkom.mcpitanlibarch.api.registry.ArchRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -57,8 +55,9 @@ public class EnhancedQuarries implements ModInitializer {
         registry.allRegister();
     }
 
-    @SuppressWarnings("UnstableApiUsage")
+    //@SuppressWarnings("UnstableApiUsage")
     // まだ未使用
+    /*
     public static void registerFluidStorage() {
         FluidStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
             if (!(blockEntity instanceof QuarryTile)) return null;
@@ -68,6 +67,7 @@ public class EnhancedQuarries implements ModInitializer {
         }, Tiles.NORMAL_QUARRY_TILE.getOrNull());
 
     }
+     */
 
     public static void registerEnergyStorage() {
         if (FabricLoader.getInstance().isModLoaded("team_reborn_energy")) {

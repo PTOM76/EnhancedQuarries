@@ -6,11 +6,9 @@ import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
@@ -42,6 +40,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     public IInventory inventory = this;
 
     // Fluid
+    /*
     SingleVariantStorage<FluidVariant> fluidStorage = new SingleVariantStorage<>() {
         @Override
         protected FluidVariant getBlankVariant() {
@@ -68,6 +67,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     public SingleVariantStorage<FluidVariant> getFluidStorage() {
         return fluidStorage;
     }
+
+     */
 
     // 経験値の量
     private int storedExp = 0;
@@ -236,8 +237,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
         tag.putInt("storedExp", getStoredExp());
 
+        /*
         tag.put("variant", fluidStorage.variant.toNbt());
         tag.putLong("amount", fluidStorage.amount);
+         */
 
         super.writeNbtOverride(tag);
     }
@@ -267,10 +270,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
         if (tag.contains("storedExp")) setStoredExp(tag.getInt("storedExp"));
 
+        /*
         if (tag.contains("variant"))
             fluidStorage.variant = FluidVariant.fromNbt(tag.getCompound("variant"));
         if (tag.contains("amount"))
             fluidStorage.amount = tag.getLong("amount");
+
+         */
     }
 
     // ----

@@ -180,19 +180,19 @@ public class OptimumQuarryTile extends NormalQuarryTile {
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
+    public void writeNbtOverride(NbtCompound tag) {
         NbtCompound procPos = new NbtCompound();
         if (procX != null) procPos.putInt("x", procX);
         if (procY != null) procPos.putInt("y", procY);
         if (procZ != null) procPos.putInt("z", procZ);
         tag.put("procPos", procPos);
         tag.putBoolean("finished", finishedQuarry);
-        super.writeNbt(tag);
+        super.writeNbtOverride(tag);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbtOverride(NbtCompound tag) {
+        super.readNbtOverride(tag);
         if (!tag.contains("procPos")) return;
         NbtCompound procPos = tag.getCompound("procPos");
         if (procPos.contains("x")) procX = procPos.getInt("x");

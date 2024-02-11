@@ -150,13 +150,9 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
             if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
         }
         if ((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null) || markerList.size() <= 2) {
-            markerList.forEach((markerSP) -> {
-                setActive(false, markerSP.getWorld(), markerSP.getBlockPos());
-            });
+            markerList.forEach((markerSP) -> setActive(false, markerSP.getWorld(), markerSP.getBlockPos()));
         } else {
-            markerList.forEach((markerSP) -> {
-                setActive(true, markerSP.getWorld(), markerSP.getBlockPos());
-            });
+            markerList.forEach((markerSP) -> setActive(true, markerSP.getWorld(), markerSP.getBlockPos()));
         }
         return ActionResult.SUCCESS;
     }

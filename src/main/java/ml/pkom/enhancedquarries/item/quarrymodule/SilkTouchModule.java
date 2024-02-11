@@ -5,8 +5,6 @@ import ml.pkom.enhancedquarries.tile.base.QuarryTile;
 import ml.pkom.mcpitanlibarch.api.event.item.ItemUseOnBlockEvent;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUsageContext;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;

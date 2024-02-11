@@ -5,8 +5,8 @@ plugins {
 	id "com.modrinth.minotaur" version "2.+"
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -55,7 +55,7 @@ processResources {
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 
-	def targetVersion = 17
+	def targetVersion = 8
 	if (JavaVersion.current().isJava9Compatible()) {
 		 it.options.release = targetVersion
 	}
@@ -100,8 +100,17 @@ if (System.getenv("CURSEFORGE_TOKEN") != null) {
 			changelog = project.changelog
 			releaseType = 'release'
 			addGameVersion "Fabric"
-			addGameVersion "1.20"
-			addGameVersion "1.20.1"
+			addGameVersion '1.18.2'
+			addGameVersion '1.19'
+			addGameVersion '1.19.1'
+			addGameVersion '1.19.2'
+			addGameVersion '1.19.3'
+			addGameVersion '1.19.4'
+			addGameVersion '1.20'
+			addGameVersion '1.20.1'
+			addGameVersion '1.20.2'
+			addGameVersion '1.20.3'
+			addGameVersion '1.20.4'
 			relations {
 				requiredDependency "fabric-api"
 				requiredDependency "mcpitanlibarch"
@@ -122,7 +131,7 @@ if (System.getenv("MODRINTH_TOKEN") != null) {
 		token = System.getenv("MODRINTH_TOKEN")
 		projectId = 'JcIgEOzn'
 		versionNumber = project.mod_version + "-fabric"
-		gameVersions = ["1.20", "1.20.1"]
+		gameVersions = ['1.18.2', '1.19', '1.19.1', '1.19.2', '1.19.3', '1.19.4', '1.20', '1.20.1', '1.20.2', '1.20.3', '1.20.4']
 		versionType = 'release'
 		uploadFile = tasks.remapJar
 		changelog = project.changelog

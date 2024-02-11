@@ -36,7 +36,7 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
 
         addPlayerMainInventorySlots(playerInventory, 8, 153);
         addPlayerHotbarSlots(playerInventory, 8, 211);
-        addSlot(new BuilderSlot(builderInventory, 0, 80, 34));
+        callAddSlot(new BuilderSlot(builderInventory, 0, 80, 34));
         addSlots(builderInventory, 1, 8, 85, 18, 9, 3);
         addDisabledSlots(needInventory, 0, 180, 13, 18, 3, 9);
     }
@@ -63,7 +63,7 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
 
     protected Slot addDisabledSlot(Inventory inventory, int index, int x, int y) {
         Slot slot = new DisabledSlot(inventory, index, x, y);
-        return this.addSlot(slot);
+        return this.callAddSlot(slot);
     }
 
     @Override

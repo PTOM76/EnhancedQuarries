@@ -1,12 +1,9 @@
 package ml.pkom.enhancedquarries.tile;
 
 import ml.pkom.enhancedquarries.Tiles;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.enhancedquarries.tile.base.BuilderTile;
-import ml.pkom.enhancedquarries.tile.base.FillerTile;
-import net.minecraft.block.BlockState;
+import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
 
 public class NormalBuilderTile extends BuilderTile {
 

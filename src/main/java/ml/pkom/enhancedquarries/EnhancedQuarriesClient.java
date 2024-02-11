@@ -6,8 +6,6 @@ import ml.pkom.mcpitanlibarch.api.network.ClientNetworking;
 import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
 import net.fabricmc.api.ClientModInitializer;
 
-import java.util.Objects;
-
 public class EnhancedQuarriesClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
