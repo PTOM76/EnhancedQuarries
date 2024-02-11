@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "YYY",
+    "YXY",
+    "YYY"
+  ],
+  "key": {
+    "X": {
+      "item": "enhanced_quarries:enhanced_panel"
+    },
+    "Y": {
+      "item": "minecraft:bottle"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:exp_collect_module",
+    "count": 1
+  }
+}
