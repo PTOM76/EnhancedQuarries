@@ -2,12 +2,12 @@ package ml.pkom.enhancedquarries.item.fillermodule;
 
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
-import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
+import ml.pkom.enhancedquarries.item.base.FillerModule;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import net.minecraft.block.AirBlock;
 import net.minecraft.util.math.Direction;
 
-public class CutStairsModule extends FillerModuleItem {
+public class CutStairsModule extends FillerModule {
     public CutStairsModule(CompatibleItemSettings settings) {
         super(settings);
     }

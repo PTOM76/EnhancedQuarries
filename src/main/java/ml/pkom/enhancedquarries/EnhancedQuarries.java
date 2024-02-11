@@ -2,12 +2,16 @@ package ml.pkom.enhancedquarries;
 
 import ml.pkom.enhancedquarries.compat.RebornEnergyRegister;
 import ml.pkom.enhancedquarries.screen.LibraryScreenHandler;
+import ml.pkom.enhancedquarries.tile.base.QuarryTile;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.item.CreativeTabBuilder;
 import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
 import ml.pkom.mcpitanlibarch.api.network.ServerNetworking;
 import ml.pkom.mcpitanlibarch.api.registry.ArchRegistry;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -51,6 +55,18 @@ public class EnhancedQuarries implements ModInitializer {
         registerEnergyStorage();
 
         registry.allRegister();
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    // まだ未使用
+    public static void registerFluidStorage() {
+        FluidStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
+            if (!(blockEntity instanceof QuarryTile)) return null;
+            QuarryTile quarryTile = (QuarryTile) blockEntity;
+            return quarryTile.getFluidStorage();
+
+        }, Tiles.NORMAL_QUARRY_TILE.getOrNull());
+
     }
 
     public static void registerEnergyStorage() {

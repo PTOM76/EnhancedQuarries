@@ -2,8 +2,8 @@ package ml.pkom.enhancedquarries;
 
 import ml.pkom.enhancedquarries.item.*;
 import ml.pkom.enhancedquarries.item.base.FillerModule;
-import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
 import ml.pkom.enhancedquarries.item.fillermodule.*;
+import ml.pkom.enhancedquarries.item.quarrymodule.*;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
@@ -45,37 +45,37 @@ public class Items {
     public static Item EXP_COLLECT_MODULE = new ExpCollectModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("exp_collect_module")));
 
     // 全配置
-    public static Item fillerALL_FILL = new FillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_all_fill")));
+    public static Item fillerALL_FILL = new GenericFillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_all_fill")));
     // 全消去
-    public static Item fillerALL_DELETE = new FillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_all_delete")));
+    public static Item fillerALL_DELETE = new GenericFillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_all_delete")));
     // 全撤去
-    public static Item fillerALL_REMOVE = new FillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_all_remove")));
+    public static Item fillerALL_REMOVE = new GenericFillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_all_remove")));
     // 整地
-    public static Item fillerLEVELING = new FillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_leveling")));
+    public static Item fillerLEVELING = new GenericFillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_leveling")));
     // ボックス
-    public static Item fillerBOX = new FillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_create_box")));
+    public static Item fillerBOX = new GenericFillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_create_box")));
     // 壁
-    public static Item fillerWALL = new FillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_create_wall")));
+    public static Item fillerWALL = new GenericFillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_create_wall")));
     // 松明
-    public static Item fillerTORCH = new FillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_place_torch")));
+    public static Item fillerTORCH = new GenericFillerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_place_torch")));
     // 垂直レイヤー
-    public static FillerModuleItem fillerVERTICAL_LAYER = new VerticalLayerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_vertical_layer")));
+    public static FillerModule fillerVERTICAL_LAYER = new VerticalLayerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_vertical_layer")));
     // 平行レイヤー
-    public static FillerModuleItem fillerHORIZONTAL_LAYER = new HorizontalLayerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_horizontal_layer")));
+    public static FillerModule fillerHORIZONTAL_LAYER = new HorizontalLayerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_horizontal_layer")));
     // 積み上げ
-    public static FillerModuleItem fillerTOWER = new TowerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_tower")));
+    public static FillerModule fillerTOWER = new TowerModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_tower")));
     // 液体除去(未実装)
-    public static FillerModuleItem fillerDELETE_FLUID = new DeleteFluidModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_delete_fluid")));
+    public static FillerModule fillerDELETE_FLUID = new DeleteFluidModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_delete_fluid")));
     // 床張り替え
-    public static FillerModuleItem fillerFLOOR_REPLACE = new FloorReplaceModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_floor_replace")));
+    public static FillerModule fillerFLOOR_REPLACE = new FloorReplaceModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_floor_replace")));
     // 階段
-    public static FillerModuleItem fillerSTAIRS = new CreateStairsModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_create_stairs")));
+    public static FillerModule fillerSTAIRS = new CreateStairsModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_create_stairs")));
     // 四角錐
-    public static FillerModuleItem fillerPYRAMID = new CreatePyramidModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_create_pyramid")));
+    public static FillerModule fillerPYRAMID = new CreatePyramidModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_create_pyramid")));
     // 階段撤去
-    public static FillerModuleItem fillerCUT_STAIRS = new CutStairsModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_cut_stairs")));
+    public static FillerModule fillerCUT_STAIRS = new CutStairsModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_cut_stairs")));
     // 四角錐撤去
-    public static FillerModuleItem fillerCUT_PYRAMID = new CutPyramidModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_cut_pyramid")));
+    public static FillerModule fillerCUT_PYRAMID = new CutPyramidModule(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("filler_cut_pyramid")));
 
     // 赤石ハンマー
     public static Item REDSTONE_HAMMER = new RedstoneHammer(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("redstone_hammer")));

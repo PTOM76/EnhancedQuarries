@@ -1,6 +1,6 @@
 package ml.pkom.enhancedquarries.registry;
 
-import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
+import ml.pkom.enhancedquarries.item.base.FillerModule;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ public class Registry {
         return INSTANCE;
     }
 
-    public List<FillerModuleItem> getModules() {
-        List<FillerModuleItem> list = new ArrayList<>();
+    public List<FillerModule> getModules() {
+        List<FillerModule> list = new ArrayList<>();
         for (RegistryData data : modules) {
             list.add(data.module);
         }
@@ -26,7 +26,7 @@ public class Registry {
         return modules;
     }
 
-    public static FillerModuleItem register(Identifier identifier, FillerModuleItem fillerModule) {
+    public static FillerModule register(Identifier identifier, FillerModule fillerModule) {
         getINSTANCE().modules.add(new RegistryData(fillerModule, identifier));
         return fillerModule;
     }
@@ -41,9 +41,9 @@ public class Registry {
     }
 
     public static class RegistryData {
-        public FillerModuleItem module;
+        public FillerModule module;
         public Identifier identifier;
-        public RegistryData(FillerModuleItem m, Identifier id) {
+        public RegistryData(FillerModule m, Identifier id) {
             module = m;
             identifier = id;
         }

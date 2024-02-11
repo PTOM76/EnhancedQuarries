@@ -2,14 +2,14 @@ package ml.pkom.enhancedquarries.item.fillermodule;
 
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
-import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
+import ml.pkom.enhancedquarries.item.base.FillerModule;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.item.ItemStack;
 
-public class HorizontalLayerModule extends FillerModuleItem {
+public class HorizontalLayerModule extends FillerModule {
     public HorizontalLayerModule(CompatibleItemSettings settings) {
         super(settings);
     }

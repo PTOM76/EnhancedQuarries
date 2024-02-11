@@ -1,4 +1,4 @@
-package ml.pkom.enhancedquarries.item;
+package ml.pkom.enhancedquarries.item.quarrymodule;
 
 import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.enhancedquarries.tile.base.QuarryTile;

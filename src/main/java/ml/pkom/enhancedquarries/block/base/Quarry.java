@@ -41,15 +41,18 @@ public abstract class Quarry extends BaseBlock {
 
     @Override
     public ActionResult onRightClick(BlockUseEvent e) {
+        if (e.player.isSneaking())
+            return ActionResult.PASS;
+
         ItemStack stack = e.player.getMainHandStack();
         if (stack != null && stack.getItem() == net.minecraft.item.Items.GLASS_BOTTLE) {
             if (e.world.isClient()) return ActionResult.SUCCESS;
             if (e.world.getBlockEntity(e.pos) instanceof QuarryTile) {
                 QuarryTile quarry = (QuarryTile) e.world.getBlockEntity(e.pos);
-                if (quarry.storedExp >= 4) {
+                if (quarry.getStoredExp() >= 4) {
                     e.player.giveStack(new ItemStack(net.minecraft.item.Items.EXPERIENCE_BOTTLE, 1));
                     stack.decrement(1);
-                    quarry.storedExp -= 4;
+                    quarry.removeStoredExp(4);
                     return ActionResult.SUCCESS;
                 }
                 return ActionResult.PASS;

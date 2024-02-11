@@ -1,4 +1,4 @@
-package ml.pkom.enhancedquarries.item;
+package ml.pkom.enhancedquarries.item.quarrymodule;
 
 import ml.pkom.enhancedquarries.block.base.Quarry;
 import ml.pkom.enhancedquarries.tile.base.QuarryTile;
@@ -10,8 +10,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class MobKillModule extends ExtendItem {
-    public MobKillModule(CompatibleItemSettings settings) {
+public class LuckEnchantModule extends ExtendItem {
+    public LuckEnchantModule(CompatibleItemSettings settings) {
         super(settings);
     }
 
@@ -25,15 +25,11 @@ public class MobKillModule extends ExtendItem {
         if (world.getBlockState(blockPos).getBlock() instanceof Quarry) {
             if (world.getBlockEntity(blockPos) != null && world.getBlockEntity(blockPos) instanceof QuarryTile) {
                 QuarryTile quarry = (QuarryTile) world.getBlockEntity(blockPos);
-                if (quarry.isSetMobKill()) {
-                    e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.mob_kill_module.1"));
+                if (quarry.isSetLuck()) {
+                    e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.luck_enchant_module.1"));
                     return ActionResult.PASS;
                 }
-                if (quarry.isSetMobDelete()) {
-                    e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.mob_kill_module.2"));
-                    return ActionResult.PASS;
-                }
-                quarry.setMobKillModule(true);
+                quarry.setLuckModule(true);
                 e.getStack().setCount(e.getStack().getCount() - 1);
                 return ActionResult.SUCCESS;
             }

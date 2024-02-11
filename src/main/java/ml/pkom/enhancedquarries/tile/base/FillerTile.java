@@ -4,7 +4,7 @@ import ml.pkom.enhancedquarries.Items;
 import ml.pkom.enhancedquarries.block.base.Filler;
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
-import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
+import ml.pkom.enhancedquarries.item.base.FillerModule;
 import ml.pkom.enhancedquarries.screen.FillerScreenHandler;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
@@ -333,7 +333,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
                         }
                         // - 登録モジュールの処理
                         FillerModuleReturn returnEvent = null;
-                        for(FillerModuleItem fillerModule : ml.pkom.enhancedquarries.registry.Registry.getINSTANCE().getModules()) {
+                        for(FillerModule fillerModule : ml.pkom.enhancedquarries.registry.Registry.getINSTANCE().getModules()) {
                             if (item.equals(fillerModule)) {
                                 returnEvent = fillerModule.onProcessInRange(new FillerProcessEvent(this, procPos, procBlock));
                                 break;
@@ -356,7 +356,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
                         }
                         // - 登録モジュールの処理
                         FillerModuleReturn returnEvent = null;
-                        for(FillerModuleItem fillerModule : ml.pkom.enhancedquarries.registry.Registry.getINSTANCE().getModules()) {
+                        for(FillerModule fillerModule : ml.pkom.enhancedquarries.registry.Registry.getINSTANCE().getModules()) {
                             if (item.equals(fillerModule)) {
                                 returnEvent = fillerModule.onProcessOnRange(new FillerProcessEvent(this, procPos, procBlock));
                                 break;
@@ -384,7 +384,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
                         }
                         // - 登録モジュールの処理
                         FillerModuleReturn returnEvent = null;
-                        for(FillerModuleItem fillerModule : ml.pkom.enhancedquarries.registry.Registry.getINSTANCE().getModules()) {
+                        for(FillerModule fillerModule : ml.pkom.enhancedquarries.registry.Registry.getINSTANCE().getModules()) {
                             if (item.equals(fillerModule)) {
                                 returnEvent = fillerModule.onProcessUnderRange(new FillerProcessEvent(this, procPos, procBlock));
                                 break;

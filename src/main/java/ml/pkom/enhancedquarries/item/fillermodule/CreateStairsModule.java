@@ -2,7 +2,7 @@ package ml.pkom.enhancedquarries.item.fillermodule;
 
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
-import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
+import ml.pkom.enhancedquarries.item.base.FillerModule;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
@@ -10,7 +10,7 @@ import net.minecraft.block.FluidBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 
-public class CreateStairsModule extends FillerModuleItem {
+public class CreateStairsModule extends FillerModule {
     public CreateStairsModule(CompatibleItemSettings settings) {
         super(settings);
     }

@@ -80,7 +80,6 @@ public class PumpTile extends BaseEnergyTile {
             storedFluid.variant = FluidVariant.fromNbt(nbt.getCompound("variant"));
             storedFluid.amount = nbt.getLong("amount");
         }
-        //setStoredFluid(FluidVolume.fromTag(tag.getCompound("fluid")));
     }
 
     public void writeNbtOverride(NbtCompound nbt) {

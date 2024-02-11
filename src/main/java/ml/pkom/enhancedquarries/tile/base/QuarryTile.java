@@ -6,9 +6,11 @@ import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
@@ -32,14 +34,43 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInventory {
     // Container
     public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
     public IInventory inventory = this;
 
+    // Fluid
+    SingleVariantStorage<FluidVariant> fluidStorage = new SingleVariantStorage<>() {
+        @Override
+        protected FluidVariant getBlankVariant() {
+            return FluidVariant.blank();
+        }
+
+        @Override
+        protected long getCapacity(FluidVariant variant) {
+            return getMaxStoredExp();
+        }
+
+        @Override
+        protected boolean canInsert(FluidVariant variant) {
+            return false;
+        }
+
+        @Override
+        protected void onFinalCommit() {
+            super.onFinalCommit();
+            markDirty();
+        }
+    };
+
+    public SingleVariantStorage<FluidVariant> getFluidStorage() {
+        return fluidStorage;
+    }
+
     // 経験値の量
-    public int storedExp = 0;
+    private int storedExp = 0;
 
     // 経験値の最大量
     public int getMaxStoredExp() {
@@ -48,6 +79,18 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public int getStoredExp() {
         return storedExp;
+    }
+
+    public void setStoredExp(int storedExp) {
+        this.storedExp = storedExp;
+    }
+
+    public void addStoredExp(int storedExp) {
+        this.storedExp += storedExp;
+    }
+
+    public void removeStoredExp(int storedExp) {
+        this.storedExp -= storedExp;
     }
 
     // モジュール
@@ -193,6 +236,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
         tag.putInt("storedExp", getStoredExp());
 
+        tag.put("variant", fluidStorage.variant.toNbt());
+        tag.putLong("amount", fluidStorage.amount);
+
         super.writeNbtOverride(tag);
     }
 
@@ -219,7 +265,12 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
         }
 
-        if (tag.contains("storedExp")) storedExp = tag.getInt("storedExp");
+        if (tag.contains("storedExp")) setStoredExp(tag.getInt("storedExp"));
+
+        if (tag.contains("variant"))
+            fluidStorage.variant = FluidVariant.fromNbt(tag.getCompound("variant"));
+        if (tag.contains("amount"))
+            fluidStorage.amount = tag.getLong("amount");
     }
 
     // ----
@@ -461,7 +512,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         List<ExperienceOrbEntity> entities = getWorld().getEntitiesByClass(ExperienceOrbEntity.class, new Box(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1)), EntityPredicates.VALID_ENTITY);
         entities.forEach((entity) -> {
             if (getStoredExp() + entity.getExperienceAmount() > getMaxStoredExp()) return;
-            storedExp += entity.getExperienceAmount();
+            addStoredExp(entity.getExperienceAmount());
             entity.discard();
         });
     }

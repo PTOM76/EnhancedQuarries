@@ -2,12 +2,12 @@ package ml.pkom.enhancedquarries.item.fillermodule;
 
 import ml.pkom.enhancedquarries.event.FillerModuleReturn;
 import ml.pkom.enhancedquarries.event.FillerProcessEvent;
-import ml.pkom.enhancedquarries.item.base.FillerModuleItem;
+import ml.pkom.enhancedquarries.item.base.FillerModule;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 
-public class DeleteFluidModule extends FillerModuleItem {
+public class DeleteFluidModule extends FillerModule {
     public DeleteFluidModule(CompatibleItemSettings settings) {
         super(settings);
     }

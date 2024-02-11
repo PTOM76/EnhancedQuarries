@@ -1,11 +1,13 @@
 package ml.pkom.enhancedquarries.tile.base;
 
+import ml.pkom.enhancedquarries.EnhancedQuarries;
 import ml.pkom.enhancedquarries.Tiles;
 import ml.pkom.enhancedquarries.block.base.EnergyGenerator;
 import ml.pkom.enhancedquarries.screen.EnergyGeneratorScreenHandler;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
+import ml.pkom.mcpitanlibarch.api.network.ServerNetworking;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -23,6 +25,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
@@ -47,6 +50,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     public int burnTime = 0;
     public boolean burning = false;
+    private long lastEnergy = 0;
 
     @Override
     public long getMaxEnergy() {
@@ -122,6 +126,17 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
         }
 
         outputEnergy(this, world, pos);
+
+        if (lastEnergy != getEnergy()) {
+            for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
+                if (player.networkHandler != null && player.currentScreenHandler instanceof EnergyGeneratorScreenHandler && ((EnergyGeneratorScreenHandler) player.currentScreenHandler).tile == this ) {
+                    PacketByteBuf buf = PacketByteUtil.create();
+                    PacketByteUtil.writeLong(buf, getEnergy());
+                    ServerNetworking.send(player, EnhancedQuarries.id("energy_generator"), buf);
+                }
+            }
+            lastEnergy = getEnergy();
+        }
     }
 
     public static void outputEnergy(EnergyGeneratorTile blockEntity, World world, BlockPos pos) {

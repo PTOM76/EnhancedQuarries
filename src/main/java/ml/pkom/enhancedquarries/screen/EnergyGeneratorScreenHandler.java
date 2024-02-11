@@ -2,6 +2,7 @@ package ml.pkom.enhancedquarries.screen;
 
 import ml.pkom.enhancedquarries.ScreenHandlers;
 import ml.pkom.enhancedquarries.inventory.slot.FuelSlot;
+import ml.pkom.enhancedquarries.tile.base.EnergyGeneratorTile;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.gui.ExtendedScreenHandler;
 import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
@@ -16,18 +17,20 @@ import net.minecraft.screen.slot.Slot;
 
 public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
     public Inventory inventory;
+    public EnergyGeneratorTile tile;
     public long energy = 0;
     public long maxEnergy = 0;
 
     public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, new SimpleInventory(1));
+        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, syncId, playerInventory, new SimpleInventory(1));
         if (buf == null) return;
         energy = PacketByteUtil.readLong(buf);
         maxEnergy = PacketByteUtil.readLong(buf);
     }
 
-    public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
-        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, syncId, playerInventory, inventory);
+    public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, EnergyGeneratorTile tile) {
+        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, syncId, playerInventory, tile);
+        this.tile = tile;
     }
 
     public EnergyGeneratorScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory) {
