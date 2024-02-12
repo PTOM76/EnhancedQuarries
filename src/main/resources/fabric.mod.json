@@ -19,13 +19,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "ml.pkom.enhancedquarries.EnhancedQuarries"
+      "net.pitan76.enhancedquarries.EnhancedQuarries"
     ],
     "client": [
-      "ml.pkom.enhancedquarries.EnhancedQuarriesClient"
+      "net.pitan76.enhancedquarries.EnhancedQuarriesClient"
     ],
     "modmenu": [
-      "ml.pkom.enhancedquarries.client.compat.ModMenuAddon"
+      "net.pitan76.enhancedquarries.client.compat.ModMenuAddon"
     ]
   },
   "mixins": [
