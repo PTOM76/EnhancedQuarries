@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "YYY",
+    " Y ",
     "YXY",
-    "YYY"
+    " Y "
   ],
   "key": {
     "X": {
       "item": "enhanced_quarries:enhanced_panel"
     },
     "Y": {
-      "item": "minecraft:bottle"
+      "item": "minecraft:glass_bottle"
     }
   },
   "result": {
