@@ -127,7 +127,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
         outputEnergy(this, world, pos);
 
-        if (lastEnergy != getEnergy()) {
+        if (lastEnergy != getEnergy() && !world.isClient()) {
             for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
                 if (player.networkHandler != null && player.currentScreenHandler instanceof EnergyGeneratorScreenHandler && ((EnergyGeneratorScreenHandler) player.currentScreenHandler).tile == this ) {
                     PacketByteBuf buf = PacketByteUtil.create();
