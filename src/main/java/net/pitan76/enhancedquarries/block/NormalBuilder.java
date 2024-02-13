@@ -1,6 +1,7 @@
 package net.pitan76.enhancedquarries.block;
 
 import net.pitan76.enhancedquarries.block.base.Builder;
+import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.tile.NormalBuilderTile;
 import net.pitan76.enhancedquarries.tile.base.BuilderTile;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
@@ -41,6 +42,7 @@ public class NormalBuilder extends Builder {
         BlockPos pos = e.getPos();
 
         if (world.isClient()) return e.success();
+        if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
         if (world.getBlockEntity(pos) instanceof BuilderTile)
             player.openGuiScreen((BuilderTile) world.getBlockEntity(pos));

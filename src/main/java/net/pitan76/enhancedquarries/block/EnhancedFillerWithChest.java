@@ -8,6 +8,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.Filler;
+import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.tile.EnhancedFillerWithChestTile;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
 
@@ -42,6 +43,7 @@ public class EnhancedFillerWithChest extends Filler {
         BlockPos pos = e.getPos();
 
         if (world.isClient()) return e.success();
+        if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
         if (world.getBlockEntity(pos) instanceof FillerTile)
             player.openGuiScreen((FillerTile) world.getBlockEntity(pos));

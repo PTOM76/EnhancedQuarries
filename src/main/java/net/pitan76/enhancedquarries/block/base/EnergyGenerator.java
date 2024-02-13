@@ -1,5 +1,6 @@
 package net.pitan76.enhancedquarries.block.base;
 
+import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
@@ -67,6 +68,7 @@ public class EnergyGenerator extends BaseBlock {
         BlockPos pos = e.getPos();
 
         if (world.isClient()) return e.success();
+        if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
         if (world.getBlockEntity(pos) instanceof EnergyGeneratorTile)
             player.openGuiScreen((EnergyGeneratorTile) world.getBlockEntity(pos));
