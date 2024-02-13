@@ -3,13 +3,16 @@ package net.pitan76.enhancedquarries.block.base;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
+import ml.pkom.mcpitanlibarch.api.event.block.BlockBreakEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockPlacedEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.PickStackEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.result.BlockBreakResult;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.StateManager;
@@ -68,6 +71,7 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
         }
     }
 
+    /*
     @Override
     public ItemStack getPickStack(PickStackEvent e) {
         ItemStack stack = super.getPickStack(e);
@@ -86,6 +90,27 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
         energyTile.writeNbtOverride(nbt);
         stack.setSubNbt("BlockEntityTag", nbt);
         return stack;
+    }
+     */
+
+    @Override
+    public BlockBreakResult onBreak(BlockBreakEvent e) {
+        BlockEntity blockEntity = e.getWorld().getBlockEntity(e.getPos());
+        if (! (blockEntity instanceof BaseEnergyTile)) return super.onBreak(e);
+
+        BaseEnergyTile energyTile = (BaseEnergyTile) blockEntity;
+        if (! energyTile.keepNbtOnDrop) return super.onBreak(e);
+
+        ItemStack stack = new ItemStack(this);
+        NbtCompound nbt = new NbtCompound();
+        energyTile.writeNbtOverride(nbt);
+        stack.setSubNbt("BlockEntityTag", nbt);
+
+        ItemEntity itemEntity = new ItemEntity(e.world, e.pos.getX() + 0.5D, e.pos.getY() + 0.5D, e.pos.getZ() + 0.5D, stack);
+        itemEntity.setToDefaultPickupDelay();
+        e.world.spawnEntity(itemEntity);
+
+        return super.onBreak(e);
     }
 
     @Override
