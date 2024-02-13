@@ -1,7 +1,7 @@
 package net.pitan76.enhancedquarries.compat;
 
+import ml.pkom.mcpitanlibarch.api.event.registry.RegistryResult;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
-import ml.pkom.mcpitanlibarch.api.event.registry.RegistryEvent;
 import net.minecraft.block.entity.BlockEntityType;
 import net.pitan76.enhancedquarries.Tiles;
 import team.reborn.energy.api.EnergyStorage;
@@ -12,7 +12,7 @@ import java.util.List;
 public class RebornEnergyRegister {
 
     public static void init() {
-        List<RegistryEvent<BlockEntityType<?>>> tileTypes = new ArrayList<>();
+        List<RegistryResult<BlockEntityType<?>>> tileTypes = new ArrayList<>();
 
         tileTypes.add(Tiles.NORMAL_QUARRY_TILE);
         tileTypes.add(Tiles.OPTIMUM_QUARRY_TILE);
@@ -29,7 +29,7 @@ public class RebornEnergyRegister {
         tileTypes.add(Tiles.FLUID_OPTIMUM_QUARRY_TILE);
         tileTypes.add(Tiles.ENERGY_GENERATOR_TILE);
 
-        for (RegistryEvent<BlockEntityType<?>> registryEvent : tileTypes) {
+        for (RegistryResult<BlockEntityType<?>> registryEvent : tileTypes) {
             EnergyStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
                 if (!(blockEntity instanceof BaseEnergyTile)) return null;
                 BaseEnergyTile tile = (BaseEnergyTile) blockEntity;

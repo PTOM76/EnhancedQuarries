@@ -1,15 +1,17 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockPlacedEvent;
+import ml.pkom.mcpitanlibarch.api.event.block.PickStackEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -18,6 +20,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import org.jetbrains.annotations.Nullable;
 
 public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider {
@@ -51,9 +54,38 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
     @Override
     public void onPlaced(BlockPlacedEvent e) {
         super.onPlaced(e);
-        if(e.placer != null) {
+        if (e.placer != null) {
             setFacing(e.placer.getHorizontalFacing().getOpposite(), e.world, e.pos);
         }
+        if (!e.stack.hasNbt()) return;
+        if (!e.stack.getNbt().contains("BlockEntityTag")) return;
+
+        NbtCompound nbt = e.stack.getSubNbt("BlockEntityTag");
+        BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
+        if (blockEntity instanceof BaseEnergyTile) {
+            BaseEnergyTile energyTile = (BaseEnergyTile) blockEntity;
+            energyTile.readNbtOverride(nbt);
+        }
+    }
+
+    @Override
+    public ItemStack getPickStack(PickStackEvent e) {
+        ItemStack stack = super.getPickStack(e);
+        BlockEntity blockEntity = null;
+        if (e.getBlockView() != null) {
+            blockEntity = e.getBlockView().getBlockEntity(e.getPos());
+        } else if (e.getBlockView() != null) {
+            blockEntity = e.getBlockView().getBlockEntity(e.getPos());
+        }
+
+        if (! (blockEntity instanceof BaseEnergyTile)) return stack;
+
+        BaseEnergyTile energyTile = (BaseEnergyTile) blockEntity;
+        if (! energyTile.keepNbtOnDrop) return stack;
+        NbtCompound nbt = new NbtCompound();
+        energyTile.writeNbtOverride(nbt);
+        stack.setSubNbt("BlockEntityTag", nbt);
+        return stack;
     }
 
     @Override

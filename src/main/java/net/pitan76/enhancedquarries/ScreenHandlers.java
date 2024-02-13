@@ -14,6 +14,7 @@ public class ScreenHandlers {
     public static ScreenHandlerType<BuilderScreenHandler> BUILDER_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(BuilderScreenHandler::new).build();
     public static ScreenHandlerType<LibraryScreenHandler> LIBRARY_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(LibraryScreenHandler::new).build();
     public static ScreenHandlerType<EnergyGeneratorScreenHandler> ENERGY_GENERATOR_SCREEN_HANDLER_TYPE = new ExtendedScreenHandlerTypeBuilder<>(EnergyGeneratorScreenHandler::new).build();
+    public static ScreenHandlerType<DroppedItemRemovalModuleEditScreenHandler> DROPPED_ITEM_REMOVAL_MODULE_EDIT_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(DroppedItemRemovalModuleEditScreenHandler::new).build();
 
     public static void init() {
         registry.registerScreenHandlerType(EnhancedQuarries.id("filler"), () -> FILLER_SCREEN_HANDLER_TYPE);
@@ -22,5 +23,6 @@ public class ScreenHandlers {
         registry.registerScreenHandlerType(EnhancedQuarries.id("builder"), () -> BUILDER_SCREEN_HANDLER_TYPE);
         registry.registerScreenHandlerType(EnhancedQuarries.id("library"), () -> LIBRARY_SCREEN_HANDLER_TYPE);
         registry.registerScreenHandlerType(EnhancedQuarries.id("energy_generator"), () -> ENERGY_GENERATOR_SCREEN_HANDLER_TYPE);
+        registry.registerScreenHandlerType(EnhancedQuarries.id("dropped_item_removal_module_edit"), () -> DROPPED_ITEM_REMOVAL_MODULE_EDIT_SCREEN_HANDLER_TYPE);
     }
 }

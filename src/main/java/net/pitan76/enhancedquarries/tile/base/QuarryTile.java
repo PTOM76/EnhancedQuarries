@@ -325,36 +325,25 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         }
     }
 
-    public boolean insertChest() {
+    public int limit = 5;
+
+    public void insertChest() {
         // チェスト自動挿入
+        if (getItems().isEmpty()) return;
         List<Direction> dirs = getDirsOfAnyContainerBlock();
         if (!dirs.isEmpty()) {
             for (int i = 0; i < getItems().size(); i++) {
+                if (i > limit) break;
                 for (Direction dir : dirs) {
                     ItemStack stack = getItems().get(i);
                     if (stack.isEmpty()) continue;
 
                     long amount = StorageUtil.move(InventoryStorage.of(this, null).getSlot(i), ItemStorage.SIDED.find(getWorld(), getPos().offset(dir), dir.getOpposite()), (iv) -> true, Long.MAX_VALUE, null);
                     if (amount < stack.getCount()) continue;
-                    return true;
+                    break;
                 }
             }
         }
-        return false;
-    }
-
-    public Inventory getAnyContainerBlock() {
-        BlockPos[] poses = new BlockPos[]{getPos().up(), getPos().down(), getPos().north(), getPos().south(), getPos().west(), getPos().east()};
-
-        for (BlockPos pos : poses) {
-            if (getWorld().getBlockEntity(pos) instanceof Inventory) {
-                Inventory inventory = (Inventory) getWorld().getBlockEntity(pos);
-                if (inventory.isEmpty()) continue;
-                if (inventory.size() <= 0) continue;
-                return inventory;
-            }
-        }
-        return null;
     }
 
     public List<Direction> getDirsOfAnyContainerBlock() {
@@ -363,11 +352,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
         for (Direction dir : dirs) {
             BlockPos pos = getPos().offset(dir);
-            if (getWorld().getBlockEntity(pos) instanceof Inventory) {
-                Inventory inventory = (Inventory) getWorld().getBlockEntity(pos);
-                if (inventory.size() <= 0) continue;
-                usableDirs.add(dir);
-            }
+            if (getWorld().getBlockEntity(pos) == null) continue;
+            usableDirs.add(dir);
         }
         return usableDirs;
     }

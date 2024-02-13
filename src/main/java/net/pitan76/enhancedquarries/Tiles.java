@@ -1,6 +1,6 @@
 package net.pitan76.enhancedquarries;
 
-import ml.pkom.mcpitanlibarch.api.event.registry.RegistryEvent;
+import ml.pkom.mcpitanlibarch.api.event.registry.RegistryResult;
 import ml.pkom.mcpitanlibarch.api.tile.BlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -12,27 +12,27 @@ import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
 
 public class Tiles {
 
-    public static RegistryEvent<BlockEntityType<?>> NORMAL_QUARRY_TILE;
-    public static RegistryEvent<BlockEntityType<?>> ENHANCED_QUARRY_TILE;
-    public static RegistryEvent<BlockEntityType<?>> FLUID_QUARRY_TILE;
-    public static RegistryEvent<BlockEntityType<?>> OPTIMUM_QUARRY_TILE;
-    public static RegistryEvent<BlockEntityType<?>> ENHANCED_OPTIMUM_QUARRY_TILE;
-    public static RegistryEvent<BlockEntityType<?>> FLUID_OPTIMUM_QUARRY_TILE;
+    public static RegistryResult<BlockEntityType<?>> NORMAL_QUARRY_TILE;
+    public static RegistryResult<BlockEntityType<?>> ENHANCED_QUARRY_TILE;
+    public static RegistryResult<BlockEntityType<?>> FLUID_QUARRY_TILE;
+    public static RegistryResult<BlockEntityType<?>> OPTIMUM_QUARRY_TILE;
+    public static RegistryResult<BlockEntityType<?>> ENHANCED_OPTIMUM_QUARRY_TILE;
+    public static RegistryResult<BlockEntityType<?>> FLUID_OPTIMUM_QUARRY_TILE;
 
-    public static RegistryEvent<BlockEntityType<?>> NORMAL_FILLER_TILE;
-    public static RegistryEvent<BlockEntityType<?>> ENHANCED_FILLER_TILE;
-    public static RegistryEvent<BlockEntityType<?>> ENHANCED_FILLER_WITH_CHEST_TILE;
+    public static RegistryResult<BlockEntityType<?>> NORMAL_FILLER_TILE;
+    public static RegistryResult<BlockEntityType<?>> ENHANCED_FILLER_TILE;
+    public static RegistryResult<BlockEntityType<?>> ENHANCED_FILLER_WITH_CHEST_TILE;
 
-    public static RegistryEvent<BlockEntityType<?>> NORMAL_PUMP_TILE;
-    public static RegistryEvent<BlockEntityType<?>> ENHANCED_PUMP_TILE;
+    public static RegistryResult<BlockEntityType<?>> NORMAL_PUMP_TILE;
+    public static RegistryResult<BlockEntityType<?>> ENHANCED_PUMP_TILE;
 
-    public static RegistryEvent<BlockEntityType<?>> NORMAL_SCANNER_TILE;
-    public static RegistryEvent<BlockEntityType<?>> NORMAL_BUILDER_TILE;
-    public static RegistryEvent<BlockEntityType<?>> NORMAL_LIBRARY_TILE;
+    public static RegistryResult<BlockEntityType<?>> NORMAL_SCANNER_TILE;
+    public static RegistryResult<BlockEntityType<?>> NORMAL_BUILDER_TILE;
+    public static RegistryResult<BlockEntityType<?>> NORMAL_LIBRARY_TILE;
 
-    public static RegistryEvent<BlockEntityType<?>> NORMAL_MARKER;
+    public static RegistryResult<BlockEntityType<?>> NORMAL_MARKER;
 
-    public static RegistryEvent<BlockEntityType<?>> ENERGY_GENERATOR_TILE;
+    public static RegistryResult<BlockEntityType<?>> ENERGY_GENERATOR_TILE;
 
     public static void init() {
         NORMAL_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries.id("normal_quarry_tile"), () -> create(NormalQuarryTile::new, Blocks.NORMAL_QUARRY));

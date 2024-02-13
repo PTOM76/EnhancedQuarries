@@ -13,6 +13,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public abstract class BaseEnergyTile extends ExtendBlockEntity implements BlockEntityTicker<BaseEnergyTile> {
+    public boolean keepNbtOnDrop = false;
+
     public BaseEnergyTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }

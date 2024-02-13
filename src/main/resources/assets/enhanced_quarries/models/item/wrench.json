@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-      "layer0": "enhanced_quarries:item/redstone_hammer"
+      "layer0": "enhanced_quarries:item/wrench"
     }
   }
