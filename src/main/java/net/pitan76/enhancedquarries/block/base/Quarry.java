@@ -69,49 +69,57 @@ public abstract class Quarry extends BaseBlock {
         BlockState state = e.state;
 
         if (state == null) return;
-        if (state.getBlock() != e.newState.getBlock()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof QuarryTile) {
-                QuarryTile quarry = (QuarryTile)blockEntity;
-                ItemScatterer.spawn(world, pos, (QuarryTile)blockEntity);
-
-                // モジュールの返却
-                if (quarry.canBedrockBreak()) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.BEDROCK_BREAK_MODULE, 1)));
-                }
-                if (quarry.isSetLuck()) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.LUCK_MODULE, 1)));
-                }
-                if (quarry.isSetSilkTouch()) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.SILK_TOUCH_MODULE, 1)));
-                }
-                if (quarry.isSetMobDelete()) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.MOB_DELETE_MODULE, 1)));
-                }
-                if (quarry.isSetMobKill()) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.MOB_KILL_MODULE, 1)));
-                }
-                if (quarry.isSetExpCollect()) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.EXP_COLLECT_MODULE, 1)));
-                }
-
-                // フレーム破壊
-                BlockPos framePos = null;
-                if (getFacing(state).equals(Direction.NORTH))
-                    framePos = pos.add(0, 0, 1);
-                if (getFacing(state).equals(Direction.SOUTH))
-                    framePos = pos.add(0, 0, -1);
-                if (getFacing(state).equals(Direction.WEST))
-                    framePos = pos.add(1, 0, 0);
-                if (getFacing(state).equals(Direction.EAST))
-                    framePos = pos.add(-1, 0, 0);
-                if (framePos != null)
-                    if (world.getBlockState(framePos).getBlock() instanceof Frame) {
-                        Frame.breakConnectFrames(world, framePos);
-                    }
-            }
+        if (state.getBlock() == e.newState.getBlock()) {
             super.onStateReplaced(e);
+            return;
         }
+
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof QuarryTile) {
+            QuarryTile quarry = (QuarryTile) blockEntity;
+            if (quarry.keepNbtOnDrop) {
+                super.onStateReplaced(e);
+                return;
+            }
+
+            ItemScatterer.spawn(world, pos, quarry);
+
+            // モジュールの返却
+            if (quarry.canBedrockBreak()) {
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.BEDROCK_BREAK_MODULE, 1)));
+            }
+            if (quarry.isSetLuck()) {
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.LUCK_MODULE, 1)));
+            }
+            if (quarry.isSetSilkTouch()) {
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.SILK_TOUCH_MODULE, 1)));
+            }
+            if (quarry.isSetMobDelete()) {
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.MOB_DELETE_MODULE, 1)));
+            }
+            if (quarry.isSetMobKill()) {
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.MOB_KILL_MODULE, 1)));
+            }
+            if (quarry.isSetExpCollect()) {
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.EXP_COLLECT_MODULE, 1)));
+            }
+
+            // フレーム破壊
+            BlockPos framePos = null;
+            if (getFacing(state).equals(Direction.NORTH))
+                framePos = pos.add(0, 0, 1);
+            if (getFacing(state).equals(Direction.SOUTH))
+                framePos = pos.add(0, 0, -1);
+            if (getFacing(state).equals(Direction.WEST))
+                framePos = pos.add(1, 0, 0);
+            if (getFacing(state).equals(Direction.EAST))
+                framePos = pos.add(-1, 0, 0);
+            if (framePos != null)
+                if (world.getBlockState(framePos).getBlock() instanceof Frame) {
+                    Frame.breakConnectFrames(world, framePos);
+                }
+        }
+        super.onStateReplaced(e);
     }
 
     @Override

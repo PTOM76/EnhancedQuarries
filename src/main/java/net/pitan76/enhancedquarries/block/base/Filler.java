@@ -42,6 +42,11 @@ public abstract class Filler extends BaseBlock {
             BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
             if (blockEntity instanceof FillerTile) {
                 FillerTile filler = (FillerTile)blockEntity;
+                if (filler.keepNbtOnDrop) {
+                    super.onStateReplaced(e);
+                    return;
+                }
+
                 ItemScatterer.spawn(e.world, e.pos, filler.inventory);
                 filler.getCraftingInventory().setStack(9, ItemStack.EMPTY);
                 ItemScatterer.spawn(e.world, e.pos, filler.getCraftingInventory());

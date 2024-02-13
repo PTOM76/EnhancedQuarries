@@ -28,6 +28,11 @@ public abstract class Builder extends BaseBlock {
             BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
             if (blockEntity instanceof BuilderTile) {
                 BuilderTile builder = (BuilderTile) blockEntity;
+                if (builder.keepNbtOnDrop) {
+                    super.onStateReplaced(e);
+                    return;
+                }
+
                 ItemScatterer.spawn(e.world, e.pos, builder);
             }
             super.onStateReplaced(e);

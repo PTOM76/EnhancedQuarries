@@ -35,6 +35,11 @@ public abstract class Scanner extends BaseBlock {
             BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
             if (blockEntity instanceof ScannerTile) {
                 ScannerTile scanner = (ScannerTile)blockEntity;
+                if (scanner.keepNbtOnDrop) {
+                    super.onStateReplaced(e);
+                    return;
+                }
+
                 ItemScatterer.spawn(e.world, e.pos, scanner);
             }
             super.onStateReplaced(e);

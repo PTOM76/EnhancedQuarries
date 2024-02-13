@@ -6,6 +6,9 @@ import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
@@ -28,9 +31,19 @@ public class WrenchItem extends ExtendItem {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (player.isSneaking()) {
             if (!(blockEntity instanceof BaseEnergyTile)) return super.onRightClickOnBlock(e);
-            BaseEnergyTile tile = (BaseEnergyTile) blockEntity;
-            tile.keepNbtOnDrop = true;
-            world.breakBlock(pos, true);
+            BaseEnergyTile energyTile = (BaseEnergyTile) blockEntity;
+            energyTile.keepNbtOnDrop = true;
+
+            ItemStack stack = new ItemStack(state.getBlock());
+            NbtCompound nbt = new NbtCompound();
+            energyTile.writeNbtOverride(nbt);
+            stack.setSubNbt("BlockEntityTag", nbt);
+
+            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
+            itemEntity.setToDefaultPickupDelay();
+            world.spawnEntity(itemEntity);
+
+            world.breakBlock(pos, false);
 
         } else {
             if (!(state.getBlock() instanceof BaseBlock)) return super.onRightClickOnBlock(e);

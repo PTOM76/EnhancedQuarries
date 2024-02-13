@@ -49,6 +49,11 @@ public class EnergyGenerator extends BaseBlock {
             BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
             if (blockEntity instanceof EnergyGeneratorTile) {
                 EnergyGeneratorTile tile = (EnergyGeneratorTile) blockEntity;
+                if (tile.keepNbtOnDrop) {
+                    super.onStateReplaced(e);
+                    return;
+                }
+
                 ItemScatterer.spawn(e.world, e.pos, tile);
             }
             super.onStateReplaced(e);

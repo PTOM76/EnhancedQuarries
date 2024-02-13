@@ -24,7 +24,7 @@ public abstract class Library extends ExtendBlock {
         if (e.state.getBlock() != e.newState.getBlock()) {
             BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
             if (blockEntity instanceof LibraryTile) {
-                LibraryTile library = (LibraryTile)blockEntity;
+                LibraryTile library = (LibraryTile) blockEntity;
                 ItemScatterer.spawn(e.world, e.pos, library.getInventory());
             }
             super.onStateReplaced(e);
