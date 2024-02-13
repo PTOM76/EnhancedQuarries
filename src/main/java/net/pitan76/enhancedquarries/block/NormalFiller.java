@@ -35,16 +35,16 @@ public class NormalFiller extends Filler {
     // ----
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent event) {
-        World world = event.getWorld();
-        Player player = event.getPlayer();
-        BlockPos pos = event.getPos();
+    public ActionResult onRightClick(BlockUseEvent e) {
+        World world = e.getWorld();
+        Player player = e.getPlayer();
+        BlockPos pos = e.getPos();
 
-        if (world.isClient()) return ActionResult.SUCCESS;
+        if (world.isClient()) return e.success();
 
         if (world.getBlockEntity(pos) instanceof FillerTile)
             player.openGuiScreen((FillerTile) world.getBlockEntity(pos));
 
-        return ActionResult.CONSUME;
+        return e.consume();
     }
 }

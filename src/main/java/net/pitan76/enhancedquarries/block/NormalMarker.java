@@ -132,7 +132,7 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
         BlockPos pos = e.getPos();
         BlockState state = e.state;
 
-        if (world.isClient()) return ActionResult.SUCCESS;
+        if (world.isClient()) return e.success();
         List<BlockStatePos> markerList = new ArrayList<>();
         markerList.add(new BlockStatePos(state, pos, world));
         searchMarker(world, pos, markerList);
@@ -154,7 +154,7 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
         } else {
             markerList.forEach((markerSP) -> setActive(true, markerSP.getWorld(), markerSP.getBlockPos()));
         }
-        return ActionResult.SUCCESS;
+        return e.success();
     }
 
     @Override

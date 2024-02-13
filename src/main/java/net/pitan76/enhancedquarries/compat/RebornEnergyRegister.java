@@ -1,9 +1,9 @@
 package net.pitan76.enhancedquarries.compat;
 
-import ml.pkom.mcpitanlibarch.api.event.registry.RegistryResult;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import net.minecraft.block.entity.BlockEntityType;
 import net.pitan76.enhancedquarries.Tiles;
+import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.ArrayList;

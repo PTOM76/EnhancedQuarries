@@ -43,6 +43,6 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": "*",
-    "mcpitanlibarch": ">1.9.1"
+    "mcpitanlibarch": ">1.9.4"
   }
 }

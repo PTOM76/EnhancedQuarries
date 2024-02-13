@@ -1,20 +1,15 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.pitan76.enhancedquarries.block.base.Filler;
-import net.pitan76.enhancedquarries.screen.FillerWithChestScreenHandler;
-import net.pitan76.enhancedquarries.tile.EnhancedFillerWithChestTile;
-import net.pitan76.enhancedquarries.tile.base.FillerTile;
+import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.mcpitanlibarch.api.util.TextUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.pitan76.enhancedquarries.block.base.Filler;
+import net.pitan76.enhancedquarries.tile.EnhancedFillerWithChestTile;
+import net.pitan76.enhancedquarries.tile.base.FillerTile;
 
 public class EnhancedFillerWithChest extends Filler {
 
@@ -42,18 +37,15 @@ public class EnhancedFillerWithChest extends Filler {
 
     @Override
     public ActionResult onRightClick(BlockUseEvent e) {
-        if (e.isClient()) return ActionResult.SUCCESS;
-        NamedScreenHandlerFactory namedScreenHandlerFactory = createScreenHandlerFactory(e.state, e.world, e.pos);
-        if (namedScreenHandlerFactory != null)
-            e.player.openGuiScreen(namedScreenHandlerFactory);
+        World world = e.getWorld();
+        Player player = e.getPlayer();
+        BlockPos pos = e.getPos();
 
-        return ActionResult.CONSUME;
-    }
+        if (world.isClient()) return e.success();
 
-    @Nullable
-    @Override
-    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        FillerTile fillerTile = (FillerTile) world.getBlockEntity(pos);
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new FillerWithChestScreenHandler(i, playerInventory, fillerTile.inventory, fillerTile.getCraftingInventory()), TextUtil.literal(""));
+        if (world.getBlockEntity(pos) instanceof FillerTile)
+            player.openGuiScreen((FillerTile) world.getBlockEntity(pos));
+
+        return e.consume();
     }
 }

@@ -41,16 +41,16 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
     @Override
     public ActionResult onRightClick(BlockUseEvent e) {
         if (e.world.isClient())
-            return ActionResult.SUCCESS;
+            return e.success();
 
         BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
         if (blockEntity instanceof LibraryTile) {
             LibraryTile tile = (LibraryTile) blockEntity;
             e.player.openGuiScreen(tile);
-            return ActionResult.CONSUME;
+            return e.consume();
         }
 
-        return ActionResult.CONSUME;
+        return e.consume();
     }
 
     @Override

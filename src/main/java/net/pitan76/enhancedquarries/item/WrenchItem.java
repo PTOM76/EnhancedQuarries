@@ -20,7 +20,7 @@ public class WrenchItem extends ExtendItem {
 
     @Override
     public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
-        if (e.isClient()) return ActionResult.SUCCESS;
+        if (e.isClient()) return e.success();
         Player player = e.getPlayer();
         World world = e.getWorld();
         BlockPos pos = e.getBlockPos();
@@ -36,7 +36,7 @@ public class WrenchItem extends ExtendItem {
             if (!(state.getBlock() instanceof BaseBlock)) return super.onRightClickOnBlock(e);
 
             world.setBlockState(pos, state.rotate(BlockRotation.CLOCKWISE_90));
-            return ActionResult.SUCCESS;
+            return e.success();
         }
 
         return super.onRightClickOnBlock(e);

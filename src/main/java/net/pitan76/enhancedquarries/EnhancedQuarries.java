@@ -1,19 +1,19 @@
 package net.pitan76.enhancedquarries;
 
-import net.pitan76.enhancedquarries.cmd.EnhancedQuarriesCommand;
-import net.pitan76.enhancedquarries.compat.RebornEnergyRegister;
-import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import ml.pkom.mcpitanlibarch.api.command.CommandRegistry;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.item.CreativeTabBuilder;
 import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
 import ml.pkom.mcpitanlibarch.api.network.ServerNetworking;
-import ml.pkom.mcpitanlibarch.api.registry.ArchRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.pitan76.enhancedquarries.cmd.EnhancedQuarriesCommand;
+import net.pitan76.enhancedquarries.compat.RebornEnergyRegister;
+import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
+import net.pitan76.mcpitanlib.api.registry.CompatRegistry;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +27,7 @@ public class EnhancedQuarries implements ModInitializer {
 
     public static final ItemGroup ENHANCED_QUARRIES_GROUP = CreativeTabBuilder.create(id("all")).setIcon(() -> new ItemStack(Items.NORMAL_QUARRY)).build();
 
-    public static ArchRegistry registry = ArchRegistry.createRegistry(MOD_ID);
+    public static CompatRegistry registry = CompatRegistry.createRegistry(MOD_ID);
 
     public void onInitialize() {
         instance = this;

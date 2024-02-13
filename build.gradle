@@ -35,7 +35,7 @@ dependencies {
 	modImplementation 'RebornCore:RebornCore-1.20:5.9.1'
 	modImplementation 'TechReborn:TechReborn-1.20:5.9.1'
 
-	modImplementation "ml.pkom:mcpitanlibarch-fabric${project.mcpitanlib_version}"
+	modImplementation "net.pitan76:mcpitanlib-fabric${project.mcpitanlib_version}"
 
 	modImplementation "com.terraformersmc:modmenu:8.0.1"
 

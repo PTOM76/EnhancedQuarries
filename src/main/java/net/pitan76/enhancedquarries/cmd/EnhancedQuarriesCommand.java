@@ -5,7 +5,7 @@ import ml.pkom.mcpitanlibarch.api.command.CommandSettings;
 import ml.pkom.mcpitanlibarch.api.command.ConfigCommand;
 import ml.pkom.mcpitanlibarch.api.command.LiteralCommand;
 import ml.pkom.mcpitanlibarch.api.event.ServerCommandEvent;
-import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.TextUtil;
 
 public class EnhancedQuarriesCommand extends LiteralCommand {
 

@@ -22,13 +22,13 @@ public class RedstoneHammer extends CompatiblePickaxeItem {
                 if (blockEntity instanceof reborncore.common.powerSystem.PowerAcceptorBlockEntity) {
                     reborncore.common.powerSystem.PowerAcceptorBlockEntity energyStorage = (reborncore.common.powerSystem.PowerAcceptorBlockEntity) blockEntity;
                     energyStorage.addEnergy(5);
-                    return ActionResult.SUCCESS;
+                    return e.success();
                 }
             }
             if (blockEntity instanceof BaseEnergyTile) {
                 BaseEnergyTile energyStorage = (BaseEnergyTile) blockEntity;
                 energyStorage.addEnergy(5);
-                return ActionResult.SUCCESS;
+                return e.success();
             }
         }
         /*
