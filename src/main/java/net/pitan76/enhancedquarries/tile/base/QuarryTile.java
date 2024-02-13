@@ -332,14 +332,16 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         if (getItems().isEmpty()) return;
         List<Direction> dirs = getDirsOfAnyContainerBlock();
         if (!dirs.isEmpty()) {
+            int time = 0;
             for (int i = 0; i < getItems().size(); i++) {
-                if (i > limit) break;
+                if (time > limit) break;
                 for (Direction dir : dirs) {
                     ItemStack stack = getItems().get(i);
                     if (stack.isEmpty()) continue;
 
                     long amount = StorageUtil.move(InventoryStorage.of(this, null).getSlot(i), ItemStorage.SIDED.find(getWorld(), getPos().offset(dir), dir.getOpposite()), (iv) -> true, Long.MAX_VALUE, null);
                     if (amount < stack.getCount()) continue;
+                    ++time;
                     break;
                 }
             }
