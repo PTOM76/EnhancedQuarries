@@ -6,6 +6,7 @@ import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import net.minecraft.item.Item;
 import net.pitan76.enhancedquarries.item.Blueprint;
 import net.pitan76.enhancedquarries.item.RedstoneHammer;
+import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.enhancedquarries.item.fillermodule.*;
 import net.pitan76.enhancedquarries.item.quarrymodule.*;
@@ -81,6 +82,9 @@ public class Items {
     // 赤石ハンマー
     public static Item REDSTONE_HAMMER = new RedstoneHammer(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("redstone_hammer")));
 
+    // レンチ
+    public static Item WRENCH = new WrenchItem(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("wrench")));
+
     // 素材
     public static Item REFINED_GEAR = new ExtendItem(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("refined_gear")));
     public static Item ENHANCED_REFINED_GEAR = new ExtendItem(new CompatibleItemSettings().addGroup(() -> EnhancedQuarries.ENHANCED_QUARRIES_GROUP, EnhancedQuarries.id("enhanced_refined_gear")));
@@ -147,6 +151,7 @@ public class Items {
         registry.registerItem(EnhancedQuarries.id("filler_cut_pyramid"), () -> fillerCUT_PYRAMID);
 
         registry.registerItem(EnhancedQuarries.id("redstone_hammer"), () -> REDSTONE_HAMMER);
+        registry.registerItem(EnhancedQuarries.id("wrench"), () -> WRENCH);
 
         registry.registerItem(EnhancedQuarries.id("refined_gear"), () -> REFINED_GEAR);
         registry.registerItem(EnhancedQuarries.id("enhanced_refined_gear"), () -> ENHANCED_REFINED_GEAR);

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XZX",
+    " Y ",
+    " Y "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "minecraft:stick"
+    },
+    "Z": {
+      "item": "enhanced_quarries:refined_gear"
+    }
+  },
+  "result": {
+    "item": "enhanced_quarries:redstone_hammer",
+    "count": 1
+  }
+}
