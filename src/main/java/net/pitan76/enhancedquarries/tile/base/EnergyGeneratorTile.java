@@ -1,14 +1,5 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.pitan76.enhancedquarries.EnhancedQuarries;
-import net.pitan76.enhancedquarries.Tiles;
-import net.pitan76.enhancedquarries.block.base.EnergyGenerator;
-import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
-import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
-import ml.pkom.mcpitanlibarch.api.network.ServerNetworking;
-import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
@@ -31,7 +22,16 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.EnhancedQuarries;
+import net.pitan76.enhancedquarries.Tiles;
+import net.pitan76.enhancedquarries.block.base.EnergyGenerator;
+import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
+import net.pitan76.mcpitanlib.api.network.ServerNetworking;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

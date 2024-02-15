@@ -1,9 +1,9 @@
 package net.pitan76.enhancedquarries.compat;
 
-import net.pitan76.enhancedquarries.Config;
-import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.pitan76.enhancedquarries.Config;
+import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")

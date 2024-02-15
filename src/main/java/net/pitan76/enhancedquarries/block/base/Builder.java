@@ -1,11 +1,11 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.pitan76.enhancedquarries.tile.base.BuilderTile;
-import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
-import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
-import ml.pkom.mcpitanlibarch.api.event.block.StateReplacedEvent;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ItemScatterer;
+import net.pitan76.enhancedquarries.tile.base.BuilderTile;
+import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 
 public abstract class Builder extends BaseBlock {
 

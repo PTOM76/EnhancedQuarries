@@ -1,7 +1,7 @@
 package net.pitan76.enhancedquarries.registry;
 
-import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.minecraft.util.Identifier;
+import net.pitan76.enhancedquarries.item.base.FillerModule;
 
 import java.util.ArrayList;
 import java.util.List;

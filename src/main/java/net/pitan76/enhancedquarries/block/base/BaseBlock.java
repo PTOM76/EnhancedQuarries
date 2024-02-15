@@ -1,9 +1,5 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
-import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
-import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
-import ml.pkom.mcpitanlibarch.api.event.block.BlockPlacedEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -19,6 +15,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
+import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider {

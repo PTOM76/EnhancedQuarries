@@ -1,8 +1,5 @@
 package net.pitan76.enhancedquarries.client.renderer;
 
-import net.pitan76.enhancedquarries.block.NormalMarker;
-import net.pitan76.enhancedquarries.event.BlockStatePos;
-import net.pitan76.enhancedquarries.tile.MarkerTile;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -14,6 +11,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
+import net.pitan76.enhancedquarries.block.NormalMarker;
+import net.pitan76.enhancedquarries.event.BlockStatePos;
+import net.pitan76.enhancedquarries.tile.MarkerTile;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 

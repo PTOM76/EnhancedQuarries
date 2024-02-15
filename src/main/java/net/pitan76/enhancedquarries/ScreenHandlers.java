@@ -1,9 +1,9 @@
 package net.pitan76.enhancedquarries;
 
-import ml.pkom.mcpitanlibarch.api.gui.ExtendedScreenHandlerTypeBuilder;
-import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandlerTypeBuilder;
 import net.minecraft.screen.ScreenHandlerType;
 import net.pitan76.enhancedquarries.screen.*;
+import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandlerTypeBuilder;
+import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandlerTypeBuilder;
 
 import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
 

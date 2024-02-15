@@ -1,15 +1,15 @@
 package net.pitan76.enhancedquarries.client.screen.base;
 
-import ml.pkom.mcpitanlibarch.api.client.SimpleHandledScreen;
-import ml.pkom.mcpitanlibarch.api.client.render.handledscreen.DrawBackgroundArgs;
-import ml.pkom.mcpitanlibarch.api.client.render.handledscreen.DrawForegroundArgs;
-import ml.pkom.mcpitanlibarch.api.client.render.handledscreen.DrawMouseoverTooltipArgs;
-import ml.pkom.mcpitanlibarch.api.client.render.handledscreen.RenderArgs;
-import ml.pkom.mcpitanlibarch.api.util.client.RenderUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.pitan76.mcpitanlib.api.client.SimpleHandledScreen;
+import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawBackgroundArgs;
+import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawForegroundArgs;
+import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawMouseoverTooltipArgs;
+import net.pitan76.mcpitanlib.api.client.render.handledscreen.RenderArgs;
+import net.pitan76.mcpitanlib.api.util.client.RenderUtil;
 
 public abstract class BaseHandledScreen extends SimpleHandledScreen {
     public BaseHandledScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {

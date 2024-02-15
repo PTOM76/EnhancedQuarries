@@ -2,10 +2,6 @@ package net.pitan76.enhancedquarries.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import ml.pkom.easyapi.FileControl;
-import ml.pkom.easyapi.config.JsonConfig;
-import ml.pkom.mcpitanlibarch.api.nbt.NbtTag;
-import ml.pkom.mcpitanlibarch.api.util.BlockUtil;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,7 +16,11 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.pitan76.easyapi.FileControl;
+import net.pitan76.easyapi.config.JsonConfig;
 import net.pitan76.enhancedquarries.Config;
+import net.pitan76.mcpitanlib.api.nbt.NbtTag;
+import net.pitan76.mcpitanlib.api.util.BlockUtil;
 
 import java.io.File;
 import java.lang.reflect.Type;

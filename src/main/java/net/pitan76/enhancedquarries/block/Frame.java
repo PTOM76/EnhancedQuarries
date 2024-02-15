@@ -1,12 +1,8 @@
 package net.pitan76.enhancedquarries.block;
 
-import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
-import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
-import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
-import ml.pkom.mcpitanlibarch.api.event.block.BlockBreakEvent;
-import ml.pkom.mcpitanlibarch.api.event.block.OutlineShapeEvent;
-import ml.pkom.mcpitanlibarch.api.event.block.result.BlockBreakResult;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -18,6 +14,12 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.event.block.BlockBreakEvent;
+import net.pitan76.mcpitanlib.api.event.block.OutlineShapeEvent;
+import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 
 public class Frame extends ExtendBlock {
     public static BooleanProperty CONNECT_NORTH = BooleanProperty.of("north");

@@ -1,8 +1,8 @@
 package net.pitan76.enhancedquarries.tile;
 
-import net.pitan76.enhancedquarries.Tiles;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.entity.BlockEntityType;
+import net.pitan76.enhancedquarries.Tiles;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 
 public class FluidQuarryTile extends EnhancedQuarryTile {
 

@@ -1,10 +1,10 @@
 package net.pitan76.enhancedquarries;
 
+import net.fabricmc.api.ClientModInitializer;
 import net.pitan76.enhancedquarries.client.renderer.TileRenderers;
 import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
-import ml.pkom.mcpitanlibarch.api.network.ClientNetworking;
-import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
-import net.fabricmc.api.ClientModInitializer;
+import net.pitan76.mcpitanlib.api.network.ClientNetworking;
+import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 
 public class EnhancedQuarriesClient implements ClientModInitializer {
     @Override

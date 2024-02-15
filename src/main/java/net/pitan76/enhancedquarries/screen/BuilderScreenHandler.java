@@ -1,18 +1,18 @@
 package net.pitan76.enhancedquarries.screen;
 
-import net.pitan76.enhancedquarries.ScreenHandlers;
-import net.pitan76.enhancedquarries.inventory.BuilderInventory;
-import net.pitan76.enhancedquarries.inventory.DisabledInventory;
-import net.pitan76.enhancedquarries.inventory.slot.BuilderSlot;
-import net.pitan76.enhancedquarries.inventory.slot.DisabledSlot;
-import ml.pkom.mcpitanlibarch.api.entity.Player;
-import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
-import ml.pkom.mcpitanlibarch.api.util.SlotUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
+import net.pitan76.enhancedquarries.ScreenHandlers;
+import net.pitan76.enhancedquarries.inventory.BuilderInventory;
+import net.pitan76.enhancedquarries.inventory.DisabledInventory;
+import net.pitan76.enhancedquarries.inventory.slot.BuilderSlot;
+import net.pitan76.enhancedquarries.inventory.slot.DisabledSlot;
+import net.pitan76.mcpitanlib.api.entity.Player;
+import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.util.SlotUtil;
 
 import java.util.ArrayList;
 import java.util.List;

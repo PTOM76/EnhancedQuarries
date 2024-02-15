@@ -1,12 +1,5 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.pitan76.enhancedquarries.Items;
-import net.pitan76.enhancedquarries.block.base.Scanner;
-import net.pitan76.enhancedquarries.screen.ScannerScreenHandler;
-import net.pitan76.enhancedquarries.util.BlueprintUtil;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
-import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
@@ -21,7 +14,14 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.Items;
+import net.pitan76.enhancedquarries.block.base.Scanner;
+import net.pitan76.enhancedquarries.screen.ScannerScreenHandler;
+import net.pitan76.enhancedquarries.util.BlueprintUtil;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;

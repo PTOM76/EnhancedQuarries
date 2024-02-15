@@ -1,9 +1,9 @@
 package net.pitan76.enhancedquarries;
 
-import ml.pkom.mcpitanlibarch.api.client.registry.ArchRegistryClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.pitan76.enhancedquarries.client.screen.*;
+import net.pitan76.mcpitanlib.api.client.registry.ArchRegistryClient;
 
 public class Screens {
     @Environment(EnvType.CLIENT)

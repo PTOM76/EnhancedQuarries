@@ -1,11 +1,11 @@
 package net.pitan76.enhancedquarries.screen;
 
-import net.pitan76.enhancedquarries.ScreenHandlers;
-import net.pitan76.enhancedquarries.inventory.FillerCraftingInventory;
-import net.pitan76.enhancedquarries.inventory.FillerInventory;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.slot.Slot;
+import net.pitan76.enhancedquarries.ScreenHandlers;
+import net.pitan76.enhancedquarries.inventory.FillerCraftingInventory;
+import net.pitan76.enhancedquarries.inventory.FillerInventory;
 
 public class FillerWithChestScreenHandler extends FillerScreenHandler {
     public FillerWithChestScreenHandler(int syncId, PlayerInventory playerInventory) {

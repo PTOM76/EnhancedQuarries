@@ -1,9 +1,5 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.pitan76.enhancedquarries.block.base.BaseBlock;
-import net.pitan76.enhancedquarries.compat.IEnergyStorage;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -11,6 +7,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.block.base.BaseBlock;
+import net.pitan76.enhancedquarries.compat.IEnergyStorage;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntity;
 
 public abstract class BaseEnergyTile extends ExtendBlockEntity implements BlockEntityTicker<BaseEnergyTile> {
     public boolean keepNbtOnDrop = false;

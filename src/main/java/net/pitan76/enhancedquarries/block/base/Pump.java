@@ -1,7 +1,7 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
-import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 
 public abstract class Pump extends BaseBlock {
     public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings

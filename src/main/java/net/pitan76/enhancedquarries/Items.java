@@ -1,8 +1,5 @@
 package net.pitan76.enhancedquarries;
 
-import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
-import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
-import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import net.minecraft.item.Item;
 import net.pitan76.enhancedquarries.item.Blueprint;
 import net.pitan76.enhancedquarries.item.RedstoneHammer;
@@ -10,6 +7,9 @@ import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.enhancedquarries.item.fillermodule.*;
 import net.pitan76.enhancedquarries.item.quarrymodule.*;
+import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.util.ItemUtil;
 
 import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
 

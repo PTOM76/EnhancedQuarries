@@ -1,10 +1,10 @@
 package net.pitan76.enhancedquarries.cmd;
 
 import net.pitan76.enhancedquarries.Config;
-import ml.pkom.mcpitanlibarch.api.command.CommandSettings;
-import ml.pkom.mcpitanlibarch.api.command.ConfigCommand;
-import ml.pkom.mcpitanlibarch.api.command.LiteralCommand;
-import ml.pkom.mcpitanlibarch.api.event.ServerCommandEvent;
+import net.pitan76.mcpitanlib.api.command.CommandSettings;
+import net.pitan76.mcpitanlib.api.command.ConfigCommand;
+import net.pitan76.mcpitanlib.api.command.LiteralCommand;
+import net.pitan76.mcpitanlib.api.event.ServerCommandEvent;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 
 public class EnhancedQuarriesCommand extends LiteralCommand {

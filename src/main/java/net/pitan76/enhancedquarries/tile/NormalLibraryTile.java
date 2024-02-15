@@ -1,12 +1,12 @@
 package net.pitan76.enhancedquarries.tile;
 
-import net.pitan76.enhancedquarries.Tiles;
-import net.pitan76.enhancedquarries.tile.base.LibraryTile;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import net.pitan76.enhancedquarries.Tiles;
+import net.pitan76.enhancedquarries.tile.base.LibraryTile;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 
 public class NormalLibraryTile extends LibraryTile {
 

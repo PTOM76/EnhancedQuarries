@@ -1,9 +1,9 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.pitan76.enhancedquarries.block.base.Pump;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import net.pitan76.enhancedquarries.tile.EnhancedPumpTile;
 import net.minecraft.block.entity.BlockEntity;
+import net.pitan76.enhancedquarries.block.base.Pump;
+import net.pitan76.enhancedquarries.tile.EnhancedPumpTile;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 
 public class EnhancedPump extends Pump {
 

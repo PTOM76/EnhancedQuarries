@@ -1,12 +1,12 @@
 package net.pitan76.enhancedquarries;
 
-import ml.pkom.mcpitanlibarch.api.tile.BlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.pitan76.enhancedquarries.tile.*;
 import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
 import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
+import net.pitan76.mcpitanlib.api.tile.BlockEntityTypeBuilder;
 
 import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
 

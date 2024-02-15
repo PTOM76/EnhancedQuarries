@@ -1,10 +1,10 @@
 package net.pitan76.enhancedquarries.event;
 
-import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.tile.base.FillerTile;
 
 public class FillerProcessEvent {
     private final FillerTile tile;

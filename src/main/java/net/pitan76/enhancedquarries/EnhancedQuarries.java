@@ -1,10 +1,5 @@
 package net.pitan76.enhancedquarries;
 
-import ml.pkom.mcpitanlibarch.api.command.CommandRegistry;
-import ml.pkom.mcpitanlibarch.api.entity.Player;
-import ml.pkom.mcpitanlibarch.api.item.CreativeTabBuilder;
-import ml.pkom.mcpitanlibarch.api.network.PacketByteUtil;
-import ml.pkom.mcpitanlibarch.api.network.ServerNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
@@ -13,6 +8,11 @@ import net.minecraft.util.Identifier;
 import net.pitan76.enhancedquarries.cmd.EnhancedQuarriesCommand;
 import net.pitan76.enhancedquarries.compat.RebornEnergyRegister;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
+import net.pitan76.mcpitanlib.api.command.CommandRegistry;
+import net.pitan76.mcpitanlib.api.entity.Player;
+import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
+import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
+import net.pitan76.mcpitanlib.api.network.ServerNetworking;
 import net.pitan76.mcpitanlib.api.registry.CompatRegistry;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

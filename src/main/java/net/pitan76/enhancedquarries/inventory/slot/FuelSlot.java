@@ -1,9 +1,9 @@
 package net.pitan76.enhancedquarries.inventory.slot;
 
-import ml.pkom.mcpitanlibarch.api.gui.slot.CompatibleSlot;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.pitan76.mcpitanlib.api.gui.slot.CompatibleSlot;
 
 public class FuelSlot extends CompatibleSlot {
     public FuelSlot(Inventory inventory, int index, int x, int y) {

@@ -1,18 +1,18 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.pitan76.enhancedquarries.item.WrenchItem;
-import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
-import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
-import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
-import ml.pkom.mcpitanlibarch.api.entity.Player;
-import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
-import ml.pkom.mcpitanlibarch.api.event.block.StateReplacedEvent;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.item.WrenchItem;
+import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
+import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.entity.Player;
+import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
+import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 
 public class EnergyGenerator extends BaseBlock {
 

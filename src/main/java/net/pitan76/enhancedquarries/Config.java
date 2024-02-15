@@ -1,11 +1,11 @@
 package net.pitan76.enhancedquarries;
 
-import ml.pkom.easyapi.FileControl;
-import ml.pkom.easyapi.config.YamlConfig;
+import net.fabricmc.loader.api.FabricLoader;
+import net.pitan76.easyapi.FileControl;
+import net.pitan76.easyapi.config.YamlConfig;
 import net.pitan76.enhancedquarries.item.fillermodule.HorizontalLayerModule;
 import net.pitan76.enhancedquarries.item.fillermodule.VerticalLayerModule;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
-import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
 

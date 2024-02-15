@@ -1,11 +1,11 @@
 package net.pitan76.enhancedquarries.inventory.slot;
 
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.enhancedquarries.util.BlueprintUtil;
-import ml.pkom.mcpitanlibarch.api.gui.slot.CompatibleSlot;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
+import net.pitan76.mcpitanlib.api.gui.slot.CompatibleSlot;
 
 public class LibrarySlot extends CompatibleSlot {
     public LibraryScreenHandler screenHandler;

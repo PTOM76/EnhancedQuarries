@@ -1,9 +1,5 @@
 package net.pitan76.enhancedquarries.tile;
 
-import net.pitan76.enhancedquarries.Tiles;
-import net.pitan76.enhancedquarries.screen.FillerWithChestScreenHandler;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
@@ -16,7 +12,11 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.pitan76.enhancedquarries.Tiles;
+import net.pitan76.enhancedquarries.screen.FillerWithChestScreenHandler;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

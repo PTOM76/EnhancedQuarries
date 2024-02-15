@@ -1,8 +1,5 @@
 package net.pitan76.enhancedquarries.block;
 
-import ml.pkom.mcpitanlibarch.api.entity.Player;
-import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -11,6 +8,9 @@ import net.pitan76.enhancedquarries.block.base.Filler;
 import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.tile.EnhancedFillerWithChestTile;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
+import net.pitan76.mcpitanlib.api.entity.Player;
+import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 
 public class EnhancedFillerWithChest extends Filler {
 

@@ -1,12 +1,5 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.pitan76.enhancedquarries.block.Frame;
-import net.pitan76.enhancedquarries.block.base.Quarry;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
-import ml.pkom.mcpitanlibarch.api.util.ItemStackUtil;
-import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
-import ml.pkom.mcpitanlibarch.api.util.math.BoxUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
@@ -27,6 +20,13 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.block.Frame;
+import net.pitan76.enhancedquarries.block.base.Quarry;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

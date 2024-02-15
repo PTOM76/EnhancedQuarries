@@ -1,14 +1,5 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.pitan76.enhancedquarries.Blocks;
-import net.pitan76.enhancedquarries.event.BlockStatePos;
-import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
-import ml.pkom.mcpitanlibarch.api.block.CompatibleMaterial;
-import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
-import ml.pkom.mcpitanlibarch.api.event.block.BlockBreakEvent;
-import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
-import ml.pkom.mcpitanlibarch.api.event.block.OutlineShapeEvent;
-import ml.pkom.mcpitanlibarch.api.event.block.result.BlockBreakResult;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -24,6 +15,15 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.Blocks;
+import net.pitan76.enhancedquarries.event.BlockStatePos;
+import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.event.block.BlockBreakEvent;
+import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
+import net.pitan76.mcpitanlib.api.event.block.OutlineShapeEvent;
+import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 
 import java.util.ArrayList;
 import java.util.List;

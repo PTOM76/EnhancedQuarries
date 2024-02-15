@@ -1,11 +1,11 @@
 package net.pitan76.enhancedquarries.item.fillermodule;
 
+import net.minecraft.block.AirBlock;
+import net.minecraft.util.math.Direction;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
-import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
-import net.minecraft.block.AirBlock;
-import net.minecraft.util.math.Direction;
+import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 
 public class CutStairsModule extends FillerModule {
     public CutStairsModule(CompatibleItemSettings settings) {

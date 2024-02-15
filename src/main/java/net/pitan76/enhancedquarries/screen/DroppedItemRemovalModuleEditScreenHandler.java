@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.screen;
 
-import ml.pkom.mcpitanlibarch.api.gui.SimpleScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -8,6 +7,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.pitan76.enhancedquarries.ScreenHandlers;
+import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import org.jetbrains.annotations.Nullable;
 

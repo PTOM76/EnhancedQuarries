@@ -3,11 +3,11 @@ package net.pitan76.enhancedquarries.client.compat;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.minecraft.client.gui.screen.Screen;
+import net.pitan76.enhancedquarries.Config;
 import net.pitan76.enhancedquarries.item.fillermodule.HorizontalLayerModule;
 import net.pitan76.enhancedquarries.item.fillermodule.VerticalLayerModule;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
-import net.minecraft.client.gui.screen.Screen;
-import net.pitan76.enhancedquarries.Config;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 
 public class ClothConfig {

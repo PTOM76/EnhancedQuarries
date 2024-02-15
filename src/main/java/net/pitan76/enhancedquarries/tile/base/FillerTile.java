@@ -1,15 +1,5 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.pitan76.enhancedquarries.Items;
-import net.pitan76.enhancedquarries.block.base.Filler;
-import net.pitan76.enhancedquarries.event.FillerModuleReturn;
-import net.pitan76.enhancedquarries.event.FillerProcessEvent;
-import net.pitan76.enhancedquarries.item.base.FillerModule;
-import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
-import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
-import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,8 +19,18 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.Items;
+import net.pitan76.enhancedquarries.block.base.Filler;
+import net.pitan76.enhancedquarries.event.FillerModuleReturn;
+import net.pitan76.enhancedquarries.event.FillerProcessEvent;
+import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.enhancedquarries.registry.Registry;
+import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.util.ItemUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class FillerTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
