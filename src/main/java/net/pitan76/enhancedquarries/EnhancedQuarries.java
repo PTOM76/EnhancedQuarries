@@ -25,7 +25,7 @@ public class EnhancedQuarries implements ModInitializer {
     public static EnhancedQuarries instance;
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final ItemGroup ENHANCED_QUARRIES_GROUP = CreativeTabBuilder.create(id("all")).setIcon(() -> new ItemStack(Items.NORMAL_QUARRY)).build();
+    public static final CreativeTabBuilder ENHANCED_QUARRIES_GROUP = CreativeTabBuilder.create(id("all")).setIcon(() -> new ItemStack(Items.NORMAL_QUARRY));
 
     public static CompatRegistry registry = CompatRegistry.createRegistry(MOD_ID);
 
@@ -33,7 +33,7 @@ public class EnhancedQuarries implements ModInitializer {
         instance = this;
         log(Level.INFO, "Initializing");
 
-        registry.registerItemGroup(id("all"), () -> ENHANCED_QUARRIES_GROUP);
+        registry.registerItemGroup(ENHANCED_QUARRIES_GROUP);
         Items.init();
         Blocks.init();
         Tiles.init();

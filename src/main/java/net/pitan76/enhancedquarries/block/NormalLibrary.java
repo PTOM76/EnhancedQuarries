@@ -1,10 +1,8 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -13,6 +11,7 @@ import net.pitan76.enhancedquarries.block.base.Library;
 import net.pitan76.enhancedquarries.tile.NormalLibraryTile;
 import net.pitan76.enhancedquarries.tile.base.LibraryTile;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import org.jetbrains.annotations.Nullable;
@@ -59,9 +58,9 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-        super.appendProperties(builder);
+    public void appendProperties(AppendPropertiesArgs args) {
+        args.addProperty(FACING);
+        super.appendProperties(args);
     }
 
     @Override
