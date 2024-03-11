@@ -1,5 +1,6 @@
 package net.pitan76.enhancedquarries.tile.base;
 
+import ml.pkom.storagebox.StorageBoxItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -29,6 +30,7 @@ import net.pitan76.enhancedquarries.util.BlueprintUtil;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
 import net.pitan76.mcpitanlib.api.util.ItemUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
@@ -135,7 +137,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
         }
         ItemStack blueprint = inventory.getStack(0);
 
-        if (blueprint.hasNbt() && blueprint.getItem() == Items.BLUEPRINT) {
+        if (CustomDataUtil.hasNbt(blueprint) && blueprint.getItem() == Items.BLUEPRINT) {
             if (blueprintMap.isEmpty()) {
                 blueprintMap = BlueprintUtil.readNBt(blueprint, getFacing());
                 pos1 = pos.add(BlueprintUtil.getMinPos(blueprintMap));
@@ -207,11 +209,10 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
             if (stack.getItem() instanceof BlockItem && stack.getItem() == block.asItem()) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
-                NbtCompound nbt = stack.getNbt();
-                if (nbt.contains("StorageItemData")) {
-                    ItemStack itemInBox = ItemStack.fromNbt(nbt.getCompound("StorageItemData"));
-                    if (itemInBox.getItem() instanceof BlockItem && itemInBox.getItem() == block.asItem()) return itemInBox;
-                }
+                ItemStack itemInBox = StorageBoxItem.getStackInStorageBox(stack);
+                if (itemInBox == null) continue;
+
+                if (itemInBox.getItem() instanceof BlockItem && itemInBox.getItem() == block.asItem()) return itemInBox;
             }
             // ---- StorageBox
         }
@@ -226,6 +227,8 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
             //state.getBlock().onPlaced(getWorld(), blockPos, state, null, latestGotStack);
             getWorld().playSound(null, blockPos, state.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
+                //ItemStack itemInBox = StorageBoxItem.getStackInStorageBox(latestGotStack);
+
                 NbtCompound tag = latestGotStack.getNbt();
                 if (tag.contains("StorageSize")) {
                     int countInBox = tag.getInt("StorageSize");

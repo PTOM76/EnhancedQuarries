@@ -744,7 +744,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                 return index;
             }
             ItemStack inStack = getItems().get(index);
-            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
+            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
                 int originInCount = getItems().get(index).getCount();
                 getItems().get(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {
@@ -766,7 +766,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                 return;
             }
             ItemStack inStack = getItems().get(index);
-            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
+            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
                 int originInCount = getItems().get(index).getCount();
                 getItems().get(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {

@@ -2,7 +2,6 @@ package net.pitan76.enhancedquarries;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.pitan76.enhancedquarries.cmd.EnhancedQuarriesCommand;

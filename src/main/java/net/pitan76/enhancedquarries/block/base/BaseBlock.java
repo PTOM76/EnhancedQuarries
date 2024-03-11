@@ -1,12 +1,10 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -18,7 +16,9 @@ import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.ExtendBlock;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
+import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider {
@@ -55,10 +55,10 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
         if (e.placer != null) {
             setFacing(e.placer.getHorizontalFacing().getOpposite(), e.world, e.pos);
         }
-        if (!e.stack.hasNbt()) return;
-        if (!e.stack.getNbt().contains("BlockEntityTag")) return;
+        if (!CustomDataUtil.hasNbt(e.stack)) return;
+        if (!CustomDataUtil.getNbt(e.stack).contains("BlockEntityTag")) return;
 
-        NbtCompound nbt = e.stack.getSubNbt("BlockEntityTag");
+        NbtCompound nbt = CustomDataUtil.get(e.stack, "BlockEntityTag");
         BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
         if (blockEntity instanceof BaseEnergyTile) {
             BaseEnergyTile energyTile = (BaseEnergyTile) blockEntity;
@@ -67,9 +67,9 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
     }
 
     @Override
-    public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(FACING, ACTIVE);
+    public void appendProperties(AppendPropertiesArgs args) {
+        super.appendProperties(args);
+        args.addProperty(FACING, ACTIVE);
     }
 
     @Override

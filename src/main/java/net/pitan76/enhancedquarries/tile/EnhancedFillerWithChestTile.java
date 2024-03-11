@@ -1,5 +1,6 @@
 package net.pitan76.enhancedquarries.tile;
 
+import ml.pkom.storagebox.StorageBoxItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
@@ -50,11 +51,10 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
             if (stack.getItem() instanceof BlockItem) return stack;
             // StorageBox
             if (FillerTile.isStorageBox(stack)) {
-                NbtCompound tag = stack.getNbt();
-                if (tag.contains("StorageItemData")) {
-                    ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("StorageItemData"));
-                    if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
-                }
+                ItemStack itemInBox = StorageBoxItem.getStackInStorageBox(stack);
+                if (itemInBox == null) continue;
+
+                if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
             }
             // ---- StorageBox
         }
@@ -81,7 +81,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
                 return;
             }
             ItemStack inStack = getItems().get(index);
-            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtEqual(stack, inStack) || !stack.hasNbt() == !inStack.hasNbt()) && inStack.getItem().getMaxCount() != 1) {
+            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
                 int originInCount = getItems().get(index).getCount();
                 getItems().get(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {

@@ -1,5 +1,7 @@
 package net.pitan76.enhancedquarries.tile.base;
 
+import ml.pkom.storagebox.StorageBoxItem;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -195,7 +197,11 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     public ItemStack latestGotStack = ItemStack.EMPTY;
 
     public static boolean isStorageBox(ItemStack stack) {
-        return ItemUtil.toID(stack.getItem()).toString().equals("storagebox:storagebox");
+        if (FabricLoader.getInstance().isModLoaded("storagebox")) {
+            return ItemUtil.toID(stack.getItem()).toString().equals("storagebox:storagebox");
+        }
+
+        return false;
     }
 
     public ItemStack getInventoryStack() {
@@ -205,11 +211,10 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
             if (stack.getItem() instanceof BlockItem) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
-                NbtCompound tag = stack.getNbt();
-                if (tag.contains("StorageItemData")) {
-                    ItemStack itemInBox = ItemStack.fromNbt(tag.getCompound("StorageItemData"));
-                    if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
-                }
+                ItemStack itemInBox = StorageBoxItem.getStackInStorageBox(stack);
+                if (itemInBox == null) continue;
+
+                if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
             }
             // ---- StorageBox
         }
