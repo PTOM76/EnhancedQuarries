@@ -5,7 +5,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -20,6 +19,7 @@ import net.pitan76.enhancedquarries.screen.ScannerScreenHandler;
 import net.pitan76.enhancedquarries.util.BlueprintUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +57,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
     // NBT
 
     public void writeNbtOverride(NbtCompound tag) {
-        Inventories.writeNbt(tag, getItems());
+        InventoryUtil.writeNbt(getWorld(), tag, getItems());
 
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
@@ -76,7 +76,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
         if (tag.contains("Items")) {
-            Inventories.readNbt(tag, getItems());
+            InventoryUtil.readNbt(getWorld(), tag, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");

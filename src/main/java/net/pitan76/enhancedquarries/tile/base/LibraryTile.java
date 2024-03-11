@@ -3,7 +3,6 @@ package net.pitan76.enhancedquarries.tile.base;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -14,6 +13,7 @@ import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntity;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,13 +27,13 @@ public class LibraryTile extends ExtendBlockEntity implements IInventory, NamedS
     @Override
     public void writeNbtOverride(NbtCompound nbt) {
         super.writeNbtOverride(nbt);
-        Inventories.writeNbt(nbt, inventory);
+        InventoryUtil.writeNbt(getWorld(), nbt, inventory);
     }
 
     @Override
     public void readNbtOverride(NbtCompound nbt) {
         super.readNbtOverride(nbt);
-        Inventories.readNbt(nbt, inventory);
+        InventoryUtil.readNbt(getWorld(), nbt, inventory);
     }
 
     public LibraryTile(BlockEntityType<?> type, TileCreateEvent event) {

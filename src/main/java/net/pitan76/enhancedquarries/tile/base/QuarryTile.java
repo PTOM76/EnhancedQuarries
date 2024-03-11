@@ -8,7 +8,6 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
@@ -24,6 +23,7 @@ import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
@@ -208,7 +208,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     // NBT
 
     public void writeNbtOverride(NbtCompound tag) {
-        Inventories.writeNbt(tag, getItems());
+        InventoryUtil.writeNbt(getWorld(), tag, getItems());
 
         tag.putDouble("coolTime", coolTime);
         if (canBedrockBreak)
@@ -248,7 +248,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
         if (tag.contains("Items")) {
-            Inventories.readNbt(tag, getItems());
+            InventoryUtil.readNbt(getWorld(), tag, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");

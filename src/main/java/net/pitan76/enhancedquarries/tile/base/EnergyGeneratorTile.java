@@ -7,7 +7,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,6 +29,7 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.network.ServerNetworking;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import org.jetbrains.annotations.NotNull;
@@ -186,7 +186,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
         if (nbt.contains("Burning"))
             burning = nbt.getBoolean("Burning");
         if (nbt.contains("Items"))
-            Inventories.readNbt(nbt, invItems);
+            InventoryUtil.readNbt(getWorld(), nbt, invItems);
     }
 
     @Override
@@ -194,7 +194,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
         super.writeNbtOverride(nbt);
         nbt.putInt("BurnTime", burnTime);
         nbt.putBoolean("Burning", burning);
-        Inventories.writeNbt(nbt, invItems);
+        InventoryUtil.writeNbt(getWorld(), nbt, invItems);
     }
 
     @Override

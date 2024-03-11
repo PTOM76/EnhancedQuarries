@@ -21,6 +21,7 @@ import net.pitan76.easyapi.config.JsonConfig;
 import net.pitan76.enhancedquarries.Config;
 import net.pitan76.mcpitanlib.api.nbt.NbtTag;
 import net.pitan76.mcpitanlib.api.util.BlockUtil;
+import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -66,7 +67,7 @@ public class BlueprintUtil {
 
     public static void writeNbt(ItemStack stack, Map<BlockPos, BlockState> blocks) {
         NbtCompound nbt = writeData(new NbtCompound(), blocks);
-        stack.setSubNbt("blueprint", nbt);
+        CustomDataUtil.set(stack, "blueprint", nbt);
     }
 
     public static Map<BlockPos, BlockState> readNBt(ItemStack stack) {
@@ -409,7 +410,7 @@ public class BlueprintUtil {
         }
 
         nbt.put("blocks", nbtList);
-        stack.setSubNbt("blueprint", nbt);
+        CustomDataUtil.set(stack, "blueprint", nbt);
         return true;
     }
 

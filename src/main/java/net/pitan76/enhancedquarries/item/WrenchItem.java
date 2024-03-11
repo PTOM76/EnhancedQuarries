@@ -15,6 +15,7 @@ import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
 
 public class WrenchItem extends ExtendItem {
     public WrenchItem(CompatibleItemSettings settings) {
@@ -37,7 +38,7 @@ public class WrenchItem extends ExtendItem {
             ItemStack stack = new ItemStack(state.getBlock());
             NbtCompound nbt = new NbtCompound();
             energyTile.writeNbtOverride(nbt);
-            stack.setSubNbt("BlockEntityTag", nbt);
+            CustomDataUtil.set(stack, "BlockEntityTag", nbt);
 
             ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
             itemEntity.setToDefaultPickupDelay();

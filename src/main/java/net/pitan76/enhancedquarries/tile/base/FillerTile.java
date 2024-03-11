@@ -6,7 +6,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
@@ -30,6 +29,7 @@ import net.pitan76.enhancedquarries.registry.Registry;
 import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
@@ -99,10 +99,10 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public void writeNbtOverride(NbtCompound tag) {
         NbtCompound invTag = new NbtCompound();
-        Inventories.writeNbt(invTag, craftingInvItems);
+        InventoryUtil.writeNbt(getWorld(), invTag, craftingInvItems);
         tag.put("craftingInv", invTag);
 
-        Inventories.writeNbt(tag, getItems());
+        InventoryUtil.writeNbt(getWorld(), tag, getItems());
 
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
@@ -126,11 +126,11 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         super.readNbtOverride(tag);
         if (tag.contains("craftingInv")) {
             NbtCompound invTag = tag.getCompound("craftingInv");
-            Inventories.readNbt(invTag, craftingInvItems);
+            InventoryUtil.readNbt(getWorld(), invTag, craftingInvItems);
         }
 
         if (tag.contains("Items")) {
-            Inventories.readNbt(tag, getItems());
+            InventoryUtil.readNbt(getWorld(), tag, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");

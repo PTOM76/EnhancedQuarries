@@ -7,7 +7,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
@@ -30,10 +29,7 @@ import net.pitan76.enhancedquarries.util.BlueprintUtil;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
-import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
-import net.pitan76.mcpitanlib.api.util.ItemUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.event.BlockEventGenerator;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,7 +71,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     // NBT
 
     public void writeNbtOverride(NbtCompound tag) {
-        Inventories.writeNbt(tag, getItems());
+        InventoryUtil.writeNbt(getWorld(), tag, getItems());
 
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
@@ -94,7 +90,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
         if (tag.contains("Items")) {
-            Inventories.readNbt(tag, getItems());
+            InventoryUtil.readNbt(getWorld(), tag, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
