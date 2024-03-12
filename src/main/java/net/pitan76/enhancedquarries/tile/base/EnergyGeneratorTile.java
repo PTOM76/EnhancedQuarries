@@ -226,8 +226,8 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     @Override
     public void writeExtraData(ExtraDataArgs args) {
-        args.writeVar(getEnergy());
-        args.writeVar(getMaxEnergy());
+        PacketByteUtil.writeLong(args.getBuf(), getEnergy());
+        PacketByteUtil.writeLong(args.getBuf(), getMaxEnergy());
     }
 
     @Nullable

@@ -71,7 +71,7 @@ public class EnergyGenerator extends BaseBlock {
         if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
         if (world.getBlockEntity(pos) instanceof EnergyGeneratorTile)
-            player.openGuiScreen((EnergyGeneratorTile) world.getBlockEntity(pos));
+            player.openExtendedMenu((EnergyGeneratorTile) world.getBlockEntity(pos));
 
         return e.consume();
     }
