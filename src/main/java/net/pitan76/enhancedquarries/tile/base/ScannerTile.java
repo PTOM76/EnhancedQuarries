@@ -75,7 +75,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
 
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
-        if (tag.contains("Items")) {
+        if (tag.contains("Items") && getWorld() != null) {
             InventoryUtil.readNbt(getWorld(), tag, getItems());
         }
 

@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -26,6 +25,9 @@ import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.block.base.EnergyGenerator;
 import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
+import net.pitan76.mcpitanlib.api.event.container.factory.ExtraDataArgs;
+import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.network.ServerNetworking;
@@ -129,7 +131,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
         if (lastEnergy != getEnergy() && !world.isClient()) {
             for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                if (player.networkHandler != null && player.currentScreenHandler instanceof EnergyGeneratorScreenHandler && ((EnergyGeneratorScreenHandler) player.currentScreenHandler).tile == this ) {
+                if (player.networkHandler != null && player.currentScreenHandler instanceof EnergyGeneratorScreenHandler && ((EnergyGeneratorScreenHandler) player.currentScreenHandler).tile == this) {
                     PacketByteBuf buf = PacketByteUtil.create();
                     PacketByteUtil.writeLong(buf, getEnergy());
                     ServerNetworking.send(player, EnhancedQuarries.id("energy_generator_sync"), buf);
@@ -146,7 +148,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
             BlockEntity dirTile = world.getBlockEntity(targetPos);
             if (!(dirTile instanceof BaseEnergyTile)) continue;
 
-            BaseEnergyTile targetEntity = (BaseEnergyTile)dirTile;
+            BaseEnergyTile targetEntity = (BaseEnergyTile) dirTile;
             long output = getOutputEnergy(blockEntity, targetEntity);
             if (output > 0) {
                 blockEntity.useEnergy(output);
@@ -218,19 +220,19 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     }
 
     @Override
-    public Text getDisplayName()  {
+    public Text getDisplayName(DisplayNameArgs args) {
         return TextUtil.translatable("screen.enhanced_quarries.energy_generator.title");
+    }
+
+    @Override
+    public void writeExtraData(ExtraDataArgs args) {
+        args.writeVar(getEnergy());
+        args.writeVar(getMaxEnergy());
     }
 
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         return new EnergyGeneratorScreenHandler(syncId, playerInventory, this);
-    }
-
-    @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        PacketByteUtil.writeLong(buf, getEnergy());
-        PacketByteUtil.writeLong(buf, getMaxEnergy());
     }
 }

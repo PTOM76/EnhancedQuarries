@@ -10,9 +10,9 @@ import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.BaseBlock;
 import net.pitan76.enhancedquarries.compat.IEnergyStorage;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
-import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntity;
+import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 
-public abstract class BaseEnergyTile extends ExtendBlockEntity implements BlockEntityTicker<BaseEnergyTile> {
+public abstract class BaseEnergyTile extends CompatBlockEntity implements BlockEntityTicker<BaseEnergyTile> {
     public boolean keepNbtOnDrop = false;
 
     public BaseEnergyTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {

@@ -2,7 +2,7 @@ package net.pitan76.enhancedquarries.tile.base;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
@@ -14,38 +14,21 @@ import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.Pump;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.extra.transfer.util.FluidStorageUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 import java.util.HashSet;
 import java.util.Set;
 
 // reference: Kibe Utilities's tank
-@SuppressWarnings("UnstableApiUsage")
 public class PumpTile extends BaseEnergyTile {
-    private SingleVariantStorage<FluidVariant> storedFluid = new SingleVariantStorage<FluidVariant>() {
+    private SingleFluidStorage storedFluid = FluidStorageUtil.withFixedCapacity(FluidConstants.BUCKET * 4, this::markDirty);
 
-        @Override
-        protected FluidVariant getBlankVariant() {
-            return FluidVariant.blank();
-        }
-
-        @Override
-        protected long getCapacity(FluidVariant variant) {
-            return FluidConstants.BUCKET * 4;
-        }
-
-        @Override
-        protected void onFinalCommit() {
-            super.onFinalCommit();
-            markDirty();
-        }
-    };
-
-    public SingleVariantStorage<FluidVariant> getStoredFluid() {
+    public SingleFluidStorage getStoredFluid() {
         return storedFluid;
     }
 
-    public void setStoredFluid(SingleVariantStorage<FluidVariant> storedFluid) {
+    public void setStoredFluid(SingleFluidStorage storedFluid) {
         this.storedFluid = storedFluid;
     }
 
@@ -74,24 +57,17 @@ public class PumpTile extends BaseEnergyTile {
     }
 
     public void readNbtOverride(NbtCompound nbt) {
-
         super.readNbtOverride(nbt);
-        if (nbt.contains("variant")) {
-            storedFluid.variant = FluidVariant.fromNbt(nbt.getCompound("variant"));
-            storedFluid.amount = nbt.getLong("amount");
+        if (getWorld() != null && nbt.contains("variant")) {
+            FluidStorageUtil.readNbt(storedFluid, nbt, getWorld());
         }
     }
 
     public void writeNbtOverride(NbtCompound nbt) {
         super.writeNbtOverride(nbt);
-        if(!storedFluid.isResourceBlank() && !fluidIsEmpty()) {
-            nbt.put("variant", storedFluid.getResource().toNbt());
-            nbt.putLong("amount", storedFluid.getAmount());
+        if(getWorld() != null && !storedFluid.isResourceBlank() && !FluidStorageUtil.isEmpty(storedFluid)) {
+            FluidStorageUtil.writeNbt(storedFluid, nbt, getWorld());
         }
-    }
-
-    public boolean fluidIsEmpty() {
-        return storedFluid.getAmount() == 0;
     }
 
     // 基準の速度
@@ -190,7 +166,7 @@ public class PumpTile extends BaseEnergyTile {
                 storedFluid.insert(FluidVariant.of(fluidState.getFluid()), FluidConstants.BUCKET, transaction);
                 transaction.commit();
             }
-            return !fluidIsEmpty();
+            return !FluidStorageUtil.isEmpty(storedFluid);
         } catch (NullPointerException e) {
             return false;
         }

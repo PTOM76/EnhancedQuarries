@@ -71,12 +71,12 @@ public class BlueprintUtil {
     }
 
     public static Map<BlockPos, BlockState> readNBt(ItemStack stack) {
-        NbtCompound nbt = stack.getSubNbt("blueprint");
+        NbtCompound nbt = CustomDataUtil.get(stack, "blueprint");
         return readData(nbt);
     }
 
     public static Map<BlockPos, BlockState> readNBt(ItemStack stack, Direction direction) {
-        NbtCompound nbt = stack.getSubNbt("blueprint");
+        NbtCompound nbt = CustomDataUtil.get(stack, "blueprint");
         return readData(nbt, direction);
     }
 
@@ -303,7 +303,7 @@ public class BlueprintUtil {
     public static boolean save(ItemStack stack, String name) {
         JsonConfig config = new JsonConfig();
 
-        NbtCompound nbt = stack.getSubNbt("blueprint");
+        NbtCompound nbt = CustomDataUtil.get(stack, "blueprint");
 
         if (nbt == null) return false;
         if (!nbt.contains("blocks")) return false;

@@ -89,7 +89,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
 
     public void readNbtOverride(NbtCompound tag) {
         super.readNbtOverride(tag);
-        if (tag.contains("Items")) {
+        if (tag.contains("Items") && getWorld() != null) {
             InventoryUtil.readNbt(getWorld(), tag, getItems());
         }
 
@@ -225,6 +225,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
             if (isStorageBox(latestGotStack)) {
                 //ItemStack itemInBox = StorageBoxItem.getStackInStorageBox(latestGotStack);
 
+                /*
                 NbtCompound tag = latestGotStack.getNbt();
                 if (tag.contains("StorageSize")) {
                     int countInBox = tag.getInt("StorageSize");
@@ -237,6 +238,8 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
                     latestGotStack.setNbt(tag);
                 }
                 return true;
+
+                 */
             }
             latestGotStack.decrement(1);
             return true;

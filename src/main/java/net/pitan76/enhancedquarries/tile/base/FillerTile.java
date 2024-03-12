@@ -29,10 +29,7 @@ import net.pitan76.enhancedquarries.registry.Registry;
 import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
-import net.pitan76.mcpitanlib.api.util.InventoryUtil;
-import net.pitan76.mcpitanlib.api.util.ItemUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.*;
 import org.jetbrains.annotations.Nullable;
 
 public class FillerTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
@@ -123,14 +120,16 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public void readNbtOverride(NbtCompound tag) {
-        super.readNbtOverride(tag);
+        super.readNbtOverride(tag);)
         if (tag.contains("craftingInv")) {
             NbtCompound invTag = tag.getCompound("craftingInv");
-            InventoryUtil.readNbt(getWorld(), invTag, craftingInvItems);
+            if (getWorld() != null)
+                InventoryUtil.readNbt(getWorld(), invTag, craftingInvItems);
         }
 
         if (tag.contains("Items")) {
-            InventoryUtil.readNbt(getWorld(), tag, getItems());
+            if (getWorld() != null)
+                InventoryUtil.readNbt(getWorld(), tag, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
@@ -229,8 +228,9 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
         if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
-            getWorld().playSound(null, blockPos, block.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+            getWorld().playSound(null, blockPos, BlockStateUtil.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
+                /*
                 NbtCompound tag = latestGotStack.getNbt();
                 if (tag.contains("StorageSize")) {
                     int countInBox = tag.getInt("StorageSize");
@@ -243,6 +243,8 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
                     latestGotStack.setNbt(tag);
                 }
                 return true;
+
+                 */
             }
             latestGotStack.setCount(latestGotStack.getCount() - 1);
             return true;
@@ -252,7 +254,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public boolean tryBreaking(BlockPos procPos) {
-        return getWorld().breakBlock(procPos, true);
+        return WorldUtil.breakBlock(world, procPos, true);
     }
 
     public boolean tryFilling(Item item) {
