@@ -132,7 +132,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
                 if (player.networkHandler != null && player.currentScreenHandler instanceof EnergyGeneratorScreenHandler && ((EnergyGeneratorScreenHandler) player.currentScreenHandler).tile == this ) {
                     PacketByteBuf buf = PacketByteUtil.create();
                     PacketByteUtil.writeLong(buf, getEnergy());
-                    ServerNetworking.send(player, EnhancedQuarries.id("energy_generator"), buf);
+                    ServerNetworking.send(player, EnhancedQuarries.id("energy_generator_sync"), buf);
                 }
             }
             lastEnergy = getEnergy();

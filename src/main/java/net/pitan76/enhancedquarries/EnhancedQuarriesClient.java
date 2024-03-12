@@ -1,6 +1,8 @@
 package net.pitan76.enhancedquarries;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.pitan76.enhancedquarries.client.BlockRenders;
+import net.pitan76.enhancedquarries.client.Screens;
 import net.pitan76.enhancedquarries.client.renderer.TileRenderers;
 import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
 import net.pitan76.mcpitanlib.api.network.ClientNetworking;
@@ -14,7 +16,7 @@ public class EnhancedQuarriesClient implements ClientModInitializer {
 
         TileRenderers.init();
 
-        ClientNetworking.registerReceiver(EnhancedQuarries.id("energy_generator"), (client, p, buf) -> {
+        ClientNetworking.registerReceiver(EnhancedQuarries.id("energy_generator_sync"), (client, p, buf) -> {
             long energy = PacketByteUtil.readLong(buf);
             if (p == null) return;
             if (p.currentScreenHandler instanceof EnergyGeneratorScreenHandler) {
