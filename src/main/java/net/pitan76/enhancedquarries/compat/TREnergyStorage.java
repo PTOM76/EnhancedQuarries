@@ -6,7 +6,6 @@ import net.pitan76.enhancedquarries.Config;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import team.reborn.energy.api.EnergyStorage;
 
-@SuppressWarnings("UnstableApiUsage")
 public class TREnergyStorage extends SnapshotParticipant<Long> implements EnergyStorage, IEnergyStorage {
 
     public static final double CONVERSION_RATE = Config.config.getDouble("reborn_energy_conversion_rate");
