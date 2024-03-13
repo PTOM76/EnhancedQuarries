@@ -227,7 +227,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
         if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
-            getWorld().playSound(null, blockPos, BlockStateUtil.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+            WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
                 /*
                 NbtCompound tag = latestGotStack.getNbt();
@@ -253,7 +253,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public boolean tryBreaking(BlockPos procPos) {
-        return WorldUtil.breakBlock(world, procPos, true);
+        return WorldUtil.breakBlock(getWorld(), procPos, true);
     }
 
     public boolean tryFilling(Item item) {

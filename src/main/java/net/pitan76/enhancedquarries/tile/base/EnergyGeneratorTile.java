@@ -206,7 +206,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        return new int[0];
+        return new int[]{0};
     }
 
     @Override
@@ -226,8 +226,10 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     @Override
     public void writeExtraData(ExtraDataArgs args) {
-        PacketByteUtil.writeLong(args.getBuf(), getEnergy());
-        PacketByteUtil.writeLong(args.getBuf(), getMaxEnergy());
+        if (args.hasBuf()) {
+            PacketByteUtil.writeLong(args.buf, getEnergy());
+            PacketByteUtil.writeLong(args.buf, getMaxEnergy());
+        }
     }
 
     @Nullable
