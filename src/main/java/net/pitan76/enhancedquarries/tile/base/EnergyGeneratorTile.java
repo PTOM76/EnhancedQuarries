@@ -187,7 +187,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
             burnTime = nbt.getInt("BurnTime");
         if (nbt.contains("Burning"))
             burning = nbt.getBoolean("Burning");
-        if (nbt.contains("Items"))
+        if (nbt.contains("Items") && getWorld() != null)
             InventoryUtil.readNbt(getWorld(), nbt, invItems);
     }
 

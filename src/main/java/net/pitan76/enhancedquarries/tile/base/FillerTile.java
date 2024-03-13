@@ -120,16 +120,15 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public void readNbtOverride(NbtCompound tag) {
-        super.readNbtOverride(tag);)
+        super.readNbtOverride(tag);
         if (tag.contains("craftingInv")) {
             NbtCompound invTag = tag.getCompound("craftingInv");
             if (getWorld() != null)
                 InventoryUtil.readNbt(getWorld(), invTag, craftingInvItems);
         }
 
-        if (tag.contains("Items")) {
-            if (getWorld() != null)
-                InventoryUtil.readNbt(getWorld(), tag, getItems());
+        if (tag.contains("Items") && getWorld() != null) {
+            InventoryUtil.readNbt(getWorld(), tag, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
