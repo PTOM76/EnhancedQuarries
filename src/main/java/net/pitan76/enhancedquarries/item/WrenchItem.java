@@ -16,6 +16,7 @@ import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.ExtendItem;
 import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class WrenchItem extends ExtendItem {
     public WrenchItem(CompatibleItemSettings settings) {
@@ -44,7 +45,7 @@ public class WrenchItem extends ExtendItem {
             itemEntity.setToDefaultPickupDelay();
             world.spawnEntity(itemEntity);
 
-            world.breakBlock(pos, false);
+            WorldUtil.breakBlock(world, pos, false);
 
         } else {
             if (!(state.getBlock() instanceof BaseBlock)) return super.onRightClickOnBlock(e);

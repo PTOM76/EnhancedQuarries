@@ -16,6 +16,7 @@ import net.pitan76.enhancedquarries.screen.FillerWithChestScreenHandler;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,8 +63,8 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
 
     @Override
     public boolean tryBreaking(BlockPos procPos) {
-        List<ItemStack> drops = Block.getDroppedStacks(getWorld().getBlockState(procPos), (ServerWorld) getWorld(), procPos, getWorld().getBlockEntity(procPos));
-        if (getWorld().breakBlock(procPos, false)) {
+        List<ItemStack> drops = Block.getDroppedStacks(WorldUtil.getBlockState(getWorld(), procPos), (ServerWorld) getWorld(), procPos, WorldUtil.getBlockEntity(getWorld(), procPos));
+        if (WorldUtil.breakBlock(getWorld(), procPos, false)) {
             drops.forEach(this::addStack);
             return true;
         }

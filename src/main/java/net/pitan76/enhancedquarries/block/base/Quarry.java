@@ -19,6 +19,7 @@ import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,7 +164,7 @@ public abstract class Quarry extends BaseBlock {
                         if (minPosX == null || markerSP.getPosX() < minPosX) minPosX = markerSP.getPosX();
                         if (minPosY == null || markerSP.getPosY() < minPosY) minPosY = markerSP.getPosY();
                         if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
-                        world.breakBlock(markerSP.getBlockPos(), true);
+                        WorldUtil.breakBlock(world, markerSP.getBlockPos(), true);
                     }
                     if (markerList.size() <= 2 ) return;
                     if (maxPosY.equals(minPosY)) maxPosY += 4;

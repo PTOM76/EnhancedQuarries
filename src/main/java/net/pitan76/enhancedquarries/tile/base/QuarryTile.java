@@ -465,9 +465,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                 List<ItemStack> drops = Block.getDroppedStacks(getWorld().getBlockState(pos), (ServerWorld) getWorld(), pos, getWorld().getBlockEntity(pos), null, getQuarryStack());
                 drops.forEach(this::addStack);
             }
-            getWorld().breakBlock(pos, false);
+            WorldUtil.breakBlock(getWorld(), pos, false);
         } else {
-            getWorld().breakBlock(pos, drop);
+            WorldUtil.breakBlock(getWorld(), pos, drop);
         }
     }
 
