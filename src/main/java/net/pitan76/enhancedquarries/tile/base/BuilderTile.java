@@ -220,7 +220,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
 
         if (getWorld().setBlockState(blockPos, state)) {
             BlockEventGenerator.onPlaced(state.getBlock(), new BlockPlacedEvent(getWorld(), blockPos, state, null, latestGotStack));
-            WorldUtil.playSound(getWorld(), null, blockPos, state.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+            WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getSoundGroup(state).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
                 if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
                     int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
