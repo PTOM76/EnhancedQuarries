@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.tile;
 
-import ml.pkom.storagebox.StorageBoxItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
@@ -17,6 +16,7 @@ import net.pitan76.enhancedquarries.screen.FillerWithChestScreenHandler;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -50,7 +50,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
             if (stack.getItem() instanceof BlockItem) return stack;
             // StorageBox
             if (FillerTile.isStorageBox(stack)) {
-                ItemStack itemInBox = StorageBoxItem.getStackInStorageBox(stack);
+                ItemStack itemInBox = StorageBoxUtil.getStackInStorageBox(stack);
                 if (itemInBox == null) continue;
 
                 if (itemInBox.getItem() instanceof BlockItem) return itemInBox;

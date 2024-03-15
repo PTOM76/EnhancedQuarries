@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import ml.pkom.storagebox.StorageBoxItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,6 +30,7 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.event.BlockEventGenerator;
+import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -205,7 +205,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
             if (stack.getItem() instanceof BlockItem && stack.getItem() == block.asItem()) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
-                ItemStack itemInBox = StorageBoxItem.getStackInStorageBox(stack);
+                ItemStack itemInBox = StorageBoxUtil.getStackInStorageBox(stack);
                 if (itemInBox == null) continue;
 
                 if (itemInBox.getItem() instanceof BlockItem && itemInBox.getItem() == block.asItem()) return itemInBox;
@@ -220,26 +220,19 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
 
         if (getWorld().setBlockState(blockPos, state)) {
             BlockEventGenerator.onPlaced(state.getBlock(), new BlockPlacedEvent(getWorld(), blockPos, state, null, latestGotStack));
-            //state.getBlock().onPlaced(getWorld(), blockPos, state, null, latestGotStack);
-            getWorld().playSound(null, blockPos, state.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+            WorldUtil.playSound(getWorld(), null, blockPos, state.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
-                //ItemStack itemInBox = StorageBoxItem.getStackInStorageBox(latestGotStack);
-
-                /*
-                NbtCompound tag = latestGotStack.getNbt();
-                if (tag.contains("StorageSize")) {
-                    int countInBox = tag.getInt("StorageSize");
+                if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
+                    int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
                     countInBox--;
-                    tag.putInt("StorageSize", countInBox);
-                    if (countInBox <= 0) {
-                        tag.remove("StorageItemData");
-                        tag.remove("StorageSize");
+                    if (countInBox < 1) {
+                        StorageBoxUtil.setStackInStorageBox(latestGotStack, ItemStack.EMPTY);
+                    } else {
+                        StorageBoxUtil.setAmountInStorageBox(latestGotStack, countInBox);
                     }
-                    latestGotStack.setNbt(tag);
-                }
-                return true;
 
-                 */
+                    return true;
+                }
             }
             latestGotStack.decrement(1);
             return true;

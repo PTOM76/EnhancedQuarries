@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import ml.pkom.storagebox.StorageBoxItem;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
@@ -30,6 +29,7 @@ import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class FillerTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
@@ -209,7 +209,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
             if (stack.getItem() instanceof BlockItem) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
-                ItemStack itemInBox = StorageBoxItem.getStackInStorageBox(stack);
+                ItemStack itemInBox = StorageBoxUtil.getStackInStorageBox(stack);
                 if (itemInBox == null) continue;
 
                 if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
@@ -229,23 +229,19 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
             WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
-                /*
-                NbtCompound tag = latestGotStack.getNbt();
-                if (tag.contains("StorageSize")) {
-                    int countInBox = tag.getInt("StorageSize");
+                if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
+                    int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
                     countInBox--;
-                    tag.putInt("StorageSize", countInBox);
-                    if (countInBox <= 0) {
-                        tag.remove("StorageItemData");
-                        tag.remove("StorageSize");
+                    if (countInBox < 1) {
+                        StorageBoxUtil.setStackInStorageBox(latestGotStack, ItemStack.EMPTY);
+                    } else {
+                        StorageBoxUtil.setAmountInStorageBox(latestGotStack, countInBox);
                     }
-                    latestGotStack.setNbt(tag);
-                }
-                return true;
 
-                 */
+                    return true;
+                }
             }
-            latestGotStack.setCount(latestGotStack.getCount() - 1);
+            latestGotStack.decrement(1);
             return true;
         }
         return false;
