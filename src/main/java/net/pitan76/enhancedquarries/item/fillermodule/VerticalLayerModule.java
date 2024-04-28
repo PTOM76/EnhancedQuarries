@@ -18,7 +18,7 @@ public class VerticalLayerModule extends FillerModule {
         boolean isInterval = ((e.getProcessPos().getX() - e.getPos1().getX() + interval) % interval == 0 && isX(e.getTile().getFacing()))
                         || ((e.getProcessPos().getZ() - e.getPos1().getZ() + interval) % interval == 0 && !isX(e.getTile().getFacing()));
         if (e.isAirOrLiquid() && isInterval) {
-            e.placeBlock();
+            return e.placeBlock();
         }
 
         return FillerModuleReturn.CONTINUE;
