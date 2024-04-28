@@ -8,7 +8,6 @@ import net.pitan76.enhancedquarries.Config;
 import net.pitan76.enhancedquarries.item.fillermodule.HorizontalLayerModule;
 import net.pitan76.enhancedquarries.item.fillermodule.TorchModule;
 import net.pitan76.enhancedquarries.item.fillermodule.VerticalLayerModule;
-import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 
 public class ClothConfig {

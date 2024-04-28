@@ -1,7 +1,6 @@
 package net.pitan76.enhancedquarries.item.fillermodule;
 
 import net.minecraft.util.math.BlockPos;
-import net.pitan76.enhancedquarries.event.FillerModuleRange;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;

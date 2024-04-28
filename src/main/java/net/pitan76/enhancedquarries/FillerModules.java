@@ -2,8 +2,6 @@ package net.pitan76.enhancedquarries;
 
 import net.pitan76.enhancedquarries.registry.Registry;
 
-import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
-
 public class FillerModules {
     public static void init() {
         Registry.register(EnhancedQuarries.id("filler_all_fill"), Items.fillerALL_FILL);

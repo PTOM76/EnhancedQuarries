@@ -6,7 +6,6 @@ import net.pitan76.easyapi.config.YamlConfig;
 import net.pitan76.enhancedquarries.item.fillermodule.HorizontalLayerModule;
 import net.pitan76.enhancedquarries.item.fillermodule.TorchModule;
 import net.pitan76.enhancedquarries.item.fillermodule.VerticalLayerModule;
-import net.pitan76.enhancedquarries.tile.base.FillerTile;
 
 import java.io.File;
 
