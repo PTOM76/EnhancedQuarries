@@ -283,6 +283,12 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
             if (item.equals(fillerModule)) module = fillerModule;
         }
         if (module == null) return false;
+        if (lastFillerModule == null) {
+            lastFillerModule = module;
+        } else if (!module.equals(lastFillerModule)) {
+            setLastCheckedPos(null);
+            lastFillerModule = module;
+        }
 
         // Out of blocks!
         ItemStack stack = getInventoryStack();
@@ -392,6 +398,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     private BlockPos pos1 = null;
     private BlockPos pos2 = null;
     private BlockPos lastCheckedPos = null;
+    private FillerModule lastFillerModule = null;
 
     public BlockPos getPos1() {
         return pos1;
@@ -412,6 +419,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public void setLastCheckedPos(BlockPos lastPos) { this.lastCheckedPos = lastPos; }
+
 
     public FillerTile(BlockEntityType<?> type, TileCreateEvent event) {
         super(type, event);
