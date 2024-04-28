@@ -18,24 +18,17 @@ public class VerticalLayerModule extends FillerModule {
     public static int interval = 6;
 
     @Override
-    public FillerModuleReturn onProcessInRange(FillerProcessEvent e) {
-        if ((e.getProcessBlock() instanceof AirBlock || e.getProcessBlock() instanceof FluidBlock)
-                && (
-                ((e.getProcessPos().getX() - e.getPos1().getX() + interval) % interval == 0 && isX(e.getTile().getFacing()))
-                        || ((e.getProcessPos().getZ() - e.getPos1().getZ() + interval) % interval == 0 && !isX(e.getTile().getFacing()))
-        )) {
-            ItemStack stack = e.getTile().getInventoryStack();
-            if (stack.isEmpty()) return FillerModuleReturn.RETURN_FALSE;
-            Block block = Block.getBlockFromItem(stack.getItem());
-            if (block.equals(e.getProcessBlock())) return FillerModuleReturn.CONTINUE;
-            if (e.getTile().tryPlacing(e.getProcessPos(), block, stack)) return FillerModuleReturn.RETURN_TRUE;
+    public FillerModuleReturn onProcess(FillerProcessEvent e) {
+        boolean isInterval = ((e.getProcessPos().getX() - e.getPos1().getX() + interval) % interval == 0 && isX(e.getTile().getFacing()))
+                        || ((e.getProcessPos().getZ() - e.getPos1().getZ() + interval) % interval == 0 && !isX(e.getTile().getFacing()));
+        if (e.isAirOrLiquid() && isInterval) {
+            e.placeBlock();
         }
-        return super.onProcessInRange(e);
+
+        return FillerModuleReturn.CONTINUE;
     }
 
     public static boolean isX(Direction dir) {
-        if (dir.equals(Direction.NORTH)) return true;
-        if (dir.equals(Direction.SOUTH)) return true;
-        return false;
+        return dir.equals(Direction.NORTH) || dir.equals(Direction.SOUTH);
     }
 }

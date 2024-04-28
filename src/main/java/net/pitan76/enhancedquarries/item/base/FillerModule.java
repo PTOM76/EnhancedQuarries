@@ -1,5 +1,7 @@
 package net.pitan76.enhancedquarries.item.base;
 
+import net.minecraft.util.math.BlockPos;
+import net.pitan76.enhancedquarries.event.FillerModuleRange;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
@@ -11,18 +13,8 @@ public abstract class FillerModule extends ExtendItem {
         super(settings);
     }
 
-    // 範囲の中
-    public FillerModuleReturn onProcessInRange(FillerProcessEvent e) {
-        return FillerModuleReturn.NOTHING;
+    public FillerModuleRange getRange(BlockPos pos1, BlockPos pos2) {
+        return FillerModuleRange.between(pos1, pos2);
     }
-
-    // 範囲の上
-    public FillerModuleReturn onProcessOnRange(FillerProcessEvent e) {
-        return FillerModuleReturn.NOTHING;
-    }
-
-    // 範囲の下
-    public FillerModuleReturn onProcessUnderRange(FillerProcessEvent e) {
-        return FillerModuleReturn.NOTHING;
-    }
+    abstract public FillerModuleReturn onProcess(FillerProcessEvent e);
 }

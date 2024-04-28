@@ -13,7 +13,7 @@ public class DeleteFluidModule extends FillerModule {
     }
 
     @Override
-    public FillerModuleReturn onProcessInRange(FillerProcessEvent e) {
+    public FillerModuleReturn onProcess(FillerProcessEvent e) {
         if (!e.getWorld().getFluidState(e.getProcessPos()).isEmpty()) {
             if (e.getWorld().getFluidState(e.getProcessPos()).isStill()) {
                 if (e.getProcessBlock() instanceof FluidBlock) {

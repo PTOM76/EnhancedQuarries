@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.pitan76.easyapi.FileControl;
 import net.pitan76.easyapi.config.YamlConfig;
 import net.pitan76.enhancedquarries.item.fillermodule.HorizontalLayerModule;
+import net.pitan76.enhancedquarries.item.fillermodule.TorchModule;
 import net.pitan76.enhancedquarries.item.fillermodule.VerticalLayerModule;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
 
@@ -23,7 +24,7 @@ public class Config {
         if (!configDir.exists() || !configDir.isDirectory())
             configDir.mkdirs();
 
-        FillerTile.moduleInterval = config.getIntOrDefault("module_interval", 6);
+        TorchModule.interval = config.getIntOrDefault("module_interval", 6);
 
         VerticalLayerModule.interval = config.getIntOrDefault("vertical_layer_interval", 6);
 

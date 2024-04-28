@@ -19,7 +19,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.base.Filler;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
@@ -70,6 +69,12 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     // ----
 
+    // The maximum number of checks to do each `tryFill` call
+    // Note it will still be limited to at most the width * length of the area.
+    private int maxBlockChecks = 1000;
+    public int maxBlockChecks() { return maxBlockChecks; }
+    public void setMaxBlockChecks(int maxBlockChecks) { this.maxBlockChecks = maxBlockChecks; }
+
     // ブロック1回設置分に対するエネルギーのコスト
     public long getEnergyCost() {
         return 30;
@@ -113,6 +118,12 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
             tag.putInt("rangePos2Z", getPos2().getZ());
         }
 
+        if (lastCheckedPos != null) {
+            tag.putInt("lastPosX", getLastCheckedPos().getX());
+            tag.putInt("lastPosY", getLastCheckedPos().getY());
+            tag.putInt("lastPosZ", getLastCheckedPos().getZ());
+        }
+
         if (canBedrockBreak)
             tag.putBoolean("module_bedrock_break", true);
 
@@ -140,6 +151,9 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
                 && tag.contains("rangePos2Z")) {
             setPos1(new BlockPos(tag.getInt("rangePos1X"), tag.getInt("rangePos1Y"), tag.getInt("rangePos1Z")));
             setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
+        }
+        if (tag.contains("lastPosX") && tag.contains("lastPosY") && tag.contains("lastPosZ")) {
+            this.lastCheckedPos = new BlockPos(tag.getInt("lastPosX"), tag.getInt("lastPosY"), tag.getInt("lastPosZ"));
         }
 
         if (tag.contains("module_bedrock_break"))
@@ -219,12 +233,6 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         return ItemStack.EMPTY;
     }
 
-    public static int moduleInterval = 6;
-
-    public int getModuleInterval() {
-        return moduleInterval;
-    }
-
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
         if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
             WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
@@ -252,159 +260,87 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         return WorldUtil.breakBlock(getWorld(), procPos, true);
     }
 
+    private int getScanStartY(FillerModule module) {
+        return module.getRange(pos1, pos2).start;
+    }
+
+    /** Returns the final Y height of this module's check zone.
+     *
+     * @param module
+     * @return The final y-level to be checked.
+     */
+    private int getScanEndY(FillerModule module) {
+        return module.getRange(pos1, pos2).end;
+    }
+
     public boolean tryFilling(Item item) {
         if (getWorld() == null || getWorld().isClient()) return false;
-        if (pos1 == null || pos2 == null)
-            return false;
-        int procX;
-        int procY;
-        int procZ;
-        //procY = pos1.getY(); procY <= pos2.getY(); procY++
-        for (procY = WorldUtil.getBottomY(getWorld()); procY <= WorldUtil.getDimensionHeight(getWorld()); procY++) {
-            for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
-                for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
-                    BlockPos procPos = new BlockPos(procX, procY, procZ);
-                    Block procBlock = getWorld().getBlockState(procPos).getBlock();
-                    if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
+        if (pos1 == null || pos2 == null) return false;
 
-                    if ( procY <= pos2.getY() && procY >= pos1.getY()) {
-                        // 埋め立てモジュール
-                        if (item.equals(Items.fillerALL_FILL)) {
-                            if (procBlock instanceof AirBlock || procBlock instanceof FluidBlock) {
-                                ItemStack stack = getInventoryStack();
-                                if (stack.isEmpty()) return false;
-                                Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.equals(procBlock)) continue;
-                                if (tryPlacing(procPos, block, stack)) return true;
-                            }
-                        }
-                        // 消去モジュール
-                        if (item.equals(Items.fillerALL_DELETE)) {
-                            if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) continue;
-                            return getWorld().removeBlock(procPos, false);
-                        }
-                        // 撤去モジュール
-                        if (item.equals(Items.fillerALL_REMOVE)) {
-                            if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) continue;
-                            return tryBreaking(procPos);
-                        }
-                        // 整地モジュール
-                        if (item.equals(Items.fillerLEVELING)) {
-                            if (!(procBlock instanceof AirBlock) && !(procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak))
-                                return tryBreaking(procPos);
-                        }
-                        // 箱モジュール
-                        if (item.equals(Items.fillerBOX)) {
-                            if ((procBlock instanceof AirBlock || procBlock instanceof FluidBlock)
-                            && (
-                                    procX == pos1.getX() || procX == pos2.getX() || procZ == pos1.getZ() || procZ == pos2.getZ() // 壁
-                                || procY == pos1.getY() || procY == pos2.getY())) {
-                                ItemStack stack = getInventoryStack();
-                                if (stack.isEmpty()) return false;
-                                Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.equals(procBlock)) continue;
-                                if (tryPlacing(procPos, block, stack)) return true;
-                            }
-                        }
-                        // 壁モジュール
-                        if (item.equals(Items.fillerWALL)) {
-                            if ((procBlock instanceof AirBlock || procBlock instanceof FluidBlock)
-                                    && (
-                                    procX == pos1.getX() || procX == pos2.getX() || procZ == pos1.getZ() || procZ == pos2.getZ()
-                            )) {
-                                ItemStack stack = getInventoryStack();
-                                if (stack.isEmpty()) return false;
-                                Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.equals(procBlock)) continue;
-                                if (tryPlacing(procPos, block, stack)) return true;
-                            }
-                        }
-                        // 松明モジュール
-                        if (item.equals(Items.fillerTORCH)) {
-                            if ((procBlock instanceof AirBlock || procBlock instanceof FluidBlock)
-                                    && (
-                                    ((procY - pos1.getY() + getModuleInterval()) % getModuleInterval() == 0)
-                                            && ((procX - pos1.getX() + getModuleInterval()) % getModuleInterval() == 0)
-                                            && ((procZ - pos1.getZ() + getModuleInterval()) % getModuleInterval() == 0)
-                            ) && !(getWorld().getBlockState(procPos.down()).getBlock() instanceof AirBlock)) {
-                                ItemStack stack = getInventoryStack();
-                                if (stack.isEmpty()) return false;
-                                Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.equals(procBlock)) continue;
-                                if (tryPlacing(procPos, block, stack)) return true;
-                            }
-                        }
-                        // - 登録モジュールの処理
-                        FillerModuleReturn returnEvent = null;
-                        for(FillerModule fillerModule : Registry.getINSTANCE().getModules()) {
-                            if (item.equals(fillerModule)) {
-                                returnEvent = fillerModule.onProcessInRange(new FillerProcessEvent(this, procPos, procBlock));
-                                break;
-                            }
-                        }
-                        if (returnEvent != null) {
-                            if (returnEvent.equals(FillerModuleReturn.RETURN_FALSE)) return false;
-                            if (returnEvent.equals(FillerModuleReturn.RETURN_TRUE)) return true;
-                            if (returnEvent.equals(FillerModuleReturn.BREAK)) break;
-                            if (returnEvent.equals(FillerModuleReturn.CONTINUE)) continue;
-                        }
-                        // ----
-                    }
-                    // 選択範囲より上～最高域
-                    if (procY <= WorldUtil.getDimensionHeight(getWorld()) && procY >= pos2.getY() + 1) {
-                        // 整地モジュール
-                        if (item.equals(Items.fillerLEVELING)) {
-                            if (!(procBlock instanceof AirBlock))
-                                return tryBreaking(procPos);
-                        }
-                        // - 登録モジュールの処理
-                        FillerModuleReturn returnEvent = null;
-                        for(FillerModule fillerModule : Registry.getINSTANCE().getModules()) {
-                            if (item.equals(fillerModule)) {
-                                returnEvent = fillerModule.onProcessOnRange(new FillerProcessEvent(this, procPos, procBlock));
-                                break;
-                            }
-                        }
-                        if (returnEvent != null) {
-                            if (returnEvent.equals(FillerModuleReturn.RETURN_FALSE)) return false;
-                            if (returnEvent.equals(FillerModuleReturn.RETURN_TRUE)) return true;
-                            if (returnEvent.equals(FillerModuleReturn.BREAK)) break;
-                            if (returnEvent.equals(FillerModuleReturn.CONTINUE)) continue;
-                        }
-                        // ----
-                    }
-                    // 選択範囲より下～0
-                    if (procY >= getWorld().getBottomY() && procY <= pos1.getY() - 1) {
-                        // 整地モジュール
-                        if (item.equals(Items.fillerLEVELING)) {
-                            if (procBlock instanceof AirBlock || procBlock instanceof FluidBlock) {
-                                ItemStack stack = getInventoryStack();
-                                if (stack.isEmpty()) continue;
-                                Block block = Block.getBlockFromItem(stack.getItem());
-                                if (block.equals(procBlock)) continue;
-                                if (tryPlacing(procPos, block, stack)) return true;
-                            }
-                        }
-                        // - 登録モジュールの処理
-                        FillerModuleReturn returnEvent = null;
-                        for(FillerModule fillerModule : Registry.getINSTANCE().getModules()) {
-                            if (item.equals(fillerModule)) {
-                                returnEvent = fillerModule.onProcessUnderRange(new FillerProcessEvent(this, procPos, procBlock));
-                                break;
-                            }
-                        }
-                        if (returnEvent != null) {
-                            if (returnEvent.equals(FillerModuleReturn.RETURN_FALSE)) return false;
-                            if (returnEvent.equals(FillerModuleReturn.RETURN_TRUE)) return true;
-                            if (returnEvent.equals(FillerModuleReturn.BREAK)) break;
-                            if (returnEvent.equals(FillerModuleReturn.CONTINUE)) continue;
-                        }
-                        // ----
-                    }
+        // Out of blocks!
+        ItemStack stack = getInventoryStack();
+        if (stack.isEmpty()) return false;
+        
+        // Get item type
+        FillerModule module = null;
+        for (FillerModule fillerModule : Registry.getINSTANCE().getModules()) {
+            if (item.equals(fillerModule)) module = fillerModule;
+        }
+        if (module == null) return false;
 
+        BlockPos lastChecked = this.getLastCheckedPos();
+        int x = (lastChecked != null) ? lastChecked.getX() : pos1.getX();
+        int y = (lastChecked != null) ? lastChecked.getY() : getScanStartY(module);
+        int z = (lastChecked != null) ? lastChecked.getZ() : pos1.getZ() - 1 /* see below */;
+
+        int diffX = pos2.getX() - pos1.getX();
+//        int diffY = pos2.getY() - pos1.getY();
+        int diffZ = pos2.getZ() - pos1.getZ();
+
+        // Max blocks checked
+        // Limit it to the size of a flat plane of it
+        // This is so we don't check the same block multiple times on smaller fills.
+        // You can multiply by `diffY` if you want
+        int maxChecks = Math.min(maxBlockChecks, diffX * diffZ);
+        int i = 0;
+        while (i <= maxChecks) {
+            i++;
+            // Wrap each coordinate back to the beginning when it goes out of bounds
+            // We do this at the beginning of the loop because `lastChecked` stores
+            // the *last* checked block, not the next block to check. To prevent
+            // off-by-one at the beginning of the filling when `lastChecked` is null,
+            // we sub one off `z` when we initialize it then. Gets added back here anyway.
+            // Note that the following code makes the assumption each component
+            // of pos1 is smaller than that of pos2
+            z++;
+            if (z > pos2.getZ()) {
+                z = pos1.getZ();
+                x++;
+
+                if (x > pos2.getX()) {
+                    x = pos1.getX();
+                    y++;
+
+                    if (y > getScanEndY(module)) {
+                        y = getScanStartY(module);
+                    }
                 }
             }
+
+            BlockPos procPos = new BlockPos(x, y, z);
+            this.setLastCheckedPos(procPos);
+            Block procBlock = getWorld().getBlockState(procPos).getBlock();
+
+            boolean isThis = getWorld().getBlockEntity(procPos) instanceof FillerTile || getWorld().getBlockEntity(procPos) == this;
+            if (!isThis) {
+                FillerProcessEvent event = new FillerProcessEvent(this, procPos, procBlock);
+                FillerModuleReturn returnEvent = module.onProcess(event);
+
+                if (returnEvent.equals(FillerModuleReturn.RETURN_FALSE)) return false;
+                if (returnEvent.equals(FillerModuleReturn.RETURN_TRUE)) return true;
+            }
         }
+
         return false;
     }
 
@@ -455,6 +391,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     private BlockPos pos1 = null;
     private BlockPos pos2 = null;
+    private BlockPos lastCheckedPos = null;
 
     public BlockPos getPos1() {
         return pos1;
@@ -464,6 +401,8 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         return pos2;
     }
 
+    public BlockPos getLastCheckedPos() { return lastCheckedPos; }
+
     public void setPos1(BlockPos pos1) {
         this.pos1 = pos1;
     }
@@ -471,6 +410,8 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     public void setPos2(BlockPos pos2) {
         this.pos2 = pos2;
     }
+
+    public void setLastCheckedPos(BlockPos lastPos) { this.lastCheckedPos = lastPos; }
 
     public FillerTile(BlockEntityType<?> type, TileCreateEvent event) {
         super(type, event);

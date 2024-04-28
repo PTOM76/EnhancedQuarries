@@ -2,7 +2,6 @@ package net.pitan76.enhancedquarries.item.fillermodule;
 
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.item.ItemStack;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
@@ -10,8 +9,8 @@ import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 
-public class TowerModule extends FillerModule {
-    public TowerModule(CompatibleItemSettings settings) {
+public class AllFillModule extends FillerModule {
+    public AllFillModule(CompatibleItemSettings settings) {
         super(settings);
     }
 
@@ -21,10 +20,6 @@ public class TowerModule extends FillerModule {
             return FillerModuleReturn.CONTINUE;
         }
 
-        BlockState underState = e.getWorld().getBlockState(e.getProcessPos().down());
-        if (underState.getBlock() instanceof AirBlock || underState.getBlock() instanceof FluidBlock) {
-            return FillerModuleReturn.CONTINUE;
-        }
         return e.placeBlock();
     }
 }

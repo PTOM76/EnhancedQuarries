@@ -6,8 +6,6 @@ public class FillerModuleReturn {
     public static FillerModuleReturn RETURN_FALSE = new FillerModuleReturn(0);
     public static FillerModuleReturn RETURN_TRUE = new FillerModuleReturn(1);
     public static FillerModuleReturn CONTINUE = new FillerModuleReturn(2);
-    public static FillerModuleReturn BREAK = new FillerModuleReturn(3);
-    public static FillerModuleReturn NOTHING = new FillerModuleReturn(4);
 
     private int mode;
 
