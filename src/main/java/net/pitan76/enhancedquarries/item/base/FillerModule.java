@@ -13,6 +13,7 @@ public abstract class FillerModule extends ExtendItem {
         super(settings);
     }
 
+    public boolean requiresBlocks() { return true; }
     public FillerModuleRange getRange(BlockPos pos1, BlockPos pos2) {
         return FillerModuleRange.between(pos1, pos2);
     }

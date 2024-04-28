@@ -12,6 +12,11 @@ public class CutPyramidModule extends FillerModule {
     }
 
     @Override
+    public boolean requiresBlocks() {
+        return false;
+    }
+
+    @Override
     public FillerModuleReturn onProcess(FillerProcessEvent e) {
         if (!(e.getProcessBlock() instanceof AirBlock)) {
             int procX = e.getProcessPos().getX();

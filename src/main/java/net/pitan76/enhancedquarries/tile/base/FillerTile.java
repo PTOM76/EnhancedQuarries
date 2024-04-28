@@ -276,10 +276,6 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     public boolean tryFilling(Item item) {
         if (getWorld() == null || getWorld().isClient()) return false;
         if (pos1 == null || pos2 == null) return false;
-
-        // Out of blocks!
-        ItemStack stack = getInventoryStack();
-        if (stack.isEmpty()) return false;
         
         // Get item type
         FillerModule module = null;
@@ -287,6 +283,10 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
             if (item.equals(fillerModule)) module = fillerModule;
         }
         if (module == null) return false;
+
+        // Out of blocks!
+        ItemStack stack = getInventoryStack();
+        if (stack.isEmpty() && module.requiresBlocks()) return false;
 
         BlockPos lastChecked = this.getLastCheckedPos();
         int x = (lastChecked != null) ? lastChecked.getX() : pos1.getX();

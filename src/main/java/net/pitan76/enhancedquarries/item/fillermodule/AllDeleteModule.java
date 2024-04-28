@@ -14,6 +14,11 @@ public class AllDeleteModule extends FillerModule {
     }
 
     @Override
+    public boolean requiresBlocks() {
+        return false;
+    }
+
+    @Override
     public FillerModuleReturn onProcess(FillerProcessEvent e) {
         Block procBlock = e.getProcessBlock();
         if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !e.canBreakBedrock())) return FillerModuleReturn.CONTINUE;
