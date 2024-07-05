@@ -20,8 +20,10 @@ import net.pitan76.easyapi.FileControl;
 import net.pitan76.easyapi.config.JsonConfig;
 import net.pitan76.enhancedquarries.Config;
 import net.pitan76.mcpitanlib.api.nbt.NbtTag;
+import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import net.pitan76.mcpitanlib.api.util.BlockUtil;
 import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
+import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -158,9 +160,9 @@ public class BlueprintUtil {
             if (element instanceof NbtCompound) {
                 NbtCompound blockNbt = (NbtCompound) element;
 
-                Block block = BlockUtil.fromId(new Identifier(blockNbt.getString("id")));
+                Block block = BlockUtil.fromId(IdentifierUtil.id(blockNbt.getString("id")));
                 NbtCompound posNbt = blockNbt.getCompound("pos");
-                BlockState state = block.getDefaultState();
+                BlockState state = BlockStateUtil.getDefaultState(block);
                 BlockPos pos = new BlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
 
                 if (direction == Direction.NORTH)

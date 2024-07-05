@@ -23,6 +23,7 @@ import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
@@ -518,7 +519,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             if (getWorld().getBlockState(tmpPos).getBlock() instanceof FluidBlock
                     && getEnergy() > getReplaceFluidEnergyCost()) {
                 if (getWorld().getFluidState(tmpPos).isStill()) {
-                    getWorld().setBlockState(tmpPos, getReplaceFluidWithBlock().getDefaultState());
+                    getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                     time++;
                     continue;
                 }
@@ -536,7 +537,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                                     itemEntity.kill();
                                 }
                         }
-                        getWorld().setBlockState(tmpPos, getReplaceFluidWithBlock().getDefaultState());
+                        getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                         time++;
                     }
                 }
@@ -552,7 +553,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                                     itemEntity.kill();
                                 }
                         }
-                        getWorld().setBlockState(tmpPos, getReplaceFluidWithBlock().getDefaultState());
+                        getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                         time++;
                     }
                 }
@@ -568,7 +569,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                                     itemEntity.kill();
                                 }
                         }
-                        getWorld().setBlockState(tmpPos, getReplaceFluidWithBlock().getDefaultState());
+                        getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                         time++;
                     }
                 }
@@ -584,7 +585,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                                     itemEntity.kill();
                                 }
                         }
-                        getWorld().setBlockState(tmpPos, getReplaceFluidWithBlock().getDefaultState());
+                        getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                         time++;
                     }
                 }
@@ -654,7 +655,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                                 if (canReplaceFluid()
                                         && getWorld().getFluidState(procPos).isStill()
                                         && getEnergy() > getReplaceFluidEnergyCost()) {
-                                    getWorld().setBlockState(procPos, getReplaceFluidWithBlock().getDefaultState());
+                                    getWorld().setBlockState(procPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                                     useEnergy(getReplaceFluidEnergyCost());
                                 } else {
                                     continue;

@@ -22,7 +22,7 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
 
     public NormalLibrary() {
         super();
-        getStateManager().getDefaultState().with(FACING, Direction.NORTH);
+        getNewDefaultState().with(FACING, Direction.NORTH);
     }
 
     // instance
@@ -66,6 +66,6 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         if (ctx.getPlayer() == null) super.getPlacementState(ctx);
-        return getDefaultState().with(FACING, ctx.getPlayer().getHorizontalFacing().getOpposite());
+        return getNewDefaultState().with(FACING, ctx.getPlayer().getHorizontalFacing().getOpposite());
     }
 }

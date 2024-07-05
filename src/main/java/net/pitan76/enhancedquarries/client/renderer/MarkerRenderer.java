@@ -14,6 +14,7 @@ import net.minecraft.util.math.RotationAxis;
 import net.pitan76.enhancedquarries.block.NormalMarker;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.MarkerTile;
+import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -53,7 +54,7 @@ public class MarkerRenderer implements BlockEntityRenderer<MarkerTile> {
     }
 
     private static void renderBeam(MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta, long worldTime, int yOffset, int maxY, float[] color) {
-        renderBeam(matrices, vertexConsumers, new Identifier("textures/entity/beacon_beam.png"), tickDelta, 1.0F, worldTime, yOffset, maxY, color, 0.2F, 0.25F);
+        renderBeam(matrices, vertexConsumers, IdentifierUtil.id("textures/entity/beacon_beam.png"), tickDelta, 1.0F, worldTime, yOffset, maxY, color, 0.2F, 0.25F);
     }
 
     public static void renderBeam(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Identifier textureId, float tickDelta, float heightScale, long worldTime, int yOffset, int maxY, float[] color, float innerRadius, float outerRadius) {

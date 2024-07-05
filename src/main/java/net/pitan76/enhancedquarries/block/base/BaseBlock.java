@@ -28,7 +28,7 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
 
     public BaseBlock(CompatibleBlockSettings settings) {
         super(settings);
-        setDefaultState(getDefaultState().with(ACTIVE, false).with(FACING, Direction.NORTH));
+        setNewDefaultState(getNewDefaultState().with(ACTIVE, false).with(FACING, Direction.NORTH));
     }
 
     public static void setFacing(Direction facing, World world, BlockPos pos) {

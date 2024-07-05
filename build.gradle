@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.5-SNAPSHOT'
+	id 'fabric-loom' version '1.6-SNAPSHOT'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.+'
 	id "com.modrinth.minotaur" version "2.+"
@@ -106,6 +106,8 @@ if (System.getenv("CURSEFORGE_TOKEN") != null) {
 			addGameVersion '1.20.1'
 			addGameVersion '1.20.3'
 			addGameVersion '1.20.4'
+			addGameVersion '1.20.6'
+			addGameVersion '1.21'
 			relations {
 				requiredDependency "fabric-api"
 				requiredDependency "mcpitanlibarch"
@@ -125,7 +127,7 @@ if (System.getenv("MODRINTH_TOKEN") != null) {
 		token = System.getenv("MODRINTH_TOKEN")
 		projectId = 'JcIgEOzn'
 		versionNumber = project.mod_version + "-fabric"
-		gameVersions = ['1.18', '1.18.1', '1.18.2', '1.19', '1.19.1', '1.19.2', '1.20', '1.20.1', '1.20.3', '1.20.4']
+		gameVersions = ['1.18', '1.18.1', '1.18.2', '1.19', '1.19.1', '1.19.2', '1.20', '1.20.1', '1.20.3', '1.20.4', '1.20.6', '1.21']
 		versionType = 'release'
 		uploadFile = tasks.remapJar
 		changelog = project.changelog

@@ -1,9 +1,6 @@
 package net.pitan76.enhancedquarries.tile;
 
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FluidBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -14,6 +11,7 @@ import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.tile.base.QuarryTile;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 
 import java.util.List;
@@ -83,7 +81,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                             if (canReplaceFluid()
                                     && getWorld().getFluidState(procPos).isStill()
                                     && getEnergy() > getReplaceFluidEnergyCost()) {
-                                getWorld().setBlockState(procPos, getReplaceFluidWithBlock().getDefaultState());
+                                getWorld().setBlockState(procPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                                 useEnergy(getReplaceFluidEnergyCost());
                             } else {
                                 return continueQuarrying();

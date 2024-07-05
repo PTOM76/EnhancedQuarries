@@ -226,8 +226,8 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
-        if (getWorld().setBlockState(blockPos, block.getDefaultState())) {
-            WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getSoundGroup(block.getDefaultState()).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+        if (getWorld().setBlockState(blockPos, BlockStateUtil.getDefaultState(block))) {
+            WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getSoundGroup(BlockStateUtil.getDefaultState(block)).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
                 if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
                     int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);

@@ -13,6 +13,7 @@ import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.network.ServerNetworking;
 import net.pitan76.mcpitanlib.api.registry.CompatRegistry;
+import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,12 +82,12 @@ public class EnhancedQuarries implements ModInitializer {
     }
 
     public static Identifier id(String id) {
-        return new Identifier(MOD_ID, id);
+        return IdentifierUtil.id(MOD_ID, id);
     }
 
     public static Identifier id(String id, boolean bool) {
-        if (bool) return new Identifier(MOD_ID, id);
-        return new Identifier(id);
+        if (bool) return IdentifierUtil.id(MOD_ID, id);
+        return IdentifierUtil.id(id);
     }
 
     public static EnhancedQuarries getInstance() {

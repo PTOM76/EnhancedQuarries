@@ -20,6 +20,7 @@ import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockBreakEvent;
 import net.pitan76.mcpitanlib.api.event.block.OutlineShapeEvent;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
+import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 
 public class Frame extends ExtendBlock {
     public static BooleanProperty CONNECT_NORTH = BooleanProperty.of("north");
@@ -39,7 +40,7 @@ public class Frame extends ExtendBlock {
 
     public Frame() {
         super(CompatibleBlockSettings.of(CompatibleMaterial.METAL).strength(1, 4).nonOpaque());
-        setDefaultState(getDefaultState()
+        setNewDefaultState(getNewDefaultState()
                 .with(CONNECT_NORTH, false)
                 .with(CONNECT_SOUTH, false)
                 .with(CONNECT_WEST, false)
@@ -87,7 +88,7 @@ public class Frame extends ExtendBlock {
     }
 
     public static BlockState getPlacementStateDefine(World world, BlockPos pos) {
-        return getBlock().getDefaultState()
+        return BlockStateUtil.getDefaultState(getBlock())
                 .with(CONNECT_NORTH, canConnect(world, pos.north()))
                 .with(CONNECT_SOUTH, canConnect(world, pos.south()))
                 .with(CONNECT_EAST, canConnect(world, pos.east()))

@@ -30,7 +30,7 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
 
     public NormalMarker() {
         super(CompatibleBlockSettings.of(CompatibleMaterial.METAL).strength(1, 4));
-            this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(ACTIVE, false));
+            setNewDefaultState(this.getNewDefaultState().with(FACING, Direction.NORTH).with(ACTIVE, false));
     }
 
     public static Block INSTANCE = new NormalMarker();
@@ -200,7 +200,7 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState();
+        BlockState blockState = this.getNewDefaultState();
         Direction direction = ctx.getSide();
         return blockState.with(FACING, direction);
     }
