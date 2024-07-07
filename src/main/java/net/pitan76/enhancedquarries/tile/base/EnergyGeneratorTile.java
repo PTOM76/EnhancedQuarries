@@ -27,6 +27,8 @@ import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
 import net.pitan76.mcpitanlib.api.event.container.factory.ExtraDataArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
@@ -181,22 +183,22 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     }
 
     @Override
-    public void readNbtOverride(NbtCompound nbt) {
-        super.readNbtOverride(nbt);
+    public void readNbt(ReadNbtArgs args) {
+        NbtCompound nbt = args.getNbt();
         if (nbt.contains("BurnTime"))
             burnTime = nbt.getInt("BurnTime");
         if (nbt.contains("Burning"))
             burning = nbt.getBoolean("Burning");
         if (nbt.contains("Items") && getWorld() != null)
-            InventoryUtil.readNbt(getWorld(), nbt, invItems);
+            InventoryUtil.readNbt(args, invItems);
     }
 
     @Override
-    public void writeNbtOverride(NbtCompound nbt) {
-        super.writeNbtOverride(nbt);
+    public void writeNbt(WriteNbtArgs args) {
+        NbtCompound nbt = args.getNbt();
         nbt.putInt("BurnTime", burnTime);
         nbt.putBoolean("Burning", burning);
-        InventoryUtil.writeNbt(getWorld(), nbt, invItems);
+        InventoryUtil.writeNbt(args, invItems);
     }
 
     @Override

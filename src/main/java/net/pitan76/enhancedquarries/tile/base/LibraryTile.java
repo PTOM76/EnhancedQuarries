@@ -11,6 +11,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntity;
 import net.pitan76.mcpitanlib.api.util.InventoryUtil;
@@ -25,16 +27,14 @@ public class LibraryTile extends ExtendBlockEntity implements IInventory, NamedS
     }
 
     @Override
-    public void writeNbtOverride(NbtCompound nbt) {
-        super.writeNbtOverride(nbt);
-        InventoryUtil.writeNbt(getWorld(), nbt, inventory);
+    public void writeNbt(WriteNbtArgs args) {
+        InventoryUtil.writeNbt(args, inventory);
     }
 
     @Override
-    public void readNbtOverride(NbtCompound nbt) {
-        super.readNbtOverride(nbt);
+    public void readNbt(ReadNbtArgs args) {
         if (getWorld() != null)
-            InventoryUtil.readNbt(getWorld(), nbt, inventory);
+            InventoryUtil.readNbt(args, inventory);
     }
 
     public LibraryTile(BlockEntityType<?> type, TileCreateEvent event) {

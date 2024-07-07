@@ -14,6 +14,8 @@ import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.Pump;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.extra.transfer.util.FluidStorageUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
@@ -56,17 +58,17 @@ public class PumpTile extends BaseEnergyTile {
         return 500;
     }
 
-    public void readNbtOverride(NbtCompound nbt) {
-        super.readNbtOverride(nbt);
+    public void readNbt(ReadNbtArgs args) {
+        NbtCompound nbt = args.getNbt();
         if (getWorld() != null && nbt.contains("variant")) {
-            FluidStorageUtil.readNbt(storedFluid, nbt, getWorld());
+            FluidStorageUtil.readNbt(storedFluid, args);
         }
     }
 
-    public void writeNbtOverride(NbtCompound nbt) {
-        super.writeNbtOverride(nbt);
+    public void writeNbt(WriteNbtArgs args) {
+        NbtCompound nbt = args.getNbt();
         if(getWorld() != null && !storedFluid.isResourceBlank() && !FluidStorageUtil.isEmpty(storedFluid)) {
-            FluidStorageUtil.writeNbt(storedFluid, nbt, getWorld());
+            FluidStorageUtil.writeNbt(storedFluid, args);
         }
     }
 

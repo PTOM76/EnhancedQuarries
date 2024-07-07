@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.client.renderer;
 
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;

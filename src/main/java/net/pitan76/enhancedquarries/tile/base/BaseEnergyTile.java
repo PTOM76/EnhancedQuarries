@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.BaseBlock;
 import net.pitan76.enhancedquarries.compat.IEnergyStorage;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 
 public abstract class BaseEnergyTile extends CompatBlockEntity implements BlockEntityTicker<BaseEnergyTile> {
@@ -38,16 +40,16 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements BlockE
     }
 
     @Override
-    public void writeNbtOverride(NbtCompound nbt) {
+    public void writeNbt(WriteNbtArgs args) {
+        NbtCompound nbt = args.getNbt();
         nbt.putLong("energy", holdEnergy);
-        super.writeNbtOverride(nbt);
     }
 
     @Override
-    public void readNbtOverride(NbtCompound nbt) {
+    public void readNbt(ReadNbtArgs args) {
+        NbtCompound nbt = args.getNbt();
         if (nbt.contains("energy"))
             holdEnergy = nbt.getLong("energy");
-        super.readNbtOverride(nbt);
     }
 
     private long holdEnergy = 0;
