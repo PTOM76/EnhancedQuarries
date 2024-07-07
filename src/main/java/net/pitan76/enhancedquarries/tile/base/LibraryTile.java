@@ -33,8 +33,7 @@ public class LibraryTile extends ExtendBlockEntity implements IInventory, NamedS
 
     @Override
     public void readNbt(ReadNbtArgs args) {
-        if (getWorld() != null)
-            InventoryUtil.readNbt(args, inventory);
+        InventoryUtil.readNbt(args, inventory);
     }
 
     public LibraryTile(BlockEntityType<?> type, TileCreateEvent event) {

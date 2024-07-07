@@ -18,6 +18,7 @@ import net.pitan76.mcpitanlib.api.block.ExtendBlock;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
 import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +63,7 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
         BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
         if (blockEntity instanceof BaseEnergyTile) {
             BaseEnergyTile energyTile = (BaseEnergyTile) blockEntity;
-            energyTile.readNbtOverride(nbt);
+            energyTile.readNbt(new ReadNbtArgs(nbt));
         }
     }
 

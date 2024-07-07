@@ -27,6 +27,8 @@ import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.enhancedquarries.registry.Registry;
 import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.storagebox.api.StorageBoxUtil;
@@ -94,12 +96,13 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     // NBT
 
-    public void writeNbtOverride(NbtCompound tag) {
+    public void writeNbt(WriteNbtArgs args) {
+        NbtCompound tag = args.getNbt();
         NbtCompound invTag = new NbtCompound();
         InventoryUtil.writeNbt(getWorld(), invTag, craftingInvItems);
         tag.put("craftingInv", invTag);
 
-        InventoryUtil.writeNbt(getWorld(), tag, getItems());
+        InventoryUtil.writeNbt(args, getItems());
 
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
@@ -115,20 +118,18 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
         if (canBedrockBreak)
             tag.putBoolean("module_bedrock_break", true);
-
-        super.writeNbtOverride(tag);
     }
 
-    public void readNbtOverride(NbtCompound tag) {
-        super.readNbtOverride(tag);
+    public void readNbt(ReadNbtArgs args) {
+        NbtCompound tag = args.getNbt();
         if (tag.contains("craftingInv")) {
             NbtCompound invTag = tag.getCompound("craftingInv");
             if (getWorld() != null)
                 InventoryUtil.readNbt(getWorld(), invTag, craftingInvItems);
         }
 
-        if (tag.contains("Items") && getWorld() != null) {
-            InventoryUtil.readNbt(getWorld(), tag, getItems());
+        if (tag.contains("Items")) {
+            InventoryUtil.readNbt(args, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");

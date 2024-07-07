@@ -18,6 +18,8 @@ import net.pitan76.enhancedquarries.block.base.Scanner;
 import net.pitan76.enhancedquarries.screen.ScannerScreenHandler;
 import net.pitan76.enhancedquarries.util.BlueprintUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
@@ -56,8 +58,12 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
 
     // NBT
 
-    public void writeNbtOverride(NbtCompound tag) {
-        InventoryUtil.writeNbt(getWorld(), tag, getItems());
+
+    @Override
+    public void writeNbt(WriteNbtArgs args) {
+        NbtCompound tag = args.getNbt();
+
+        InventoryUtil.writeNbt(args, getItems());
 
         tag.putDouble("coolTime", coolTime);
         if (pos1 != null) {
@@ -70,13 +76,13 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
             tag.putInt("rangePos2Y", getPos2().getY());
             tag.putInt("rangePos2Z", getPos2().getZ());
         }
-        super.writeNbtOverride(tag);
     }
 
-    public void readNbtOverride(NbtCompound tag) {
-        super.readNbtOverride(tag);
-        if (tag.contains("Items") && getWorld() != null) {
-            InventoryUtil.readNbt(getWorld(), tag, getItems());
+    public void readNbt(ReadNbtArgs args) {
+        NbtCompound tag = args.getNbt();
+
+        if (tag.contains("Items")) {
+            InventoryUtil.readNbt(args, getItems());
         }
 
         if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");

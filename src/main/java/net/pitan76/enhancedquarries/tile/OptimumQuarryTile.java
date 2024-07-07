@@ -11,6 +11,8 @@ import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.tile.base.QuarryTile;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 
@@ -181,19 +183,19 @@ public class OptimumQuarryTile extends NormalQuarryTile {
     }
 
     @Override
-    public void writeNbtOverride(NbtCompound tag) {
+    public void writeNbt(WriteNbtArgs args) {
+        NbtCompound tag = args.getNbt();
         NbtCompound procPos = new NbtCompound();
         if (procX != null) procPos.putInt("x", procX);
         if (procY != null) procPos.putInt("y", procY);
         if (procZ != null) procPos.putInt("z", procZ);
         tag.put("procPos", procPos);
         tag.putBoolean("finished", finishedQuarry);
-        super.writeNbtOverride(tag);
     }
 
     @Override
-    public void readNbtOverride(NbtCompound tag) {
-        super.readNbtOverride(tag);
+    public void readNbt(ReadNbtArgs args) {
+        NbtCompound tag = args.getNbt();
         if (!tag.contains("procPos")) return;
         NbtCompound procPos = tag.getCompound("procPos");
         if (procPos.contains("x")) procX = procPos.getInt("x");
