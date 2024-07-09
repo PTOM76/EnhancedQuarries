@@ -1,12 +1,13 @@
 package net.pitan76.enhancedquarries.item.fillermodule;
 
+import net.minecraft.util.math.BlockPos;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 
-public class CreatePyramidModule extends FillerModule {
-    public CreatePyramidModule(CompatibleItemSettings settings) {
+public class BoxModule extends FillerModule {
+    public BoxModule(CompatibleItemSettings settings) {
         super(settings);
     }
 
@@ -19,10 +20,15 @@ public class CreatePyramidModule extends FillerModule {
         int procX = e.getProcessPos().getX();
         int procZ = e.getProcessPos().getZ();
         int procY = e.getProcessPos().getY();
-        int diffY = procY - e.getPos1().getY();
-        if (procX >= e.getPos1().getX() + diffY && procX <= e.getPos2().getX() - diffY && procZ <= e.getPos1().getZ() - diffY && procZ >= e.getPos2().getZ() + diffY) {
-            return e.placeBlock();
+        BlockPos pos1 = e.getPos1();
+        BlockPos pos2 = e.getPos2();
+        boolean isPlaceable = procX == pos1.getX() || procX == pos2.getX()
+                            || procZ == pos1.getZ() || procZ == pos2.getZ()
+                            || procY == pos1.getY() || procY == pos2.getY();
+        if (!isPlaceable) {
+            return FillerModuleReturn.CONTINUE;
         }
-        return FillerModuleReturn.CONTINUE;
+
+        return e.placeBlock();
     }
 }

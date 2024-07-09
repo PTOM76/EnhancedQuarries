@@ -13,15 +13,19 @@ public class CutStairsModule extends FillerModule {
     }
 
     @Override
-    public FillerModuleReturn onProcessInRange(FillerProcessEvent e) {
+    public boolean requiresBlocks() {
+        return false;
+    }
+
+    @Override
+    public FillerModuleReturn onProcess(FillerProcessEvent e) {
         if (!(e.getProcessBlock() instanceof AirBlock)) {
             int procX = e.getProcessPos().getX();
             int procZ = e.getProcessPos().getZ();
             int procY = e.getProcessPos().getY();
             int diffY = procY - e.getPos1().getY();
             if ((procX >= e.getPos1().getX() + diffY && e.getTile().getFacing().equals(Direction.SOUTH)) || (procX <= e.getPos2().getX() - diffY && e.getTile().getFacing().equals(Direction.NORTH)) || (procZ <= e.getPos1().getZ() - diffY && e.getTile().getFacing().equals(Direction.EAST)) || (procZ >= e.getPos2().getZ() + diffY && e.getTile().getFacing().equals(Direction.WEST))) {
-                if (e.getTile().tryBreaking(e.getProcessPos())) return FillerModuleReturn.RETURN_TRUE;
-                else return FillerModuleReturn.RETURN_FALSE;
+                return e.destroyBlock();
             }
         }
         return FillerModuleReturn.CONTINUE;

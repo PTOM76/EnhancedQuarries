@@ -4,6 +4,13 @@ import net.pitan76.enhancedquarries.registry.Registry;
 
 public class FillerModules {
     public static void init() {
+        Registry.register(EnhancedQuarries.id("filler_all_fill"), Items.fillerALL_FILL);
+        Registry.register(EnhancedQuarries.id("filler_all_delete"), Items.fillerALL_DELETE);
+        Registry.register(EnhancedQuarries.id("filler_all_remove"), Items.fillerALL_REMOVE);
+        Registry.register(EnhancedQuarries.id("filler_leveling"), Items.fillerLEVELING);
+        Registry.register(EnhancedQuarries.id("filler_create_box"), Items.fillerBOX);
+        Registry.register(EnhancedQuarries.id("filler_create_wall"), Items.fillerWALL);
+        Registry.register(EnhancedQuarries.id("filler_place_torch"), Items.fillerTORCH);
         Registry.register(EnhancedQuarries.id("vertical_layer"), Items.fillerVERTICAL_LAYER);
         Registry.register(EnhancedQuarries.id("horizontal_layer"), Items.fillerHORIZONTAL_LAYER);
         Registry.register(EnhancedQuarries.id("tower"), Items.fillerTOWER);

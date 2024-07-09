@@ -47,19 +47,19 @@ public class Items {
     public static Item EXP_COLLECT_MODULE = new ExpCollectModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
     // 全配置
-    public static Item fillerALL_FILL = new GenericFillerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerALL_FILL = new AllFillModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 全消去
-    public static Item fillerALL_DELETE = new GenericFillerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerALL_DELETE = new AllDeleteModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 全撤去
-    public static Item fillerALL_REMOVE = new GenericFillerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerALL_REMOVE = new AllRemoveModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 整地
-    public static Item fillerLEVELING = new GenericFillerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerLEVELING = new LevelingModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // ボックス
-    public static Item fillerBOX = new GenericFillerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerBOX = new BoxModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 壁
-    public static Item fillerWALL = new GenericFillerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerWALL = new WallModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 松明
-    public static Item fillerTORCH = new GenericFillerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerTORCH = new TorchModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 垂直レイヤー
     public static FillerModule fillerVERTICAL_LAYER = new VerticalLayerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 平行レイヤー

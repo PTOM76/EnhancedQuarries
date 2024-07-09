@@ -1,9 +1,5 @@
 package net.pitan76.enhancedquarries.item.fillermodule;
 
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
@@ -16,19 +12,22 @@ public class CreateStairsModule extends FillerModule {
     }
 
     @Override
-    public FillerModuleReturn onProcessInRange(FillerProcessEvent e) {
-        if (e.getProcessBlock() instanceof AirBlock || e.getProcessBlock() instanceof FluidBlock) {
-            int procX = e.getProcessPos().getX();
-            int procZ = e.getProcessPos().getZ();
-            int procY = e.getProcessPos().getY();
-            int diffY = procY - e.getPos1().getY();
-            if ((procX >= e.getPos1().getX() + diffY && e.getTile().getFacing().equals(Direction.SOUTH)) || (procX <= e.getPos2().getX() - diffY && e.getTile().getFacing().equals(Direction.NORTH)) || (procZ <= e.getPos1().getZ() - diffY && e.getTile().getFacing().equals(Direction.EAST)) || (procZ >= e.getPos2().getZ() + diffY && e.getTile().getFacing().equals(Direction.WEST))) {
-                ItemStack stack = e.getTile().getInventoryStack();
-                if (stack.isEmpty()) return FillerModuleReturn.RETURN_FALSE;
-                Block block = Block.getBlockFromItem(stack.getItem());
-                if (block.equals(e.getProcessBlock())) return FillerModuleReturn.CONTINUE;
-                if (e.getTile().tryPlacing(e.getProcessPos(), block, stack)) return FillerModuleReturn.RETURN_TRUE;
-            }
+    public FillerModuleReturn onProcess(FillerProcessEvent e) {
+        if (!e.isAirOrLiquid()) {
+            return FillerModuleReturn.CONTINUE;
+        }
+
+        int procX = e.getProcessPos().getX();
+        int procZ = e.getProcessPos().getZ();
+        int procY = e.getProcessPos().getY();
+        int diffY = procY - e.getPos1().getY();
+
+        boolean southCheck = procX >= e.getPos1().getX() + diffY && e.getTile().getFacing().equals(Direction.SOUTH);
+        boolean northCheck = procX <= e.getPos2().getX() - diffY && e.getTile().getFacing().equals(Direction.NORTH);
+        boolean eastCheck = procZ <= e.getPos1().getZ() - diffY && e.getTile().getFacing().equals(Direction.EAST);
+        boolean westCheck = procZ >= e.getPos2().getZ() + diffY && e.getTile().getFacing().equals(Direction.WEST);
+        if (southCheck || northCheck || eastCheck || westCheck) {
+            return e.placeBlock();
         }
         return FillerModuleReturn.CONTINUE;
     }

@@ -1,7 +1,10 @@
 package net.pitan76.enhancedquarries.event;
 
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FluidBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
@@ -38,11 +41,7 @@ public class FillerProcessEvent {
     }
 
     public BlockState getBlockState() {
-        return getWorld().getBlockState(getPos());
-    }
-
-    public BlockPos getPos() {
-        return getTilePos();
+        return getWorld().getBlockState(getTilePos());
     }
 
     public BlockPos getPos1() {
@@ -55,6 +54,36 @@ public class FillerProcessEvent {
 
     public World getWorld() {
         return getTile().getWorld();
+    }
+
+    public ItemStack getStack() { return getTile().getInventoryStack(); }
+
+    public FillerModuleReturn placeBlock() {
+        ItemStack stack = getStack();
+        if (stack.isEmpty()) return FillerModuleReturn.RETURN_FALSE;
+
+        Block itemBlock = Block.getBlockFromItem(stack.getItem());
+        // Skip if it's the same block. E.g., don't replace stone with stone!
+        if (itemBlock.equals(getProcessBlock())) return FillerModuleReturn.CONTINUE;
+        // New block!
+        boolean wasPlacementSuccessful = getTile().tryPlacing(getProcessPos(), itemBlock, stack);
+        if (wasPlacementSuccessful) return FillerModuleReturn.RETURN_TRUE;
+
+        return FillerModuleReturn.CONTINUE;
+    }
+
+    public FillerModuleReturn destroyBlock() {
+        if (getTile().tryBreaking(getProcessPos())) return FillerModuleReturn.RETURN_TRUE;
+        else return FillerModuleReturn.RETURN_FALSE;
+    }
+
+    public boolean isAirOrLiquid() {
+        Block procBlock = getProcessBlock();
+        return procBlock instanceof AirBlock || procBlock instanceof FluidBlock;
+    }
+
+    public boolean canBreakBedrock() {
+        return getTile().canBedrockBreak();
     }
 
 }

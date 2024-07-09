@@ -1,10 +1,8 @@
 package net.pitan76.enhancedquarries.item.fillermodule;
 
 import net.minecraft.block.AirBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
-import net.minecraft.item.ItemStack;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
@@ -16,16 +14,15 @@ public class TowerModule extends FillerModule {
     }
 
     @Override
-    public FillerModuleReturn onProcessInRange(FillerProcessEvent e) {
-        if (e.getProcessBlock() instanceof AirBlock || e.getProcessBlock() instanceof FluidBlock) {
-            BlockState underState = e.getWorld().getBlockState(e.getProcessPos().down());
-            if (underState.getBlock() instanceof AirBlock || underState.getBlock() instanceof FluidBlock) return FillerModuleReturn.CONTINUE;
-            ItemStack stack = e.getTile().getInventoryStack();
-            if (stack.isEmpty()) return FillerModuleReturn.RETURN_FALSE;
-            Block block = Block.getBlockFromItem(stack.getItem());
-            if (block.equals(e.getProcessBlock())) return FillerModuleReturn.CONTINUE;
-            if (e.getTile().tryPlacing(e.getProcessPos(), block, stack)) return FillerModuleReturn.RETURN_TRUE;
+    public FillerModuleReturn onProcess(FillerProcessEvent e) {
+        if (!e.isAirOrLiquid()) {
+            return FillerModuleReturn.CONTINUE;
         }
-        return super.onProcessInRange(e);
+
+        BlockState underState = e.getWorld().getBlockState(e.getProcessPos().down());
+        if (underState.getBlock() instanceof AirBlock || underState.getBlock() instanceof FluidBlock) {
+            return FillerModuleReturn.CONTINUE;
+        }
+        return e.placeBlock();
     }
 }
