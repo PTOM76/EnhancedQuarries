@@ -506,90 +506,23 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public double tryFluidReplace(BlockPos blockPos) {
         double time = 0;
-        BlockPos tmpPos = null;
-        int i;
-        for (i = 0;i < 4;i++) {
-            if (i == 0)
-                tmpPos = blockPos.add(1 , 0, 0);
-            if (i == 1)
-                tmpPos = blockPos.add(-1 , 0, 0);
-            if (i == 2)
-                tmpPos = blockPos.add(0 , 0, 1);
-            if (i == 3)
-                tmpPos = blockPos.add(0 , 0, -1);
-            if (getWorld().getBlockState(tmpPos).getBlock() instanceof FluidBlock
-                    && getEnergy() > getReplaceFluidEnergyCost()) {
-                if (getWorld().getFluidState(tmpPos).isStill()) {
-                    getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
-                    time++;
-                    continue;
-                }
+
+        if(getEnergy() < getReplaceFluidEnergyCost()) {
+            return 0;
+        }
+
+        for (Direction value : Direction.values()) {
+            BlockPos offsetBlockPos = blockPos.offset(value);
+
+            if (getWorld().getBlockState(offsetBlockPos).getBlock() instanceof FluidBlock) {
+                // replace fluid block
+                getWorld().setBlockState(offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
+                time += 0.1;
             }
-            if (!getWorld().getFluidState(tmpPos).isEmpty() || getWorld().getBlockState(tmpPos).getBlock() instanceof FluidBlock) {
-                if (i == 0 && getEnergy() > getReplaceFluidEnergyCost()) {
-                    if (tmpPos.getX() + 1 == pos2.getX()) {
-                        BlockState tmpBlock = getWorld().getBlockState(tmpPos);
-                        if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
-                            breakBlock(tmpPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
-                            if (!entities.isEmpty())
-                                for(ItemEntity itemEntity : entities) {
-                                    addStack(itemEntity.getStack());
-                                    itemEntity.kill();
-                                }
-                        }
-                        getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
-                        time++;
-                    }
-                }
-                if (i == 1 && getEnergy() > getReplaceFluidEnergyCost()) {
-                    if (tmpPos.getX() == pos1.getX()) {
-                        BlockState tmpBlock = getWorld().getBlockState(tmpPos);
-                        if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
-                            breakBlock(tmpPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
-                            if (!entities.isEmpty())
-                                for(ItemEntity itemEntity : entities) {
-                                    addStack(itemEntity.getStack());
-                                    itemEntity.kill();
-                                }
-                        }
-                        getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
-                        time++;
-                    }
-                }
-                if (i == 2 && getEnergy() > getReplaceFluidEnergyCost()) {
-                    if (tmpPos.getZ() == pos1.getZ()) {
-                        BlockState tmpBlock = getWorld().getBlockState(tmpPos);
-                        if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
-                            breakBlock(tmpPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
-                            if (!entities.isEmpty())
-                                for(ItemEntity itemEntity : entities) {
-                                    addStack(itemEntity.getStack());
-                                    itemEntity.kill();
-                                }
-                        }
-                        getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
-                        time++;
-                    }
-                }
-                if (i == 3 && getEnergy() > getReplaceFluidEnergyCost()) {
-                    if (tmpPos.getZ() - 1 == pos2.getZ()) {
-                        BlockState tmpBlock = getWorld().getBlockState(tmpPos);
-                        if (!tmpBlock.isAir() && !(tmpBlock.getBlock() instanceof FluidBlock)) {
-                            breakBlock(tmpPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(tmpPos.getX() - 1, tmpPos.getY() - 1, tmpPos.getZ() - 1), new BlockPos(tmpPos.getX() + 1, tmpPos.getY() + 1, tmpPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
-                            if (!entities.isEmpty())
-                                for(ItemEntity itemEntity : entities) {
-                                    addStack(itemEntity.getStack());
-                                    itemEntity.kill();
-                                }
-                        }
-                        getWorld().setBlockState(tmpPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
-                        time++;
-                    }
-                }
+
+            if(!getWorld().getFluidState(offsetBlockPos).isEmpty() || getWorld().getFluidState(offsetBlockPos).isStill()) {
+                getWorld().setBlockState(offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
+                time += 0.1;
             }
         }
 
