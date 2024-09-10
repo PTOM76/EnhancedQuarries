@@ -460,7 +460,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public void breakBlock(BlockPos pos, boolean drop) {
-        if (getWorld().isClient()) return;
+        if (getWorld().isClient) return;
 
         if (isSetSilkTouch || isSetLuck) {
             if (drop) {
@@ -514,8 +514,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         for (Direction value : Direction.values()) {
             BlockPos offsetBlockPos = blockPos.offset(value);
 
+            //replace fluid
             if (getWorld().getBlockState(offsetBlockPos).getBlock() instanceof FluidBlock) {
-                // replace fluid block
                 getWorld().setBlockState(offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
                 time += 0.1;
             }
@@ -523,6 +523,15 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             if(!getWorld().getFluidState(offsetBlockPos).isEmpty() || getWorld().getFluidState(offsetBlockPos).isStill()) {
                 getWorld().setBlockState(offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
                 time += 0.1;
+            }
+
+            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(offsetBlockPos.getX() - 1, offsetBlockPos.getY() - 1, offsetBlockPos.getZ() - 1), new BlockPos(offsetBlockPos.getX() + 1, offsetBlockPos.getY() + 1, offsetBlockPos.getZ() + 1)), EntityPredicates.VALID_ENTITY);
+
+            if (!entities.isEmpty()) {
+                for (ItemEntity itemEntity : entities) {
+                    addStack(itemEntity.getStack());
+                    itemEntity.kill();
+                }
             }
         }
 
