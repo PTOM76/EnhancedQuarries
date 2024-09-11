@@ -520,6 +520,14 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             }
 
             if(!getWorld().getFluidState(offsetBlockPos).isEmpty() || getWorld().getFluidState(offsetBlockPos).isStill()) {
+                breakBlock(offsetBlockPos, true);
+
+                List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add( 1,  1, 1)), EntityPredicates.VALID_ENTITY);
+                for(ItemEntity itemEntity : entities) {
+                    addStack(itemEntity.getStack());
+                    itemEntity.kill();
+                }
+
                 getWorld().setBlockState(offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
                 time += 0.1;
             }
