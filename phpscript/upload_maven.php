@@ -1,6 +1,6 @@
 <?php
 $gradle_properties = file_get_contents('../gradle.properties');
-preg_match('/mod_version=(.*)/', $gradle_properties, $matches);
+preg_match('/mod_version = (.*)/', $gradle_properties, $matches);
 $matches[1] = str_replace(["\r", "\n"], '', $matches[1]);
 
 define('VERSION', $matches[1]);
