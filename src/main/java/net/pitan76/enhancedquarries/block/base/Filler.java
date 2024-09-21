@@ -16,7 +16,9 @@ import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +51,12 @@ public abstract class Filler extends BaseBlock {
                 }
 
                 ItemScatterer.spawn(e.world, e.pos, filler.inventory);
-                filler.getCraftingInventory().setStack(9, ItemStack.EMPTY);
+                filler.getCraftingInventory().setStack(9, ItemStackUtil.empty());
                 ItemScatterer.spawn(e.world, e.pos, filler.getCraftingInventory());
 
                 // モジュールの返却
                 if (filler.canBedrockBreak()) {
-                    e.world.spawnEntity(new ItemEntity(e.world, e.pos.getX(), e.pos.getY(), e.pos.getZ(), new ItemStack(Items.BEDROCK_BREAK_MODULE, 1)));
+                    e.world.spawnEntity(new ItemEntity(e.world, e.pos.getX(), e.pos.getY(), e.pos.getZ(), ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1)));
                 }
             }
             super.onStateReplaced(e);
@@ -69,8 +71,8 @@ public abstract class Filler extends BaseBlock {
         BlockState fstate = e.state;
 
         BlockState state;
-        state = (world.getBlockState(pos) == null) ? fstate : world.getBlockState(pos);
-        if (world.isClient()) return;
+        state = (WorldUtil.getBlockState(world, pos) == null) ? fstate : WorldUtil.getBlockState(world, pos);
+        if (WorldUtil.isClient(world)) return;
         if (world.getBlockEntity(pos) instanceof FillerTile) {
             FillerTile fillerTile = (FillerTile) world.getBlockEntity(pos);
             Objects.requireNonNull(fillerTile).init();
@@ -85,8 +87,8 @@ public abstract class Filler extends BaseBlock {
                 if (getFacing(state).equals(Direction.EAST))
                     markerPos = pos.add(-1, 0, 0);
                 if (markerPos == null) return;
-                if (world.getBlockState(markerPos).getBlock() instanceof NormalMarker) {
-                    BlockState markerState = world.getBlockState(markerPos);
+                if (WorldUtil.getBlockState(world, markerPos).getBlock() instanceof NormalMarker) {
+                    BlockState markerState = WorldUtil.getBlockState(world, markerPos);
 
                     List<BlockStatePos> markerList = new ArrayList<>();
                     markerList.add(new BlockStatePos(markerState, markerPos, world));
@@ -105,8 +107,8 @@ public abstract class Filler extends BaseBlock {
                         WorldUtil.breakBlock(world, markerSP.getBlockPos(), true);
                     }
                     if (markerList.size() <= 2) return;
-                    fillerTile.setPos1(new BlockPos(minPosX, minPosY, minPosZ));
-                    fillerTile.setPos2(new BlockPos(maxPosX, maxPosY, maxPosZ));
+                    fillerTile.setPos1(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
+                    fillerTile.setPos2(PosUtil.flooredBlockPos(maxPosX, maxPosY, maxPosZ));
                 }
             }
         }

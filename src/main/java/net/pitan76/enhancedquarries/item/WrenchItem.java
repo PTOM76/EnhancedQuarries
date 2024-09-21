@@ -4,7 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
@@ -13,11 +12,9 @@ import net.pitan76.enhancedquarries.block.base.BaseBlock;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
-import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.ExtendItem;
-import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.*;
 
 public class WrenchItem extends ExtendItem {
     public WrenchItem(CompatibleItemSettings settings) {
@@ -30,17 +27,16 @@ public class WrenchItem extends ExtendItem {
         Player player = e.getPlayer();
         World world = e.getWorld();
         BlockPos pos = e.getBlockPos();
-        BlockState state = world.getBlockState(pos);
+        BlockState state = WorldUtil.getBlockState(world, pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (player.isSneaking()) {
             if (!(blockEntity instanceof BaseEnergyTile)) return super.onRightClickOnBlock(e);
             BaseEnergyTile energyTile = (BaseEnergyTile) blockEntity;
             energyTile.keepNbtOnDrop = true;
 
-            ItemStack stack = new ItemStack(state.getBlock());
-            NbtCompound nbt = new NbtCompound();
-            energyTile.writeNbt(new WriteNbtArgs(nbt));
-            CustomDataUtil.set(stack, "BlockEntityTag", nbt);
+            ItemStack stack = ItemStackUtil.create(state.getBlock());
+
+            BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, energyTile);
 
             ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
             itemEntity.setToDefaultPickupDelay();

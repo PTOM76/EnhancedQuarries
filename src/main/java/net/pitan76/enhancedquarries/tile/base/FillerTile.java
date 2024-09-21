@@ -23,21 +23,23 @@ import net.pitan76.enhancedquarries.block.base.Filler;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
-import net.pitan76.enhancedquarries.registry.Registry;
+import net.pitan76.enhancedquarries.registry.ModuleRegistry;
 import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class FillerTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
 
     // Container
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
-    public DefaultedList<ItemStack> craftingInvItems = DefaultedList.ofSize(10, ItemStack.EMPTY);
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStackUtil.empty());
+    public DefaultedList<ItemStack> craftingInvItems = DefaultedList.ofSize(10, ItemStackUtil.empty());
 
     public IInventory craftingInventory = () -> craftingInvItems;
     public IInventory inventory = this;
@@ -102,63 +104,63 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     // NBT
 
     public void writeNbt(WriteNbtArgs args) {
-        NbtCompound tag = args.getNbt();
-        NbtCompound invTag = new NbtCompound();
-        InventoryUtil.writeNbt(getWorld(), invTag, craftingInvItems);
-        tag.put("craftingInv", invTag);
+        NbtCompound nbt = args.getNbt();
+        NbtCompound invNbt = NbtUtil.create();
+        InventoryUtil.writeNbt(args.registryLookup, invNbt, craftingInvItems);
+        NbtUtil.put(nbt, "craftingInv", invNbt);
 
         InventoryUtil.writeNbt(args, getItems());
 
-        tag.putDouble("coolTime", coolTime);
+        NbtUtil.putDouble(nbt, "coolTime", coolTime);
         if (pos1 != null) {
-            tag.putInt("rangePos1X", getPos1().getX());
-            tag.putInt("rangePos1Y", getPos1().getY());
-            tag.putInt("rangePos1Z", getPos1().getZ());
+            NbtUtil.putInt(nbt, "rangePos1X", getPos1().getX());
+            NbtUtil.putInt(nbt, "rangePos1Y", getPos1().getY());
+            NbtUtil.putInt(nbt, "rangePos1Z", getPos1().getZ());
         }
         if (pos2 != null) {
-            tag.putInt("rangePos2X", getPos2().getX());
-            tag.putInt("rangePos2Y", getPos2().getY());
-            tag.putInt("rangePos2Z", getPos2().getZ());
+            NbtUtil.putInt(nbt, "rangePos2X", getPos2().getX());
+            NbtUtil.putInt(nbt, "rangePos2Y", getPos2().getY());
+            NbtUtil.putInt(nbt, "rangePos2Z", getPos2().getZ());
         }
 
         if (lastCheckedPos != null) {
-            tag.putInt("lastPosX", getLastCheckedPos().getX());
-            tag.putInt("lastPosY", getLastCheckedPos().getY());
-            tag.putInt("lastPosZ", getLastCheckedPos().getZ());
+            NbtUtil.putInt(nbt, "lastPosX", getLastCheckedPos().getX());
+            NbtUtil.putInt(nbt, "lastPosY", getLastCheckedPos().getY());
+            NbtUtil.putInt(nbt, "lastPosZ", getLastCheckedPos().getZ());
         }
 
         if (canBedrockBreak)
-            tag.putBoolean("module_bedrock_break", true);
+            NbtUtil.putBoolean(nbt, "module_bedrock_break", true);
     }
 
     public void readNbt(ReadNbtArgs args) {
-        NbtCompound tag = args.getNbt();
-        if (tag.contains("craftingInv")) {
-            NbtCompound invTag = tag.getCompound("craftingInv");
+        NbtCompound nbt = args.getNbt();
+        if (NbtUtil.has(nbt, "craftingInv")) {
+            NbtCompound invNbt = NbtUtil.get(nbt, "craftingInv");
             if (getWorld() != null)
-                InventoryUtil.readNbt(getWorld(), invTag, craftingInvItems);
+                InventoryUtil.readNbt(args.registryLookup, invNbt, craftingInvItems);
         }
 
-        if (tag.contains("Items")) {
+        if (NbtUtil.has(nbt, "Items")) {
             InventoryUtil.readNbt(args, getItems());
         }
 
-        if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
-        if (tag.contains("rangePos1X")
-                && tag.contains("rangePos1Y")
-                && tag.contains("rangePos1Z")
-                && tag.contains("rangePos2X")
-                && tag.contains("rangePos2Y")
-                && tag.contains("rangePos2Z")) {
-            setPos1(new BlockPos(tag.getInt("rangePos1X"), tag.getInt("rangePos1Y"), tag.getInt("rangePos1Z")));
-            setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
+        if (NbtUtil.has(nbt, "coolTime")) coolTime = NbtUtil.getDouble(nbt, "coolTime");
+        if (NbtUtil.has(nbt, "rangePos1X")
+                && NbtUtil.has(nbt, "rangePos1Y")
+                && NbtUtil.has(nbt, "rangePos1Z")
+                && NbtUtil.has(nbt, "rangePos2X")
+                && NbtUtil.has(nbt, "rangePos2Y")
+                && NbtUtil.has(nbt, "rangePos2Z")) {
+            setPos1(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
+            setPos2(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
         }
-        if (tag.contains("lastPosX") && tag.contains("lastPosY") && tag.contains("lastPosZ")) {
-            this.lastCheckedPos = new BlockPos(tag.getInt("lastPosX"), tag.getInt("lastPosY"), tag.getInt("lastPosZ"));
+        if (NbtUtil.has(nbt, "lastPosX") && NbtUtil.has(nbt, "lastPosY") && NbtUtil.has(nbt, "lastPosZ")) {
+            this.lastCheckedPos = PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "lastPosX"), NbtUtil.getInt(nbt, "lastPosY"), NbtUtil.getInt(nbt, "lastPosZ"));
         }
 
-        if (tag.contains("module_bedrock_break"))
-            canBedrockBreak = tag.getBoolean("module_bedrock_break");
+        if (NbtUtil.has(nbt, "module_bedrock_break"))
+            canBedrockBreak = NbtUtil.getBoolean(nbt, "module_bedrock_break");
     }
 
     // ----
@@ -177,14 +179,17 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public double coolTime = getSettingCoolTime();
 
-    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        super.tick(world, pos, state, blockEntity);
-        if (world.isClient()) return;
+    @Override
+    public void tick(TileTickEvent<BaseEnergyTile> e) {
+        super.tick(e);
+        World world = e.world;
+        BlockPos pos = e.pos;
+        if (WorldUtil.isClient(world)) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(world, getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
             if (isActive())
-                Filler.setActive(false, world, getPos());
+                Filler.setActive(false, world, pos);
             return;
         }
         if (!hasModule()) return;
@@ -200,17 +205,17 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive())
-                Filler.setActive(true, world, getPos());
+                Filler.setActive(true, world, pos);
 
         } else if (isActive()) {
-            Filler.setActive(false, world, getPos());
+            Filler.setActive(false, world, pos);
         }
     }
 
-    public ItemStack latestGotStack = ItemStack.EMPTY;
+    public ItemStack latestGotStack = ItemStackUtil.empty();
 
     public static boolean isStorageBox(ItemStack stack) {
-        if (FabricLoader.getInstance().isModLoaded("storagebox")) {
+        if (PlatformUtil.isModLoaded("storagebox")) {
             return ItemUtil.toID(stack.getItem()).toString().equals("storagebox:storagebox");
         }
 
@@ -231,7 +236,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
             }
             // ---- StorageBox
         }
-        return ItemStack.EMPTY;
+        return ItemStackUtil.empty();
     }
 
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
@@ -242,7 +247,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
                     int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
                     countInBox--;
                     if (countInBox < 1) {
-                        StorageBoxUtil.setStackInStorageBox(latestGotStack, ItemStack.EMPTY);
+                        StorageBoxUtil.setStackInStorageBox(latestGotStack, ItemStackUtil.empty());
                     } else {
                         StorageBoxUtil.setAmountInStorageBox(latestGotStack, countInBox);
                     }
@@ -267,7 +272,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     /** Returns the final Y height of this module's check zone.
      *
-     * @param module
+     * @param module The module to check.
      * @return The final y-level to be checked.
      */
     private int getScanEndY(FillerModule module) {
@@ -275,12 +280,12 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public boolean tryFilling(Item item) {
-        if (getWorld() == null || getWorld().isClient()) return false;
+        if (getWorld() == null || WorldUtil.isClient(getWorld())) return false;
         if (pos1 == null || pos2 == null) return false;
         
         // Get item type
         FillerModule module = null;
-        for (FillerModule fillerModule : Registry.getINSTANCE().getModules()) {
+        for (FillerModule fillerModule : ModuleRegistry.getINSTANCE().getModules()) {
             if (item.equals(fillerModule)) module = fillerModule;
         }
         if (module == null) return false;
@@ -334,7 +339,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
                 }
             }
 
-            BlockPos procPos = new BlockPos(x, y, z);
+            BlockPos procPos = PosUtil.flooredBlockPos(x, y, z);
             this.setLastCheckedPos(procPos);
             Block procBlock = getWorld().getBlockState(procPos).getBlock();
 

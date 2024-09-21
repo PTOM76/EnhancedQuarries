@@ -16,11 +16,13 @@ import net.minecraft.world.WorldAccess;
 import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.block.ExtendBlock;
-import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
-import net.pitan76.mcpitanlib.api.event.block.BlockBreakEvent;
-import net.pitan76.mcpitanlib.api.event.block.OutlineShapeEvent;
+import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
+import net.pitan76.mcpitanlib.api.util.BlockViewUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.world.WorldAccessUtil;
+import org.jetbrains.annotations.Nullable;
 
 public class Frame extends ExtendBlock {
     public static BooleanProperty CONNECT_NORTH = BooleanProperty.of("north");
@@ -77,10 +79,8 @@ public class Frame extends ExtendBlock {
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        World world = ctx.getWorld();
-        BlockPos pos = ctx.getBlockPos();
-        return getPlacementStateByTile(world, pos);
+    public @Nullable BlockState getPlacementState(PlacementStateArgs args) {
+        return getPlacementStateByTile(args.getWorld(), args.getPos());
     }
 
     public static BlockState getPlacementStateByTile(World world, BlockPos pos) {
@@ -98,8 +98,15 @@ public class Frame extends ExtendBlock {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (world.isClient()) return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState getStateForNeighborUpdate(StateForNeighborUpdateArgs args) {
+        WorldAccess world = args.world;
+        BlockPos pos = args.pos;
+        BlockState state = args.state;
+        Direction direction = args.direction;
+
+        if (WorldAccessUtil.isClient(world))
+            return super.getStateForNeighborUpdate(args);
+
         try {
             if (direction.equals(Direction.NORTH))
                 return state.with(CONNECT_NORTH, canConnect(world, pos.offset(direction)));
@@ -114,17 +121,17 @@ public class Frame extends ExtendBlock {
             if (direction.equals(Direction.DOWN))
                 return state.with(CONNECT_DOWN, canConnect(world, pos.offset(direction)));
         } catch (IllegalArgumentException e) {
-            return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+            return super.getStateForNeighborUpdate(args);
         }
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(args);
     }
 
     public static boolean canConnect(BlockView world, BlockPos blockPos) {
-        return world.getBlockState(blockPos).getBlock() == getBlock();
+        return BlockViewUtil.getBlockState(world, blockPos).getBlock() == getBlock();
     }
 
     public static boolean canConnect(World world, BlockPos blockPos) {
-        return world.getBlockState(blockPos).getBlock() == getBlock();
+        return WorldUtil.getBlockState(world, blockPos).getBlock() == getBlock();
     }
 
     @Override
@@ -135,15 +142,15 @@ public class Frame extends ExtendBlock {
     }
 
     public static void breakConnectFrames(World world, BlockPos pos) {
-        if (!world.isClient()) {
-            if (!(world.getBlockState(pos).getBlock() instanceof Frame)) return;
+        if (!WorldUtil.isClient(world)) {
+            if (!(WorldUtil.getBlockState(world, pos).getBlock() instanceof Frame)) return;
             world.removeBlock(pos, false);
-            if (world.getBlockState(pos.north()).getBlock() instanceof Frame) breakConnectFrames(world, pos.north());
-            if (world.getBlockState(pos.south()).getBlock() instanceof Frame) breakConnectFrames(world, pos.south());
-            if (world.getBlockState(pos.east()).getBlock() instanceof Frame) breakConnectFrames(world, pos.east());
-            if (world.getBlockState(pos.west()).getBlock() instanceof Frame) breakConnectFrames(world, pos.west());
-            if (world.getBlockState(pos.up()).getBlock() instanceof Frame) breakConnectFrames(world, pos.up());
-            if (world.getBlockState(pos.down()).getBlock() instanceof Frame) breakConnectFrames(world, pos.down());
+            if (WorldUtil.getBlockState(world, pos.north()).getBlock() instanceof Frame) breakConnectFrames(world, pos.north());
+            if (WorldUtil.getBlockState(world, pos.south()).getBlock() instanceof Frame) breakConnectFrames(world, pos.south());
+            if (WorldUtil.getBlockState(world, pos.east()).getBlock() instanceof Frame) breakConnectFrames(world, pos.east());
+            if (WorldUtil.getBlockState(world, pos.west()).getBlock() instanceof Frame) breakConnectFrames(world, pos.west());
+            if (WorldUtil.getBlockState(world, pos.up()).getBlock() instanceof Frame) breakConnectFrames(world, pos.up());
+            if (WorldUtil.getBlockState(world, pos.down()).getBlock() instanceof Frame) breakConnectFrames(world, pos.down());
         }
     }
 

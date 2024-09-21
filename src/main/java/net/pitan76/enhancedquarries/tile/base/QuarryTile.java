@@ -24,21 +24,20 @@ import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
-import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
-import net.pitan76.mcpitanlib.api.util.InventoryUtil;
-import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
+//@SuppressWarnings("UnstableApiUsage")
 public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInventory {
     // Container
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStackUtil.empty());
 
     public IInventory inventory = this;
 
@@ -211,71 +210,71 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     // NBT
 
     public void writeNbt(WriteNbtArgs args) {
-        NbtCompound tag = args.getNbt();
+        NbtCompound nbt = args.getNbt();
         InventoryUtil.writeNbt(args, getItems());
 
-        tag.putDouble("coolTime", coolTime);
+        NbtUtil.putDouble(nbt, "coolTime", coolTime);
         if (canBedrockBreak)
-            tag.putBoolean("module_bedrock_break", true);
+            NbtUtil.putBoolean(nbt, "module_bedrock_break", true);
         if (isSetMobKill)
-            tag.putBoolean("module_mob_kill", true);
+            NbtUtil.putBoolean(nbt, "module_mob_kill", true);
         if (isSetLuck)
-            tag.putBoolean("module_luck", true);
+            NbtUtil.putBoolean(nbt, "module_luck", true);
         if (isSetSilkTouch)
-            tag.putBoolean("module_silk_touch", true);
+            NbtUtil.putBoolean(nbt, "module_silk_touch", true);
         if (isSetMobDelete)
-            tag.putBoolean("module_mob_delete", true);
+            NbtUtil.putBoolean(nbt, "module_mob_delete", true);
         if (isSetExpCollect)
-            tag.putBoolean("module_exp_collect", true);
+            NbtUtil.putBoolean(nbt, "module_exp_collect", true);
 
         if (pos1 != null) {
-            tag.putInt("rangePos1X", getPos1().getX());
-            tag.putInt("rangePos1Y", getPos1().getY());
-            tag.putInt("rangePos1Z", getPos1().getZ());
+            NbtUtil.putInt(nbt, "rangePos1X", getPos1().getX());
+            NbtUtil.putInt(nbt, "rangePos1Y", getPos1().getY());
+            NbtUtil.putInt(nbt, "rangePos1Z", getPos1().getZ());
         }
         if (pos2 != null) {
-            tag.putInt("rangePos2X", getPos2().getX());
-            tag.putInt("rangePos2Y", getPos2().getY());
-            tag.putInt("rangePos2Z", getPos2().getZ());
+            NbtUtil.putInt(nbt, "rangePos2X", getPos2().getX());
+            NbtUtil.putInt(nbt, "rangePos2Y", getPos2().getY());
+            NbtUtil.putInt(nbt, "rangePos2Z", getPos2().getZ());
         }
 
-        tag.putInt("storedExp", getStoredExp());
+        NbtUtil.putInt(nbt, "storedExp", getStoredExp());
 
         /*
-        tag.put("variant", fluidStorage.variant.toNbt());
+        NbtUtil.put(nbt, "variant", fluidStorage.variant.toNbt());
         tag.putLong("amount", fluidStorage.amount);
          */
     }
 
     public void readNbt(ReadNbtArgs args) {
-        NbtCompound tag = args.getNbt();
-        if (tag.contains("Items")) {
+        NbtCompound nbt = args.getNbt();
+        if (NbtUtil.has(nbt, "Items")) {
             InventoryUtil.readNbt(args, getItems());
         }
 
-        if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
-        if (tag.contains("module_bedrock_break")) canBedrockBreak = tag.getBoolean("module_bedrock_break");
-        if (tag.contains("module_mob_delete")) isSetMobDelete = tag.getBoolean("module_mob_delete");
-        if (tag.contains("module_mob_kill")) isSetMobKill = tag.getBoolean("module_mob_kill");
-        if (tag.contains("module_luck")) isSetLuck = tag.getBoolean("module_luck");
-        if (tag.contains("module_silk_touch")) isSetSilkTouch = tag.getBoolean("module_silk_touch");
-        if (tag.contains("module_exp_collect")) isSetExpCollect = tag.getBoolean("module_exp_collect");
-        if (tag.contains("rangePos1X")
-                && tag.contains("rangePos1Y")
-                && tag.contains("rangePos1Z")
-                && tag.contains("rangePos2X")
-                && tag.contains("rangePos2Y")
-                && tag.contains("rangePos2Z")) {
-            setPos1(new BlockPos(tag.getInt("rangePos1X"), tag.getInt("rangePos1Y"), tag.getInt("rangePos1Z")));
-            setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
+        if (NbtUtil.has(nbt, "coolTime")) coolTime = NbtUtil.getDouble(nbt, "coolTime");
+        if (NbtUtil.has(nbt, "module_bedrock_break")) canBedrockBreak = NbtUtil.getBoolean(nbt, "module_bedrock_break");
+        if (NbtUtil.has(nbt, "module_mob_delete")) isSetMobDelete = NbtUtil.getBoolean(nbt, "module_mob_delete");
+        if (NbtUtil.has(nbt, "module_mob_kill")) isSetMobKill = NbtUtil.getBoolean(nbt, "module_mob_kill");
+        if (NbtUtil.has(nbt, "module_luck")) isSetLuck = NbtUtil.getBoolean(nbt, "module_luck");
+        if (NbtUtil.has(nbt, "module_silk_touch")) isSetSilkTouch = NbtUtil.getBoolean(nbt, "module_silk_touch");
+        if (NbtUtil.has(nbt, "module_exp_collect")) isSetExpCollect = NbtUtil.getBoolean(nbt, "module_exp_collect");
+        if (NbtUtil.has(nbt, "rangePos1X")
+                && NbtUtil.has(nbt, "rangePos1Y")
+                && NbtUtil.has(nbt, "rangePos1Z")
+                && NbtUtil.has(nbt, "rangePos2X")
+                && NbtUtil.has(nbt, "rangePos2Y")
+                && NbtUtil.has(nbt, "rangePos2Z")) {
+            setPos1(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
+            setPos2(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
         }
 
-        if (tag.contains("storedExp")) setStoredExp(tag.getInt("storedExp"));
+        if (NbtUtil.has(nbt, "storedExp")) setStoredExp(NbtUtil.getInt(nbt, "storedExp"));
 
         /*
-        if (tag.contains("variant"))
-            fluidStorage.variant = FluidVariant.fromNbt(tag.getCompound("variant"));
-        if (tag.contains("amount"))
+        if (NbtUtil.has(nbt, "variant"))
+            fluidStorage.variant = FluidVariant.fromNbt(NbtUtil.get(nbt, "variant"));
+        if (NbtUtil.has(nbt, "amount"))
             fluidStorage.amount = tag.getLong("amount");
 
          */
@@ -295,14 +294,17 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public double coolTime = getSettingCoolTime();
 
-    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        super.tick(world, pos, state, blockEntity);
-        if (world.isClient()) return;
+    public void tick(TileTickEvent<BaseEnergyTile> e) {
+        super.tick(e);
+        World world = e.world;
+        BlockPos pos = e.pos;
+        if (world == null || WorldUtil.isClient(world)) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(getWorld(), getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
             if (isActive())
-                Quarry.setActive(false, getWorld(), getPos());
+                Quarry.setActive(false, world, pos);
+
             return;
         }
 
@@ -317,13 +319,12 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             // エネルギーが多いほどクールダウンが早くなる
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
-            if (!isActive()) {
-                Quarry.setActive(true, getWorld(), getPos());
-            }
-            if (getWorld().getTime() % 2L == 0L)
+            if (!isActive()) Quarry.setActive(true, world, pos);
+
+            if (WorldUtil.getTime(world) % 2L == 0L)
                 insertChest();
         } else if (isActive()) {
-            Quarry.setActive(false, getWorld(), getPos());
+            Quarry.setActive(false, world, pos);
         }
     }
 
@@ -333,30 +334,33 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         // チェスト自動挿入
         if (getItems().isEmpty()) return;
         List<Direction> dirs = getDirsOfAnyContainerBlock();
-        if (!dirs.isEmpty()) {
-            int time = 0;
-            for (int i = 0; i < getItems().size(); i++) {
-                if (time > limit) break;
-                for (Direction dir : dirs) {
-                    ItemStack stack = getItems().get(i);
-                    if (stack.isEmpty()) continue;
+        if (dirs.isEmpty()) return;
 
-                    long amount = StorageUtil.move(InventoryStorage.of(this, null).getSlot(i), ItemStorage.SIDED.find(getWorld(), getPos().offset(dir), dir.getOpposite()), (iv) -> true, Long.MAX_VALUE, null);
-                    if (amount < stack.getCount()) continue;
-                    ++time;
-                    break;
-                }
+        int time = 0;
+        for (int i = 0; i < getItems().size(); i++) {
+            if (time > limit) break;
+            for (Direction dir : dirs) {
+                ItemStack stack = getItems().get(i);
+                if (stack.isEmpty()) continue;
+
+                long amount = StorageUtil.move(InventoryStorage.of(this, null).getSlot(i), ItemStorage.SIDED.find(getWorld(), getPos().offset(dir), dir.getOpposite()), (iv) -> true, Long.MAX_VALUE, null);
+                if (amount < stack.getCount()) continue;
+
+                ++time;
+                break;
             }
         }
     }
 
     public List<Direction> getDirsOfAnyContainerBlock() {
+        if (getWorld() == null) return new ArrayList<>();
+
         Direction[] dirs = new Direction[]{Direction.UP, Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
         List<Direction> usableDirs = new ArrayList<>();
 
         for (Direction dir : dirs) {
             BlockPos pos = getPos().offset(dir);
-            if (getWorld().getBlockEntity(pos) == null) continue;
+            if (WorldUtil.getBlockEntity(getWorld(), pos) == null) continue;
             usableDirs.add(dir);
         }
         return usableDirs;
@@ -406,13 +410,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         // default
         switch (getFacing()) {
             case NORTH:
-                return new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() + 1);
+                return PosUtil.flooredBlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() + 1);
             case SOUTH:
-                return new BlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() - 11);
+                return PosUtil.flooredBlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() - 11);
             case WEST:
-                return new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ() - 5);
+                return PosUtil.flooredBlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ() - 5);
             case EAST:
-                return new BlockPos(getPos().getX() - 11, getPos().getY(), getPos().getZ() - 5);
+                return PosUtil.flooredBlockPos(getPos().getX() - 11, getPos().getY(), getPos().getZ() - 5);
             default:
                 return null;
         }
@@ -422,14 +426,14 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         // default
         switch (getFacing()) {
             case NORTH:
-                return new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ() + 12);
+                return PosUtil.flooredBlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ() + 12);
             case SOUTH:
-                return new BlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ());
+                return PosUtil.flooredBlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ());
 
             case WEST:
-                return new BlockPos(getPos().getX() + 12, getPos().getY() + 4, getPos().getZ() + 6);
+                return PosUtil.flooredBlockPos(getPos().getX() + 12, getPos().getY() + 4, getPos().getZ() + 6);
             case EAST:
-                return new BlockPos(getPos().getX(), getPos().getY() + 4, getPos().getZ() + 6);
+                return PosUtil.flooredBlockPos(getPos().getX(), getPos().getY() + 4, getPos().getZ() + 6);
             default:
                 return null;
         }
@@ -474,7 +478,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     private ItemStack getQuarryStack() {
-        ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
+        ItemStack stack = ItemStackUtil.create(Items.DIAMOND_PICKAXE);
         if (isSetSilkTouch)
             stack.addEnchantment(Enchantments.SILK_TOUCH, 3);
         if (isSetLuck)
@@ -577,7 +581,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             if (pos1.getY() - 1 >= procY) {
                 for (procX = pos1.getX() + 1; procX < pos2.getX() - 1; procX++) {
                     for (procZ = pos1.getZ() + 1; procZ < pos2.getZ() - 1; procZ++) {
-                        BlockPos procPos = new BlockPos(procX, procY, procZ);
+                        BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                         if (getWorld().getBlockState(procPos) == null) continue;
                         if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
 
@@ -618,7 +622,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                                 tryCollectExp(procPos);
                             }
                             breakBlock(procPos, true);
-                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(procX - 1, procY - 1, procZ - 1), new BlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
+                            List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
                             if (entities.isEmpty()) return true;
                             for(ItemEntity itemEntity : entities) {
                                 addStack(itemEntity.getStack());
@@ -633,7 +637,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                 // procX < pos2.getX()を=<するとposのずれ問題は修正可能だが、別の方法で対処しているので、時間があればこっちで修正したい。
                 for (procX = pos1.getX(); procX < pos2.getX(); procX++) {
                     for (procZ = pos1.getZ(); procZ < pos2.getZ(); procZ++) {
-                        BlockPos procPos = new BlockPos(procX, procY, procZ);
+                        BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                         if (getWorld().getBlockState(procPos) == null) continue;
                         if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
 

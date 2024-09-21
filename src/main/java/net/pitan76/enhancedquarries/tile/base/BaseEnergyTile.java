@@ -1,7 +1,6 @@
 package net.pitan76.enhancedquarries.tile.base;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
@@ -12,9 +11,15 @@ import net.pitan76.enhancedquarries.compat.IEnergyStorage;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
+import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntityTicker;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
-public abstract class BaseEnergyTile extends CompatBlockEntity implements BlockEntityTicker<BaseEnergyTile> {
+import java.util.Optional;
+
+public abstract class BaseEnergyTile extends CompatBlockEntity implements ExtendBlockEntityTicker<BaseEnergyTile> {
     public boolean keepNbtOnDrop = false;
 
     public BaseEnergyTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -48,7 +53,7 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements BlockE
     @Override
     public void readNbt(ReadNbtArgs args) {
         NbtCompound nbt = args.getNbt();
-        if (nbt.contains("energy"))
+        if (NbtUtil.has(nbt, "energy"))
             holdEnergy = nbt.getLong("energy");
     }
 
@@ -113,12 +118,13 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements BlockE
     public abstract long getMaxInput();
 
     @Override
-    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
+    public void tick(TileTickEvent<BaseEnergyTile> e) {
 
     }
 
     public boolean isActive() {
-        return BaseBlock.isActive(getBlockState());
+        return getBlockState().filter(BaseBlock::isActive).isPresent();
+
     }
 
     public void setActive(boolean bool, World world, BlockPos blockPos) {
@@ -134,11 +140,18 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements BlockE
     }
 
     public Direction getFacing() {
-        return getFacing(getBlockState());
+        Optional<BlockState> blockState = getBlockState();
+        if (!blockState.isPresent())
+            return Direction.NORTH;
+
+        return getFacing(blockState.get());
     }
 
-    public BlockState getBlockState() {
-        return getWorld().getBlockState(getPos());
+    public Optional<BlockState> getBlockState() {
+        if (getWorld() == null)
+            return Optional.empty();
+
+        return Optional.ofNullable(WorldUtil.getBlockState(getWorld(), getPos()));
     }
 
 }

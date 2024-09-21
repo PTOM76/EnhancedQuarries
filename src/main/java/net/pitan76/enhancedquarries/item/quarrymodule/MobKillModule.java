@@ -8,7 +8,9 @@ import net.pitan76.enhancedquarries.item.base.MachineModule;
 import net.pitan76.enhancedquarries.tile.base.QuarryTile;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class MobKillModule extends MachineModule {
     public MobKillModule(CompatibleItemSettings settings) {
@@ -18,26 +20,21 @@ public class MobKillModule extends MachineModule {
     @Override
     public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
         World world = e.getWorld();
-        if (world.isClient())
+        if (WorldUtil.isClient(world) || !(e.getBlockState().getBlock() instanceof Quarry) ||
+                e.getBlockEntity() == null || !(e.getBlockEntity() instanceof QuarryTile))
             return super.onRightClickOnBlock(e);
-        BlockPos blockPos = e.getBlockPos();
 
-        if (world.getBlockState(blockPos).getBlock() instanceof Quarry) {
-            if (world.getBlockEntity(blockPos) != null && world.getBlockEntity(blockPos) instanceof QuarryTile) {
-                QuarryTile quarry = (QuarryTile) world.getBlockEntity(blockPos);
-                if (quarry.isSetMobKill()) {
-                    e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.mob_kill_module.1"));
-                    return e.pass();
-                }
-                if (quarry.isSetMobDelete()) {
-                    e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.mob_kill_module.2"));
-                    return e.pass();
-                }
-                quarry.setMobKillModule(true);
-                e.getStack().setCount(e.getStack().getCount() - 1);
-                return e.success();
-            }
+        QuarryTile quarry = (QuarryTile) e.getBlockEntity();
+        if (quarry.isSetMobKill()) {
+            e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.mob_kill_module.1"));
+            return e.pass();
         }
-        return super.onRightClickOnBlock(e);
+        if (quarry.isSetMobDelete()) {
+            e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.mob_kill_module.2"));
+            return e.pass();
+        }
+        quarry.setMobKillModule(true);
+        ItemStackUtil.decrementCount(e.getStack(), 1);
+        return e.success();
     }
 }

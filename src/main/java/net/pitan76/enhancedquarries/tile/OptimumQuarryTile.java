@@ -14,7 +14,11 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
+import net.pitan76.mcpitanlib.api.util.FluidUtil;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 import java.util.List;
 
@@ -65,7 +69,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
         if (pos1.getY() - 1 >= procY) {
             if (procX < pos2.getX() - 1) {
                 if (procZ > pos2.getZ() + 1) {
-                    BlockPos procPos = new BlockPos(procX, procY, procZ);
+                    BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                     if (getWorld().getBlockState(procPos) == null) return false;
                     if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continueQuarrying();
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
@@ -102,7 +106,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                             tryKillMob(procPos);
                         }
                         breakBlock(procPos, true);
-                        List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(new BlockPos(procX - 1, procY - 1, procZ - 1), new BlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
+                        List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
                         if (entities.isEmpty()) return true;
                         for (ItemEntity itemEntity : entities) {
                             addStack(itemEntity.getStack());
@@ -128,7 +132,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
             if (procX < pos2.getX()) {
                 if (procZ > pos2.getZ()) {
                     // procX < pos2.getX()を=<するとposのずれ問題は修正可能だが、別の方法で対処しているので、時間があればこっちで修正したい。
-                    BlockPos procPos = new BlockPos(procX, procY, procZ);
+                    BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                     if (getWorld().getBlockState(procPos) == null) return false;
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
                     if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak())) {
@@ -150,16 +154,17 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                             useEnergy((long) time * getReplaceFluidEnergyCost());
                         }
                     }
-                    if (isSetMobDelete()) {
+                    if (isSetMobDelete())
                         tryDeleteMob(procPos);
-                    }
-                    if (isSetMobKill()) {
+
+                    if (isSetMobKill())
                         tryKillMob(procPos);
-                    }
-                    if (procBlock instanceof FluidBlock && !getWorld().getFluidState(procPos).isStill()) {
+
+                    if (procBlock instanceof FluidBlock && !FluidUtil.isStill(WorldUtil.getFluidState(getWorld(), procPos)))
                         return continueQuarrying();
-                    }
+
                     if (procBlock instanceof Frame) return continueQuarrying();
+
                     breakBlock(procPos, false);
                     return true;
                 } else {
@@ -184,23 +189,23 @@ public class OptimumQuarryTile extends NormalQuarryTile {
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
-        NbtCompound tag = args.getNbt();
-        NbtCompound procPos = new NbtCompound();
-        if (procX != null) procPos.putInt("x", procX);
-        if (procY != null) procPos.putInt("y", procY);
-        if (procZ != null) procPos.putInt("z", procZ);
-        tag.put("procPos", procPos);
-        tag.putBoolean("finished", finishedQuarry);
+        NbtCompound nbt = args.getNbt();
+
+        NbtUtil.setBlockPos(nbt, "procPos", PosUtil.flooredBlockPos(procX, procY, procZ));
+        NbtUtil.putBoolean(nbt, "finished", finishedQuarry);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
-        NbtCompound tag = args.getNbt();
-        if (!tag.contains("procPos")) return;
-        NbtCompound procPos = tag.getCompound("procPos");
-        if (procPos.contains("x")) procX = procPos.getInt("x");
-        if (procPos.contains("y")) procY = procPos.getInt("y");
-        if (procPos.contains("z")) procZ = procPos.getInt("z");
-        if (tag.contains("finished")) finishedQuarry = tag.getBoolean("finished");
+        NbtCompound nbt = args.getNbt();
+        if (!NbtUtil.has(nbt, "procPos")) return;
+
+        // TODO: 要チェック
+        BlockPos procPos = NbtUtil.getBlockPos(nbt, "procPos");
+        procX = procPos.getX();
+        procY = procPos.getY();
+        procZ = procPos.getZ();
+
+        if (NbtUtil.has(nbt, "finished")) finishedQuarry = NbtUtil.getBoolean(nbt, "finished");
     }
 }

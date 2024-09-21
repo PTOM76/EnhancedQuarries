@@ -50,22 +50,22 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
             ItemStack originalStack = slot.getStack();
             if (index < 36) {
                 if (!this.callInsertItem(originalStack, 36,  36 + libraryInventory.size() - 1, false)) {
-                    return ItemStack.EMPTY;
+                    return ItemStackUtil.empty();
                 }
             } else {
                 if (!this.callInsertItem(originalStack, 0, 35, false)) {
-                    return ItemStack.EMPTY;
+                    return ItemStackUtil.empty();
                 }
             }
 
             if (originalStack.isEmpty()) {
-                SlotUtil.setStack(slot, ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
                 slot.markDirty();
             }
         }
 
-        return ItemStack.EMPTY;
+        return ItemStackUtil.empty();
     }
 
     public void setBlueprintName(String name) {

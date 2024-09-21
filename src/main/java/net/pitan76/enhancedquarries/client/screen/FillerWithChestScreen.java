@@ -4,9 +4,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawForegroundArgs;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
 
 public class FillerWithChestScreen extends FillerScreen {
@@ -22,8 +22,8 @@ public class FillerWithChestScreen extends FillerScreen {
     }
 
     @Override
-    public Identifier getTexture() {
-        return EnhancedQuarries.id("textures/gui/filler_with_chest.png");
+    public CompatIdentifier getCompatTexture() {
+        return EnhancedQuarries._id("textures/gui/filler_with_chest.png");
     }
 
     @Override

@@ -18,11 +18,10 @@ import net.minecraft.util.math.Direction;
 import net.pitan76.easyapi.FileControl;
 import net.pitan76.easyapi.config.JsonConfig;
 import net.pitan76.enhancedquarries.Config;
+import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.mcpitanlib.api.nbt.NbtTag;
-import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
-import net.pitan76.mcpitanlib.api.util.BlockUtil;
-import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
-import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
+import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -42,7 +41,7 @@ public class BlueprintUtil {
             if (z < pos.getZ()) z = pos.getZ();
         }
 
-        return new BlockPos(x, y, z);
+        return PosUtil.flooredBlockPos(x, y, z);
     }
 
     public static BlockPos getMaxPos(ItemStack stack) {
@@ -58,7 +57,7 @@ public class BlueprintUtil {
             if (z > pos.getZ()) z = pos.getZ();
         }
 
-        return new BlockPos(x, y, z);
+        return PosUtil.flooredBlockPos(x, y, z);
     }
 
     public static BlockPos getMinPos(ItemStack stack) {
@@ -82,15 +81,15 @@ public class BlueprintUtil {
     }
 
     public static NbtCompound writeData(NbtCompound nbt, Map<BlockPos, BlockState> blocks) {
-        System.out.println("writedata");
+        EnhancedQuarries.logIfDev("writedata");
         NbtList nbtList = new NbtList();
 
         for (Map.Entry<BlockPos, BlockState> entry : blocks.entrySet()) {
             BlockPos pos = entry.getKey();
             BlockState state = entry.getValue();
 
-            NbtCompound blockNbt = new NbtCompound();
-            NbtCompound posNbt = new NbtCompound();
+            NbtCompound blockNbt = NbtUtil.create();
+            NbtCompound posNbt = NbtUtil.create();
 
             posNbt.putInt("x", pos.getX());
             posNbt.putInt("y", pos.getY());
@@ -162,16 +161,16 @@ public class BlueprintUtil {
                 Block block = BlockUtil.fromId(IdentifierUtil.id(blockNbt.getString("id")));
                 NbtCompound posNbt = blockNbt.getCompound("pos");
                 BlockState state = BlockStateUtil.getDefaultState(block);
-                BlockPos pos = new BlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
+                BlockPos pos = PosUtil.flooredBlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
 
                 if (direction == Direction.NORTH)
-                    pos = new BlockPos(- posNbt.getInt("z"), posNbt.getInt("y"), posNbt.getInt("x"));
+                    pos = PosUtil.flooredBlockPos(- posNbt.getInt("z"), posNbt.getInt("y"), posNbt.getInt("x"));
                 if (direction == Direction.SOUTH)
-                    pos = new BlockPos( posNbt.getInt("z"), posNbt.getInt("y"), - posNbt.getInt("x"));
+                    pos = PosUtil.flooredBlockPos( posNbt.getInt("z"), posNbt.getInt("y"), - posNbt.getInt("x"));
                 if (direction == Direction.EAST)
-                    pos = new BlockPos(- posNbt.getInt("x"), posNbt.getInt("y"), - posNbt.getInt("z"));
+                    pos = PosUtil.flooredBlockPos(- posNbt.getInt("x"), posNbt.getInt("y"), - posNbt.getInt("z"));
                 if (direction == Direction.WEST)
-                    pos = new BlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
+                    pos = PosUtil.flooredBlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
 
                 if (blockNbt.contains("horizontal_facing")) {
                     try {
@@ -307,7 +306,7 @@ public class BlueprintUtil {
         NbtCompound nbt = CustomDataUtil.get(stack, "blueprint");
 
         if (nbt == null) return false;
-        if (!nbt.contains("blocks")) return false;
+        if (!NbtUtil.has(nbt, "blocks")) return false;
 
         NbtList nbtList = nbt.getList("blocks", NbtElement.COMPOUND_TYPE);
         for (NbtElement element : nbtList) {
@@ -363,13 +362,13 @@ public class BlueprintUtil {
             String key = entry.getKey();
             String[] keys = key.split(",");
             if (keys.length != 3) continue;
-            BlockPos pos = new BlockPos(Integer.parseInt(keys[0]), Integer.parseInt(keys[1]), Integer.parseInt(keys[2]));
+            BlockPos pos = PosUtil.flooredBlockPos(Integer.parseInt(keys[0]), Integer.parseInt(keys[1]), Integer.parseInt(keys[2]));
 
             if (!(entry.getValue() instanceof Map)) continue;
             Map<String, Object> data = (Map<String, Object>) entry.getValue();
 
-            NbtCompound blockNbt = new NbtCompound();
-            NbtCompound posNbt = new NbtCompound();
+            NbtCompound blockNbt = NbtUtil.create();
+            NbtCompound posNbt = NbtUtil.create();
 
             for (Map.Entry<String, Object> entry1 : data.entrySet()) {
                 Object value = entry1.getValue();

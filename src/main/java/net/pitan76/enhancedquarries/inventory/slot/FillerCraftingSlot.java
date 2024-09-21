@@ -32,7 +32,7 @@ public class FillerCraftingSlot extends CompatibleSlot {
             if (stack.isEmpty() && !isCrafting) {
                 int i;
                 for (i = 0;i < 9;i++) {
-                    inventory.setStack(i, ItemStack.EMPTY);
+                    inventory.setStack(i, ItemStackUtil.empty());
                 }
             }
             return;
@@ -51,7 +51,7 @@ public class FillerCraftingSlot extends CompatibleSlot {
             if (callGetStack().isEmpty() && !isCrafting) {
                 int i;
                 for (i = 0;i < 9;i++) {
-                    inventory.setStack(i, ItemStack.EMPTY);
+                    inventory.setStack(i, ItemStackUtil.empty());
                 }
             }
 
@@ -62,7 +62,7 @@ public class FillerCraftingSlot extends CompatibleSlot {
     public void tryCraft() {
         for(FillerCraftingPattern pattern : FillerCraftingPatterns.getPatterns()) {
             if (pattern.inputEquals(new FillerCraftingPattern(
-                    ItemStack.EMPTY, inventory.getStack(0), inventory.getStack(1), inventory.getStack(2),
+                    ItemStackUtil.empty(), inventory.getStack(0), inventory.getStack(1), inventory.getStack(2),
                     inventory.getStack(3), inventory.getStack(4), inventory.getStack(5), inventory.getStack(6),
                     inventory.getStack(7), inventory.getStack(8)
             ))) {
@@ -83,7 +83,7 @@ public class FillerCraftingSlot extends CompatibleSlot {
             inventory.setStack(9, inventory.getStack(moduleSlot).copy());
             return;
         }
-        inventory.setStack(9, ItemStack.EMPTY);
+        inventory.setStack(9, ItemStackUtil.empty());
     }
 
     @Override

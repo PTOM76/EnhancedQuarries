@@ -19,7 +19,9 @@ import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,17 +44,17 @@ public abstract class Quarry extends BaseBlock {
 
     @Override
     public ActionResult onRightClick(BlockUseEvent e) {
-        if (e.player.isSneaking())
+        if (e.isSneaking())
             return e.pass();
 
         ItemStack stack = e.player.getMainHandStack();
         if (stack != null && stack.getItem() == net.minecraft.item.Items.GLASS_BOTTLE) {
-            if (e.world.isClient()) return e.success();
-            if (e.world.getBlockEntity(e.pos) instanceof QuarryTile) {
-                QuarryTile quarry = (QuarryTile) e.world.getBlockEntity(e.pos);
+            if (WorldUtil.isClient(e.world)) return e.success();
+            if (e.getBlockEntity() instanceof QuarryTile) {
+                QuarryTile quarry = (QuarryTile) e.getBlockEntity();
                 if (quarry.getStoredExp() >= 4) {
-                    e.player.giveStack(new ItemStack(net.minecraft.item.Items.EXPERIENCE_BOTTLE, 1));
-                    stack.decrement(1);
+                    e.player.giveStack(ItemStackUtil.create(net.minecraft.item.Items.EXPERIENCE_BOTTLE, 1));
+                    ItemStackUtil.decrementCount(stack, 1);
                     quarry.removeStoredExp(4);
                     return e.success();
                 }
@@ -87,22 +89,22 @@ public abstract class Quarry extends BaseBlock {
 
             // モジュールの返却
             if (quarry.canBedrockBreak()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.BEDROCK_BREAK_MODULE, 1)));
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1)));
             }
             if (quarry.isSetLuck()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.LUCK_MODULE, 1)));
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.LUCK_MODULE, 1)));
             }
             if (quarry.isSetSilkTouch()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.SILK_TOUCH_MODULE, 1)));
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.SILK_TOUCH_MODULE, 1)));
             }
             if (quarry.isSetMobDelete()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.MOB_DELETE_MODULE, 1)));
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.MOB_DELETE_MODULE, 1)));
             }
             if (quarry.isSetMobKill()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.MOB_KILL_MODULE, 1)));
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.MOB_KILL_MODULE, 1)));
             }
             if (quarry.isSetExpCollect()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.EXP_COLLECT_MODULE, 1)));
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.EXP_COLLECT_MODULE, 1)));
             }
 
             // フレーム破壊
@@ -116,7 +118,7 @@ public abstract class Quarry extends BaseBlock {
             if (getFacing(state).equals(Direction.EAST))
                 framePos = pos.add(-1, 0, 0);
             if (framePos != null)
-                if (world.getBlockState(framePos).getBlock() instanceof Frame) {
+                if (WorldUtil.getBlockState(world, framePos).getBlock() instanceof Frame) {
                     Frame.breakConnectFrames(world, framePos);
                 }
         }
@@ -131,8 +133,8 @@ public abstract class Quarry extends BaseBlock {
         BlockState fstate = e.state;
 
         BlockState state;
-        state = (world.getBlockState(pos) == null) ? fstate : world.getBlockState(pos);
-        if (world.isClient()) return;
+        state = (WorldUtil.getBlockState(world, pos) == null) ? fstate : WorldUtil.getBlockState(world, pos);
+        if (WorldUtil.isClient(world)) return;
         if (world.getBlockEntity(pos) instanceof QuarryTile) {
             QuarryTile quarryTile = (QuarryTile) world.getBlockEntity(pos);
             Objects.requireNonNull(quarryTile).init();
@@ -147,8 +149,8 @@ public abstract class Quarry extends BaseBlock {
                 if (getFacing(state).equals(Direction.EAST))
                     markerPos = pos.add(-1, 0, 0);
                 if (markerPos == null) return;
-                if (world.getBlockState(markerPos).getBlock() instanceof NormalMarker) {
-                    BlockState markerState = world.getBlockState(markerPos);
+                if (WorldUtil.getBlockState(world, markerPos).getBlock() instanceof NormalMarker) {
+                    BlockState markerState = WorldUtil.getBlockState(world, markerPos);
 
                     List<BlockStatePos> markerList = new ArrayList<>();
                     markerList.add(new BlockStatePos(markerState, markerPos, world));
@@ -169,8 +171,8 @@ public abstract class Quarry extends BaseBlock {
                     if (markerList.size() <= 2 ) return;
                     if (maxPosY.equals(minPosY)) maxPosY += 4;
 
-                    quarryTile.setPos1(new BlockPos(minPosX, minPosY, minPosZ));
-                    quarryTile.setPos2(new BlockPos(maxPosX + 1, maxPosY, maxPosZ + 1));
+                    quarryTile.setPos1(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
+                    quarryTile.setPos2(PosUtil.flooredBlockPos(maxPosX + 1, maxPosY, maxPosZ + 1));
                 }
             }
         }

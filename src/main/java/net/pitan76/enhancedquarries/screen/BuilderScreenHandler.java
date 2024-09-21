@@ -73,31 +73,31 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
 
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
-        ItemStack newStack = ItemStack.EMPTY;
+        ItemStack newStack = ItemStackUtil.empty();
         Slot slot = this.slots.get(index);
         if (slot.inventory instanceof DisabledInventory) {
-            return ItemStack.EMPTY;
+            return ItemStackUtil.empty();
         }
         if (slot != null && slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
             if (index < 36) {
                 if (!this.callInsertItem(originalStack, 36,  36 + builderInventory.size() - 1, false)) {
-                    return ItemStack.EMPTY;
+                    return ItemStackUtil.empty();
                 }
             } else {
                 if (!this.callInsertItem(originalStack, 0, 35, false)) {
-                    return ItemStack.EMPTY;
+                    return ItemStackUtil.empty();
                 }
             }
 
             if (originalStack.isEmpty()) {
-                SlotUtil.setStack(slot, ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
                 slot.markDirty();
             }
         }
 
-        return ItemStack.EMPTY;
+        return ItemStackUtil.empty();
     }
 }

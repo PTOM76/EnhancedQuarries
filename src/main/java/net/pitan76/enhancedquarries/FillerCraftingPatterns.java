@@ -12,7 +12,7 @@ public class FillerCraftingPatterns {
     public static ItemStack SLAB_BRICKS = create(net.minecraft.item.Items.BRICK_SLAB);
     public static ItemStack GLASS = create(net.minecraft.item.Items.GLASS);
     public static ItemStack WATER_BUCKET = create(net.minecraft.item.Items.WATER_BUCKET);
-    public static ItemStack EMPTY = ItemStack.EMPTY;
+    public static ItemStack EMPTY = ItemStackUtil.empty();
 
     private static final List<FillerCraftingPattern> patterns = new ArrayList<>();
 
@@ -57,6 +57,6 @@ public class FillerCraftingPatterns {
     }
 
     public static ItemStack create(Item item) {
-        return new ItemStack(item);
+        return ItemStackUtil.create(item);
     }
 }

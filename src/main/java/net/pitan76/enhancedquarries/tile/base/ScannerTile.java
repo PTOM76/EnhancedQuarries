@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.base.Scanner;
 import net.pitan76.enhancedquarries.screen.ScannerScreenHandler;
@@ -20,10 +21,10 @@ import net.pitan76.enhancedquarries.util.BlueprintUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
-import net.pitan76.mcpitanlib.api.util.InventoryUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
@@ -32,7 +33,7 @@ import java.util.Map;
 public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScreenHandlerFactory {
 
     // Container
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStack.EMPTY);
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStackUtil.empty());
 
     // ブロック1回設置分に対するエネルギーのコスト
     public long getEnergyCost() {
@@ -61,39 +62,39 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
-        NbtCompound tag = args.getNbt();
+        NbtCompound nbt = args.getNbt();
 
         InventoryUtil.writeNbt(args, getItems());
 
-        tag.putDouble("coolTime", coolTime);
+        NbtUtil.putDouble(nbt, "coolTime", coolTime);
         if (pos1 != null) {
-            tag.putInt("rangePos1X", getPos1().getX());
-            tag.putInt("rangePos1Y", getPos1().getY());
-            tag.putInt("rangePos1Z", getPos1().getZ());
+            NbtUtil.putInt(nbt, "rangePos1X", getPos1().getX());
+            NbtUtil.putInt(nbt, "rangePos1Y", getPos1().getY());
+            NbtUtil.putInt(nbt, "rangePos1Z", getPos1().getZ());
         }
         if (pos2 != null) {
-            tag.putInt("rangePos2X", getPos2().getX());
-            tag.putInt("rangePos2Y", getPos2().getY());
-            tag.putInt("rangePos2Z", getPos2().getZ());
+            NbtUtil.putInt(nbt, "rangePos2X", getPos2().getX());
+            NbtUtil.putInt(nbt, "rangePos2Y", getPos2().getY());
+            NbtUtil.putInt(nbt, "rangePos2Z", getPos2().getZ());
         }
     }
 
     public void readNbt(ReadNbtArgs args) {
-        NbtCompound tag = args.getNbt();
+        NbtCompound nbt = args.getNbt();
 
-        if (tag.contains("Items")) {
+        if (NbtUtil.has(nbt, "Items")) {
             InventoryUtil.readNbt(args, getItems());
         }
 
-        if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
-        if (tag.contains("rangePos1X")
-                && tag.contains("rangePos1Y")
-                && tag.contains("rangePos1Z")
-                && tag.contains("rangePos2X")
-                && tag.contains("rangePos2Y")
-                && tag.contains("rangePos2Z")) {
-            setPos1(new BlockPos(tag.getInt("rangePos1X"), tag.getInt("rangePos1Y"), tag.getInt("rangePos1Z")));
-            setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
+        if (NbtUtil.has(nbt, "coolTime")) coolTime = NbtUtil.getDouble(nbt, "coolTime");
+        if (NbtUtil.has(nbt, "rangePos1X")
+                && NbtUtil.has(nbt, "rangePos1Y")
+                && NbtUtil.has(nbt, "rangePos1Z")
+                && NbtUtil.has(nbt, "rangePos2X")
+                && NbtUtil.has(nbt, "rangePos2Y")
+                && NbtUtil.has(nbt, "rangePos2Z")) {
+            setPos1(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
+            setPos2(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
         }
     }
 
@@ -111,14 +112,17 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
 
     public double coolTime = getSettingCoolTime();
 
-    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        super.tick(world, pos, state, blockEntity);
-        if (world.isClient()) return;
+    public void tick(TileTickEvent<BaseEnergyTile> e) {
+        super.tick(e);
+        World world = e.world;
+        BlockPos pos = e.pos;
+        if (world == null || WorldUtil.isClient(world)) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(getWorld(), getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
             if (isActive())
-                Scanner.setActive(false, getWorld(), getPos());
+                Scanner.setActive(false, world, pos);
+            
             return;
         }
         if (getEnergy() > getEnergyCost()) {
@@ -130,10 +134,10 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
                 coolTime = getSettingCoolTime();
                 Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
                 if (tryScanning(blocks)) {
-                    ItemStack stack = new ItemStack(Items.BLUEPRINT, getItems().get(0).getCount());
+                    ItemStack stack = ItemStackUtil.create(Items.BLUEPRINT, getItems().get(0).getCount());
                     BlueprintUtil.writeNbt(stack, blocks);
                     getItems().set(1, stack);
-                    getItems().set(0, ItemStack.EMPTY);
+                    getItems().set(0, ItemStackUtil.empty());
                     useEnergy(getEnergyCost());
                 }
 
@@ -141,31 +145,31 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, NamedScre
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive()) {
-                Scanner.setActive(true, getWorld(), getPos());
+                Scanner.setActive(true, world, pos);
             }
         } else if (isActive()) {
-            Scanner.setActive(false, getWorld(), getPos());
+            Scanner.setActive(false, world, pos);
         }
     }
 
     // blocks...スキャナーを基準とした相対的な座標
     public boolean tryScanning(Map<BlockPos, BlockState> blocks) {
-        System.out.println("scanning");
-        if (getWorld() == null || getWorld().isClient()) return false;
-        if (pos1 == null || pos2 == null)
+        EnhancedQuarries.logIfDev("scanning");
+        if (getWorld() == null || getWorld().isClient() || pos1 == null || pos2 == null)
             return false;
+        
         int procX;
         int procY;
         int procZ;
         for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
-                    BlockPos procPos = new BlockPos(procX, procY, procZ);
+                    BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                     BlockState procState = getWorld().getBlockState(procPos);
 
                     if (procState.getBlock() == Blocks.AIR) continue;
 
-                    blocks.put(new BlockPos(procX - pos1.getX(), procY - pos1.getY(), procZ - pos1.getZ()), procState);
+                    blocks.put(PosUtil.flooredBlockPos(procX - pos1.getX(), procY - pos1.getY(), procZ - pos1.getZ()), procState);
                 }
             }
         }

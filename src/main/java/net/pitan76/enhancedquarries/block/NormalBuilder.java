@@ -11,6 +11,7 @@ import net.pitan76.enhancedquarries.tile.base.BuilderTile;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class NormalBuilder extends Builder {
 
@@ -41,10 +42,10 @@ public class NormalBuilder extends Builder {
         Player player = e.getPlayer();
         BlockPos pos = e.getPos();
 
-        if (world.isClient()) return e.success();
+        if (WorldUtil.isClient(world)) return e.success();
         if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
-        if (world.getBlockEntity(pos) instanceof BuilderTile)
+        if (e.getBlockEntity() instanceof BuilderTile)
             player.openGuiScreen((BuilderTile) world.getBlockEntity(pos));
 
         return e.consume();

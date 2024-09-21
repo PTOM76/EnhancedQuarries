@@ -13,6 +13,8 @@ import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandler;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
 
 public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
@@ -50,28 +52,28 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
 
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
-        ItemStack newStack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(index);
-        if (slot.hasStack()) {
+        ItemStack newStack = ItemStackUtil.empty();
+        Slot slot = ScreenHandlerUtil.getSlot(this, index);
+        if (SlotUtil.hasStack(slot)) {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
             if (index < 36) {
                 if (!this.callInsertItem(originalStack, 36, 37, false)) {
-                    return ItemStack.EMPTY;
+                    return ItemStackUtil.empty();
                 }
             } else if (index == 37) {
                 if (!this.callInsertItem(originalStack, 0, 35, false)) {
-                    return ItemStack.EMPTY;
+                    return ItemStackUtil.empty();
                 }
             }
 
             if (originalStack.isEmpty()) {
-                SlotUtil.setStack(slot, ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
-                slot.markDirty();
+                SlotUtil.markDirty(slot);
             }
         }
 
-        return ItemStack.EMPTY;
+        return ItemStackUtil.empty();
     }
 }

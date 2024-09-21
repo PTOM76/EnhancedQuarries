@@ -13,7 +13,9 @@ import net.pitan76.enhancedquarries.tile.base.LibraryTile;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
 import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
+import net.pitan76.mcpitanlib.api.event.block.PlacementStateArgs;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class NormalLibrary extends Library implements ExtendBlockEntityProvider {
@@ -39,10 +41,10 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
 
     @Override
     public ActionResult onRightClick(BlockUseEvent e) {
-        if (e.world.isClient())
+        if (WorldUtil.isClient(e.world))
             return e.success();
 
-        BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
+        BlockEntity blockEntity = e.getBlockEntity();
         if (blockEntity instanceof LibraryTile) {
             LibraryTile tile = (LibraryTile) blockEntity;
             e.player.openGuiScreen(tile);
@@ -64,8 +66,8 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        if (ctx.getPlayer() == null) super.getPlacementState(ctx);
-        return getNewDefaultState().with(FACING, ctx.getPlayer().getHorizontalFacing().getOpposite());
+    public BlockState getPlacementState(PlacementStateArgs args) {
+        if (args.getPlayer() == null) super.getPlacementState(args);
+        return getNewDefaultState().with(FACING, args.getPlayer().getHorizontalFacing().getOpposite());
     }
 }

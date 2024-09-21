@@ -16,7 +16,9 @@ import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.extra.transfer.util.FluidStorageUtil;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 import java.util.HashSet;
@@ -60,7 +62,7 @@ public class PumpTile extends BaseEnergyTile {
 
     public void readNbt(ReadNbtArgs args) {
         NbtCompound nbt = args.getNbt();
-        if (nbt.contains("variant")) {
+        if (NbtUtil.has(nbt, "variant")) {
             FluidStorageUtil.readNbt(storedFluid, args);
         }
     }
@@ -84,17 +86,20 @@ public class PumpTile extends BaseEnergyTile {
 
     public double coolTime = getSettingCoolTime();
 
-    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        super.tick(world, pos, state, blockEntity);
+    public void tick(TileTickEvent<BaseEnergyTile> e) {
+        super.tick(e);
+        World world = e.world;
+        BlockPos pos = e.pos;
+        BlockState state = e.state;
 
-        if (world.isClient()) return;
+        if (world == null || WorldUtil.isClient(world)) return;
 
         if (!(state.getBlock() instanceof Pump)) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(world, getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
             if (isActive())
-                 Pump.setActive(false, world, getPos());
+                 Pump.setActive(false, world, pos);
             return;
         }
         if (getEnergy() > getEnergyCost()) {
@@ -108,10 +113,10 @@ public class PumpTile extends BaseEnergyTile {
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!Pump.isActive(state)) {
-                Pump.setActive(true, world, getPos());
+                Pump.setActive(true, world, pos);
             }
         } else if (Pump.isActive(state)) {
-            Pump.setActive(false, world, getPos());
+            Pump.setActive(false, world, pos);
         }
     }
 
@@ -127,7 +132,7 @@ public class PumpTile extends BaseEnergyTile {
 
     public Set<BlockStatePos> sphereAround(BlockPos pos, int radius) {
         Set<BlockStatePos> sphere = new HashSet<>();
-        BlockStatePos center = new BlockStatePos(getWorld().getBlockState(pos), pos, getWorld());
+        BlockStatePos center = new BlockStatePos(WorldUtil.getBlockState(getWorld(), pos), pos, getWorld());
         for(int x = -radius; x <= radius; x++) {
             for(int y = -radius; y <= radius; y++) {
                 for(int z = -radius; z <= radius; z++) {

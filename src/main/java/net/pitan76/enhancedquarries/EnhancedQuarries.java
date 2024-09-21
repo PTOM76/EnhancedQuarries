@@ -1,9 +1,7 @@
 package net.pitan76.enhancedquarries;
 
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
 import net.pitan76.enhancedquarries.cmd.EnhancedQuarriesCommand;
 import net.pitan76.enhancedquarries.compat.RebornEnergyRegister;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
@@ -11,27 +9,29 @@ import net.pitan76.mcpitanlib.api.command.CommandRegistry;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
-import net.pitan76.mcpitanlib.api.network.ServerNetworking;
-import net.pitan76.mcpitanlib.api.registry.CompatRegistry;
-import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
+import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
+import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.fabric.ExtendModInitializer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class EnhancedQuarries implements ModInitializer {
+public class EnhancedQuarries extends ExtendModInitializer {
 
     public static final String MOD_ID = "enhanced_quarries";
     public static final String MOD_NAME = "Enhanced Quarries";
     public static EnhancedQuarries instance;
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final CreativeTabBuilder ENHANCED_QUARRIES_GROUP = CreativeTabBuilder.create(id("all")).setIcon(() -> new ItemStack(Items.NORMAL_QUARRY));
+    public static final CreativeTabBuilder ENHANCED_QUARRIES_GROUP = CreativeTabBuilder.create(_id("all")).setIcon(() -> ItemStackUtil.create(Items.NORMAL_QUARRY));
 
-    public static CompatRegistry registry = CompatRegistry.createRegistry(MOD_ID);
+    public static CompatRegistryV2 registry;
 
-    public void onInitialize() {
+    @Override
+    public void init() {
         instance = this;
-        log(Level.INFO, "Initializing");
+        registry = super.registry;
 
         registry.registerItemGroup(ENHANCED_QUARRIES_GROUP);
         Items.init();
@@ -42,9 +42,10 @@ public class EnhancedQuarries implements ModInitializer {
         FillerCraftingPatterns.init();
         Config.init();
 
-        ServerNetworking.registerReceiver(id("blueprint_name"), ((server, p, buf) -> {
-            String text = PacketByteUtil.readString(buf);
-            Player player = new Player(p);
+        ServerNetworking.registerReceiver(_id("blueprint_name"), (e -> {
+            String text = PacketByteUtil.readString(e.getBuf());
+            Player player = e.getPlayer();
+
             if (!(player.getCurrentScreenHandler() instanceof LibraryScreenHandler)) return;
             LibraryScreenHandler screenHandler = (LibraryScreenHandler) player.getCurrentScreenHandler();
             screenHandler.setBlueprintName(text);
@@ -53,8 +54,16 @@ public class EnhancedQuarries implements ModInitializer {
         registerEnergyStorage();
 
         CommandRegistry.register("enhancedquarries", new EnhancedQuarriesCommand());
+    }
 
-        registry.allRegister();
+    @Override
+    public String getId() {
+        return MOD_ID;
+    }
+
+    @Override
+    public String getName() {
+        return MOD_NAME;
     }
 
     //@SuppressWarnings("UnstableApiUsage")
@@ -77,17 +86,16 @@ public class EnhancedQuarries implements ModInitializer {
         }
     }
 
-    public static void log(Level level, String message){
-        LOGGER.log(level, "[" + MOD_NAME + "] " + message);
+    public static void log(String message, boolean isDebug) {
+        instance.logger.log(message, isDebug);
     }
 
-    public static Identifier id(String id) {
-        return IdentifierUtil.id(MOD_ID, id);
+    public static void logIfDev(String message) {
+        instance.logger.infoIfDev(message);
     }
 
-    public static Identifier id(String id, boolean bool) {
-        if (bool) return IdentifierUtil.id(MOD_ID, id);
-        return IdentifierUtil.id(id);
+    public static CompatIdentifier _id(String id) {
+        return CompatIdentifier.of(MOD_ID, id);
     }
 
     public static EnhancedQuarries getInstance() {

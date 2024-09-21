@@ -6,16 +6,16 @@ import net.minecraft.item.ItemStack;
 import java.util.Objects;
 
 public class FillerCraftingPattern {
-    public ItemStack input1 = ItemStack.EMPTY;
-    public ItemStack input2 = ItemStack.EMPTY;
-    public ItemStack input3 = ItemStack.EMPTY;
-    public ItemStack input4 = ItemStack.EMPTY;
-    public ItemStack input5 = ItemStack.EMPTY;
-    public ItemStack input6 = ItemStack.EMPTY;
-    public ItemStack input7 = ItemStack.EMPTY;
-    public ItemStack input8 = ItemStack.EMPTY;
-    public ItemStack input9 = ItemStack.EMPTY;
-    public ItemStack output = ItemStack.EMPTY;
+    public ItemStack input1 = ItemStackUtil.empty();
+    public ItemStack input2 = ItemStackUtil.empty();
+    public ItemStack input3 = ItemStackUtil.empty();
+    public ItemStack input4 = ItemStackUtil.empty();
+    public ItemStack input5 = ItemStackUtil.empty();
+    public ItemStack input6 = ItemStackUtil.empty();
+    public ItemStack input7 = ItemStackUtil.empty();
+    public ItemStack input8 = ItemStackUtil.empty();
+    public ItemStack input9 = ItemStackUtil.empty();
+    public ItemStack output = ItemStackUtil.empty();
 
     @Override
     public String toString() {
@@ -56,7 +56,7 @@ public class FillerCraftingPattern {
         if (i == 7) return input7.copy();
         if (i == 8) return input8.copy();
         if (i == 9) return input9.copy();
-        return ItemStack.EMPTY;
+        return ItemStackUtil.empty();
     }
 
     public ItemStack getOutput() {
@@ -76,7 +76,7 @@ public class FillerCraftingPattern {
     }
 
     public static FillerCraftingPattern createDonutPattern(ItemStack output, ItemStack input) {
-        return new FillerCraftingPattern(output, input, input, input, input, ItemStack.EMPTY, input, input, input, input);
+        return new FillerCraftingPattern(output, input, input, input, input, ItemStackUtil.empty(), input, input, input, input);
     }
 
     @Override

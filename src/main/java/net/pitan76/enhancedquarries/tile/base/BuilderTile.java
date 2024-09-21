@@ -29,9 +29,11 @@ import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.event.BlockEventGenerator;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +45,7 @@ import java.util.Map;
 public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
 
     // Container
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(28, ItemStack.EMPTY);
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(28, ItemStackUtil.empty());
 
     public IInventory inventory = this;
 
@@ -73,39 +75,39 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     // NBT
 
     public void writeNbt(WriteNbtArgs args) {
-        NbtCompound tag = args.getNbt();
+        NbtCompound nbt = args.getNbt();
 
         InventoryUtil.writeNbt(args, getItems());
 
-        tag.putDouble("coolTime", coolTime);
+        NbtUtil.putDouble(nbt, "coolTime", coolTime);
         if (pos1 != null) {
-            tag.putInt("rangePos1X", getPos1().getX());
-            tag.putInt("rangePos1Y", getPos1().getY());
-            tag.putInt("rangePos1Z", getPos1().getZ());
+            NbtUtil.putInt(nbt, "rangePos1X", getPos1().getX());
+            NbtUtil.putInt(nbt, "rangePos1Y", getPos1().getY());
+            NbtUtil.putInt(nbt, "rangePos1Z", getPos1().getZ());
         }
         if (pos2 != null) {
-            tag.putInt("rangePos2X", getPos2().getX());
-            tag.putInt("rangePos2Y", getPos2().getY());
-            tag.putInt("rangePos2Z", getPos2().getZ());
+            NbtUtil.putInt(nbt, "rangePos2X", getPos2().getX());
+            NbtUtil.putInt(nbt, "rangePos2Y", getPos2().getY());
+            NbtUtil.putInt(nbt, "rangePos2Z", getPos2().getZ());
         }
     }
 
     public void readNbt(ReadNbtArgs args) {
-        NbtCompound tag = args.getNbt();
+        NbtCompound nbt = args.getNbt();
 
-        if (tag.contains("Items")) {
+        if (NbtUtil.has(nbt, "Items")) {
             InventoryUtil.readNbt(args, getItems());
         }
 
-        if (tag.contains("coolTime")) coolTime = tag.getDouble("coolTime");
-        if (tag.contains("rangePos1X")
-                && tag.contains("rangePos1Y")
-                && tag.contains("rangePos1Z")
-                && tag.contains("rangePos2X")
-                && tag.contains("rangePos2Y")
-                && tag.contains("rangePos2Z")) {
-            setPos1(new BlockPos(tag.getInt("rangePos1X"), tag.getInt("rangePos1Y"), tag.getInt("rangePos1Z")));
-            setPos2(new BlockPos(tag.getInt("rangePos2X"), tag.getInt("rangePos2Y"), tag.getInt("rangePos2Z")));
+        if (NbtUtil.has(nbt, "coolTime")) coolTime = NbtUtil.getDouble(nbt, "coolTime");
+        if (NbtUtil.has(nbt, "rangePos1X")
+                && NbtUtil.has(nbt, "rangePos1Y")
+                && NbtUtil.has(nbt, "rangePos1Z")
+                && NbtUtil.has(nbt, "rangePos2X")
+                && NbtUtil.has(nbt, "rangePos2Y")
+                && NbtUtil.has(nbt, "rangePos2Z")) {
+            setPos1(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
+            setPos2(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
         }
     }
 
@@ -125,16 +127,20 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
 
     public Map<BlockPos, BlockState> blueprintMap = new LinkedHashMap<>();
 
-    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        super.tick(world, pos, state, blockEntity);
-        if (world.isClient()) return;
+    @Override
+    public void tick(TileTickEvent<BaseEnergyTile> e) {
+        super.tick(e);
+        World world = e.world;
+        BlockPos pos = e.pos;
+        if (WorldUtil.isClient(world)) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(getWorld(), getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
             if (isActive())
-                Builder.setActive(false, getWorld(), getPos());
+                Builder.setActive(false, world, pos);
             return;
         }
+
         ItemStack blueprint = inventory.getStack(0);
 
         if (CustomDataUtil.hasNbt(blueprint) && blueprint.getItem() == Items.BLUEPRINT) {
@@ -156,7 +162,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
                         b = true;
                     }
                     if (b) continue;
-                    needStacks.add(new ItemStack(item, 1));
+                    needStacks.add(ItemStackUtil.create(item, 1));
                 }
                 int i = 0;
                 for (ItemStack stack : needStacks) {
@@ -170,7 +176,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
             pos1 = pos2 = null;
             blueprintMap = new LinkedHashMap<>();
             for (int i = 0; i < needInventory.size(); i++) {
-                needInventory.setStack(i, ItemStack.EMPTY);
+                needInventory.setStack(i, ItemStackUtil.empty());
             }
             return;
         }
@@ -188,14 +194,14 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
             coolTimeBonus();
             coolTime = coolTime - getBasicSpeed();
             if (!isActive()) {
-                Builder.setActive(true, getWorld(), getPos());
+                Builder.setActive(true, world, pos);
             }
         } else if (isActive()) {
-            Builder.setActive(false, getWorld(), getPos());
+            Builder.setActive(false, world, pos);
         }
     }
 
-    public ItemStack latestGotStack = ItemStack.EMPTY;
+    public ItemStack latestGotStack = ItemStackUtil.empty();
 
     public static boolean isStorageBox(ItemStack stack) {
         return ItemUtil.toID(stack.getItem()).toString().equals("storagebox:storagebox");
@@ -216,7 +222,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
             }
             // ---- StorageBox
         }
-        return ItemStack.EMPTY;
+        return ItemStackUtil.empty();
     }
 
     public boolean tryPlacing(BlockPos blockPos, BlockState state) {
@@ -230,7 +236,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
                     int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
                     countInBox--;
                     if (countInBox < 1) {
-                        StorageBoxUtil.setStackInStorageBox(latestGotStack, ItemStack.EMPTY);
+                        StorageBoxUtil.setStackInStorageBox(latestGotStack, ItemStackUtil.empty());
                     } else {
                         StorageBoxUtil.setAmountInStorageBox(latestGotStack, countInBox);
                     }
@@ -255,7 +261,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
         for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
-                    BlockPos procPos = new BlockPos(procX, procY, procZ);
+                    BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
 
                     BlockState buildingState = blueprintMap.get(procPos.add(-pos.getX(), -pos.getY(), -pos.getZ()));

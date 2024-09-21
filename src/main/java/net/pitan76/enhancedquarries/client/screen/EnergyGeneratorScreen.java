@@ -3,12 +3,12 @@ package net.pitan76.enhancedquarries.client.screen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.client.screen.base.BaseHandledScreen;
 import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawBackgroundArgs;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawForegroundArgs;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
 
@@ -29,8 +29,8 @@ public class EnergyGeneratorScreen extends BaseHandledScreen {
     }
 
     @Override
-    public Identifier getTexture() {
-        return EnhancedQuarries.id("textures/gui/energy_generator.png");
+    public CompatIdentifier getCompatTexture() {
+        return EnhancedQuarries._id("textures/gui/energy_generator.png");
     }
 
     @Override

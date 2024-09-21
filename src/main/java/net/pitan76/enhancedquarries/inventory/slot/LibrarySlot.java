@@ -28,13 +28,13 @@ public class LibrarySlot extends CompatibleSlot {
         super.callSetStack(stack);
         if (getIndex() == 3) { // Save
             BlueprintUtil.save(stack, screenHandler.blueprintName);
-            super.callSetStack(ItemStack.EMPTY);
+            super.callSetStack(ItemStackUtil.empty());
             inventory.setStack(2, stack);
         }
         if (getIndex() == 0) { // Load
-            ItemStack newStack = new ItemStack(Items.BLUEPRINT, stack.getCount());
+            ItemStack newStack = ItemStackUtil.create(Items.BLUEPRINT, stack.getCount());
             BlueprintUtil.load(newStack, screenHandler.blueprintName);
-            super.callSetStack(ItemStack.EMPTY);
+            super.callSetStack(ItemStackUtil.empty());
             inventory.setStack(1, newStack);
         }
     }

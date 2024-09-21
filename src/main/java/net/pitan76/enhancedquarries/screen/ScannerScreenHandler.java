@@ -40,28 +40,28 @@ public class ScannerScreenHandler extends SimpleScreenHandler {
 
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
-        ItemStack newStack = ItemStack.EMPTY;
+        ItemStack newStack = ItemStackUtil.empty();
         Slot slot = this.slots.get(index);
         if (slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
             if (index < 36) {
                 if (!this.callInsertItem(originalStack, 36, 37, false)) {
-                    return ItemStack.EMPTY;
+                    return ItemStackUtil.empty();
                 }
             } else if (index == 37) {
                 if (!this.callInsertItem(originalStack, 0, 35, false)) {
-                    return ItemStack.EMPTY;
+                    return ItemStackUtil.empty();
                 }
             }
 
             if (originalStack.isEmpty()) {
-                SlotUtil.setStack(slot, ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
                 slot.markDirty();
             }
         }
 
-        return ItemStack.EMPTY;
+        return ItemStackUtil.empty();
     }
 }

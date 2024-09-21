@@ -17,12 +17,12 @@ public class ScreenHandlers {
     public static ScreenHandlerType<DroppedItemRemovalModuleEditScreenHandler> DROPPED_ITEM_REMOVAL_MODULE_EDIT_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(DroppedItemRemovalModuleEditScreenHandler::new).build();
 
     public static void init() {
-        registry.registerScreenHandlerType(EnhancedQuarries.id("filler_menu"), () -> FILLER_SCREEN_HANDLER_TYPE);
-        registry.registerScreenHandlerType(EnhancedQuarries.id("filler_with_chest_menu"), () -> FILLER_WITH_CHEST_SCREEN_HANDLER_TYPE);
-        registry.registerScreenHandlerType(EnhancedQuarries.id("scanner_menu"), () -> SCANNER_SCREEN_HANDLER_TYPE);
-        registry.registerScreenHandlerType(EnhancedQuarries.id("builder_menu"), () -> BUILDER_SCREEN_HANDLER_TYPE);
-        registry.registerScreenHandlerType(EnhancedQuarries.id("library_menu"), () -> LIBRARY_SCREEN_HANDLER_TYPE);
-        registry.registerScreenHandlerType(EnhancedQuarries.id("energy_generator_menu"), () -> ENERGY_GENERATOR_SCREEN_HANDLER_TYPE);
-        registry.registerScreenHandlerType(EnhancedQuarries.id("dropped_item_removal_module_edit_menu"), () -> DROPPED_ITEM_REMOVAL_MODULE_EDIT_SCREEN_HANDLER_TYPE);
+        registry.registerScreenHandlerType(EnhancedQuarries._id("filler_menu"), () -> FILLER_SCREEN_HANDLER_TYPE);
+        registry.registerScreenHandlerType(EnhancedQuarries._id("filler_with_chest_menu"), () -> FILLER_WITH_CHEST_SCREEN_HANDLER_TYPE);
+        registry.registerScreenHandlerType(EnhancedQuarries._id("scanner_menu"), () -> SCANNER_SCREEN_HANDLER_TYPE);
+        registry.registerScreenHandlerType(EnhancedQuarries._id("builder_menu"), () -> BUILDER_SCREEN_HANDLER_TYPE);
+        registry.registerScreenHandlerType(EnhancedQuarries._id("library_menu"), () -> LIBRARY_SCREEN_HANDLER_TYPE);
+        registry.registerScreenHandlerType(EnhancedQuarries._id("energy_generator_menu"), () -> ENERGY_GENERATOR_SCREEN_HANDLER_TYPE);
+        registry.registerScreenHandlerType(EnhancedQuarries._id("dropped_item_removal_module_edit_menu"), () -> DROPPED_ITEM_REMOVAL_MODULE_EDIT_SCREEN_HANDLER_TYPE);
     }
 }

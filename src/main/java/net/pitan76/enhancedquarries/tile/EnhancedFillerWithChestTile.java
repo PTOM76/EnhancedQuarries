@@ -24,7 +24,7 @@ import java.util.List;
 
 public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
 
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(54, ItemStack.EMPTY);
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(54, ItemStackUtil.empty());
     
     @Override
     public DefaultedList<ItemStack> getItems() {
@@ -58,7 +58,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
             }
             // ---- StorageBox
         }
-        return ItemStack.EMPTY;
+        return ItemStackUtil.empty();
     }
 
     @Override

@@ -24,18 +24,19 @@ import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.block.base.EnergyGenerator;
 import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
+import net.pitan76.mcpitanlib.api.entity.Player;
+import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
 import net.pitan76.mcpitanlib.api.event.container.factory.ExtraDataArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
-import net.pitan76.mcpitanlib.api.network.ServerNetworking;
-import net.pitan76.mcpitanlib.api.util.InventoryUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
+import net.pitan76.mcpitanlib.api.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +51,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
         this(Tiles.ENERGY_GENERATOR_TILE.getOrNull(), event);
     }
 
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(1, ItemStack.EMPTY);
+    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(1, ItemStackUtil.empty());
 
     public int burnTime = 0;
     public boolean burning = false;
@@ -80,38 +81,41 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     }
 
     @Override
-    public void tick(World world, BlockPos pos, BlockState state, BaseEnergyTile blockEntity) {
-        super.tick(world, pos, state, blockEntity);
+    public void tick(TileTickEvent<BaseEnergyTile> e) {
+        super.tick(e);
+        World world = e.world;
+        BlockPos pos = e.pos;
         if (world == null) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(world, getPos())) {
+        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
             if (isActive())
-                EnergyGenerator.setActive(false, world, getPos());
+                EnergyGenerator.setActive(false, world, pos);
+            
             return;
         }
 
         if (isActive() != isBurning())
-            EnergyGenerator.setActive(isBurning(), world, getPos());
+            EnergyGenerator.setActive(isBurning(), world, pos);
 
         // 燃焼時間が0の場合
-        if (burnTime == 0 && !world.isClient()) {
+        if (burnTime == 0 && !WorldUtil.isClient(world)) {
             burnTime = getBurnTimeFrom(getItems().get(0));
             if (burnTime > 0) {
                 ItemStack stack = getItems().get(0);
                 // レシピリマインダーがある場合
                 if (stack.getItem().hasRecipeRemainder()) {
-                    ItemStack remainder = new ItemStack(stack.getItem().getRecipeRemainder(), 1);
+                    ItemStack remainder = ItemStackUtil.create(stack.getItem().getRecipeRemainder(), 1);
                     if (stack.getCount() == 1)
                         // 最大スタック数が1の場合はスタックを置き換える
                         getItems().set(0, remainder);
                     else {
                         // 最大スタック数が1より大きい場合は1つ減らしてドロップ
-                        stack.decrement(1);
-                        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), remainder);
+                        ItemStackUtil.decrementCount(stack, 1);
+                        ItemScattererUtil.spawn(world, pos, remainder);
                     }
                 } else {
-                    stack.decrement(1);
+                    ItemStackUtil.decrementCount(stack, 1);
                 }
             }
         }
@@ -131,23 +135,24 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
         outputEnergy(this, world, pos);
 
-        if (lastEnergy != getEnergy() && !world.isClient()) {
-            for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                if (player.networkHandler != null && player.currentScreenHandler instanceof EnergyGeneratorScreenHandler && ((EnergyGeneratorScreenHandler) player.currentScreenHandler).tile == this) {
-                    PacketByteBuf buf = PacketByteUtil.create();
-                    PacketByteUtil.writeLong(buf, getEnergy());
-                    ServerNetworking.send(player, EnhancedQuarries.id("energy_generator_sync"), buf);
-                }
+        if (lastEnergy == getEnergy() || WorldUtil.isClient(world)) return;
+        
+        for (Player player : WorldUtil.getPlayers(world)) {
+            if (player.hasNetworkHandler() && player.getCurrentScreenHandler() instanceof EnergyGeneratorScreenHandler
+                    && ((EnergyGeneratorScreenHandler) player.getCurrentScreenHandler()).tile == this) {
+                PacketByteBuf buf = PacketByteUtil.create();
+                PacketByteUtil.writeLong(buf, getEnergy());
+                ServerNetworking.send(player, EnhancedQuarries._id("energy_generator_sync"), buf);
             }
-            lastEnergy = getEnergy();
         }
+        lastEnergy = getEnergy();
     }
 
     public static void outputEnergy(EnergyGeneratorTile blockEntity, World world, BlockPos pos) {
         if (blockEntity.getEnergy() <= 0) return;
         for (Direction direction : Direction.values()) {
             BlockPos targetPos = pos.offset(direction);
-            BlockEntity dirTile = world.getBlockEntity(targetPos);
+            BlockEntity dirTile = WorldUtil.getBlockEntity(world, targetPos);
             if (!(dirTile instanceof BaseEnergyTile)) continue;
 
             BaseEnergyTile targetEntity = (BaseEnergyTile) dirTile;
@@ -185,19 +190,19 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     @Override
     public void readNbt(ReadNbtArgs args) {
         NbtCompound nbt = args.getNbt();
-        if (nbt.contains("BurnTime"))
-            burnTime = nbt.getInt("BurnTime");
-        if (nbt.contains("Burning"))
-            burning = nbt.getBoolean("Burning");
-        if (nbt.contains("Items"))
+        if (NbtUtil.has(nbt, "BurnTime"))
+            burnTime = NbtUtil.getInt(nbt, "BurnTime");
+        if (NbtUtil.has(nbt, "Burning"))
+            burning = NbtUtil.getBoolean(nbt, "Burning");
+        if (NbtUtil.has(nbt, "Items"))
             InventoryUtil.readNbt(args, invItems);
     }
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
         NbtCompound nbt = args.getNbt();
-        nbt.putInt("BurnTime", burnTime);
-        nbt.putBoolean("Burning", burning);
+        NbtUtil.putInt(nbt, "BurnTime", burnTime);
+        NbtUtil.putBoolean(nbt, "Burning", burning);
         InventoryUtil.writeNbt(args, invItems);
     }
 
@@ -228,10 +233,10 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     @Override
     public void writeExtraData(ExtraDataArgs args) {
-        if (args.hasBuf()) {
-            PacketByteUtil.writeLong(args.buf, getEnergy());
-            PacketByteUtil.writeLong(args.buf, getMaxEnergy());
-        }
+        if (!args.hasBuf()) return;
+        
+        PacketByteUtil.writeLong(args.getBuf(), getEnergy());
+        PacketByteUtil.writeLong(args.getBuf(), getMaxEnergy());
     }
 
     @Nullable

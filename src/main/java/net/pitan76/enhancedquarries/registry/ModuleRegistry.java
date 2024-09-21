@@ -1,16 +1,16 @@
 package net.pitan76.enhancedquarries.registry;
 
-import net.minecraft.util.Identifier;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Registry {
-    private static final Registry INSTANCE = new Registry();
+public class ModuleRegistry {
+    private static final ModuleRegistry INSTANCE = new ModuleRegistry();
     private final List<RegistryData> modules = new ArrayList<>();
 
-    public static Registry getINSTANCE() {
+    public static ModuleRegistry getINSTANCE() {
         return INSTANCE;
     }
 
@@ -26,12 +26,12 @@ public class Registry {
         return modules;
     }
 
-    public static FillerModule register(Identifier identifier, FillerModule fillerModule) {
+    public static FillerModule register(CompatIdentifier identifier, FillerModule fillerModule) {
         getINSTANCE().modules.add(new RegistryData(fillerModule, identifier));
         return fillerModule;
     }
 
-    public static boolean unregister(Identifier identifier) {
+    public static boolean unregister(CompatIdentifier identifier) {
         for (RegistryData data : getINSTANCE().modules) {
             if (data.identifier.equals(identifier)) {
                 return getINSTANCE().modules.remove(data);
@@ -42,8 +42,8 @@ public class Registry {
 
     public static class RegistryData {
         public FillerModule module;
-        public Identifier identifier;
-        public RegistryData(FillerModule m, Identifier id) {
+        public CompatIdentifier identifier;
+        public RegistryData(FillerModule m, CompatIdentifier id) {
             module = m;
             identifier = id;
         }

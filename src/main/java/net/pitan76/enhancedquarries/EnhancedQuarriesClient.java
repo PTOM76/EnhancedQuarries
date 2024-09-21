@@ -5,7 +5,7 @@ import net.pitan76.enhancedquarries.client.BlockRenders;
 import net.pitan76.enhancedquarries.client.Screens;
 import net.pitan76.enhancedquarries.client.renderer.TileRenderers;
 import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
-import net.pitan76.mcpitanlib.api.network.ClientNetworking;
+import net.pitan76.mcpitanlib.api.network.v2.ClientNetworking;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 
 public class EnhancedQuarriesClient implements ClientModInitializer {
@@ -16,11 +16,11 @@ public class EnhancedQuarriesClient implements ClientModInitializer {
 
         TileRenderers.init();
 
-        ClientNetworking.registerReceiver(EnhancedQuarries.id("energy_generator_sync"), (client, p, buf) -> {
-            long energy = PacketByteUtil.readLong(buf);
-            if (p == null) return;
-            if (p.currentScreenHandler instanceof EnergyGeneratorScreenHandler) {
-                EnergyGeneratorScreenHandler screenHandler = (EnergyGeneratorScreenHandler) p.currentScreenHandler;
+        ClientNetworking.registerReceiver(EnhancedQuarries._id("energy_generator_sync"), (e) -> {
+            long energy = PacketByteUtil.readLong(e.getBuf());
+            if (e.getClientPlayer() == null) return;
+            if (e.player.getCurrentScreenHandler() instanceof EnergyGeneratorScreenHandler) {
+                EnergyGeneratorScreenHandler screenHandler = (EnergyGeneratorScreenHandler) e.player.getCurrentScreenHandler();
                 screenHandler.energy = energy;
             }
         });

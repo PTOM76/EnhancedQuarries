@@ -2,12 +2,9 @@ package net.pitan76.enhancedquarries.block.base;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -20,12 +17,13 @@ import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
-import org.jetbrains.annotations.Nullable;
+import net.pitan76.mcpitanlib.api.util.PropertyUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider {
 
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
+    public static final DirectionProperty FACING = PropertyUtil.horizontalFacing();
+    public static final BooleanProperty ACTIVE = PropertyUtil.createBooleanProperty("active");
 
     public BaseBlock(CompatibleBlockSettings settings) {
         super(settings);
@@ -33,7 +31,7 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
     }
 
     public static void setFacing(Direction facing, World world, BlockPos pos) {
-        world.setBlockState(pos, world.getBlockState(pos).with(FACING, facing));
+        world.setBlockState(pos, WorldUtil.getBlockState(world, pos).with(FACING, facing));
     }
 
     public static Direction getFacing(BlockState state) {
@@ -41,9 +39,9 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
     }
 
     public static void setActive(Boolean active, World world, BlockPos pos) {
-        Direction facing = world.getBlockState(pos).get(FACING);
-        BlockState state = world.getBlockState(pos).with(ACTIVE, active).with(FACING, facing);
-        world.setBlockState(pos, state, 3);
+        Direction facing = WorldUtil.getBlockState(world, pos).get(FACING);
+        BlockState state = WorldUtil.getBlockState(world, pos).with(ACTIVE, active).with(FACING, facing);
+        WorldUtil.setBlockState(world, pos, state);
     }
 
     public static boolean isActive(BlockState state) {
@@ -53,14 +51,19 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
     @Override
     public void onPlaced(BlockPlacedEvent e) {
         super.onPlaced(e);
-        if (e.placer != null) {
+        if (e.placer != null)
             setFacing(e.placer.getHorizontalFacing().getOpposite(), e.world, e.pos);
-        }
+
+        loadBlockEntityTag(e);
+    }
+
+    @Deprecated
+    private static void loadBlockEntityTag(BlockPlacedEvent e) {
         if (!CustomDataUtil.hasNbt(e.stack)) return;
         if (!CustomDataUtil.getNbt(e.stack).contains("BlockEntityTag")) return;
 
         NbtCompound nbt = CustomDataUtil.get(e.stack, "BlockEntityTag");
-        BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
+        BlockEntity blockEntity = e.getBlockEntity();
         if (blockEntity instanceof BaseEnergyTile) {
             BaseEnergyTile energyTile = (BaseEnergyTile) blockEntity;
             energyTile.readNbt(new ReadNbtArgs(nbt));
@@ -78,14 +81,8 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return ((world1, pos, state1, blockEntity) -> {
-            if (blockEntity instanceof BaseEnergyTile) {
-                BaseEnergyTile baseEnergyTile = (BaseEnergyTile) blockEntity;
-                baseEnergyTile.tick(world1, pos, state1, baseEnergyTile);
-            }
-        });
+    public boolean isTick() {
+        return true;
     }
 }

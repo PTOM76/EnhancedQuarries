@@ -5,13 +5,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.client.screen.base.BaseHandledScreen;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.KeyEventArgs;
-import net.pitan76.mcpitanlib.api.network.ClientNetworking;
+import net.pitan76.mcpitanlib.api.network.v2.ClientNetworking;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
 
@@ -30,8 +30,8 @@ public class LibraryScreen extends BaseHandledScreen {
     }
 
     @Override
-    public Identifier getTexture() {
-        return EnhancedQuarries.id("textures/gui/library.png");
+    public CompatIdentifier getCompatTexture() {
+        return EnhancedQuarries._id("textures/gui/library.png");
     }
 
     @Override
@@ -52,7 +52,7 @@ public class LibraryScreen extends BaseHandledScreen {
             if (args.keyCode != 256) {
                 PacketByteBuf buf = PacketByteUtil.create();
                 PacketByteUtil.writeString(buf, nameBox.getText());
-                ClientNetworking.send(EnhancedQuarries.id("blueprint_name"), buf);
+                ClientNetworking.send(EnhancedQuarries._id("blueprint_name"), buf);
                 ((LibraryScreenHandler) handler).setBlueprintName(nameBox.getText());
             }
         }

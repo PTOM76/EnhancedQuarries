@@ -102,63 +102,63 @@ public class Items {
 
 
     public static void init() {
-        registry.registerItem(EnhancedQuarries.id("normal_quarry"), () -> NORMAL_QUARRY);
-        registry.registerItem(EnhancedQuarries.id("enhanced_quarry"), () -> ENHANCED_QUARRY);
-        registry.registerItem(EnhancedQuarries.id("fluid_quarry"), () -> FLUID_QUARRY);
-        registry.registerItem(EnhancedQuarries.id("optimum_quarry"), () -> OPTIMUM_QUARRY);
-        registry.registerItem(EnhancedQuarries.id("enhanced_optimum_quarry"), () -> ENHANCED_OPTIMUM_QUARRY);
-        registry.registerItem(EnhancedQuarries.id("fluid_optimum_quarry"), () -> FLUID_OPTIMUM_QUARRY);
+        registry.registerItem(EnhancedQuarries._id("normal_quarry"), () -> NORMAL_QUARRY);
+        registry.registerItem(EnhancedQuarries._id("enhanced_quarry"), () -> ENHANCED_QUARRY);
+        registry.registerItem(EnhancedQuarries._id("fluid_quarry"), () -> FLUID_QUARRY);
+        registry.registerItem(EnhancedQuarries._id("optimum_quarry"), () -> OPTIMUM_QUARRY);
+        registry.registerItem(EnhancedQuarries._id("enhanced_optimum_quarry"), () -> ENHANCED_OPTIMUM_QUARRY);
+        registry.registerItem(EnhancedQuarries._id("fluid_optimum_quarry"), () -> FLUID_OPTIMUM_QUARRY);
 
-        registry.registerItem(EnhancedQuarries.id("normal_filler"), () -> NORMAL_FILLER);
-        registry.registerItem(EnhancedQuarries.id("enhanced_filler"), () -> ENHANCED_FILLER);
-        registry.registerItem(EnhancedQuarries.id("enhanced_filler_with_chest"), () -> ENHANCED_FILLER_WITH_CHEST);
+        registry.registerItem(EnhancedQuarries._id("normal_filler"), () -> NORMAL_FILLER);
+        registry.registerItem(EnhancedQuarries._id("enhanced_filler"), () -> ENHANCED_FILLER);
+        registry.registerItem(EnhancedQuarries._id("enhanced_filler_with_chest"), () -> ENHANCED_FILLER_WITH_CHEST);
 
-        registry.registerItem(EnhancedQuarries.id("normal_pump"), () -> NORMAL_PUMP);
-        registry.registerItem(EnhancedQuarries.id("enhanced_pump"), () -> ENHANCED_PUMP);
+        registry.registerItem(EnhancedQuarries._id("normal_pump"), () -> NORMAL_PUMP);
+        registry.registerItem(EnhancedQuarries._id("enhanced_pump"), () -> ENHANCED_PUMP);
 
-        registry.registerItem(EnhancedQuarries.id("normal_scanner"), () -> NORMAL_SCANNER);
-        registry.registerItem(EnhancedQuarries.id("normal_builder"), () -> NORMAL_BUILDER);
-        registry.registerItem(EnhancedQuarries.id("normal_library"), () -> NORMAL_LIBRARY);
+        registry.registerItem(EnhancedQuarries._id("normal_scanner"), () -> NORMAL_SCANNER);
+        registry.registerItem(EnhancedQuarries._id("normal_builder"), () -> NORMAL_BUILDER);
+        registry.registerItem(EnhancedQuarries._id("normal_library"), () -> NORMAL_LIBRARY);
 
-        registry.registerItem(EnhancedQuarries.id("energy_generator"), () -> ENERGY_GENERATOR);
+        registry.registerItem(EnhancedQuarries._id("energy_generator"), () -> ENERGY_GENERATOR);
 
-        registry.registerItem(EnhancedQuarries.id("normal_marker"), () -> NORMAL_MARKER);
-        registry.registerItem(EnhancedQuarries.id("frame"), () -> FRAME);
+        registry.registerItem(EnhancedQuarries._id("normal_marker"), () -> NORMAL_MARKER);
+        registry.registerItem(EnhancedQuarries._id("frame"), () -> FRAME);
 
 
-        registry.registerItem(EnhancedQuarries.id("bedrock_break_module"), () -> BEDROCK_BREAK_MODULE);
-        registry.registerItem(EnhancedQuarries.id("silk_touch_module"), () -> SILK_TOUCH_MODULE);
-        registry.registerItem(EnhancedQuarries.id("luck_enchant_module"), () -> LUCK_MODULE);
-        registry.registerItem(EnhancedQuarries.id("mob_kill_module"), () -> MOB_KILL_MODULE);
-        registry.registerItem(EnhancedQuarries.id("mob_delete_module"), () -> MOB_DELETE_MODULE);
-        registry.registerItem(EnhancedQuarries.id("exp_collect_module"), () -> EXP_COLLECT_MODULE);
+        registry.registerItem(EnhancedQuarries._id("bedrock_break_module"), () -> BEDROCK_BREAK_MODULE);
+        registry.registerItem(EnhancedQuarries._id("silk_touch_module"), () -> SILK_TOUCH_MODULE);
+        registry.registerItem(EnhancedQuarries._id("luck_enchant_module"), () -> LUCK_MODULE);
+        registry.registerItem(EnhancedQuarries._id("mob_kill_module"), () -> MOB_KILL_MODULE);
+        registry.registerItem(EnhancedQuarries._id("mob_delete_module"), () -> MOB_DELETE_MODULE);
+        registry.registerItem(EnhancedQuarries._id("exp_collect_module"), () -> EXP_COLLECT_MODULE);
 
-        registry.registerItem(EnhancedQuarries.id("filler_all_fill"), () -> fillerALL_FILL);
-        registry.registerItem(EnhancedQuarries.id("filler_all_delete"), () -> fillerALL_DELETE);
-        registry.registerItem(EnhancedQuarries.id("filler_all_remove"), () -> fillerALL_REMOVE);
-        registry.registerItem(EnhancedQuarries.id("filler_leveling"), () -> fillerLEVELING);
-        registry.registerItem(EnhancedQuarries.id("filler_create_box"), () -> fillerBOX);
-        registry.registerItem(EnhancedQuarries.id("filler_create_wall"), () -> fillerWALL);
-        registry.registerItem(EnhancedQuarries.id("filler_place_torch"), () -> fillerTORCH);
-        registry.registerItem(EnhancedQuarries.id("filler_vertical_layer"), () -> fillerVERTICAL_LAYER);
-        registry.registerItem(EnhancedQuarries.id("filler_horizontal_layer"), () -> fillerHORIZONTAL_LAYER);
-        registry.registerItem(EnhancedQuarries.id("filler_tower"), () -> fillerTOWER);
-        registry.registerItem(EnhancedQuarries.id("filler_delete_fluid"), () -> fillerDELETE_FLUID);
-        registry.registerItem(EnhancedQuarries.id("filler_floor_replace"), () -> fillerFLOOR_REPLACE);
-        registry.registerItem(EnhancedQuarries.id("filler_create_stairs"), () -> fillerSTAIRS);
-        registry.registerItem(EnhancedQuarries.id("filler_create_pyramid"), () -> fillerPYRAMID);
-        registry.registerItem(EnhancedQuarries.id("filler_cut_stairs"), () -> fillerCUT_STAIRS);
-        registry.registerItem(EnhancedQuarries.id("filler_cut_pyramid"), () -> fillerCUT_PYRAMID);
+        registry.registerItem(EnhancedQuarries._id("filler_all_fill"), () -> fillerALL_FILL);
+        registry.registerItem(EnhancedQuarries._id("filler_all_delete"), () -> fillerALL_DELETE);
+        registry.registerItem(EnhancedQuarries._id("filler_all_remove"), () -> fillerALL_REMOVE);
+        registry.registerItem(EnhancedQuarries._id("filler_leveling"), () -> fillerLEVELING);
+        registry.registerItem(EnhancedQuarries._id("filler_create_box"), () -> fillerBOX);
+        registry.registerItem(EnhancedQuarries._id("filler_create_wall"), () -> fillerWALL);
+        registry.registerItem(EnhancedQuarries._id("filler_place_torch"), () -> fillerTORCH);
+        registry.registerItem(EnhancedQuarries._id("filler_vertical_layer"), () -> fillerVERTICAL_LAYER);
+        registry.registerItem(EnhancedQuarries._id("filler_horizontal_layer"), () -> fillerHORIZONTAL_LAYER);
+        registry.registerItem(EnhancedQuarries._id("filler_tower"), () -> fillerTOWER);
+        registry.registerItem(EnhancedQuarries._id("filler_delete_fluid"), () -> fillerDELETE_FLUID);
+        registry.registerItem(EnhancedQuarries._id("filler_floor_replace"), () -> fillerFLOOR_REPLACE);
+        registry.registerItem(EnhancedQuarries._id("filler_create_stairs"), () -> fillerSTAIRS);
+        registry.registerItem(EnhancedQuarries._id("filler_create_pyramid"), () -> fillerPYRAMID);
+        registry.registerItem(EnhancedQuarries._id("filler_cut_stairs"), () -> fillerCUT_STAIRS);
+        registry.registerItem(EnhancedQuarries._id("filler_cut_pyramid"), () -> fillerCUT_PYRAMID);
 
-        registry.registerItem(EnhancedQuarries.id("redstone_hammer"), () -> REDSTONE_HAMMER);
-        registry.registerItem(EnhancedQuarries.id("wrench"), () -> WRENCH);
+        registry.registerItem(EnhancedQuarries._id("redstone_hammer"), () -> REDSTONE_HAMMER);
+        registry.registerItem(EnhancedQuarries._id("wrench"), () -> WRENCH);
 
-        registry.registerItem(EnhancedQuarries.id("refined_gear"), () -> REFINED_GEAR);
-        registry.registerItem(EnhancedQuarries.id("enhanced_refined_gear"), () -> ENHANCED_REFINED_GEAR);
-        registry.registerItem(EnhancedQuarries.id("enhanced_panel"), () -> ENHANCED_PANEL);
+        registry.registerItem(EnhancedQuarries._id("refined_gear"), () -> REFINED_GEAR);
+        registry.registerItem(EnhancedQuarries._id("enhanced_refined_gear"), () -> ENHANCED_REFINED_GEAR);
+        registry.registerItem(EnhancedQuarries._id("enhanced_panel"), () -> ENHANCED_PANEL);
 
-        registry.registerItem(EnhancedQuarries.id("empty_blueprint"), () -> EMPTY_BLUEPRINT);
-        registry.registerItem(EnhancedQuarries.id("blueprint"), () -> BLUEPRINT);
+        registry.registerItem(EnhancedQuarries._id("empty_blueprint"), () -> EMPTY_BLUEPRINT);
+        registry.registerItem(EnhancedQuarries._id("blueprint"), () -> BLUEPRINT);
 
         //registry.registerItem(EnhancedQuarries.id("reimu_bun"), () -> REIMU_BUN);
         //registry.registerItem(EnhancedQuarries.id("marisa_bun"), () -> MARISA_BUN);

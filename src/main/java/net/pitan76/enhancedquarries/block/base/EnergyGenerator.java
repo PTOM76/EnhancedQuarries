@@ -67,7 +67,7 @@ public class EnergyGenerator extends BaseBlock {
         Player player = e.getPlayer();
         BlockPos pos = e.getPos();
 
-        if (world.isClient()) return e.success();
+        if (WorldUtil.isClient(world)) return e.success();
         if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
         if (world.getBlockEntity(pos) instanceof EnergyGeneratorTile)

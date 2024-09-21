@@ -60,25 +60,25 @@ public class FillerScreenHandler extends SimpleScreenHandler {
 
     @Override
     public ItemStack quickMoveOverride(Player player, int invSlot) {
-        ItemStack newStack = ItemStack.EMPTY;
+        ItemStack newStack = ItemStackUtil.empty();
         Slot slot = this.slots.get(invSlot);
         if (slot instanceof FillerCraftingSlot) {
             if (invSlot != 9)
-                return ItemStack.EMPTY;
+                return ItemStackUtil.empty();
         }
         if (slot != null && slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
             if (invSlot < inventory.size() + craftingInventory.size()) {
                 if (!this.callInsertItem(originalStack, inventory.size() + craftingInventory.size(), this.slots.size(), true)) {
-                    return ItemStack.EMPTY;
+                    return ItemStackUtil.empty();
                 }
             } else if (!this.callInsertItem(originalStack, craftingInventory.size(),craftingInventory.size() + inventory.size(), false)) {
-                return ItemStack.EMPTY;
+                return ItemStackUtil.empty();
             }
 
             if (originalStack.isEmpty()) {
-                SlotUtil.setStack(slot, ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
                 slot.markDirty();
             }
