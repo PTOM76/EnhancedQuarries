@@ -10,6 +10,8 @@ import net.pitan76.enhancedquarries.inventory.ScannerInventory;
 import net.pitan76.enhancedquarries.inventory.slot.ScannerSlot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
 
 public class ScannerScreenHandler extends SimpleScreenHandler {
@@ -41,9 +43,9 @@ public class ScannerScreenHandler extends SimpleScreenHandler {
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
         ItemStack newStack = ItemStackUtil.empty();
-        Slot slot = this.slots.get(index);
-        if (slot.hasStack()) {
-            ItemStack originalStack = slot.getStack();
+        Slot slot = ScreenHandlerUtil.getSlot(this, index);
+        if (SlotUtil.hasStack(slot)) {
+            ItemStack originalStack = SlotUtil.getStack(slot);
             newStack = originalStack.copy();
             if (index < 36) {
                 if (!this.callInsertItem(originalStack, 36, 37, false)) {
@@ -58,7 +60,7 @@ public class ScannerScreenHandler extends SimpleScreenHandler {
             if (originalStack.isEmpty()) {
                 SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
-                slot.markDirty();
+                SlotUtil.markDirty(slot);
             }
         }
 

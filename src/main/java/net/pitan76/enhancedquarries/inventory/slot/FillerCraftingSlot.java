@@ -6,6 +6,7 @@ import net.pitan76.enhancedquarries.FillerCraftingPattern;
 import net.pitan76.enhancedquarries.FillerCraftingPatterns;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.mcpitanlib.api.gui.slot.CompatibleSlot;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 
 public class FillerCraftingSlot extends CompatibleSlot {
 

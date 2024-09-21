@@ -2,8 +2,6 @@ package net.pitan76.enhancedquarries.block.base;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
@@ -11,8 +9,10 @@ import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
+import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class EnergyGenerator extends BaseBlock {
 
@@ -47,7 +47,7 @@ public class EnergyGenerator extends BaseBlock {
     @Override
     public void onStateReplaced(StateReplacedEvent e) {
         if (e.state.getBlock() != e.newState.getBlock()) {
-            BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
+            BlockEntity blockEntity = e.getBlockEntity();
             if (blockEntity instanceof EnergyGeneratorTile) {
                 EnergyGeneratorTile tile = (EnergyGeneratorTile) blockEntity;
                 if (tile.keepNbtOnDrop) {
@@ -55,7 +55,7 @@ public class EnergyGenerator extends BaseBlock {
                     return;
                 }
 
-                ItemScatterer.spawn(e.world, e.pos, tile);
+                ItemScattererUtil.spawn(e.world, e.pos, (BlockEntity) tile);
             }
             super.onStateReplaced(e);
         }
@@ -65,13 +65,12 @@ public class EnergyGenerator extends BaseBlock {
     public ActionResult onRightClick(BlockUseEvent e) {
         World world = e.getWorld();
         Player player = e.getPlayer();
-        BlockPos pos = e.getPos();
 
         if (WorldUtil.isClient(world)) return e.success();
         if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
-        if (world.getBlockEntity(pos) instanceof EnergyGeneratorTile)
-            player.openExtendedMenu((EnergyGeneratorTile) world.getBlockEntity(pos));
+        if (e.getBlockEntity() instanceof EnergyGeneratorTile)
+            player.openExtendedMenu((EnergyGeneratorTile) e.getBlockEntity());
 
         return e.consume();
     }

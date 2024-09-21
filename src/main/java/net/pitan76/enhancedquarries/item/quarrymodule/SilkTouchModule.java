@@ -1,7 +1,6 @@
 package net.pitan76.enhancedquarries.item.quarrymodule;
 
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.item.base.MachineModule;

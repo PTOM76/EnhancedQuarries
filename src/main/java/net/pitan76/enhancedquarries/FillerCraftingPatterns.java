@@ -2,6 +2,7 @@ package net.pitan76.enhancedquarries;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 
 import java.util.ArrayList;
 import java.util.List;

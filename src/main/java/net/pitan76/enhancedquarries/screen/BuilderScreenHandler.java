@@ -12,6 +12,8 @@ import net.pitan76.enhancedquarries.inventory.slot.BuilderSlot;
 import net.pitan76.enhancedquarries.inventory.slot.DisabledSlot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
 
 import java.util.ArrayList;
@@ -74,12 +76,12 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
         ItemStack newStack = ItemStackUtil.empty();
-        Slot slot = this.slots.get(index);
+        Slot slot = ScreenHandlerUtil.getSlot(this, index);
         if (slot.inventory instanceof DisabledInventory) {
             return ItemStackUtil.empty();
         }
-        if (slot != null && slot.hasStack()) {
-            ItemStack originalStack = slot.getStack();
+        if (slot != null && SlotUtil.hasStack(slot)) {
+            ItemStack originalStack = SlotUtil.getStack(slot);
             newStack = originalStack.copy();
             if (index < 36) {
                 if (!this.callInsertItem(originalStack, 36,  36 + builderInventory.size() - 1, false)) {
@@ -94,7 +96,7 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
             if (originalStack.isEmpty()) {
                 SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
-                slot.markDirty();
+                SlotUtil.markDirty(slot);
             }
         }
 

@@ -11,6 +11,7 @@ import net.pitan76.enhancedquarries.inventory.FillerInventory;
 import net.pitan76.enhancedquarries.inventory.slot.FillerCraftingSlot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
 
 public class FillerScreenHandler extends SimpleScreenHandler {
@@ -66,8 +67,8 @@ public class FillerScreenHandler extends SimpleScreenHandler {
             if (invSlot != 9)
                 return ItemStackUtil.empty();
         }
-        if (slot != null && slot.hasStack()) {
-            ItemStack originalStack = slot.getStack();
+        if (slot != null && SlotUtil.hasStack(slot)) {
+            ItemStack originalStack = SlotUtil.getStack(slot);
             newStack = originalStack.copy();
             if (invSlot < inventory.size() + craftingInventory.size()) {
                 if (!this.callInsertItem(originalStack, inventory.size() + craftingInventory.size(), this.slots.size(), true)) {
@@ -80,7 +81,7 @@ public class FillerScreenHandler extends SimpleScreenHandler {
             if (originalStack.isEmpty()) {
                 SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
-                slot.markDirty();
+                SlotUtil.markDirty(slot);
             }
         }
 

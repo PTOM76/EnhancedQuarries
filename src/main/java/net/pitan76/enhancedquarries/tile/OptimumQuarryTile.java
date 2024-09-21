@@ -1,6 +1,9 @@
 package net.pitan76.enhancedquarries.tile;
 
-import net.minecraft.block.*;
+import net.minecraft.block.AirBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;

@@ -2,7 +2,6 @@ package net.pitan76.enhancedquarries.screen;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
@@ -13,6 +12,7 @@ import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandler;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
@@ -24,7 +24,7 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
     public long maxEnergy = 0;
 
     public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, syncId, playerInventory, new SimpleInventory(1));
+        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, syncId, playerInventory, InventoryUtil.createSimpleInventory(1));
         if (buf == null) return;
         energy = PacketByteUtil.readLong(buf);
         maxEnergy = PacketByteUtil.readLong(buf);
@@ -55,7 +55,7 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
         ItemStack newStack = ItemStackUtil.empty();
         Slot slot = ScreenHandlerUtil.getSlot(this, index);
         if (SlotUtil.hasStack(slot)) {
-            ItemStack originalStack = slot.getStack();
+            ItemStack originalStack = SlotUtil.getStack(slot);
             newStack = originalStack.copy();
             if (index < 36) {
                 if (!this.callInsertItem(originalStack, 36, 37, false)) {

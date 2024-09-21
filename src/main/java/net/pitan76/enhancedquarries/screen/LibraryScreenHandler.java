@@ -2,7 +2,6 @@ package net.pitan76.enhancedquarries.screen;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
@@ -10,6 +9,9 @@ import net.pitan76.enhancedquarries.ScreenHandlers;
 import net.pitan76.enhancedquarries.inventory.slot.LibrarySlot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
 
 public class LibraryScreenHandler extends SimpleScreenHandler {
@@ -18,7 +20,7 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
     public String blueprintName = "";
 
     public LibraryScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(4));
+        this(syncId, playerInventory, InventoryUtil.createSimpleInventory(4));
     }
 
     public LibraryScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
@@ -45,9 +47,9 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
 
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot.hasStack()) {
-            ItemStack originalStack = slot.getStack();
+        Slot slot = ScreenHandlerUtil.getSlot(this, index);
+        if (SlotUtil.hasStack(slot)) {
+            ItemStack originalStack = SlotUtil.getStack(slot);
             if (index < 36) {
                 if (!this.callInsertItem(originalStack, 36,  36 + libraryInventory.size() - 1, false)) {
                     return ItemStackUtil.empty();
@@ -61,7 +63,7 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
             if (originalStack.isEmpty()) {
                 SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
-                slot.markDirty();
+                SlotUtil.markDirty(slot);
             }
         }
 

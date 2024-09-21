@@ -1,7 +1,6 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

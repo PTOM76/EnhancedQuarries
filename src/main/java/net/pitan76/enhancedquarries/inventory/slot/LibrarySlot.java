@@ -6,6 +6,7 @@ import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.enhancedquarries.util.BlueprintUtil;
 import net.pitan76.mcpitanlib.api.gui.slot.CompatibleSlot;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 
 public class LibrarySlot extends CompatibleSlot {
     public LibraryScreenHandler screenHandler;
