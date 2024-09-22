@@ -51,6 +51,7 @@
     "item.enhanced_quarries.enhanced_refined_gear": "Усовершенствованная шестеренка",
     "item.enhanced_quarries.enhanced_panel": "Расширенная панель",
 
+    "message.enhanced_quarries.appended_module": "Применено \"%s\" к машине.",
     "message.enhanced_quarries.already_applied": "Модуль «%s» уже установлен.",
     "message.enhanced_quarries.mob_delete_module.conflict": "Модули «Удаление мобов» и «Убийство мобов» не возможно установить одновременно.",
     "message.enhanced_quarries.mob_kill_module.conflict": "Модули «Убийство мобов» и «Удаление мобов» не возможно установить одновременно.",

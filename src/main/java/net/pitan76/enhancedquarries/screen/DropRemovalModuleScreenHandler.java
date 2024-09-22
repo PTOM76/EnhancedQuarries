@@ -79,11 +79,11 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
         Slot slot = ScreenHandlerUtil.getSlot(this, index);
         if (SlotUtil.hasStack(slot)) {
             ItemStack originalStack = SlotUtil.getStack(slot);
-            if (index < 36) {
-                if (!this.callInsertItem(originalStack, 36, 41, false)) {
+            if (index < 35) {
+                if (!this.callInsertItem(originalStack, 35, 40, false)) {
                     return ItemStackUtil.empty();
                 }
-            } else if (index >= 37) {
+            } else if (index >= 36) {
                 if (!this.callInsertItem(originalStack, 0, 35, false)) {
                     return ItemStackUtil.empty();
                 }
@@ -120,6 +120,12 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
 
     @Override
     public void overrideOnSlotClick(int slotIndex, int button, SlotActionType actionType, Player player) {
+        System.out.println("Slot Index: " + slotIndex);
+        if (slotIndex < 0 || slotIndex >= slots.size()) {
+            overrideOnSlotClick(slotIndex, button, actionType, player);
+            return;
+        }
+
         Slot targetSlot = callGetSlot(slotIndex);
 
         if (slotIndex >= 36) { // Target Slot

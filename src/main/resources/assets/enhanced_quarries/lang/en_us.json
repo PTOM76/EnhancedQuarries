@@ -54,6 +54,7 @@
     "item.enhanced_quarries.enhanced_refined_gear": "Enhanced / Refined Gear",
     "item.enhanced_quarries.enhanced_panel": "Enhanced Panel",
 
+    "message.enhanced_quarries.appended_module": "Applied \"%s\" to the machine.",
     "message.enhanced_quarries.already_applied": "The \"%s\" has already been applied to the machine.",
     "message.enhanced_quarries.mob_delete_module.conflict": "\"Mob Delete Module\" And \"Mob Kill Module\" cannot coexist.",
     "message.enhanced_quarries.mob_kill_module.conflict": "\"Mob Kill Module\" And \"Mob Delete Module\" cannot coexist.",

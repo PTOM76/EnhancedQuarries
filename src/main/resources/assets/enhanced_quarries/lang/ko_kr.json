@@ -54,6 +54,7 @@
   "item.enhanced_quarries.enhanced_refined_gear": "향상된 / 정제된 기어",
   "item.enhanced_quarries.enhanced_panel": "향상된 패널",
 
+    "message.enhanced_quarries.appended_module": "기계에 \"%s\"이 적용되었습니다.",
   "message.enhanced_quarries.already_applied": "이 기계에는 이미 \"%s\"이 적용되어 있습니다.",
   "message.enhanced_quarries.mob_delete_module.conflict": "\"몹 삭제 모듈\"과 \"몹 사살 모듈\"은 함께 존재할 수 없습니다.",
   "message.enhanced_quarries.mob_kill_module.conflict": "\"몹 사살 모듈\"과 \"몹 삭제 모듈\"은 함께 존재할 수 없습니다.",

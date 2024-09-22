@@ -54,6 +54,7 @@
   "item.enhanced_quarries.enhanced_refined_gear": "增强/精炼齿轮",
   "item.enhanced_quarries.enhanced_panel": "增强面板",
 
+    "message.enhanced_quarries.appended_module": "已将“%s”应用于该机器。",
   "message.enhanced_quarries.already_applied": "“%s”已经应用于该机器。",
   "message.enhanced_quarries.mob_delete_module.conflict": "“生物删除模块”和“生物杀死模块”不能共存。",
   "message.enhanced_quarries.mob_kill_module.conflict": "“生物杀死模块”和“生物删除模块”不能共存。",

@@ -54,6 +54,7 @@
     "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",
     "item.enhanced_quarries.enhanced_panel": "強化されたパネル",
 
+    "message.enhanced_quarries.appended_module": "マシンに\"%s\"が適用されました。",
     "message.enhanced_quarries.already_applied": "そのマシンは既に%sが適用されています",
     "message.enhanced_quarries.mob_delete_module.conflict": "モブ消去モジュールとモブ殺害モジュールは共存できません。",
     "message.enhanced_quarries.mob_kill_module.conflict": "モブ殺害モジュールとモブ消去モジュールは共存できません。",

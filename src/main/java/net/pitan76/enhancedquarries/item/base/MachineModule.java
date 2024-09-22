@@ -11,6 +11,7 @@ import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 import java.util.Map;
@@ -74,6 +75,7 @@ public abstract class MachineModule extends ExtendItem {
             }
         }
 
+        e.player.sendMessage(TextUtil.translatable("message.enhanced_quarries.appended_module", getName()));
         quarry.insertModuleStack(e.stack);
         return null;
     }
