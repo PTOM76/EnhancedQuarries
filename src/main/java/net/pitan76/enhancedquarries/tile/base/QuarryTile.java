@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
@@ -24,6 +23,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.block.base.Quarry;
+import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 //@SuppressWarnings("UnstableApiUsage")
 public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInventory {
@@ -484,11 +485,26 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     private ItemStack getQuarryStack() {
         ItemStack stack = ItemStackUtil.create(Items.DIAMOND_PICKAXE);
-        if (isSetSilkTouch)
-            stack.addEnchantment(Enchantments.SILK_TOUCH, 3);
-        if (isSetLuck)
-            stack.addEnchantment(Enchantments.FORTUNE, 3);
+        applyEnchantment(stack);
         return stack;
+    }
+
+    private void applyEnchantment(ItemStack stack) {
+        boolean applied = false;
+
+        Map<CompatEnchantment, Integer> enchantments = EnchantmentUtil.getEnchantment(stack, getWorld());
+
+        if (isSetSilkTouch) {
+            enchantments.put(EnchantmentUtil.getEnchantment(CompatIdentifier.of("silk_touch")), 3);
+            applied = true;
+        }
+        if (isSetLuck) {
+            enchantments.put(EnchantmentUtil.getEnchantment(CompatIdentifier.of("fortune")), 3);
+            applied = true;
+        }
+
+        if (applied)
+            EnchantmentUtil.setEnchantment(stack, enchantments, getWorld());
     }
 
     public void tryDeleteMob(BlockPos blockPos) {
