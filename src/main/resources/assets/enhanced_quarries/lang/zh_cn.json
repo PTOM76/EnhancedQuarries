@@ -25,6 +25,7 @@
   "item.enhanced_quarries.mob_delete_module": "生物删除模块",
   "item.enhanced_quarries.mob_kill_module": "生物杀死模块",
   "item.enhanced_quarries.exp_collect_module": "经验收集模块",
+    "item.enhanced_quarries.dropped_item_removal_module": "掉落物品移除模块",
 
   "item.enhanced_quarries.filler_all_fill": "填充模块",
   "item.enhanced_quarries.filler_all_delete": "删除模块",

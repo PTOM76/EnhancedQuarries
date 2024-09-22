@@ -25,6 +25,7 @@
     "item.enhanced_quarries.mob_delete_module": "Mob Delete Module",
     "item.enhanced_quarries.mob_kill_module": "Mob Kill Module",
     "item.enhanced_quarries.exp_collect_module": "Experience Collect Module",
+    "item.enhanced_quarries.dropped_item_removal_module": "Dropped Item Removal Module",
 
     "item.enhanced_quarries.filler_all_fill": "Fill Module",
     "item.enhanced_quarries.filler_all_delete": "Delete Module",
@@ -64,6 +65,7 @@
     "screen.enhanced_quarries.builder.title2": "Building Resources",
     "screen.enhanced_quarries.library.title": "Library",
     "screen.enhanced_quarries.energy_generator.title": "Generator",
+    "screen.enhanced_quarries.dropped_item_removal_module_edit.title": "Dropped Item Removal Module",
 
     "title.enhanced_quarries.config": "Enhanced Quarries' Settings",
     "category.enhanced_quarries.general": "General",

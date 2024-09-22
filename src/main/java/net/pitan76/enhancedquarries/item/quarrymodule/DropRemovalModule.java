@@ -5,16 +5,14 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
 import net.pitan76.enhancedquarries.item.base.MachineModule;
 import net.pitan76.enhancedquarries.screen.DropRemovalModuleScreenHandler;
 import net.pitan76.mcpitanlib.api.entity.Player;
-import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
-import net.pitan76.mcpitanlib.api.event.container.factory.ExtraDataArgs;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseEvent;
-import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.util.*;
 
@@ -22,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DropRemovalModule extends MachineModule implements ExtendedScreenHandlerFactory {
+public class DropRemovalModule extends MachineModule implements NamedScreenHandlerFactory {
     public DropRemovalModule(CompatibleItemSettings settings) {
         super(settings);
     }
@@ -37,8 +35,11 @@ public class DropRemovalModule extends MachineModule implements ExtendedScreenHa
         ItemStack stack = e.getStack();
         Player player = e.getUser();
         if (e.isClient()) return TypedActionResult.pass(stack);
+
+        if (player.getEntity() == null) return TypedActionResult.pass(stack);
+
         if (player.isSneaking()) {
-            player.openExtendedMenu(this);
+            player.openMenu(this);
         }
         return super.onRightClick(e);
     }
@@ -59,9 +60,7 @@ public class DropRemovalModule extends MachineModule implements ExtendedScreenHa
         Optional<ItemStack> optional = player.getCurrentHandItem();
         if (optional.isPresent()) {
             ItemStack stack = optional.get();
-            if (CustomDataUtil.hasNbt(stack)) {
-                return CustomDataUtil.getNbt(stack);
-            }
+            return getNbt(stack);
         }
         return NbtUtil.create();
     }
@@ -74,22 +73,14 @@ public class DropRemovalModule extends MachineModule implements ExtendedScreenHa
     }
 
     @Override
-    public Text getDisplayName(DisplayNameArgs args) {
-        return TextUtil.translatable("screen.enhancedquarries.dropped_item_removal_module_edit.title");
-    }
-
-    @Override
-    public void writeExtraData(ExtraDataArgs args) {
-        Player player = new Player(args.getPlayer());
-        NbtCompound nbt = getNbtFromCurrentStack(player);
-
-        args.writeVar(nbt);
-    }
-
-    @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         Optional<ItemStack> optional = new Player(player).getCurrentHandItem();
         return optional.map(stack -> new DropRemovalModuleScreenHandler(syncId, playerInventory, stack))
                 .orElseGet(() -> new DropRemovalModuleScreenHandler(syncId, playerInventory));
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return TextUtil.translatable("screen.enhanced_quarries.dropped_item_removal_module_edit.title");
     }
 }

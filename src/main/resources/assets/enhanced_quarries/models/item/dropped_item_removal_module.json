@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+      "layer0": "enhanced_quarries:item/dropped_item_removal_module"
+    }
+  }

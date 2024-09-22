@@ -118,7 +118,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         if (!(stack.getItem() instanceof MachineModule))
             return;
 
-        moduleStacks.add(stack);
+        int nextIndex = 0;
+        for (nextIndex = 0; nextIndex < moduleStacks.size(); nextIndex++) {
+            if (moduleStacks.get(nextIndex).isEmpty())
+                break;
+        }
+
+        moduleStacks.add(nextIndex, stack);
         CACHE_isEnchanted = null;
         CACHE_moduleItems.add(stack.getItem());
     }

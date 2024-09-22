@@ -1,20 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "YYY",
+    " Y ",
     "YXY",
-    "YYY"
+    " Y "
   ],
   "key": {
     "X": {
       "item": "enhanced_quarries:enhanced_panel"
     },
     "Y": {
-      "item": "minecraft:obsidian"
+      "item": "minecraft:cactus"
     }
   },
   "result": {
-    "item": "enhanced_quarries:bedrock_break_module",
+    "item": "enhanced_quarries:dropped_item_removal_module",
     "count": 1
   }
 }

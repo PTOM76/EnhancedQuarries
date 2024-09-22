@@ -25,6 +25,7 @@
     "item.enhanced_quarries.mob_delete_module": "モブ消去モジュール",
     "item.enhanced_quarries.mob_kill_module": "モブ殺害モジュール",
     "item.enhanced_quarries.exp_collect_module": "経験値採取モジュール",
+    "item.enhanced_quarries.dropped_item_removal_module": "ドロップ品除去モジュール",
 
     "item.enhanced_quarries.filler_all_fill": "埋め立てモジュール",
     "item.enhanced_quarries.filler_all_delete": "消去モジュール",

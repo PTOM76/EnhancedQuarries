@@ -14,7 +14,7 @@ public class ScreenHandlers {
     public static ScreenHandlerType<BuilderScreenHandler> BUILDER_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(BuilderScreenHandler::new).build();
     public static ScreenHandlerType<LibraryScreenHandler> LIBRARY_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(LibraryScreenHandler::new).build();
     public static ScreenHandlerType<EnergyGeneratorScreenHandler> ENERGY_GENERATOR_SCREEN_HANDLER_TYPE = new ExtendedScreenHandlerTypeBuilder<>(EnergyGeneratorScreenHandler::new).build();
-    public static ScreenHandlerType<DropRemovalModuleScreenHandler> DROP_REMOVAL_MODULE_SCREEN_HANDLER_TYPE = new ExtendedScreenHandlerTypeBuilder<>(DropRemovalModuleScreenHandler::new).build();
+    public static ScreenHandlerType<DropRemovalModuleScreenHandler> DROP_REMOVAL_MODULE_SCREEN_HANDLER_TYPE = new SimpleScreenHandlerTypeBuilder<>(DropRemovalModuleScreenHandler::new).build();
 
     public static void init() {
         registry.registerScreenHandlerType(EnhancedQuarries._id("filler_menu"), () -> FILLER_SCREEN_HANDLER_TYPE);

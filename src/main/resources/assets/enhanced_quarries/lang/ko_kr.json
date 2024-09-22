@@ -25,6 +25,7 @@
   "item.enhanced_quarries.mob_delete_module": "몹 삭제 모듈",
   "item.enhanced_quarries.mob_kill_module": "몹 사살 모듈",
   "item.enhanced_quarries.exp_collect_module": "경험치 수집 모듈",
+  "item.enhanced_quarries.dropped_item_removal_module": "드롭 아이템 제거 모듈",
 
   "item.enhanced_quarries.filler_all_fill": "채우기 모듈",
   "item.enhanced_quarries.filler_all_delete": "삭제 모듈",

@@ -6,32 +6,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.pitan76.enhancedquarries.ScreenHandlers;
 import net.pitan76.enhancedquarries.item.quarrymodule.DropRemovalModule;
 import net.pitan76.enhancedquarries.screen.slot.TargetSlot;
 import net.pitan76.mcpitanlib.api.entity.Player;
-import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandler;
-import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
+import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
 import net.pitan76.mcpitanlib.api.util.*;
 
-import java.util.Optional;
-
-public class DropRemovalModuleScreenHandler extends ExtendedScreenHandler {
+public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
 
     public PlayerInventory playerInventory;
     public Inventory targetInventory;
 
     public ItemStack moduleStack = ItemStackUtil.empty();
-
-    public void setModuleStackFromPlayer(Player player) {
-        if (player.getEntity() == null) return;
-        Optional<ItemStack> optional = player.getCurrentHandItem();
-
-        optional.ifPresent(stack -> moduleStack = stack);
-    }
 
     public void setStackFromNbt(NbtCompound nbt) {
         if (!NbtUtil.has(nbt, "Items")) return;
@@ -46,16 +36,6 @@ public class DropRemovalModuleScreenHandler extends ExtendedScreenHandler {
 
             targetInventory.setStack(i, ItemStackUtil.create(ItemUtil.fromId(id)));
         }
-    }
-
-    public DropRemovalModuleScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory);
-
-        NbtCompound nbt = PacketByteUtil.readNbt(buf);
-        if (nbt == null) return;
-        setStackFromNbt(nbt);
-
-        setModuleStackFromPlayer(new Player(playerInventory.player));
     }
 
     public DropRemovalModuleScreenHandler(int syncId, PlayerInventory playerInventory, ItemStack stack) {
@@ -82,11 +62,11 @@ public class DropRemovalModuleScreenHandler extends ExtendedScreenHandler {
     }
 
     public void initSlots() {
-        addPlayerMainInventorySlots(playerInventory, 8, 94);
-        addPlayerHotbarSlots(playerInventory, 8, 94);
+        addPlayerMainInventorySlots(playerInventory, 8, 51);
+        addPlayerHotbarSlots(playerInventory, 8, 109);
 
         for (int i = 0; i < 5; i++) {
-            addTargetSlot(targetInventory, i, 8 + i * 18, 18);
+            addTargetSlot(targetInventory, i, 44 + i * 18, 20);
         }
     }
 
@@ -136,5 +116,25 @@ public class DropRemovalModuleScreenHandler extends ExtendedScreenHandler {
 
         CustomDataUtil.put(moduleStack, "Items", items);
         super.close(player);
+    }
+
+    @Override
+    public void overrideOnSlotClick(int slotIndex, int button, SlotActionType actionType, Player player) {
+        Slot targetSlot = callGetSlot(slotIndex);
+
+        if (slotIndex >= 36) { // Target Slot
+            // カーソルでアイテムを持ってない場合
+            if (getCursorStack().isEmpty()) {
+                SlotUtil.setStack(targetSlot, ItemStackUtil.empty());
+                return;
+            }
+
+            ItemStack oldStack = ItemStackUtil.create(getCursorStack().getItem());
+            SlotUtil.setStack(targetSlot, oldStack);
+            callSetCursorStack(getCursorStack());
+            return;
+        }
+
+        super.overrideOnSlotClick(slotIndex, button, actionType, player);
     }
 }

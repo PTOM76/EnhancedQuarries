@@ -25,6 +25,7 @@
     "item.enhanced_quarries.mob_delete_module": "Модуль «Удаление мобов»",
     "item.enhanced_quarries.mob_kill_module": "Модуль «Убийство мобов»",
     "item.enhanced_quarries.exp_collect_module": "Модуль «Сбор опыта»",
+    "item.enhanced_quarries.dropped_item_removal_module": "Модуль «Удаление предметов»",
 
     "item.enhanced_quarries.filler_all_fill": "Модуль «Заполнение»",
     "item.enhanced_quarries.filler_all_delete": "Модуль «Удаление»",
