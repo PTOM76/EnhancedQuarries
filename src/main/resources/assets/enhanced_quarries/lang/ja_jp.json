@@ -53,14 +53,9 @@
     "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",
     "item.enhanced_quarries.enhanced_panel": "強化されたパネル",
 
-    "message.enhanced_quarries.bedrock_break_module.1": "そのマシンは既に岩盤破壊モジュールが適用されています。",
-    "message.enhanced_quarries.silk_touch_module.1": "そのマシンは既にシルクタッチモジュールが適用されています。",
-    "message.enhanced_quarries.luck_enchant_module.1": "そのマシンは既に幸運モジュールが適用されています。",
-    "message.enhanced_quarries.mob_delete_module.1": "そのマシンは既にモブ消去モジュールが適用されています。",
-    "message.enhanced_quarries.mob_delete_module.2": "モブ消去モジュールとモブ殺害モジュールは共存できません。",
-    "message.enhanced_quarries.mob_kill_module.1": "そのマシンは既にモブ殺害モジュールが適用されています。",
-    "message.enhanced_quarries.mob_kill_module.2": "モブ殺害モジュールとモブ消去モジュールは共存できません。",
-    "message.enhanced_quarries.exp_collect_module.1": "そのマシンは既に経験値回収モジュールが適用されています。",
+    "message.enhanced_quarries.already_applied": "そのマシンは既に%sが適用されています",
+    "message.enhanced_quarries.mob_delete_module.conflict": "モブ消去モジュールとモブ殺害モジュールは共存できません。",
+    "message.enhanced_quarries.mob_kill_module.conflict": "モブ殺害モジュールとモブ消去モジュールは共存できません。",
 
     "title.enhanced_quarries.config": "Enhanced Quarriesの設定",
     "category.enhanced_quarries.general": "一般",

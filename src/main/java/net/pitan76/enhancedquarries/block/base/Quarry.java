@@ -9,7 +9,6 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.block.NormalMarker;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
@@ -21,6 +20,7 @@ import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 import java.util.ArrayList;
@@ -88,23 +88,12 @@ public abstract class Quarry extends BaseBlock {
             ItemScatterer.spawn(world, pos, quarry);
 
             // モジュールの返却
-            if (quarry.canBedrockBreak()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1)));
-            }
-            if (quarry.isSetLuck()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.LUCK_MODULE, 1)));
-            }
-            if (quarry.isSetSilkTouch()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.SILK_TOUCH_MODULE, 1)));
-            }
-            if (quarry.isSetMobDelete()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.MOB_DELETE_MODULE, 1)));
-            }
-            if (quarry.isSetMobKill()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.MOB_KILL_MODULE, 1)));
-            }
-            if (quarry.isSetExpCollect()) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), ItemStackUtil.create(Items.EXP_COLLECT_MODULE, 1)));
+            if (!quarry.isEmptyInModules()) {
+                for (ItemStack module : quarry.getModuleStacks()) {
+                    ItemEntity itemEntity = ItemEntityUtil.create(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, module);
+                    ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
+                    WorldUtil.spawnEntity(world, itemEntity);
+                }
             }
 
             // フレーム破壊

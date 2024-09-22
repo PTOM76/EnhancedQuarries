@@ -1,15 +1,13 @@
 package net.pitan76.enhancedquarries.item.quarrymodule;
 
-import net.minecraft.util.ActionResult;
-import net.minecraft.world.World;
-import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.item.base.MachineModule;
-import net.pitan76.enhancedquarries.tile.base.QuarryTile;
-import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
+import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.EnchantmentUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LuckEnchantModule extends MachineModule {
     public LuckEnchantModule(CompatibleItemSettings settings) {
@@ -17,19 +15,15 @@ public class LuckEnchantModule extends MachineModule {
     }
 
     @Override
-    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
-        World world = e.getWorld();
-        if (WorldUtil.isClient(world) || !(e.getBlockState().getBlock() instanceof Quarry) ||
-                e.getBlockEntity() == null || !(e.getBlockEntity() instanceof QuarryTile))
-            return super.onRightClickOnBlock(e);
+    public boolean allowMultiple() {
+        return false;
+    }
 
-        QuarryTile quarry = (QuarryTile) e.getBlockEntity();
-        if (quarry.isSetLuck()) {
-            e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.luck_enchant_module.1"));
-            return e.pass();
-        }
-        quarry.setLuckModule(true);
-        ItemStackUtil.decrementCount(e.getStack(), 1);
-        return e.success();
+    @Override
+    public Map<CompatEnchantment, Integer> getEnchantments() {
+        Map<CompatEnchantment, Integer> enchantments = new HashMap<>();
+        enchantments.put(EnchantmentUtil.getEnchantment(CompatIdentifier.of("fortune")), 3);
+
+        return enchantments;
     }
 }

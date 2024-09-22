@@ -15,5 +15,6 @@ public class Screens {
         CompatRegistryClient.registerScreen(ScreenHandlers.BUILDER_SCREEN_HANDLER_TYPE, BuilderScreen::new);
         CompatRegistryClient.registerScreen(ScreenHandlers.LIBRARY_SCREEN_HANDLER_TYPE, LibraryScreen::new);
         CompatRegistryClient.registerScreen(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, EnergyGeneratorScreen::new);
+        CompatRegistryClient.registerScreen(ScreenHandlers.DROP_REMOVAL_MODULE_SCREEN_HANDLER_TYPE, DropRemovalModuleScreen::new);
     }
 }

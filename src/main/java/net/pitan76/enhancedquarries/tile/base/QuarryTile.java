@@ -8,10 +8,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -23,6 +26,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.block.base.Quarry;
+import net.pitan76.enhancedquarries.item.base.MachineModule;
+import net.pitan76.enhancedquarries.item.quarrymodule.DropRemovalModule;
+import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
 import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
@@ -30,6 +36,7 @@ import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import org.jetbrains.annotations.Nullable;
@@ -100,72 +107,62 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         this.storedExp -= storedExp;
     }
 
+    public int getMaxModuleCount() {
+        return 64;
+    }
+
     // モジュール
+    public DefaultedList<ItemStack> moduleStacks = DefaultedList.ofSize(getMaxModuleCount(), ItemStackUtil.empty());
 
-    // - 岩盤破壊モジュール
-    private boolean canBedrockBreak = false;
+    public void addModuleStack(ItemStack stack) {
+        if (!(stack.getItem() instanceof MachineModule))
+            return;
 
-    public boolean canBedrockBreak() {
-        return canBedrockBreak;
+        moduleStacks.add(stack);
+        CACHE_isEnchanted = null;
+        CACHE_moduleItems.add(stack.getItem());
     }
 
-    public void setBedrockBreak(boolean canBedrockBreak) {
-        this.canBedrockBreak = canBedrockBreak;
+    public void insertModuleStack(ItemStack stack) {
+        ItemStack copyStack = ItemStackUtil.copy(stack);
+        ItemStackUtil.setCount(copyStack, 1);
+        addModuleStack(copyStack);
+
+        ItemStackUtil.decrementCount(stack, 1);
     }
 
-    // - シルクタッチモジュール
-    private boolean isSetSilkTouch = false;
+    public boolean removeModuleStack(ItemStack stack) {
+        CACHE_isEnchanted = null;
+        CACHE_moduleItems.remove(stack.getItem());
 
-    public boolean isSetSilkTouch() {
-        return isSetSilkTouch;
+        return moduleStacks.remove(stack);
     }
 
-    public void setSilkTouchModule(boolean isSetSilkTouch) {
-        this.isSetSilkTouch = isSetSilkTouch;
+    public boolean hasModuleStack(ItemStack stack) {
+        return moduleStacks.contains(stack);
     }
 
-    // - 経験値採取モジュール
-    private boolean isSetExpCollect = false;
+    private final List<Item> CACHE_moduleItems = new ArrayList<>();
 
-    public boolean isSetExpCollect() {
-        return isSetExpCollect;
+    public boolean hasModuleItem(Item item) {
+        if (CACHE_moduleItems.contains(item)) return true;
+
+        for (ItemStack stack : getModuleStacks()) {
+            if (stack.getItem().equals(item)) {
+                CACHE_moduleItems.add(item);
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public void setExpCollectModule(boolean isSetExpCollect) {
-        this.isSetExpCollect = isSetExpCollect;
+    public DefaultedList<ItemStack> getModuleStacks() {
+        return moduleStacks;
     }
 
-    // - 幸運モジュール
-    private boolean isSetLuck = false;
-
-    public boolean isSetLuck() {
-        return isSetLuck;
-    }
-
-    public void setLuckModule(boolean isSetLuck) {
-        this.isSetLuck = isSetLuck;
-    }
-
-    // - モブキルモジュール
-    private boolean isSetMobKill = false;
-
-    public boolean isSetMobKill() {
-        return isSetMobKill;
-    }
-
-    public void setMobKillModule(boolean isSetMobKill) {
-        this.isSetMobKill = isSetMobKill;
-    }
-
-    // - モブ消去モジュール
-    private boolean isSetMobDelete = false;
-
-    public boolean isSetMobDelete() {
-        return isSetMobDelete;
-    }
-
-    public void setMobDeleteModule(boolean isSetMobDelete) {
-        this.isSetMobDelete = isSetMobDelete;
+    public boolean isEmptyInModules() {
+        return getModuleStacks().isEmpty();
     }
 
     // ----
@@ -219,18 +216,12 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         InventoryUtil.writeNbt(args, getItems());
 
         NbtUtil.putDouble(nbt, "coolTime", coolTime);
-        if (canBedrockBreak)
-            NbtUtil.putBoolean(nbt, "module_bedrock_break", true);
-        if (isSetMobKill)
-            NbtUtil.putBoolean(nbt, "module_mob_kill", true);
-        if (isSetLuck)
-            NbtUtil.putBoolean(nbt, "module_luck", true);
-        if (isSetSilkTouch)
-            NbtUtil.putBoolean(nbt, "module_silk_touch", true);
-        if (isSetMobDelete)
-            NbtUtil.putBoolean(nbt, "module_mob_delete", true);
-        if (isSetExpCollect)
-            NbtUtil.putBoolean(nbt, "module_exp_collect", true);
+
+        if (!isEmptyInModules()) {
+            NbtCompound moduleNbt = NbtUtil.create();
+            InventoryUtil.writeNbt(args.registryLookup, moduleNbt, getModuleStacks());
+            NbtUtil.put(nbt, "modules", moduleNbt);
+        }
 
         if (minPos != null) {
             NbtUtil.putInt(nbt, "rangePos1X", getMinPos().getX());
@@ -254,17 +245,19 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
         NbtCompound nbt = args.getNbt();
-        if (NbtUtil.has(nbt, "Items")) {
+        if (NbtUtil.has(nbt, "Items"))
             InventoryUtil.readNbt(args, getItems());
+
+        if (NbtUtil.has(nbt, "coolTime"))
+            coolTime = NbtUtil.getDouble(nbt, "coolTime");
+
+        if (NbtUtil.has(nbt, "modules")) {
+            NbtCompound moduleNbt = NbtUtil.get(nbt, "modules");
+            InventoryUtil.readNbt(args.registryLookup, moduleNbt, getModuleStacks());
         }
 
-        if (NbtUtil.has(nbt, "coolTime")) coolTime = NbtUtil.getDouble(nbt, "coolTime");
-        if (NbtUtil.has(nbt, "module_bedrock_break")) canBedrockBreak = NbtUtil.getBoolean(nbt, "module_bedrock_break");
-        if (NbtUtil.has(nbt, "module_mob_delete")) isSetMobDelete = NbtUtil.getBoolean(nbt, "module_mob_delete");
-        if (NbtUtil.has(nbt, "module_mob_kill")) isSetMobKill = NbtUtil.getBoolean(nbt, "module_mob_kill");
-        if (NbtUtil.has(nbt, "module_luck")) isSetLuck = NbtUtil.getBoolean(nbt, "module_luck");
-        if (NbtUtil.has(nbt, "module_silk_touch")) isSetSilkTouch = NbtUtil.getBoolean(nbt, "module_silk_touch");
-        if (NbtUtil.has(nbt, "module_exp_collect")) isSetExpCollect = NbtUtil.getBoolean(nbt, "module_exp_collect");
+        addModulesFromOldNbt(nbt);
+
         if (NbtUtil.has(nbt, "rangePos1X")
                 && NbtUtil.has(nbt, "rangePos1Y")
                 && NbtUtil.has(nbt, "rangePos1Z")
@@ -284,6 +277,33 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
             fluidStorage.amount = tag.getLong("amount");
 
          */
+    }
+
+    protected void addModulesFromOldNbt(NbtCompound nbt) {
+        if (NbtUtil.has(nbt, "module_bedrock_break") && NbtUtil.getBoolean(nbt, "module_bedrock_break")) {
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.BEDROCK_BREAK_MODULE))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.BEDROCK_BREAK_MODULE, 1));
+        }
+        if (NbtUtil.has(nbt, "module_mob_delete") && NbtUtil.getBoolean(nbt, "module_mob_delete")) {
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.MOB_DELETE_MODULE))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.MOB_DELETE_MODULE, 1));
+        }
+        if (NbtUtil.has(nbt, "module_mob_kill") && NbtUtil.getBoolean(nbt, "module_mob_kill")) {
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.MOB_KILL_MODULE))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.MOB_KILL_MODULE, 1));
+        }
+        if (NbtUtil.has(nbt, "module_luck") && NbtUtil.getBoolean(nbt, "module_luck")) {
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.LUCK_MODULE))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.LUCK_MODULE, 1));
+        }
+        if (NbtUtil.has(nbt, "module_silk_touch") && NbtUtil.getBoolean(nbt, "module_silk_touch")) {
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.SILK_TOUCH_MODULE))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.SILK_TOUCH_MODULE, 1));
+        }
+        if (NbtUtil.has(nbt, "module_exp_collect") && NbtUtil.getBoolean(nbt, "module_exp_collect")) {
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.EXP_COLLECT_MODULE))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.EXP_COLLECT_MODULE, 1));
+        }
     }
 
     // ----
@@ -335,6 +355,20 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public int limit = 5;
+
+    public boolean isRemovalItem(ItemStack stack) {
+        if (!hasModuleItem(ModuleItems.DROP_REMOVAL_MODULE)) return false;
+
+        for (ItemStack moduleStack : getModuleStacks()) {
+            if (!(moduleStack.getItem() instanceof DropRemovalModule)) continue;
+
+            List<Item> removalItems = DropRemovalModule.getRemovalItems(moduleStack);
+            if (removalItems.contains(stack.getItem()))
+                return true;
+
+        }
+        return false;
+    }
 
     public void insertChest() {
         // チェスト自動挿入
@@ -461,18 +495,18 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         return maxPos;
     }
 
-    public void setMinPos(BlockPos pos1) {
-        this.minPos = pos1;
+    public void setMinPos(BlockPos pos) {
+        this.minPos = pos;
     }
 
-    public void setMaxPos(BlockPos pos2) {
-        this.maxPos = pos2;
+    public void setMaxPos(BlockPos pos) {
+        this.maxPos = pos;
     }
 
     public void breakBlock(BlockPos pos, boolean drop) {
         if (WorldUtil.isClient(getWorld())) return;
 
-        if (isSetSilkTouch || isSetLuck) {
+        if (isEnchanted()) {
             if (drop) {
                 List<ItemStack> drops = Block.getDroppedStacks(WorldUtil.getBlockState(getWorld(), pos), (ServerWorld) getWorld(), pos, getWorld().getBlockEntity(pos), null, getQuarryStack());
                 drops.forEach(this::addStack);
@@ -481,6 +515,25 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         } else {
             WorldUtil.breakBlock(getWorld(), pos, drop);
         }
+    }
+
+    private Boolean CACHE_isEnchanted = null;
+
+    public boolean isEnchanted() {
+        if (CACHE_isEnchanted != null) return CACHE_isEnchanted;
+
+        for (ItemStack stack : getModuleStacks()) {
+            if (!(stack.getItem() instanceof MachineModule)) continue;
+
+            MachineModule module = (MachineModule) stack.getItem();
+            if (module.getEnchantments() != null) {
+                CACHE_isEnchanted = true;
+                return true;
+            }
+        }
+
+        CACHE_isEnchanted = false;
+        return false;
     }
 
     private ItemStack getQuarryStack() {
@@ -494,12 +547,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
         Map<CompatEnchantment, Integer> enchantments = EnchantmentUtil.getEnchantment(stack, getWorld());
 
-        if (isSetSilkTouch) {
-            enchantments.put(EnchantmentUtil.getEnchantment(CompatIdentifier.of("silk_touch")), 3);
-            applied = true;
-        }
-        if (isSetLuck) {
-            enchantments.put(EnchantmentUtil.getEnchantment(CompatIdentifier.of("fortune")), 3);
+        if (isEmptyInModules()) return;
+        for (ItemStack moduleStack : getModuleStacks()) {
+            if (!(moduleStack.getItem() instanceof MachineModule)) continue;
+            MachineModule module = (MachineModule) moduleStack.getItem();
+
+            if (module.getEnchantments() == null) continue;
+            enchantments.putAll(module.getEnchantments());
             applied = true;
         }
 
@@ -510,13 +564,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     public void tryDeleteMob(BlockPos blockPos) {
         if (getWorld() == null || getWorld().isClient()) return;
         List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
-        mobs.forEach(Entity::discard);
+        mobs.forEach(EntityUtil::discard);
     }
 
     public void tryKillMob(BlockPos blockPos) {
         if (getWorld() == null || getWorld().isClient()) return;
         List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
-        mobs.forEach(LivingEntity::kill);
+        mobs.forEach(EntityUtil::kill);
     }
 
     public void tryCollectExp(BlockPos blockPos) {
@@ -525,7 +579,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         entities.forEach((entity) -> {
             if (getStoredExp() + entity.getExperienceAmount() > getMaxStoredExp()) return;
             addStoredExp(entity.getExperienceAmount());
-            entity.discard();
+            EntityUtil.discard(entity);
         });
     }
 
@@ -607,7 +661,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                         if (WorldUtil.getBlockEntity(getWorld(), procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
 
                         Block procBlock = WorldUtil.getBlockState(getWorld(), procPos).getBlock();
-                        if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) {
+                        if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (canReplaceFluid()) {
                                 double time = tryFluidReplace(procPos);
                                 if (time != 0) {
@@ -633,13 +687,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                                     useEnergy((long) time * getReplaceFluidEnergyCost());
                                 }
                             }
-                            if (isSetMobDelete) {
+                            if (hasModuleItem(ModuleItems.MOB_DELETE_MODULE)) {
                                 tryDeleteMob(procPos);
                             }
-                            if (isSetMobKill) {
+                            if (hasModuleItem(ModuleItems.MOB_KILL_MODULE)) {
                                 tryKillMob(procPos);
                             }
-                            if (isSetExpCollect) {
+                            if (hasModuleItem(ModuleItems.EXP_COLLECT_MODULE)) {
                                 tryCollectExp(procPos);
                             }
                             breakBlock(procPos, true);
@@ -663,7 +717,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                         if (WorldUtil.getBlockEntity(getWorld(), procPos) instanceof QuarryTile && WorldUtil.getBlockEntity(getWorld(), procPos) == this) continue;
 
                         Block procBlock = WorldUtil.getBlockState(getWorld(), procPos).getBlock();
-                        if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) {
+                        if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (tryPlaceFrame(procPos)) {
                                 useEnergy(getPlaceFrameEnergyCost());
                                 return false;
@@ -682,13 +736,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                                 useEnergy((long) time * getReplaceFluidEnergyCost());
                             }
                         }
-                        if (isSetMobDelete) {
+                        if (hasModuleItem(ModuleItems.MOB_DELETE_MODULE)) {
                             tryDeleteMob(procPos);
                         }
-                        if (isSetMobKill) {
+                        if (hasModuleItem(ModuleItems.MOB_KILL_MODULE)) {
                             tryKillMob(procPos);
                         }
-                        if (isSetExpCollect) {
+                        if (hasModuleItem(ModuleItems.EXP_COLLECT_MODULE)) {
                             tryCollectExp(procPos);
                         }
                         if (procBlock instanceof FluidBlock
@@ -726,6 +780,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public void addStack(ItemStack stack) {
         if (getWorld() == null || getWorld().isClient()) return;
+
+        if (isRemovalItem(stack)) return;
+
         int index = 0;
         for (; index < getItems().size(); index++) {
             if (stack.isEmpty() || stack.getCount() == 0) return;
@@ -743,7 +800,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                 stack.setCount(stack.getCount() + originInCount - stack.getMaxCount());
             }
         }
-        getWorld().spawnEntity(new ItemEntity(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ(), stack));
+
+        ItemEntity itemEntity = ItemEntityUtil.create(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ(), stack);
+        WorldUtil.spawnEntity(getWorld(), itemEntity);
     }
 
     public QuarryTile(BlockEntityType<?> type, TileCreateEvent event) {

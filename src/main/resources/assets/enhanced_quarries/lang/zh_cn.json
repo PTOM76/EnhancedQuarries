@@ -53,14 +53,9 @@
   "item.enhanced_quarries.enhanced_refined_gear": "增强/精炼齿轮",
   "item.enhanced_quarries.enhanced_panel": "增强面板",
 
-  "message.enhanced_quarries.bedrock_break_module.1": "“基岩破坏模块”已经应用于该机器。",
-  "message.enhanced_quarries.silk_touch_module.1": "“丝绸触摸模块”已经应用于该机器。",
-  "message.enhanced_quarries.luck_enchant_module.1": "“幸运模块”已经应用于该机器。",
-  "message.enhanced_quarries.mob_delete_module.1": "“生物删除模块”已经应用于该机器。",
-  "message.enhanced_quarries.mob_delete_module.2": "“生物删除模块”和“生物杀死模块”不能共存。",
-  "message.enhanced_quarries.mob_kill_module.1": "“生物杀死模块”已经应用于该机器。",
-  "message.enhanced_quarries.mob_kill_module.2": "“生物杀死模块”和“生物删除模块”不能共存。",
-  "message.enhanced_quarries.exp_collect_module.1": "“经验收集模块”已经应用于该机器。",
+  "message.enhanced_quarries.already_applied": "“%s”已经应用于该机器。",
+  "message.enhanced_quarries.mob_delete_module.conflict": "“生物删除模块”和“生物杀死模块”不能共存。",
+  "message.enhanced_quarries.mob_kill_module.conflict": "“生物杀死模块”和“生物删除模块”不能共存。",
 
   "screen.enhanced_quarries.filler.title": "填充器",
   "screen.enhanced_quarries.filler.title2": "填充资源",

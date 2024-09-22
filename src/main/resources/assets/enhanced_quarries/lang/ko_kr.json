@@ -53,14 +53,9 @@
   "item.enhanced_quarries.enhanced_refined_gear": "향상된 / 정제된 기어",
   "item.enhanced_quarries.enhanced_panel": "향상된 패널",
 
-  "message.enhanced_quarries.bedrock_break_module.1": "이 기계에는 이미 \"바위판 파괴 모듈\"이 적용되어 있습니다.",
-  "message.enhanced_quarries.silk_touch_module.1": "이 기계에는 이미 \"실크 터치 모듈\"이 적용되어 있습니다.",
-  "message.enhanced_quarries.luck_enchant_module.1": "이 기계에는 이미 \"행운 모듈\"이 적용되어 있습니다.",
-  "message.enhanced_quarries.mob_delete_module.1": "이 기계에는 이미 \"몹 삭제 모듈\"이 적용되어 있습니다.",
-  "message.enhanced_quarries.mob_delete_module.2": "\"몹 삭제 모듈\"과 \"몹 사살 모듈\"은 함께 존재할 수 없습니다.",
-  "message.enhanced_quarries.mob_kill_module.1": "이 기계에는 이미 \"몹 사살 모듈\"이 적용되어 있습니다.",
-  "message.enhanced_quarries.mob_kill_module.2": "\"몹 사살 모듈\"과 \"몹 삭제 모듈\"은 함께 존재할 수 없습니다.",
-  "message.enhanced_quarries.exp_collect_module.1": "이 기계에는 이미 \"경험치 수집 모듈\"이 적용되어 있습니다.",
+  "message.enhanced_quarries.already_applied": "이 기계에는 이미 \"%s\"이 적용되어 있습니다.",
+  "message.enhanced_quarries.mob_delete_module.conflict": "\"몹 삭제 모듈\"과 \"몹 사살 모듈\"은 함께 존재할 수 없습니다.",
+  "message.enhanced_quarries.mob_kill_module.conflict": "\"몹 사살 모듈\"과 \"몹 삭제 모듈\"은 함께 존재할 수 없습니다.",
 
   "screen.enhanced_quarries.filler.title": "채움 장치",
   "screen.enhanced_quarries.filler.title2": "자원 채움",

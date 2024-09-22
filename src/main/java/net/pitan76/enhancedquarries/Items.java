@@ -15,90 +15,91 @@ import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
 
 public class Items {
 
-    public static Item NORMAL_QUARRY = ItemUtil.ofBlock(Blocks.NORMAL_QUARRY, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item ENHANCED_QUARRY = ItemUtil.ofBlock(Blocks.ENHANCED_QUARRY, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item FLUID_QUARRY = ItemUtil.ofBlock(Blocks.FLUID_QUARRY, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item OPTIMUM_QUARRY = ItemUtil.ofBlock(Blocks.OPTIMUM_QUARRY, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item ENHANCED_OPTIMUM_QUARRY = ItemUtil.ofBlock(Blocks.ENHANCED_OPTIMUM_QUARRY, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item FLUID_OPTIMUM_QUARRY = ItemUtil.ofBlock(Blocks.FLUID_OPTIMUM_QUARRY, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item NORMAL_QUARRY = ItemUtil.ofBlock(Blocks.NORMAL_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item ENHANCED_QUARRY = ItemUtil.ofBlock(Blocks.ENHANCED_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item FLUID_QUARRY = ItemUtil.ofBlock(Blocks.FLUID_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item OPTIMUM_QUARRY = ItemUtil.ofBlock(Blocks.OPTIMUM_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item ENHANCED_OPTIMUM_QUARRY = ItemUtil.ofBlock(Blocks.ENHANCED_OPTIMUM_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item FLUID_OPTIMUM_QUARRY = ItemUtil.ofBlock(Blocks.FLUID_OPTIMUM_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
-    public static Item NORMAL_FILLER = ItemUtil.ofBlock(Blocks.NORMAL_FILLER, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item ENHANCED_FILLER = ItemUtil.ofBlock(Blocks.ENHANCED_FILLER, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item ENHANCED_FILLER_WITH_CHEST = ItemUtil.ofBlock(Blocks.ENHANCED_FILLER_WITH_CHEST, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item NORMAL_FILLER = ItemUtil.ofBlock(Blocks.NORMAL_FILLER, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item ENHANCED_FILLER = ItemUtil.ofBlock(Blocks.ENHANCED_FILLER, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item ENHANCED_FILLER_WITH_CHEST = ItemUtil.ofBlock(Blocks.ENHANCED_FILLER_WITH_CHEST, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
-    public static Item NORMAL_PUMP = ItemUtil.ofBlock(Blocks.NORMAL_PUMP, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item ENHANCED_PUMP = ItemUtil.ofBlock(Blocks.ENHANCED_PUMP, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item NORMAL_PUMP = ItemUtil.ofBlock(Blocks.NORMAL_PUMP, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item ENHANCED_PUMP = ItemUtil.ofBlock(Blocks.ENHANCED_PUMP, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
-    public static Item NORMAL_SCANNER = ItemUtil.ofBlock(Blocks.NORMAL_SCANNER, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item NORMAL_BUILDER = ItemUtil.ofBlock(Blocks.NORMAL_BUILDER, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item NORMAL_LIBRARY = ItemUtil.ofBlock(Blocks.NORMAL_LIBRARY, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item NORMAL_SCANNER = ItemUtil.ofBlock(Blocks.NORMAL_SCANNER, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item NORMAL_BUILDER = ItemUtil.ofBlock(Blocks.NORMAL_BUILDER, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item NORMAL_LIBRARY = ItemUtil.ofBlock(Blocks.NORMAL_LIBRARY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
-    public static Item ENERGY_GENERATOR = ItemUtil.ofBlock(Blocks.ENERGY_GENERATOR, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item ENERGY_GENERATOR = ItemUtil.ofBlock(Blocks.ENERGY_GENERATOR, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
-    public static Item NORMAL_MARKER = ItemUtil.ofBlock(Blocks.NORMAL_MARKER, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item FRAME = ItemUtil.ofBlock(Blocks.FRAME, new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item NORMAL_MARKER = ItemUtil.ofBlock(Blocks.NORMAL_MARKER, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item FRAME = ItemUtil.ofBlock(Blocks.FRAME, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
 
-    public static Item BEDROCK_BREAK_MODULE = new BedrockBreakModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item SILK_TOUCH_MODULE = new SilkTouchModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item LUCK_MODULE = new LuckEnchantModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item MOB_KILL_MODULE = new MobKillModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item MOB_DELETE_MODULE = new MobDeleteModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item EXP_COLLECT_MODULE = new ExpCollectModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item BEDROCK_BREAK_MODULE = new BedrockBreakModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item SILK_TOUCH_MODULE = new SilkTouchModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item LUCK_MODULE = new LuckEnchantModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item MOB_KILL_MODULE = new MobKillModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item MOB_DELETE_MODULE = new MobDeleteModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item EXP_COLLECT_MODULE = new ExpCollectModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item DROPPED_ITEM_REMOVAL_MODULE = new DropRemovalModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
     // 全配置
-    public static FillerModule fillerALL_FILL = new AllFillModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerALL_FILL = new AllFillModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 全消去
-    public static FillerModule fillerALL_DELETE = new AllDeleteModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerALL_DELETE = new AllDeleteModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 全撤去
-    public static FillerModule fillerALL_REMOVE = new AllRemoveModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerALL_REMOVE = new AllRemoveModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 整地
-    public static FillerModule fillerLEVELING = new LevelingModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerLEVELING = new LevelingModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // ボックス
-    public static FillerModule fillerBOX = new BoxModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerBOX = new BoxModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 壁
-    public static FillerModule fillerWALL = new WallModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerWALL = new WallModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 松明
-    public static FillerModule fillerTORCH = new TorchModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerTORCH = new TorchModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 垂直レイヤー
-    public static FillerModule fillerVERTICAL_LAYER = new VerticalLayerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerVERTICAL_LAYER = new VerticalLayerModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 平行レイヤー
-    public static FillerModule fillerHORIZONTAL_LAYER = new HorizontalLayerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerHORIZONTAL_LAYER = new HorizontalLayerModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 積み上げ
-    public static FillerModule fillerTOWER = new TowerModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerTOWER = new TowerModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 液体除去(未実装)
-    public static FillerModule fillerDELETE_FLUID = new DeleteFluidModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerDELETE_FLUID = new DeleteFluidModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 床張り替え
-    public static FillerModule fillerFLOOR_REPLACE = new FloorReplaceModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerFLOOR_REPLACE = new FloorReplaceModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 階段
-    public static FillerModule fillerSTAIRS = new CreateStairsModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerSTAIRS = new CreateStairsModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 四角錐
-    public static FillerModule fillerPYRAMID = new CreatePyramidModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerPYRAMID = new CreatePyramidModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 階段撤去
-    public static FillerModule fillerCUT_STAIRS = new CutStairsModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerCUT_STAIRS = new CutStairsModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     // 四角錐撤去
-    public static FillerModule fillerCUT_PYRAMID = new CutPyramidModule(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static FillerModule fillerCUT_PYRAMID = new CutPyramidModule(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
     // 赤石ハンマー
-    public static Item REDSTONE_HAMMER = new RedstoneHammer(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item REDSTONE_HAMMER = new RedstoneHammer(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
     // レンチ
-    public static Item WRENCH = new WrenchItem(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item WRENCH = new WrenchItem(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
     // 素材
-    public static Item REFINED_GEAR = new ExtendItem(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item ENHANCED_REFINED_GEAR = new ExtendItem(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item ENHANCED_PANEL = new ExtendItem(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item REFINED_GEAR = new ExtendItem(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item ENHANCED_REFINED_GEAR = new ExtendItem(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item ENHANCED_PANEL = new ExtendItem(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
     // ----
 
     // 設計図
-    public static Item BLUEPRINT = new Blueprint(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
-    public static Item EMPTY_BLUEPRINT = new Blueprint(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item BLUEPRINT = new Blueprint(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item EMPTY_BLUEPRINT = new Blueprint(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
     // ゆっくり饅頭 (未実装)
-    //public static Item REIMU_BUN = new ExtendItem(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP).food(FoodComponents.COOKIE));
-    //public static Item MARISA_BUN = new ExtendItem(new CompatibleItemSettings().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP).food(FoodComponents.COOKIE));
+    //public static Item REIMU_BUN = new ExtendItem(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP).food(FoodComponents.COOKIE));
+    //public static Item MARISA_BUN = new ExtendItem(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP).food(FoodComponents.COOKIE));
 
 
     public static void init() {
@@ -132,6 +133,7 @@ public class Items {
         registry.registerItem(EnhancedQuarries._id("mob_kill_module"), () -> MOB_KILL_MODULE);
         registry.registerItem(EnhancedQuarries._id("mob_delete_module"), () -> MOB_DELETE_MODULE);
         registry.registerItem(EnhancedQuarries._id("exp_collect_module"), () -> EXP_COLLECT_MODULE);
+        registry.registerItem(EnhancedQuarries._id("dropped_item_removal_module"), () -> DROPPED_ITEM_REMOVAL_MODULE);
 
         registry.registerItem(EnhancedQuarries._id("filler_all_fill"), () -> fillerALL_FILL);
         registry.registerItem(EnhancedQuarries._id("filler_all_delete"), () -> fillerALL_DELETE);

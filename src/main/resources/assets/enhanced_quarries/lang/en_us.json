@@ -53,14 +53,9 @@
     "item.enhanced_quarries.enhanced_refined_gear": "Enhanced / Refined Gear",
     "item.enhanced_quarries.enhanced_panel": "Enhanced Panel",
 
-    "message.enhanced_quarries.bedrock_break_module.1": "The \"Bedrock Break Module\" has already been applied to the machine.",
-    "message.enhanced_quarries.silk_touch_module.1": "The \"Silk Touch Module\" has already been applied to the machine.",
-    "message.enhanced_quarries.luck_enchant_module.1": "The \"Luck Module\" has already been applied to the machine.",
-    "message.enhanced_quarries.mob_delete_module.1": "The \"Mob Delete Module\" has already been applied to the machine.",
-    "message.enhanced_quarries.mob_delete_module.2": "\"Mob Delete Module\" And \"Mob Kill Module\" cannot coexist.",
-    "message.enhanced_quarries.mob_kill_module.1": "The \"Mob Kill Module\" has already been applied to the machine.",
-    "message.enhanced_quarries.mob_kill_module.2": "\"Mob Kill Module\" And \"Mob Delete Module\" cannot coexist.",
-    "message.enhanced_quarries.exp_collect_module.1": "The \"Experience Collect Module\" has already been applied to the machine.",
+    "message.enhanced_quarries.already_applied": "The \"%s\" has already been applied to the machine.",
+    "message.enhanced_quarries.mob_delete_module.conflict": "\"Mob Delete Module\" And \"Mob Kill Module\" cannot coexist.",
+    "message.enhanced_quarries.mob_kill_module.conflict": "\"Mob Kill Module\" And \"Mob Delete Module\" cannot coexist.",
 
     "screen.enhanced_quarries.filler.title": "Filler",
     "screen.enhanced_quarries.filler.title2": "Filling Resources",
