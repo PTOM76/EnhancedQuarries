@@ -24,6 +24,7 @@ import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.enhancedquarries.registry.ModuleRegistry;
 import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
+import net.pitan76.enhancedquarries.util.EQStorageBoxUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
@@ -215,21 +216,13 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public ItemStack latestGotStack = ItemStackUtil.empty();
 
-    public static boolean isStorageBox(ItemStack stack) {
-        if (PlatformUtil.isModLoaded("storagebox")) {
-            return ItemUtil.toID(stack.getItem()).toString().equals("storagebox:storagebox");
-        }
-
-        return false;
-    }
-
     public ItemStack getInventoryStack() {
         for (ItemStack stack : getItems()) {
             latestGotStack = stack;
             if (stack.isEmpty()) continue;
             if (stack.getItem() instanceof BlockItem) return stack;
             // StorageBox
-            if (isStorageBox(stack)) {
+            if (EQStorageBoxUtil.isStorageBox(stack)) {
                 ItemStack itemInBox = StorageBoxUtil.getStackInStorageBox(stack);
                 if (itemInBox == null) continue;
 
@@ -243,7 +236,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
         if (getWorld().setBlockState(blockPos, BlockStateUtil.getDefaultState(block))) {
             WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getSoundGroup(BlockStateUtil.getDefaultState(block)).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
-            if (isStorageBox(latestGotStack)) {
+            if (EQStorageBoxUtil.isStorageBox(latestGotStack)) {
                 if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
                     int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
                     countInBox--;

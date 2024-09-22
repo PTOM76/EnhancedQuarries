@@ -13,7 +13,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.screen.FillerWithChestScreenHandler;
-import net.pitan76.enhancedquarries.tile.base.FillerTile;
+import net.pitan76.enhancedquarries.util.EQStorageBoxUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
@@ -50,7 +50,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
             if (stack.isEmpty()) continue;
             if (stack.getItem() instanceof BlockItem) return stack;
             // StorageBox
-            if (FillerTile.isStorageBox(stack)) {
+            if (EQStorageBoxUtil.isStorageBox(stack)) {
                 ItemStack itemInBox = StorageBoxUtil.getStackInStorageBox(stack);
                 if (itemInBox == null) continue;
 
