@@ -1,7 +1,7 @@
 package net.pitan76.enhancedquarries;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.pitan76.enhancedquarries.cmd.EnhancedQuarriesCommand;
+import net.pitan76.enhancedquarries.command.EnhancedQuarriesCommand;
 import net.pitan76.enhancedquarries.compat.RebornEnergyRegister;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.mcpitanlib.api.command.CommandRegistry;

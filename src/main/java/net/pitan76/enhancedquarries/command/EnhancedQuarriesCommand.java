@@ -1,4 +1,4 @@
-package net.pitan76.enhancedquarries.cmd;
+package net.pitan76.enhancedquarries.command;
 
 import net.pitan76.enhancedquarries.Config;
 import net.pitan76.mcpitanlib.api.command.CommandSettings;
