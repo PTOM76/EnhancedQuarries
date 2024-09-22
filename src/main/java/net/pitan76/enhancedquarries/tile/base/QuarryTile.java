@@ -213,6 +213,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     // NBT
 
     public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
         NbtCompound nbt = args.getNbt();
         InventoryUtil.writeNbt(args, getItems());
 
@@ -250,6 +251,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
         NbtCompound nbt = args.getNbt();
         if (NbtUtil.has(nbt, "Items")) {
             InventoryUtil.readNbt(args, getItems());

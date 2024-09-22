@@ -103,6 +103,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     // NBT
 
     public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
         NbtCompound nbt = args.getNbt();
         NbtCompound invNbt = NbtUtil.create();
         InventoryUtil.writeNbt(args.registryLookup, invNbt, craftingInvItems);
@@ -133,6 +134,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
         NbtCompound nbt = args.getNbt();
         if (NbtUtil.has(nbt, "craftingInv")) {
             NbtCompound invNbt = NbtUtil.get(nbt, "craftingInv");

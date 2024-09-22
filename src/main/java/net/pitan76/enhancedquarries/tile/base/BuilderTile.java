@@ -75,6 +75,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     // NBT
 
     public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
         NbtCompound nbt = args.getNbt();
 
         InventoryUtil.writeNbt(args, getItems());
@@ -93,6 +94,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     }
 
     public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
         NbtCompound nbt = args.getNbt();
 
         if (NbtUtil.has(nbt, "Items")) {

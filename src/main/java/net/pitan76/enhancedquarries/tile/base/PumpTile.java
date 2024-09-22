@@ -61,6 +61,7 @@ public class PumpTile extends BaseEnergyTile {
     }
 
     public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
         NbtCompound nbt = args.getNbt();
         if (NbtUtil.has(nbt, "variant")) {
             FluidStorageUtil.readNbt(storedFluid, args);
@@ -68,6 +69,7 @@ public class PumpTile extends BaseEnergyTile {
     }
 
     public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
         NbtCompound nbt = args.getNbt();
         if(!storedFluid.isResourceBlank() && !FluidStorageUtil.isEmpty(storedFluid)) {
             FluidStorageUtil.writeNbt(storedFluid, args);

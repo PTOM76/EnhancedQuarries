@@ -185,6 +185,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     @Override
     public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
         NbtCompound nbt = args.getNbt();
         if (NbtUtil.has(nbt, "BurnTime"))
             burnTime = NbtUtil.getInt(nbt, "BurnTime");
@@ -196,6 +197,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
         NbtCompound nbt = args.getNbt();
         NbtUtil.putInt(nbt, "BurnTime", burnTime);
         NbtUtil.putBoolean(nbt, "Burning", burning);
