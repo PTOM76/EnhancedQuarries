@@ -171,8 +171,8 @@ public abstract class Quarry extends BaseBlock {
                     if (markerList.size() <= 2 ) return;
                     if (maxPosY.equals(minPosY)) maxPosY += 4;
 
-                    quarryTile.setPos1(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
-                    quarryTile.setPos2(PosUtil.flooredBlockPos(maxPosX + 1, maxPosY, maxPosZ + 1));
+                    quarryTile.setMinPos(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
+                    quarryTile.setMaxPos(PosUtil.flooredBlockPos(maxPosX + 1, maxPosY, maxPosZ + 1));
                 }
             }
         }

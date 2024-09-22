@@ -230,15 +230,15 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         if (isSetExpCollect)
             NbtUtil.putBoolean(nbt, "module_exp_collect", true);
 
-        if (pos1 != null) {
-            NbtUtil.putInt(nbt, "rangePos1X", getPos1().getX());
-            NbtUtil.putInt(nbt, "rangePos1Y", getPos1().getY());
-            NbtUtil.putInt(nbt, "rangePos1Z", getPos1().getZ());
+        if (minPos != null) {
+            NbtUtil.putInt(nbt, "rangePos1X", getMinPos().getX());
+            NbtUtil.putInt(nbt, "rangePos1Y", getMinPos().getY());
+            NbtUtil.putInt(nbt, "rangePos1Z", getMinPos().getZ());
         }
-        if (pos2 != null) {
-            NbtUtil.putInt(nbt, "rangePos2X", getPos2().getX());
-            NbtUtil.putInt(nbt, "rangePos2Y", getPos2().getY());
-            NbtUtil.putInt(nbt, "rangePos2Z", getPos2().getZ());
+        if (maxPos != null) {
+            NbtUtil.putInt(nbt, "rangePos2X", getMaxPos().getX());
+            NbtUtil.putInt(nbt, "rangePos2Y", getMaxPos().getY());
+            NbtUtil.putInt(nbt, "rangePos2Z", getMaxPos().getZ());
         }
 
         NbtUtil.putInt(nbt, "storedExp", getStoredExp());
@@ -268,8 +268,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                 && NbtUtil.has(nbt, "rangePos2X")
                 && NbtUtil.has(nbt, "rangePos2Y")
                 && NbtUtil.has(nbt, "rangePos2Z")) {
-            setPos1(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
-            setPos2(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
+            setMinPos(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
+            setMaxPos(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
         }
 
         if (NbtUtil.has(nbt, "storedExp")) setStoredExp(NbtUtil.getInt(nbt, "storedExp"));
@@ -409,7 +409,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         }
     }
 
-    public BlockPos getDefaultRangePos1() {
+    public BlockPos getDefaultRangeMinPos() {
         // default
         switch (getFacing()) {
             case NORTH:
@@ -425,7 +425,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         }
     }
 
-    public BlockPos getDefaultRangePos2() {
+    public BlockPos getDefaultRangeMaxPos() {
         // default
         switch (getFacing()) {
             case NORTH:
@@ -447,31 +447,31 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         return true;
     }
 
-    private BlockPos pos1 = null;
-    private BlockPos pos2 = null;
+    private BlockPos minPos = null;
+    private BlockPos maxPos = null;
 
-    public BlockPos getPos1() {
-        return pos1;
+    public BlockPos getMinPos() {
+        return minPos;
     }
 
-    public BlockPos getPos2() {
-        return pos2;
+    public BlockPos getMaxPos() {
+        return maxPos;
     }
 
-    public void setPos1(BlockPos pos1) {
-        this.pos1 = pos1;
+    public void setMinPos(BlockPos pos1) {
+        this.minPos = pos1;
     }
 
-    public void setPos2(BlockPos pos2) {
-        this.pos2 = pos2;
+    public void setMaxPos(BlockPos pos2) {
+        this.maxPos = pos2;
     }
 
     public void breakBlock(BlockPos pos, boolean drop) {
-        if (getWorld().isClient()) return;
+        if (WorldUtil.isClient(getWorld())) return;
 
         if (isSetSilkTouch || isSetLuck) {
             if (drop) {
-                List<ItemStack> drops = Block.getDroppedStacks(getWorld().getBlockState(pos), (ServerWorld) getWorld(), pos, getWorld().getBlockEntity(pos), null, getQuarryStack());
+                List<ItemStack> drops = Block.getDroppedStacks(WorldUtil.getBlockState(getWorld(), pos), (ServerWorld) getWorld(), pos, getWorld().getBlockEntity(pos), null, getQuarryStack());
                 drops.forEach(this::addStack);
             }
             WorldUtil.breakBlock(getWorld(), pos, false);
@@ -520,22 +520,22 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         for (Direction value : Direction.values()) {
             BlockPos offsetBlockPos = blockPos.offset(value);
 
-            if (getWorld().getBlockState(offsetBlockPos).getBlock() instanceof FluidBlock) {
+            if (WorldUtil.getBlockState(getWorld(), offsetBlockPos).getBlock() instanceof FluidBlock) {
                 // replace fluid block
-                getWorld().setBlockState(offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
+                WorldUtil.setBlockState(getWorld(), offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
                 time += 0.1;
             }
 
-            if(!getWorld().getFluidState(offsetBlockPos).isEmpty() || getWorld().getFluidState(offsetBlockPos).isStill()) {
+            if(!WorldUtil.getFluidState(getWorld(), offsetBlockPos).isEmpty() || getWorld().getFluidState(offsetBlockPos).isStill()) {
                 breakBlock(offsetBlockPos, true);
 
                 List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add( 1,  1, 1)), EntityPredicates.VALID_ENTITY);
                 for(ItemEntity itemEntity : entities) {
                     addStack(itemEntity.getStack());
-                    itemEntity.kill();
+                    EntityUtil.kill(itemEntity);
                 }
 
-                getWorld().setBlockState(offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
+                WorldUtil.setBlockState(getWorld(), offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
                 time += 0.1;
             }
         }
@@ -545,25 +545,25 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
     public boolean tryPlaceFrame(BlockPos blockPos) {
         if (getEnergy() > getPlaceFrameEnergyCost()) {
-            Block block = getWorld().getBlockState(blockPos).getBlock();
+            Block block = WorldUtil.getBlockState(getWorld(), blockPos).getBlock();
             if (block instanceof Frame) return false;
             if (
-                    ((blockPos.getX() == pos1.getX()
-                    || blockPos.getZ() == pos1.getZ()
-                    || blockPos.getX() + 1 == pos2.getX()
-                    || blockPos.getZ() + 1 == pos2.getZ())
-                            && (blockPos.getY() == pos1.getY()
-                            || blockPos.getY() == pos2.getY())
+                    ((blockPos.getX() == minPos.getX()
+                    || blockPos.getZ() == minPos.getZ()
+                    || blockPos.getX() + 1 == maxPos.getX()
+                    || blockPos.getZ() + 1 == maxPos.getZ())
+                            && (blockPos.getY() == minPos.getY()
+                            || blockPos.getY() == maxPos.getY())
                     )
                     ||
                     (
-                            (blockPos.getX() == pos1.getX() && blockPos.getZ() == pos1.getZ())
-                                    || (blockPos.getX() + 1 == pos2.getX() && blockPos.getZ() + 1 == pos2.getZ())
-                                    || (blockPos.getX() == pos1.getX() && blockPos.getZ() + 1 == pos2.getZ())
-                                    || (blockPos.getX() + 1 == pos2.getX() && blockPos.getZ() == pos1.getZ())
+                            (blockPos.getX() == minPos.getX() && blockPos.getZ() == minPos.getZ())
+                                    || (blockPos.getX() + 1 == maxPos.getX() && blockPos.getZ() + 1 == maxPos.getZ())
+                                    || (blockPos.getX() == minPos.getX() && blockPos.getZ() + 1 == maxPos.getZ())
+                                    || (blockPos.getX() + 1 == maxPos.getX() && blockPos.getZ() == minPos.getZ())
                     )
             ) {
-                getWorld().setBlockState(blockPos, Frame.getPlacementStateByTile(getWorld(), blockPos));
+                WorldUtil.setBlockState(getWorld(), blockPos, Frame.getPlacementStateByTile(getWorld(), blockPos));
                 return true;
             }
 
@@ -572,23 +572,23 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     public boolean tryQuarrying() {
-        if (getWorld() == null || getWorld().isClient()) return false;
-        if (pos1 == null)
-            pos1 = getDefaultRangePos1();
-        if (pos2 == null)
-            pos2 = getDefaultRangePos2();
+        if (getWorld() == null || WorldUtil.isClient(getWorld())) return false;
+        if (minPos == null)
+            minPos = getDefaultRangeMinPos();
+        if (maxPos == null)
+            maxPos = getDefaultRangeMaxPos();
         int procX;
         int procY;
         int procZ;
-        for (procY = pos2.getY(); procY > WorldUtil.getBottomY(getWorld()); procY--) {
-            if (pos1.getY() - 1 >= procY) {
-                for (procX = pos1.getX() + 1; procX < pos2.getX() - 1; procX++) {
-                    for (procZ = pos1.getZ() + 1; procZ < pos2.getZ() - 1; procZ++) {
+        for (procY = maxPos.getY(); procY > WorldUtil.getBottomY(getWorld()); procY--) {
+            if (minPos.getY() - 1 >= procY) {
+                for (procX = minPos.getX() + 1; procX < maxPos.getX() - 1; procX++) {
+                    for (procZ = minPos.getZ() + 1; procZ < maxPos.getZ() - 1; procZ++) {
                         BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                        if (getWorld().getBlockState(procPos) == null) continue;
-                        if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
+                        if (WorldUtil.getBlockState(getWorld(), procPos) == null) continue;
+                        if (WorldUtil.getBlockEntity(getWorld(), procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
 
-                        Block procBlock = getWorld().getBlockState(procPos).getBlock();
+                        Block procBlock = WorldUtil.getBlockState(getWorld(), procPos).getBlock();
                         if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) {
                             if (canReplaceFluid()) {
                                 double time = tryFluidReplace(procPos);
@@ -598,12 +598,12 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                             }
                             continue;
                         }
-                        if (pos1.getY() - 1 >= procY) {
+                        if (minPos.getY() - 1 >= procY) {
                             if ( procBlock instanceof FluidBlock) {
                                 if (canReplaceFluid()
-                                        && getWorld().getFluidState(procPos).isStill()
+                                        && WorldUtil.getFluidState(getWorld(), procPos).isStill()
                                         && getEnergy() > getReplaceFluidEnergyCost()) {
-                                    getWorld().setBlockState(procPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
+                                    WorldUtil.setBlockState(getWorld(), procPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                                     useEnergy(getReplaceFluidEnergyCost());
                                 } else {
                                     continue;
@@ -629,22 +629,22 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                             if (entities.isEmpty()) return true;
                             for(ItemEntity itemEntity : entities) {
                                 addStack(itemEntity.getStack());
-                                itemEntity.kill();
+                                EntityUtil.kill(itemEntity);
                             }
                             return true;
                         }
                     }
                 }
             }
-            else if (pos1.getY() <= procY && pos2.getY() >= procY) {
+            else if (minPos.getY() <= procY && maxPos.getY() >= procY) {
                 // procX < pos2.getX()を=<するとposのずれ問題は修正可能だが、別の方法で対処しているので、時間があればこっちで修正したい。
-                for (procX = pos1.getX(); procX < pos2.getX(); procX++) {
-                    for (procZ = pos1.getZ(); procZ < pos2.getZ(); procZ++) {
+                for (procX = minPos.getX(); procX < maxPos.getX(); procX++) {
+                    for (procZ = minPos.getZ(); procZ < maxPos.getZ(); procZ++) {
                         BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                        if (getWorld().getBlockState(procPos) == null) continue;
-                        if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
+                        if (WorldUtil.getBlockState(getWorld(), procPos) == null) continue;
+                        if (WorldUtil.getBlockEntity(getWorld(), procPos) instanceof QuarryTile && WorldUtil.getBlockEntity(getWorld(), procPos) == this) continue;
 
-                        Block procBlock = getWorld().getBlockState(procPos).getBlock();
+                        Block procBlock = WorldUtil.getBlockState(getWorld(), procPos).getBlock();
                         if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !canBedrockBreak)) {
                             if (tryPlaceFrame(procPos)) {
                                 useEnergy(getPlaceFrameEnergyCost());
@@ -673,7 +673,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
                         if (isSetExpCollect) {
                             tryCollectExp(procPos);
                         }
-                        if (procBlock instanceof FluidBlock && !getWorld().getFluidState(procPos).isStill()) {
+                        if (procBlock instanceof FluidBlock
+                                && !FluidUtil.isStill(WorldUtil.getFluidState(getWorld(), procPos))) {
                             continue;
                         }
                         if (procBlock instanceof Frame) continue;
