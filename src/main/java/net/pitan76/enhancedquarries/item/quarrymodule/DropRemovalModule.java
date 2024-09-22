@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -48,9 +49,13 @@ public class DropRemovalModule extends MachineModule implements NamedScreenHandl
         List<Item> items = new ArrayList<>();
 
         NbtCompound nbt = CustomDataUtil.getNbt(stack);
-        for (Object o : NbtUtil.getList(nbt, "Items")) {
-            if (!(o instanceof String)) continue;
-            items.add(ItemUtil.fromId(CompatIdentifier.of((String) o)));
+        NbtList list = NbtUtil.getList(nbt, "Items");
+
+        for (int i = 0; i < list.size(); i++) {
+            String itemId = list.getString(i);
+            if (itemId == null || itemId.isEmpty()) continue;
+
+            items.add(ItemUtil.fromId(CompatIdentifier.of(itemId)));
         }
 
         return items;

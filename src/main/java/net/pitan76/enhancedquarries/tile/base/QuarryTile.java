@@ -363,6 +363,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     public int limit = 5;
 
     public boolean isRemovalItem(ItemStack stack) {
+        // TODO: キャッシュ機構実装
         if (!hasModuleItem(ModuleItems.DROP_REMOVAL_MODULE)) return false;
 
         for (ItemStack moduleStack : getModuleStacks()) {

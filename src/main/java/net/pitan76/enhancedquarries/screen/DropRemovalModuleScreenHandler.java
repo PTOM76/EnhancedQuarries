@@ -120,9 +120,8 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
 
     @Override
     public void overrideOnSlotClick(int slotIndex, int button, SlotActionType actionType, Player player) {
-        System.out.println("Slot Index: " + slotIndex);
         if (slotIndex < 0 || slotIndex >= slots.size()) {
-            overrideOnSlotClick(slotIndex, button, actionType, player);
+            super.overrideOnSlotClick(slotIndex, button, actionType, player);
             return;
         }
 
