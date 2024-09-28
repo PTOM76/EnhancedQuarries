@@ -2,19 +2,15 @@ package net.pitan76.enhancedquarries.tile.base;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -26,20 +22,24 @@ import net.pitan76.enhancedquarries.registry.ModuleRegistry;
 import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
 import net.pitan76.enhancedquarries.util.EQStorageBoxUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
+import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
-public class FillerTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
+public class FillerTile extends BaseEnergyTile implements IInventory, SidedInventory, SimpleScreenHandlerFactory {
 
     // Container
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStackUtil.empty());
-    public DefaultedList<ItemStack> craftingInvItems = DefaultedList.ofSize(10, ItemStackUtil.empty());
+    public ItemStackList invItems = ItemStackList.ofSize(27, ItemStackUtil.empty());
+    public ItemStackList craftingInvItems = ItemStackList.ofSize(10, ItemStackUtil.empty());
 
     public IInventory craftingInventory = () -> craftingInvItems;
     public IInventory inventory = this;
@@ -107,7 +107,13 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         super.writeNbt(args);
         NbtCompound nbt = args.getNbt();
         NbtCompound invNbt = NbtUtil.create();
-        InventoryUtil.writeNbt(args.registryLookup, invNbt, craftingInvItems);
+
+        if (getWorld() != null) {
+            if (!args.hasRegistryLookup())
+                args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
+
+            InventoryUtil.writeNbt(args.registryLookup, invNbt, craftingInvItems);
+        }
         NbtUtil.put(nbt, "craftingInv", invNbt);
 
         InventoryUtil.writeNbt(args, getItems());
@@ -139,8 +145,13 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
         NbtCompound nbt = args.getNbt();
         if (NbtUtil.has(nbt, "craftingInv")) {
             NbtCompound invNbt = NbtUtil.get(nbt, "craftingInv");
-            if (getWorld() != null)
+
+            if (getWorld() != null) {
+                if (!args.hasRegistryLookup())
+                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
+
                 InventoryUtil.readNbt(args.registryLookup, invNbt, craftingInvItems);
+            }
         }
 
         if (NbtUtil.has(nbt, "Items")) {
@@ -430,7 +441,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public ItemStackList getItems() {
         return invItems;
     }
 
@@ -454,13 +465,13 @@ public class FillerTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     @Override
-    public Text getDisplayName() {
+    public Text getDisplayName(DisplayNameArgs args) {
         return TextUtil.translatable("screen.enhanced_quarries.filler.title");
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new FillerScreenHandler(syncId, playerInventory, this, getCraftingInventory());
+    public ScreenHandler createMenu(CreateMenuEvent e) {
+        return new FillerScreenHandler(e.syncId, e.playerInventory, this, getCraftingInventory());
     }
 }

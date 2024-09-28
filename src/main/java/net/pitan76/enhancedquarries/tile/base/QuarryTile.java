@@ -20,7 +20,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -36,6 +35,7 @@ import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
@@ -48,7 +48,7 @@ import java.util.Map;
 //@SuppressWarnings("UnstableApiUsage")
 public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInventory {
     // Container
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(27, ItemStackUtil.empty());
+    public ItemStackList invItems = ItemStackList.ofSize(27, ItemStackUtil.empty());
 
     public IInventory inventory = this;
 
@@ -112,7 +112,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     // モジュール
-    public DefaultedList<ItemStack> moduleStacks = DefaultedList.ofSize(getMaxModuleCount(), ItemStackUtil.empty());
+    public ItemStackList moduleStacks = ItemStackList.ofSize(getMaxModuleCount(), ItemStackUtil.empty());
 
     public void addModuleStack(ItemStack stack) {
         if (!(stack.getItem() instanceof MachineModule))
@@ -163,7 +163,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         return false;
     }
 
-    public DefaultedList<ItemStack> getModuleStacks() {
+    public ItemStackList getModuleStacks() {
         return moduleStacks;
     }
 
@@ -225,10 +225,12 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
         if (!isEmptyInModules()) {
             NbtCompound moduleNbt = NbtUtil.create();
-            if (!args.hasRegistryLookup())
-                args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
+            if (getWorld() != null) {
+                if (!args.hasRegistryLookup())
+                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
 
-            InventoryUtil.writeNbt(args.registryLookup, moduleNbt, getModuleStacks());
+                InventoryUtil.writeNbt(args.registryLookup, moduleNbt, getModuleStacks());
+            }
             NbtUtil.put(nbt, "modules", moduleNbt);
         }
 
@@ -262,7 +264,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
         if (NbtUtil.has(nbt, "modules")) {
             NbtCompound moduleNbt = NbtUtil.get(nbt, "modules");
-            InventoryUtil.readNbt(args.registryLookup, moduleNbt, getModuleStacks());
+
+            if (getWorld() != null) {
+                if (!args.hasRegistryLookup())
+                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
+
+                InventoryUtil.readNbt(args.registryLookup, moduleNbt, getModuleStacks());
+            }
         }
 
         addModulesFromOldNbt(nbt);
@@ -824,7 +832,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public ItemStackList getItems() {
         return invItems;
     }
 

@@ -3,20 +3,19 @@ package net.pitan76.enhancedquarries.tile;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.screen.FillerWithChestScreenHandler;
 import net.pitan76.enhancedquarries.util.EQStorageBoxUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,10 +23,10 @@ import java.util.List;
 
 public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
 
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(54, ItemStackUtil.empty());
+    public ItemStackList invItems = ItemStackList.ofSize(54, ItemStackUtil.empty());
     
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public ItemStackList getItems() {
         return invItems;
     }
 
@@ -99,7 +98,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new FillerWithChestScreenHandler(syncId, playerInventory, this, getCraftingInventory());
+    public ScreenHandler createMenu(CreateMenuEvent e) {
+        return new FillerWithChestScreenHandler(e.syncId, e.playerInventory, this, getCraftingInventory());
     }
 }
