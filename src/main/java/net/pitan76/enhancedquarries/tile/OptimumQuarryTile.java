@@ -91,7 +91,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                             if (canReplaceFluid()
                                     && FluidUtil.isStill(WorldUtil.getFluidState(getWorld(), procPos))
                                     && getEnergy() > getReplaceFluidEnergyCost()) {
-                                getWorld().setBlockState(procPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
+                                WorldUtil.setBlockState(getWorld(), procPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                                 useEnergy(getReplaceFluidEnergyCost());
                             } else {
                                 return continueQuarrying();

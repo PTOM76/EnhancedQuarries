@@ -225,6 +225,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
 
         if (!isEmptyInModules()) {
             NbtCompound moduleNbt = NbtUtil.create();
+            if (!args.hasRegistryLookup())
+                args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
+
             InventoryUtil.writeNbt(args.registryLookup, moduleNbt, getModuleStacks());
             NbtUtil.put(nbt, "modules", moduleNbt);
         }
