@@ -11,6 +11,7 @@ import net.pitan76.enhancedquarries.inventory.slot.FuelSlot;
 import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandler;
+import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
@@ -23,15 +24,15 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
     public long energy = 0;
     public long maxEnergy = 0;
 
-    public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, syncId, playerInventory, InventoryUtil.createSimpleInventory(1));
+    public EnergyGeneratorScreenHandler(CreateMenuEvent e, PacketByteBuf buf) {
+        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, e.syncId, e.playerInventory, InventoryUtil.createSimpleInventory(1));
         if (buf == null) return;
         energy = PacketByteUtil.readLong(buf);
         maxEnergy = PacketByteUtil.readLong(buf);
     }
 
-    public EnergyGeneratorScreenHandler(int syncId, PlayerInventory playerInventory, EnergyGeneratorTile tile) {
-        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, syncId, playerInventory, tile);
+    public EnergyGeneratorScreenHandler(CreateMenuEvent e, EnergyGeneratorTile tile) {
+        this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, e.syncId, e.playerInventory, tile);
         this.tile = tile;
     }
 

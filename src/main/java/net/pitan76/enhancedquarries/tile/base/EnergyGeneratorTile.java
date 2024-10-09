@@ -3,7 +3,6 @@ package net.pitan76.enhancedquarries.tile.base;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -27,6 +26,8 @@ import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.VanillaStyleSidedInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
 import net.pitan76.mcpitanlib.api.gui.v2.ExtendedScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, SidedInventory, ExtendedScreenHandlerFactory {
+public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, VanillaStyleSidedInventory, ExtendedScreenHandlerFactory {
     public EnergyGeneratorTile(BlockEntityType<?> type, TileCreateEvent event) {
         super(type, event);
     }
@@ -209,18 +210,8 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     }
 
     @Override
-    public int[] getAvailableSlots(Direction side) {
+    public int[] getAvailableSlots(AvailableSlotsArgs args) {
         return new int[]{0};
-    }
-
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return dir != Direction.DOWN;
-    }
-
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return dir == Direction.DOWN;
     }
 
     @Override
@@ -239,6 +230,6 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     @Nullable
     @Override
     public ScreenHandler createMenu(CreateMenuEvent e) {
-        return new EnergyGeneratorScreenHandler(e.syncId, e.playerInventory, this);
+        return new EnergyGeneratorScreenHandler(e, this);
     }
 }

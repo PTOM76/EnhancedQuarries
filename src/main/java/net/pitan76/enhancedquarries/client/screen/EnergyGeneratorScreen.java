@@ -55,6 +55,6 @@ public class EnergyGeneratorScreen extends BaseHandledScreen {
         long maxEnergy = screenHandler.maxEnergy;
         int energyBarHeight = (int) ((double) energy / (double) maxEnergy * (double) height);
         int energyBarY = y + height - energyBarHeight;
-        callDrawTexture(args.drawObjectDM, getTexture(), x, energyBarY, 176, 0, width, energyBarHeight);
+        callDrawTexture(args.drawObjectDM, getTexture(), x, energyBarY, 176, height - energyBarHeight, width, energyBarHeight);
     }
 }
