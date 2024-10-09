@@ -18,10 +18,14 @@ public class EnhancedQuarriesClient implements ClientModInitializer {
 
         ClientNetworking.registerReceiver(EnhancedQuarries._id("energy_generator_sync"), (e) -> {
             long energy = PacketByteUtil.readLong(e.getBuf());
+            int burnTime = PacketByteUtil.readInt(e.getBuf());
+            int maxBurnTime = PacketByteUtil.readInt(e.getBuf());
             if (e.getClientPlayer() == null) return;
             if (e.player.getCurrentScreenHandler() instanceof EnergyGeneratorScreenHandler) {
                 EnergyGeneratorScreenHandler screenHandler = (EnergyGeneratorScreenHandler) e.player.getCurrentScreenHandler();
                 screenHandler.energy = energy;
+                screenHandler.burnTime = burnTime;
+                screenHandler.maxBurnTime = maxBurnTime;
             }
         });
     }

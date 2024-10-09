@@ -50,6 +50,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
     public ItemStackList invItems = ItemStackList.ofSize(1, ItemStackUtil.empty());
 
     public int burnTime = 0;
+    public int maxBurnTime = 0;
     public boolean burning = false;
     private long lastEnergy = 0;
 
@@ -97,6 +98,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
         // 燃焼時間が0の場合
         if (burnTime == 0 && !WorldUtil.isClient(world)) {
             burnTime = getBurnTimeFrom(getItems().get(0));
+            maxBurnTime = burnTime;
             if (burnTime > 0) {
                 ItemStack stack = getItems().get(0);
                 // レシピリマインダーがある場合
@@ -138,6 +140,8 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
                     && ((EnergyGeneratorScreenHandler) player.getCurrentScreenHandler()).tile == this) {
                 PacketByteBuf buf = PacketByteUtil.create();
                 PacketByteUtil.writeLong(buf, getEnergy());
+                PacketByteUtil.writeInt(buf, burnTime);
+                PacketByteUtil.writeInt(buf, maxBurnTime);
                 ServerNetworking.send(player, EnhancedQuarries._id("energy_generator_sync"), buf);
             }
         }
@@ -189,6 +193,8 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
         NbtCompound nbt = args.getNbt();
         if (NbtUtil.has(nbt, "BurnTime"))
             burnTime = NbtUtil.getInt(nbt, "BurnTime");
+        if (NbtUtil.has(nbt, "MaxBurnTime"))
+            maxBurnTime = NbtUtil.getInt(nbt, "MaxBurnTime");
         if (NbtUtil.has(nbt, "Burning"))
             burning = NbtUtil.getBoolean(nbt, "Burning");
         if (NbtUtil.has(nbt, "Items"))
@@ -200,6 +206,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
         super.writeNbt(args);
         NbtCompound nbt = args.getNbt();
         NbtUtil.putInt(nbt, "BurnTime", burnTime);
+        NbtUtil.putInt(nbt, "MaxBurnTime", maxBurnTime);
         NbtUtil.putBoolean(nbt, "Burning", burning);
         InventoryUtil.writeNbt(args, invItems);
     }
@@ -225,6 +232,8 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
         
         PacketByteUtil.writeLong(args.getBuf(), getEnergy());
         PacketByteUtil.writeLong(args.getBuf(), getMaxEnergy());
+        PacketByteUtil.writeInt(args.getBuf(), burnTime);
+        PacketByteUtil.writeInt(args.getBuf(), maxBurnTime);
     }
 
     @Nullable

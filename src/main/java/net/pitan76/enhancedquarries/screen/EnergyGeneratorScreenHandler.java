@@ -23,12 +23,16 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
     public EnergyGeneratorTile tile;
     public long energy = 0;
     public long maxEnergy = 0;
+    public int burnTime = 0;
+    public int maxBurnTime = 0;
 
     public EnergyGeneratorScreenHandler(CreateMenuEvent e, PacketByteBuf buf) {
         this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, e.syncId, e.playerInventory, InventoryUtil.createSimpleInventory(1));
         if (buf == null) return;
         energy = PacketByteUtil.readLong(buf);
         maxEnergy = PacketByteUtil.readLong(buf);
+        burnTime = PacketByteUtil.readInt(buf);
+        maxBurnTime = PacketByteUtil.readInt(buf);
     }
 
     public EnergyGeneratorScreenHandler(CreateMenuEvent e, EnergyGeneratorTile tile) {

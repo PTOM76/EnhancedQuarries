@@ -10,7 +10,9 @@ import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawBackgroundArgs
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawForegroundArgs;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.client.RenderUtil;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
+import net.pitan76.mcpitanlib.guilib.GuiTextures;
 
 public class EnergyGeneratorScreen extends BaseHandledScreen {
 
@@ -44,6 +46,14 @@ public class EnergyGeneratorScreen extends BaseHandledScreen {
     public void drawBackgroundOverride(DrawBackgroundArgs args) {
         super.drawBackgroundOverride(args);
         drawEnergyBar(args);
+
+        if (screenHandler.maxBurnTime > 0) {
+            double percentage = ((double) screenHandler.burnTime / screenHandler.maxBurnTime) * 100;
+            if (percentage > 0) {
+                int progress = (int) (percentage / 100 * 16);
+                RenderUtil.RendererUtil.drawTexture(args.drawObjectDM, GuiTextures.BASE_FURNACE_BACKGROUND, x + backgroundWidth / 2 - 8, y + 41 + 16 - progress, 0, 182 + 16 - progress,16, progress);
+            }
+        }
     }
 
     public void drawEnergyBar(DrawBackgroundArgs args) {
