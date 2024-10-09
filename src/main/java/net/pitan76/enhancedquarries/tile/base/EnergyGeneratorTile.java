@@ -3,8 +3,6 @@ package net.pitan76.enhancedquarries.tile.base;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,7 +10,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -28,11 +25,13 @@ import net.pitan76.mcpitanlib.api.event.container.factory.ExtraDataArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
-import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandlerFactory;
+import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.gui.v2.ExtendedScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +46,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
         this(Tiles.ENERGY_GENERATOR_TILE.getOrNull(), event);
     }
 
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(1, ItemStackUtil.empty());
+    public ItemStackList invItems = ItemStackList.ofSize(1, ItemStackUtil.empty());
 
     public int burnTime = 0;
     public boolean burning = false;
@@ -205,7 +204,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public ItemStackList getItems() {
         return invItems;
     }
 
@@ -239,7 +238,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, S
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new EnergyGeneratorScreenHandler(syncId, playerInventory, this);
+    public ScreenHandler createMenu(CreateMenuEvent e) {
+        return new EnergyGeneratorScreenHandler(e.syncId, e.playerInventory, this);
     }
 }

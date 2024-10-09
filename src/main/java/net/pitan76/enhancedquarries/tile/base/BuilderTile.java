@@ -4,19 +4,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -27,11 +23,15 @@ import net.pitan76.enhancedquarries.screen.BuilderScreenHandler;
 import net.pitan76.enhancedquarries.util.BlueprintUtil;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
+import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.event.BlockEventGenerator;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.storagebox.api.StorageBoxUtil;
@@ -42,10 +42,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInventory, NamedScreenHandlerFactory {
+public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInventory, SimpleScreenHandlerFactory {
 
     // Container
-    public DefaultedList<ItemStack> invItems = DefaultedList.ofSize(28, ItemStackUtil.empty());
+    public ItemStackList invItems = ItemStackList.ofSize(28, ItemStackUtil.empty());
 
     public IInventory inventory = this;
 
@@ -230,7 +230,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     public boolean tryPlacing(BlockPos blockPos, BlockState state) {
         if (getInventoryStack(state.getBlock()).isEmpty()) return false;
 
-        if (getWorld().setBlockState(blockPos, state)) {
+        if (WorldUtil.setBlockState(getWorld(), blockPos, state)) {
             BlockEventGenerator.onPlaced(state.getBlock(), new BlockPlacedEvent(getWorld(), blockPos, state, null, latestGotStack));
             WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getSoundGroup(state).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
@@ -356,7 +356,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public ItemStackList getItems() {
         return invItems;
     }
 
@@ -380,13 +380,13 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     }
 
     @Override
-    public Text getDisplayName() {
+    public Text getDisplayName(DisplayNameArgs args) {
         return TextUtil.translatable("screen.enhanced_quarries.builder.title");
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new BuilderScreenHandler(syncId, playerInventory, inventory, needInventory);
+    public ScreenHandler createMenu(CreateMenuEvent e) {
+        return new BuilderScreenHandler(e.syncId, e.playerInventory, inventory, needInventory);
     }
 }
