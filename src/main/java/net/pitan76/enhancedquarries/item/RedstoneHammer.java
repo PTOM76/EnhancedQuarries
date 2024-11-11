@@ -3,11 +3,10 @@ package net.pitan76.enhancedquarries.item;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ToolMaterials;
-import net.minecraft.util.ActionResult;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
-import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.tool.CompatiblePickaxeItem;
+import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 
 public class RedstoneHammer extends CompatiblePickaxeItem {

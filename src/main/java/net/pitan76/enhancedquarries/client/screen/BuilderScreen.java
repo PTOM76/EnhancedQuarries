@@ -1,18 +1,18 @@
 package net.pitan76.enhancedquarries.client.screen;
 
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.client.screen.base.BaseHandledScreen;
+import net.pitan76.enhancedquarries.screen.BuilderScreenHandler;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawForegroundArgs;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
 
-public class BuilderScreen extends BaseHandledScreen {
+public class BuilderScreen extends BaseHandledScreen<BuilderScreenHandler> {
 
-    public BuilderScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
+    public BuilderScreen(BuilderScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         titleX = backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2;
         titleY = 7;

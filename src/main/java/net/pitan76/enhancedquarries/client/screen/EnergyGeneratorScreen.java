@@ -1,7 +1,6 @@
 package net.pitan76.enhancedquarries.client.screen;
 
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.client.screen.base.BaseHandledScreen;
@@ -14,11 +13,11 @@ import net.pitan76.mcpitanlib.api.util.client.RenderUtil;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
 import net.pitan76.mcpitanlib.guilib.GuiTextures;
 
-public class EnergyGeneratorScreen extends BaseHandledScreen {
+public class EnergyGeneratorScreen extends BaseHandledScreen<EnergyGeneratorScreenHandler> {
 
     public EnergyGeneratorScreenHandler screenHandler;
 
-    public EnergyGeneratorScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
+    public EnergyGeneratorScreen(EnergyGeneratorScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         titleX = backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2;
         titleY = 7;
@@ -26,8 +25,7 @@ public class EnergyGeneratorScreen extends BaseHandledScreen {
         playerInventoryTitleY = 72;
         setBackgroundWidth(176);
         setBackgroundHeight(166);
-        if (handler instanceof EnergyGeneratorScreenHandler)
-            screenHandler = (EnergyGeneratorScreenHandler) handler;
+        screenHandler = handler;
     }
 
     @Override
@@ -65,6 +63,6 @@ public class EnergyGeneratorScreen extends BaseHandledScreen {
         long maxEnergy = screenHandler.maxEnergy;
         int energyBarHeight = (int) ((double) energy / (double) maxEnergy * (double) height);
         int energyBarY = y + height - energyBarHeight;
-        callDrawTexture(args.drawObjectDM, getTexture(), x, energyBarY, 176, height - energyBarHeight, width, energyBarHeight);
+        callDrawTexture(args.drawObjectDM, getCompatTexture(), x, energyBarY, 176, height - energyBarHeight, width, energyBarHeight);
     }
 }

@@ -3,23 +3,25 @@ package net.pitan76.enhancedquarries.block.base;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ItemScatterer;
 import net.pitan76.enhancedquarries.tile.base.BuilderTile;
-import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 
 public abstract class Builder extends BaseBlock {
 
-    public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
-            .of(CompatibleMaterial.METAL)
+    public static BlockSettingsBuilder defaultSettings = new BlockSettingsBuilder()
+            .material(CompatibleMaterial.METAL)
             .requiresTool()
             .strength(2, 8);
 
     public Builder(CompatibleBlockSettings settings) {
-        super(defaultSettings);
+        super(settings);
     }
 
-    public Builder() {
-        super(defaultSettings);
+    public Builder(CompatIdentifier id) {
+        this(defaultSettings.build(id));
     }
 
     @Override

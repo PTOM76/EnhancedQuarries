@@ -1,23 +1,29 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.Filler;
 import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.tile.EnhancedFillerWithChestTile;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 
 public class EnhancedFillerWithChest extends Filler {
 
     public EnhancedFillerWithChest() {
-        super();
+        this(CompatIdentifier.of("enhanced_filler_with_chest"));
+    }
+
+    public EnhancedFillerWithChest(CompatIdentifier id) {
+        super(id);
+    }
+
+    public EnhancedFillerWithChest(CompatibleBlockSettings settings) {
+        super(settings);
     }
 
     @Override
@@ -25,30 +31,18 @@ public class EnhancedFillerWithChest extends Filler {
         return new EnhancedFillerWithChestTile(event);
     }
 
-    // instance
-    public static Filler INSTANCE = new EnhancedFillerWithChest();
-
-    public static Filler getInstance() {
-        return INSTANCE;
-    }
-
-    public static Filler getFiller() {
-        return getInstance();
-    }
     // ----
-
 
     @Override
     public CompatActionResult onRightClick(BlockUseEvent e) {
-        World world = e.getWorld();
         Player player = e.getPlayer();
-        BlockPos pos = e.getPos();
 
-        if (WorldUtil.isClient(world)) return e.success();
+        if (e.isClient()) return e.success();
         if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
-        if (world.getBlockEntity(pos) instanceof FillerTile)
-            player.openGuiScreen((FillerTile) world.getBlockEntity(pos));
+        BlockEntity blockEntity = e.getBlockEntity();
+        if (blockEntity instanceof FillerTile)
+            player.openGuiScreen((FillerTile) blockEntity);
 
         return e.consume();
     }

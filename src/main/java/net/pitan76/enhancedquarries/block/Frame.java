@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.BooleanProperty;
@@ -12,13 +11,15 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
+import net.pitan76.enhancedquarries.Blocks;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import net.pitan76.mcpitanlib.api.util.BlockViewUtil;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.world.WorldAccessUtil;
 import org.jetbrains.annotations.Nullable;
@@ -39,8 +40,8 @@ public class Frame extends CompatBlock {
     public static VoxelShape UP = VoxelShapes.cuboid(0.25, .75, 0.25, 0.75, 1, 0.75);
     public static VoxelShape DOWN = VoxelShapes.cuboid(0.25, 0, 0.25, 0.75, .25, 0.75);
 
-    public Frame() {
-        super(CompatibleBlockSettings.of(CompatibleMaterial.METAL).strength(1, 4).nonOpaque());
+    public Frame(CompatIdentifier id) {
+        super(new BlockSettingsBuilder(id).material(CompatibleMaterial.METAL).strength(1, 4).build().nonOpaque());
         setNewDefaultState(getNewDefaultState()
                 .with(CONNECT_NORTH, false)
                 .with(CONNECT_SOUTH, false)
@@ -49,16 +50,6 @@ public class Frame extends CompatBlock {
                 .with(CONNECT_UP, false)
                 .with(CONNECT_DOWN, false)
         );
-    }
-
-    public static Block INSTANCE = new Frame();
-
-    public static Block getInstance() {
-        return INSTANCE;
-    }
-
-    public static Block getBlock() {
-        return getInstance();
     }
 
     @Override
@@ -87,7 +78,7 @@ public class Frame extends CompatBlock {
     }
 
     public static BlockState getPlacementStateDefine(World world, BlockPos pos) {
-        return BlockStateUtil.getDefaultState(getBlock())
+        return BlockStateUtil.getDefaultState(Blocks.FRAME)
                 .with(CONNECT_NORTH, canConnect(world, pos.north()))
                 .with(CONNECT_SOUTH, canConnect(world, pos.south()))
                 .with(CONNECT_EAST, canConnect(world, pos.east()))
@@ -126,11 +117,11 @@ public class Frame extends CompatBlock {
     }
 
     public static boolean canConnect(BlockView world, BlockPos blockPos) {
-        return BlockViewUtil.getBlockState(world, blockPos).getBlock() == getBlock();
+        return BlockViewUtil.getBlockState(world, blockPos).getBlock() == Blocks.FRAME;
     }
 
     public static boolean canConnect(World world, BlockPos blockPos) {
-        return WorldUtil.getBlockState(world, blockPos).getBlock() == getBlock();
+        return WorldUtil.getBlockState(world, blockPos).getBlock() == Blocks.FRAME;
     }
 
     @Override

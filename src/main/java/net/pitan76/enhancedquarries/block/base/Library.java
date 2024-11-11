@@ -2,11 +2,11 @@ package net.pitan76.enhancedquarries.block.base;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ItemScatterer;
-import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.tile.base.LibraryTile;
-import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 
@@ -17,12 +17,12 @@ public abstract class Library extends CompatBlock {
             .requiresTool()
             .strength(2, 8);
 
-    public Library(CompatIdentifier id) {
-        super(defaultSettings.build(id));
+    public Library(CompatibleBlockSettings settings) {
+        super(settings);
     }
 
-    public Library() {
-        super(defaultSettings.build(EnhancedQuarries._id("normal_library")));
+    public Library(CompatIdentifier id) {
+        this(defaultSettings.build(id));
     }
 
     @Override

@@ -1,48 +1,44 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
-import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class EnergyGenerator extends BaseBlock {
 
-    public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
-            .of(CompatibleMaterial.METAL)
-            .requiresTool()
-            .strength(2, 8);
+    public static BlockSettingsBuilder defaultSettings = new BlockSettingsBuilder()
+        .material(CompatibleMaterial.METAL)
+        .requiresTool()
+        .strength(2, 8);
 
     public EnergyGenerator(CompatibleBlockSettings settings) {
         super(settings);
     }
 
+    public EnergyGenerator(CompatIdentifier id) {
+        this(defaultSettings.build(id));
+    }
+
     public EnergyGenerator() {
-        this(defaultSettings);
+        this(EnhancedQuarries._id("energy_generator"));
     }
 
     @Override
     public BlockEntity createBlockEntity(TileCreateEvent event) {
         return new EnergyGeneratorTile(event);
-    }
-
-    public static EnergyGenerator INSTANCE = new EnergyGenerator();
-
-    public static EnergyGenerator getInstance() {
-        return INSTANCE;
-    }
-
-    public static EnergyGenerator getEnergyGenerator() {
-        return getInstance();
     }
 
     @Override

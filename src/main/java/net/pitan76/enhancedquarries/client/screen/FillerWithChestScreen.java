@@ -2,19 +2,18 @@ package net.pitan76.enhancedquarries.client.screen;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
+import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawForegroundArgs;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
 
 public class FillerWithChestScreen extends FillerScreen {
 
-    public FillerWithChestScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
+    public FillerWithChestScreen(FillerScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        titleX = 45;
-        titleY = 7;
+        setTitlePos(45, 7);
 
         playerInventoryTitleY = 143;
         setBackgroundWidth(238);

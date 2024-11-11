@@ -3,7 +3,6 @@ package net.pitan76.enhancedquarries.client.screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.client.screen.base.BaseHandledScreen;
@@ -15,11 +14,11 @@ import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
 
-public class LibraryScreen extends BaseHandledScreen {
+public class LibraryScreen extends BaseHandledScreen<LibraryScreenHandler> {
 
     protected TextFieldWidget nameBox;
 
-    public LibraryScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
+    public LibraryScreen(LibraryScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         this.titleX = backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2;
         this.titleY = 6;
@@ -53,12 +52,13 @@ public class LibraryScreen extends BaseHandledScreen {
                 PacketByteBuf buf = PacketByteUtil.create();
                 PacketByteUtil.writeString(buf, nameBox.getText());
                 ClientNetworking.send(EnhancedQuarries._id("blueprint_name"), buf);
-                ((LibraryScreenHandler) handler).setBlueprintName(nameBox.getText());
+                handler.setBlueprintName(nameBox.getText());
             }
         }
         return super.keyReleased(args);
     }
 
+    @Override
     public boolean keyPressed(KeyEventArgs args) {
         if (nameBox.isFocused()) {
             if (args.keyCode != 256) {
@@ -68,8 +68,9 @@ public class LibraryScreen extends BaseHandledScreen {
         return super.keyPressed(args);
     }
 
-    public void removed() {
-        super.removed();
+    @Override
+    public void removedOverride() {
+        super.removedOverride();
         if (nameBox.isFocused())
             ScreenUtil.setRepeatEvents(false);
     }

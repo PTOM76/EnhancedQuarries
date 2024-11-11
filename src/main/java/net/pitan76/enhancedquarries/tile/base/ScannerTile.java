@@ -157,7 +157,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
     // blocks...スキャナーを基準とした相対的な座標
     public boolean tryScanning(Map<BlockPos, BlockState> blocks) {
         EnhancedQuarries.logIfDev("scanning");
-        if (getWorld() == null || getWorld().isClient() || pos1 == null || pos2 == null)
+        if (getWorld() == null || WorldUtil.isClient(getWorld()) || pos1 == null || pos2 == null)
             return false;
         
         int procX;
@@ -167,7 +167,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                    BlockState procState = getWorld().getBlockState(procPos);
+                    BlockState procState = WorldUtil.getBlockState(getWorld(), procPos);
 
                     if (procState.getBlock() == Blocks.AIR) continue;
 
@@ -242,12 +242,8 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
         this.pos2 = pos2;
     }
 
-    public ScannerTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
-    }
-
-    public void init() {
-
+    public ScannerTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
     
     @Override

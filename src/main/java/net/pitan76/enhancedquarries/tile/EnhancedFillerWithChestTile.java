@@ -16,6 +16,7 @@ import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
+import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,11 +90,8 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
                 stack.setCount(stack.getCount() + originInCount - stack.getMaxCount());
             }
         }
-        getWorld().spawnEntity(new ItemEntity(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ(), stack));
-    }
-
-    @Override
-    public void init() {
+        ItemEntity itemEntity = ItemEntityUtil.create(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ(), stack);
+        WorldUtil.spawnEntity(getWorld(), itemEntity);
     }
 
     @Nullable

@@ -6,7 +6,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.TypedActionResult;
 import net.pitan76.enhancedquarries.item.base.MachineModule;
 import net.pitan76.enhancedquarries.screen.DropRemovalModuleScreenHandler;
 import net.pitan76.mcpitanlib.api.entity.Player;
@@ -16,6 +15,7 @@ import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +32,13 @@ public class DropRemovalModule extends MachineModule implements SimpleScreenHand
     }
 
     @Override
-    public TypedActionResult<ItemStack> onRightClick(ItemUseEvent e) {
-        ItemStack stack = e.getStack();
+    public StackActionResult onRightClick(ItemUseEvent e) {
         Player player = e.getUser();
-        if (e.isClient()) return TypedActionResult.pass(stack);
+        if (e.isClient() || player.getEntity() == null) return e.pass();
 
-        if (player.getEntity() == null) return TypedActionResult.pass(stack);
-
-        if (player.isSneaking()) {
+        if (e.isSneaking())
             player.openMenu(this);
-        }
+
         return super.onRightClick(e);
     }
 

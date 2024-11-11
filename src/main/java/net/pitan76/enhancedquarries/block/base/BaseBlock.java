@@ -31,11 +31,11 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
     }
 
     public static void setFacing(Direction facing, World world, BlockPos pos) {
-        world.setBlockState(pos, WorldUtil.getBlockState(world, pos).with(FACING.getProperty(), facing));
+        WorldUtil.setBlockState(world, pos, WorldUtil.getBlockState(world, pos).with(FACING.getProperty(), facing));
     }
 
     public static Direction getFacing(BlockState state) {
-        return state.get(FACING.getProperty());
+        return FACING.get(state);
     }
 
     public static void setActive(Boolean active, World world, BlockPos pos) {

@@ -1,18 +1,18 @@
 package net.pitan76.enhancedquarries.client.screen;
 
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.client.screen.base.BaseHandledScreen;
+import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawForegroundArgs;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
 
-public class FillerScreen extends BaseHandledScreen {
+public class FillerScreen extends BaseHandledScreen<FillerScreenHandler> {
 
-    public FillerScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
+    public FillerScreen(FillerScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         titleX = 45;
         titleY = 7;

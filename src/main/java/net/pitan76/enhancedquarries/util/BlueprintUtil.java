@@ -2,7 +2,6 @@ package net.pitan76.enhancedquarries.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
@@ -19,8 +18,11 @@ import net.pitan76.easyapi.FileControl;
 import net.pitan76.easyapi.config.JsonConfig;
 import net.pitan76.enhancedquarries.Config;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
-import net.pitan76.mcpitanlib.api.nbt.NbtTag;
-import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
+import net.pitan76.mcpitanlib.api.util.block.BlockUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 import java.io.File;
@@ -66,7 +68,7 @@ public class BlueprintUtil {
 
 
     public static void writeNbt(ItemStack stack, Map<BlockPos, BlockState> blocks) {
-        NbtCompound nbt = writeData(new NbtCompound(), blocks);
+        NbtCompound nbt = writeData(NbtUtil.create(), blocks);
         CustomDataUtil.set(stack, "blueprint", nbt);
     }
 
@@ -82,7 +84,7 @@ public class BlueprintUtil {
 
     public static NbtCompound writeData(NbtCompound nbt, Map<BlockPos, BlockState> blocks) {
         EnhancedQuarries.logIfDev("writedata");
-        NbtList nbtList = new NbtList();
+        NbtList nbtList = NbtUtil.createNbtList();
 
         for (Map.Entry<BlockPos, BlockState> entry : blocks.entrySet()) {
             BlockPos pos = entry.getKey();
@@ -96,52 +98,52 @@ public class BlueprintUtil {
             posNbt.putInt("z", pos.getZ());
 
             if (state.getProperties().contains(Properties.HORIZONTAL_FACING)) {
-                blockNbt.putString("horizontal_facing", state.get(Properties.HORIZONTAL_FACING).name());
+                NbtUtil.putString(blockNbt, "horizontal_facing", state.get(Properties.HORIZONTAL_FACING).name());
             }
             if (state.getProperties().contains(Properties.FACING)) {
-                blockNbt.putString("facing", state.get(Properties.FACING).name());
+                NbtUtil.putString(blockNbt, "facing", state.get(Properties.FACING).name());
             }
             if (state.getProperties().contains(Properties.HOPPER_FACING)) {
-                blockNbt.putString("hopper_facing", state.get(Properties.HOPPER_FACING).name());
+                NbtUtil.putString(blockNbt, "hopper_facing", state.get(Properties.HOPPER_FACING).name());
             }
 
             if (state.getProperties().contains(Properties.BLOCK_HALF)) {
-                blockNbt.putString("block_half", state.get(Properties.BLOCK_HALF).name());
+                NbtUtil.putString(blockNbt, "block_half", state.get(Properties.BLOCK_HALF).name());
             }
             if (state.getProperties().contains(Properties.STAIR_SHAPE)) {
-                blockNbt.putString("stair_shape", state.get(Properties.STAIR_SHAPE).name());
+                NbtUtil.putString(blockNbt, "stair_shape", state.get(Properties.STAIR_SHAPE).name());
             }
             if (state.getProperties().contains(Properties.SLAB_TYPE)) {
-                blockNbt.putString("slab_type", state.get(Properties.SLAB_TYPE).name());
+                NbtUtil.putString(blockNbt, "slab_type", state.get(Properties.SLAB_TYPE).name());
             }
             if (state.getProperties().contains(Properties.BED_PART)) {
-                blockNbt.putString("bed_part", state.get(Properties.BED_PART).name());
+                NbtUtil.putString(blockNbt, "bed_part", state.get(Properties.BED_PART).name());
             }
             if (state.getProperties().contains(Properties.AXIS)) {
-                blockNbt.putString("axis", state.get(Properties.AXIS).name());
+                NbtUtil.putString(blockNbt, "axis", state.get(Properties.AXIS).name());
             }
             if (state.getProperties().contains(Properties.HORIZONTAL_AXIS)) {
-                blockNbt.putString("horizontal_axis", state.get(Properties.HORIZONTAL_AXIS).name());
+                NbtUtil.putString(blockNbt, "horizontal_axis", state.get(Properties.HORIZONTAL_AXIS).name());
             }
             if (state.getProperties().contains(Properties.CHEST_TYPE)) {
-                blockNbt.putString("chest_type", state.get(Properties.CHEST_TYPE).name());
+                NbtUtil.putString(blockNbt, "chest_type", state.get(Properties.CHEST_TYPE).name());
             }
             if (state.getProperties().contains(Properties.PISTON_TYPE)) {
-                blockNbt.putString("piston_type", state.get(Properties.PISTON_TYPE).name());
+                NbtUtil.putString(blockNbt, "piston_type", state.get(Properties.PISTON_TYPE).name());
             }
             if (state.getProperties().contains(Properties.DOOR_HINGE)) {
-                blockNbt.putString("door_hinge", state.get(Properties.DOOR_HINGE).name());
+                NbtUtil.putString(blockNbt, "door_hinge", state.get(Properties.DOOR_HINGE).name());
             }
             if (state.getProperties().contains(Properties.DOUBLE_BLOCK_HALF)) {
-                blockNbt.putString("double_block_half", state.get(Properties.DOUBLE_BLOCK_HALF).name());
+                NbtUtil.putString(blockNbt, "double_block_half", state.get(Properties.DOUBLE_BLOCK_HALF).name());
             }
 
-            blockNbt.put("pos", posNbt);
-            blockNbt.putString("id", BlockUtil.toID(state.getBlock()).toString());
+            NbtUtil.put(blockNbt, "pos", posNbt);
+            NbtUtil.putString(blockNbt, "id", BlockUtil.toIdAsString(state.getBlock()));
 
             nbtList.add(blockNbt);
         }
-        nbt.put("blocks", nbtList);
+        NbtUtil.put(nbt, "blocks", nbtList);
         return nbt;
     }
 
@@ -153,118 +155,118 @@ public class BlueprintUtil {
     public static Map<BlockPos, BlockState> readData(NbtCompound nbt, Direction direction) {
         Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
 
-        NbtList nbtList = nbt.getList("blocks", NbtType.COMPOUND);
+        NbtList nbtList = NbtUtil.getNbtCompoundList(nbt, "blocks");
         for (NbtElement element : nbtList) {
             if (element instanceof NbtCompound) {
                 NbtCompound blockNbt = (NbtCompound) element;
 
-                Block block = BlockUtil.fromId(IdentifierUtil.id(blockNbt.getString("id")));
-                NbtCompound posNbt = blockNbt.getCompound("pos");
+                Block block = BlockUtil.fromId(CompatIdentifier.of(NbtUtil.getString(blockNbt, "id")));
+                NbtCompound posNbt = NbtUtil.get(blockNbt, "pos");
                 BlockState state = BlockStateUtil.getDefaultState(block);
-                BlockPos pos = PosUtil.flooredBlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
+                BlockPos pos = PosUtil.flooredBlockPos(NbtUtil.getInt(posNbt, "x"), NbtUtil.getInt(posNbt, "y"), NbtUtil.getInt(posNbt, "z"));
 
                 if (direction == Direction.NORTH)
-                    pos = PosUtil.flooredBlockPos(- posNbt.getInt("z"), posNbt.getInt("y"), posNbt.getInt("x"));
+                    pos = PosUtil.flooredBlockPos(- NbtUtil.getInt(posNbt, "z"), NbtUtil.getInt(posNbt, "y"), NbtUtil.getInt(posNbt, "x"));
                 if (direction == Direction.SOUTH)
-                    pos = PosUtil.flooredBlockPos( posNbt.getInt("z"), posNbt.getInt("y"), - posNbt.getInt("x"));
+                    pos = PosUtil.flooredBlockPos( NbtUtil.getInt(posNbt, "z"), NbtUtil.getInt(posNbt, "y"), - NbtUtil.getInt(posNbt, "x"));
                 if (direction == Direction.EAST)
-                    pos = PosUtil.flooredBlockPos(- posNbt.getInt("x"), posNbt.getInt("y"), - posNbt.getInt("z"));
+                    pos = PosUtil.flooredBlockPos(- NbtUtil.getInt(posNbt, "x"), NbtUtil.getInt(posNbt, "y"), - NbtUtil.getInt(posNbt, "z"));
                 if (direction == Direction.WEST)
-                    pos = PosUtil.flooredBlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
+                    pos = PosUtil.flooredBlockPos(NbtUtil.getInt(posNbt, "x"), NbtUtil.getInt(posNbt, "y"), NbtUtil.getInt(posNbt, "z"));
 
-                if (blockNbt.contains("horizontal_facing")) {
+                if (NbtUtil.has(blockNbt, "horizontal_facing")) {
                     try {
                         if (direction == Direction.WEST)
-                            state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(blockNbt.getString("horizontal_facing")));
+                            state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "horizontal_facing")));
                         if (direction == Direction.NORTH)
-                            state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(blockNbt.getString("horizontal_facing")).rotateYClockwise());
+                            state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "horizontal_facing")).rotateYClockwise());
                         if (direction == Direction.EAST)
-                            state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(blockNbt.getString("horizontal_facing")).rotateYClockwise().rotateYClockwise());
+                            state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "horizontal_facing")).rotateYClockwise().rotateYClockwise());
                         if (direction == Direction.SOUTH)
-                            state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(blockNbt.getString("horizontal_facing")).rotateYCounterclockwise());
+                            state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "horizontal_facing")).rotateYCounterclockwise());
                     } catch (IllegalStateException ignore) {
-                        state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(blockNbt.getString("horizontal_facing")));
+                        state = state.with(Properties.HORIZONTAL_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "horizontal_facing")));
                     }
                 }
-                if (blockNbt.contains("facing")) {
+                if (NbtUtil.has(blockNbt, "facing")) {
                     try {
                         if (direction == Direction.WEST)
-                            state = state.with(Properties.FACING, getDirectionFromName(blockNbt.getString("facing")));
+                            state = state.with(Properties.FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "facing")));
                         if (direction == Direction.NORTH)
-                            state = state.with(Properties.FACING, getDirectionFromName(blockNbt.getString("facing")).rotateYClockwise());
+                            state = state.with(Properties.FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "facing")).rotateYClockwise());
                         if (direction == Direction.EAST)
-                            state = state.with(Properties.FACING, getDirectionFromName(blockNbt.getString("facing")).rotateYClockwise().rotateYClockwise());
+                            state = state.with(Properties.FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "facing")).rotateYClockwise().rotateYClockwise());
                         if (direction == Direction.SOUTH)
-                            state = state.with(Properties.FACING, getDirectionFromName(blockNbt.getString("facing")).rotateYCounterclockwise());
+                            state = state.with(Properties.FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "facing")).rotateYCounterclockwise());
                     } catch (IllegalStateException ignore) {
-                        state = state.with(Properties.FACING, getDirectionFromName(blockNbt.getString("facing")));
+                        state = state.with(Properties.FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "facing")));
                     }
                 }
-                if (blockNbt.contains("hopper_facing")) {
+                if (NbtUtil.has(blockNbt, "hopper_facing")) {
                     try {
                         if (direction == Direction.WEST)
-                            state = state.with(Properties.HOPPER_FACING, getDirectionFromName(blockNbt.getString("hopper_facing")));
+                            state = state.with(Properties.HOPPER_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "hopper_facing")));
                         if (direction == Direction.NORTH)
-                            state = state.with(Properties.HOPPER_FACING, getDirectionFromName(blockNbt.getString("hopper_facing")).rotateYClockwise());
+                            state = state.with(Properties.HOPPER_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "hopper_facing")).rotateYClockwise());
                         if (direction == Direction.EAST)
-                            state = state.with(Properties.HOPPER_FACING, getDirectionFromName(blockNbt.getString("hopper_facing")).rotateYClockwise().rotateYClockwise());
+                            state = state.with(Properties.HOPPER_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "hopper_facing")).rotateYClockwise().rotateYClockwise());
                         if (direction == Direction.SOUTH)
-                            state = state.with(Properties.HOPPER_FACING, getDirectionFromName(blockNbt.getString("hopper_facing")).rotateYCounterclockwise());
+                            state = state.with(Properties.HOPPER_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "hopper_facing")).rotateYCounterclockwise());
                     } catch (IllegalStateException ignore) {
-                        state = state.with(Properties.HOPPER_FACING, getDirectionFromName(blockNbt.getString("hopper_facing")));
+                        state = state.with(Properties.HOPPER_FACING, getDirectionFromName(NbtUtil.getString(blockNbt, "hopper_facing")));
                     }
                 }
 
-                if (blockNbt.contains("block_half")) {
+                if (NbtUtil.has(blockNbt, "block_half")) {
                     try {
-                        state = state.with(Properties.BLOCK_HALF, BlockHalf.valueOf(blockNbt.getString("block_half").toUpperCase()));
+                        state = state.with(Properties.BLOCK_HALF, BlockHalf.valueOf(NbtUtil.getString(blockNbt, "block_half").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
-                if (blockNbt.contains("stair_shape")) {
+                if (NbtUtil.has(blockNbt, "stair_shape")) {
                     try {
-                        state = state.with(Properties.STAIR_SHAPE, StairShape.valueOf(blockNbt.getString("stair_shape").toUpperCase()));
+                        state = state.with(Properties.STAIR_SHAPE, StairShape.valueOf(NbtUtil.getString(blockNbt, "stair_shape").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
-                if (blockNbt.contains("slab_type")) {
+                if (NbtUtil.has(blockNbt, "slab_type")) {
                     try {
-                        state = state.with(Properties.SLAB_TYPE, SlabType.valueOf(blockNbt.getString("slab_type").toUpperCase()));
+                        state = state.with(Properties.SLAB_TYPE, SlabType.valueOf(NbtUtil.getString(blockNbt, "slab_type").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
-                if (blockNbt.contains("bed_part")) {
+                if (NbtUtil.has(blockNbt, "bed_part")) {
                     try {
-                        if (blockNbt.getString("bed_part").equalsIgnoreCase("head")) continue;
-                        state = state.with(Properties.BED_PART, BedPart.valueOf(blockNbt.getString("bed_part").toUpperCase()));
+                        if (NbtUtil.getString(blockNbt, "bed_part").equalsIgnoreCase("head")) continue;
+                        state = state.with(Properties.BED_PART, BedPart.valueOf(NbtUtil.getString(blockNbt, "bed_part").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
-                if (blockNbt.contains("axis")) {
+                if (NbtUtil.has(blockNbt, "axis")) {
                     try {
-                        state = state.with(Properties.AXIS, Direction.Axis.valueOf(blockNbt.getString("axis").toUpperCase()));
+                        state = state.with(Properties.AXIS, Direction.Axis.valueOf(NbtUtil.getString(blockNbt, "axis").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
-                if (blockNbt.contains("horizontal_axis")) {
+                if (NbtUtil.has(blockNbt, "horizontal_axis")) {
                     try {
-                        state = state.with(Properties.HORIZONTAL_AXIS, Direction.Axis.valueOf(blockNbt.getString("horizontal_axis").toUpperCase()));
+                        state = state.with(Properties.HORIZONTAL_AXIS, Direction.Axis.valueOf(NbtUtil.getString(blockNbt, "horizontal_axis").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
-                if (blockNbt.contains("chest_type")) {
+                if (NbtUtil.has(blockNbt, "chest_type")) {
                     try {
-                        state = state.with(Properties.CHEST_TYPE, ChestType.valueOf(blockNbt.getString("chest_type").toUpperCase()));
+                        state = state.with(Properties.CHEST_TYPE, ChestType.valueOf(NbtUtil.getString(blockNbt, "chest_type").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
-                if (blockNbt.contains("piston_type")) {
+                if (NbtUtil.has(blockNbt, "piston_type")) {
                     try {
-                        state = state.with(Properties.PISTON_TYPE, PistonType.valueOf(blockNbt.getString("piston_type").toUpperCase()));
+                        state = state.with(Properties.PISTON_TYPE, PistonType.valueOf(NbtUtil.getString(blockNbt, "piston_type").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
-                if (blockNbt.contains("door_hinge")) {
+                if (NbtUtil.has(blockNbt, "door_hinge")) {
                     try {
-                        state = state.with(Properties.DOOR_HINGE, DoorHinge.valueOf(blockNbt.getString("door_hinge").toUpperCase()));
+                        state = state.with(Properties.DOOR_HINGE, DoorHinge.valueOf(NbtUtil.getString(blockNbt, "door_hinge").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
-                if (blockNbt.contains("double_block_half")) {
+                if (NbtUtil.has(blockNbt, "double_block_half")) {
                     try {
-                        if (blockNbt.getString("double_block_half").equalsIgnoreCase("upper")) continue;
-                        state = state.with(Properties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.valueOf(blockNbt.getString("double_block_half").toUpperCase()));
+                        if (NbtUtil.getString(blockNbt, "double_block_half").equalsIgnoreCase("upper")) continue;
+                        state = state.with(Properties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.valueOf(NbtUtil.getString(blockNbt, "double_block_half").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
                 if (state.getBlock() instanceof PillarBlock) {
@@ -308,20 +310,20 @@ public class BlueprintUtil {
         if (nbt == null) return false;
         if (!NbtUtil.has(nbt, "blocks")) return false;
 
-        NbtList nbtList = nbt.getList("blocks", NbtElement.COMPOUND_TYPE);
+        NbtList nbtList = NbtUtil.getNbtCompoundList(nbt, "blocks");
         for (NbtElement element : nbtList) {
             if (element instanceof NbtCompound) {
                 NbtCompound blockNbt = (NbtCompound) element;
-                NbtCompound posNbt = blockNbt.getCompound("pos");
+                NbtCompound posNbt = NbtUtil.get(blockNbt, "pos");
 
                 Map<String, Object> data = new LinkedHashMap<>();
 
-                for (String key : blockNbt.getKeys()) {
+                for (String key : NbtUtil.getKeys(blockNbt)) {
                     if (Objects.equals(key, "pos")) continue;
-                    data.put(key, blockNbt.get(key));
+                    data.put(key, NbtUtil.get(blockNbt, key));
                 }
 
-                config.set(posNbt.getInt("x") + "," + posNbt.getInt("y") + "," + posNbt.getInt("z"), data);
+                config.set(NbtUtil.getInt(posNbt, "x") + "," + NbtUtil.getInt(posNbt, "y") + "," + NbtUtil.getInt(posNbt, "z"), data);
             }
         }
 
@@ -354,9 +356,9 @@ public class BlueprintUtil {
 
         Map<String, Object> map = gson.fromJson(json, jsonMap);
 
-        NbtCompound nbt = NbtTag.create();
+        NbtCompound nbt = NbtUtil.create();
 
-        NbtList nbtList = new NbtList();
+        NbtList nbtList = NbtUtil.createNbtList();
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
@@ -382,34 +384,34 @@ public class BlueprintUtil {
                     }
                 }
                 if (value instanceof String)
-                    blockNbt.putString(entry1.getKey(), (String) value);
+                    NbtUtil.putString(blockNbt, entry1.getKey(), (String) value);
                 if (value instanceof Integer)
-                    blockNbt.putInt(entry1.getKey(), (int) value);
+                    NbtUtil.putInt(blockNbt, entry1.getKey(), (int) value);
                 if (value instanceof Short)
-                    blockNbt.putShort(entry1.getKey(), (short) value);
+                    NbtUtil.putShort(blockNbt, entry1.getKey(), (short) value);
                 if (value instanceof Long)
-                    blockNbt.putLong(entry1.getKey(), (long) value);
+                    NbtUtil.putLong(blockNbt, entry1.getKey(), (long) value);
                 if (value instanceof Double)
-                    blockNbt.putDouble(entry1.getKey(), (double) value);
+                    NbtUtil.putDouble(blockNbt, entry1.getKey(), (double) value);
                 if (value instanceof Float)
-                    blockNbt.putFloat(entry1.getKey(), (float) value);
+                    NbtUtil.putFloat(blockNbt, entry1.getKey(), (float) value);
                 if (value instanceof Boolean)
-                    blockNbt.putBoolean(entry1.getKey(), (boolean) value);
+                    NbtUtil.putBoolean(blockNbt, entry1.getKey(), (boolean) value);
                 if (value instanceof Byte)
-                    blockNbt.putByte(entry1.getKey(), (byte) value);
+                    NbtUtil.putByte(blockNbt, entry1.getKey(), (byte) value);
                 if (value instanceof NbtCompound)
-                    blockNbt.put(entry1.getKey(), (NbtCompound) value);
+                    NbtUtil.put(blockNbt, entry1.getKey(), (NbtCompound) value);
             }
 
-            posNbt.putInt("x", pos.getX());
-            posNbt.putInt("y", pos.getY());
-            posNbt.putInt("z", pos.getZ());
-            blockNbt.put("pos", posNbt);
+            NbtUtil.putInt(posNbt, "x", pos.getX());
+            NbtUtil.putInt(posNbt, "y", pos.getY());
+            NbtUtil.putInt(posNbt, "z", pos.getZ());
+            NbtUtil.put(blockNbt, "pos", posNbt);
 
             nbtList.add(blockNbt);
         }
 
-        nbt.put("blocks", nbtList);
+        NbtUtil.put(nbt, "blocks", nbtList);
         CustomDataUtil.set(stack, "blueprint", nbt);
         return true;
     }

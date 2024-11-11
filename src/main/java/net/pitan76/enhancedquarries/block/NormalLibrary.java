@@ -1,47 +1,45 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.Direction;
+import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.block.base.Library;
 import net.pitan76.enhancedquarries.tile.NormalLibraryTile;
 import net.pitan76.enhancedquarries.tile.base.LibraryTile;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.PlacementStateArgs;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.PropertyUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class NormalLibrary extends Library implements ExtendBlockEntityProvider {
 
-    public static DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static DirectionProperty FACING = PropertyUtil.horizontalFacing();
 
     public NormalLibrary() {
-        super();
-        getNewDefaultState().with(FACING, Direction.NORTH);
+        this(EnhancedQuarries._id("normal_library"));
     }
 
-    // instance
-    public static Library INSTANCE = new NormalLibrary();
-
-    public static Library getInstance() {
-        return INSTANCE;
+    public NormalLibrary(CompatIdentifier id) {
+        super(id);
+       setNewDefaultState(FACING.with(getNewDefaultState(), Direction.NORTH));
     }
 
-    public static Library getLibrary() {
-        return getInstance();
+    public NormalLibrary(CompatibleBlockSettings settings) {
+        super(settings);
+        setNewDefaultState(FACING.with(getNewDefaultState(), Direction.NORTH));
     }
-    // ----
 
     @Override
     public CompatActionResult onRightClick(BlockUseEvent e) {
-        if (WorldUtil.isClient(e.world))
+        if (e.isClient())
             return e.success();
 
         BlockEntity blockEntity = e.getBlockEntity();
@@ -61,13 +59,13 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
 
     @Override
     public void appendProperties(AppendPropertiesArgs args) {
-        args.addProperty(FACING);
+        args.addProperty(FACING.getProperty());
         super.appendProperties(args);
     }
 
     @Override
     public BlockState getPlacementState(PlacementStateArgs args) {
         if (args.getPlayer() == null) super.getPlacementState(args);
-        return getNewDefaultState().with(FACING, args.getPlayer().getHorizontalFacing().getOpposite());
+        return FACING.with(getNewDefaultState(), args.getHorizontalPlayerFacing().getOpposite());
     }
 }

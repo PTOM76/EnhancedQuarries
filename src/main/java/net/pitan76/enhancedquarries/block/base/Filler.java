@@ -3,23 +3,23 @@ package net.pitan76.enhancedquarries.block.base;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.NormalMarker;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
+import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
-import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
+import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 import java.util.ArrayList;
@@ -38,31 +38,28 @@ public abstract class Filler extends BaseBlock {
     }
 
     public Filler(CompatIdentifier id) {
-        super(defaultSettings.build(id));
-    }
-
-    public Filler() {
-        this(EnhancedQuarries._id("normal_filler"));
+        this(defaultSettings.build(id));
     }
 
     @Override
     public void onStateReplaced(StateReplacedEvent e) {
         if (e.state.getBlock() != e.newState.getBlock()) {
-            BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
+            BlockEntity blockEntity = e.getBlockEntity();
             if (blockEntity instanceof FillerTile) {
-                FillerTile filler = (FillerTile)blockEntity;
+                FillerTile filler = (FillerTile) blockEntity;
                 if (filler.keepNbtOnDrop) {
                     super.onStateReplaced(e);
                     return;
                 }
 
-                ItemScatterer.spawn(e.world, e.pos, filler.inventory);
+                ItemScattererUtil.spawn(e.world, e.pos, filler.inventory);
                 filler.getCraftingInventory().setStack(9, ItemStackUtil.empty());
-                ItemScatterer.spawn(e.world, e.pos, filler.getCraftingInventory());
+                ItemScattererUtil.spawn(e.world, e.pos, filler.getCraftingInventory());
 
                 // モジュールの返却
                 if (filler.canBedrockBreak()) {
-                    e.world.spawnEntity(new ItemEntity(e.world, e.pos.getX(), e.pos.getY(), e.pos.getZ(), ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1)));
+                    ItemEntity itemEntity = ItemEntityUtil.create(e.world, e.pos.getX(), e.pos.getY(), e.pos.getZ(), ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1));
+                    WorldUtil.spawnEntity(e.world, itemEntity);
                 }
             }
             super.onStateReplaced(e);
@@ -78,9 +75,11 @@ public abstract class Filler extends BaseBlock {
 
         BlockState state;
         state = (WorldUtil.getBlockState(world, pos) == null) ? fstate : WorldUtil.getBlockState(world, pos);
-        if (WorldUtil.isClient(world)) return;
-        if (e.getBlockEntity() instanceof FillerTile) {
-            FillerTile fillerTile = (FillerTile) world.getBlockEntity(pos);
+        if (e.isClient()) return;
+
+        BlockEntity blockEntity = e.getBlockEntity();
+        if (blockEntity instanceof FillerTile) {
+            FillerTile fillerTile = (FillerTile) blockEntity;
             Objects.requireNonNull(fillerTile).init();
             if (fillerTile.canSetPosByMarker()) {
                 BlockPos markerPos = null;

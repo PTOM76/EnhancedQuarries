@@ -16,21 +16,21 @@ public class Blocks {
     public static Quarry ENHANCED_OPTIMUM_QUARRY = new EnhancedOptimumQuarry(_id("enhanced_optimum_quarry"));
     public static Quarry FLUID_OPTIMUM_QUARRY = new FluidOptimumQuarry(_id("fluid_optimum_quarry"));
 
-    public static Filler NORMAL_FILLER = NormalFiller.getFiller();
-    public static Filler ENHANCED_FILLER = EnhancedFiller.getFiller();
-    public static Filler ENHANCED_FILLER_WITH_CHEST = EnhancedFillerWithChest.getFiller();
+    public static Filler NORMAL_FILLER = new NormalFiller(_id("normal_filler"));
+    public static Filler ENHANCED_FILLER = new EnhancedFiller(_id("enhanced_filler"));
+    public static Filler ENHANCED_FILLER_WITH_CHEST = new EnhancedFillerWithChest(_id("enhanced_filler_with_chest"));
 
-    public static Pump NORMAL_PUMP = NormalPump.getPump();
-    public static Pump ENHANCED_PUMP = EnhancedPump.getPump();
+    public static Pump NORMAL_PUMP = new NormalPump(_id("normal_pump"));
+    public static Pump ENHANCED_PUMP = new EnhancedPump(_id("enhanced_pump"));
 
-    public static Scanner NORMAL_SCANNER = NormalScanner.getScanner();
-    public static Builder NORMAL_BUILDER = NormalBuilder.getBuilder();
-    public static Library NORMAL_LIBRARY = NormalLibrary.getLibrary();
+    public static Scanner NORMAL_SCANNER = new NormalScanner(_id("normal_scanner"));
+    public static Builder NORMAL_BUILDER = new NormalBuilder(_id("normal_builder"));
+    public static Library NORMAL_LIBRARY = new NormalLibrary(_id("normal_library"));
 
-    public static Block ENERGY_GENERATOR = EnergyGenerator.getEnergyGenerator();
+    public static Block ENERGY_GENERATOR = new EnergyGenerator(_id("energy_generator"));
 
-    public static Block NORMAL_MARKER = NormalMarker.getBlock();
-    public static Block FRAME = Frame.getBlock();
+    public static Block NORMAL_MARKER = new NormalMarker(_id("normal_marker"));
+    public static Block FRAME = new Frame(_id("frame"));
 
     public static void init() {
         registry.registerBlock(EnhancedQuarries._id("normal_quarry"), () -> NORMAL_QUARRY);

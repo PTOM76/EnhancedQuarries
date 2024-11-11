@@ -13,7 +13,6 @@ import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -34,19 +33,22 @@ import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.ChestStyleSidedInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.CanExtractArgs;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.CanInsertArgs;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 //@SuppressWarnings("UnstableApiUsage")
-public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInventory {
+public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory {
     // Container
     public ItemStackList invItems = ItemStackList.ofSize(27, ItemStackUtil.empty());
 
@@ -823,12 +825,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
         WorldUtil.spawnEntity(getWorld(), itemEntity);
     }
 
-    public QuarryTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
-    }
-
-    public void init() {
-
+    public QuarryTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
     @Override
@@ -837,7 +835,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     @Override
-    public int[] getAvailableSlots(Direction side) {
+    public int[] getAvailableSlots(AvailableSlotsArgs args) {
         int[] result = new int[getItems().size()];
         for (int i = 0; i < result.length; i++) {
             result[i] = i;
@@ -846,12 +844,12 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, SidedInven
     }
 
     @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+    public boolean canInsert(CanInsertArgs args) {
         return false;
     }
 
     @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+    public boolean canExtract(CanExtractArgs args) {
         return true;
     }
 }

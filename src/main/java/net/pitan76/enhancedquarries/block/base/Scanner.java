@@ -4,14 +4,17 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.block.NormalMarker;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.base.ScannerTile;
-import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
@@ -21,13 +24,21 @@ import java.util.Objects;
 
 public abstract class Scanner extends BaseBlock {
 
-    public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
-            .of(CompatibleMaterial.METAL)
-            .requiresTool()
-            .strength(2, 8);
+    public static BlockSettingsBuilder defaultSettings = new BlockSettingsBuilder()
+        .material(CompatibleMaterial.METAL)
+        .requiresTool()
+        .strength(2, 8);
+
+    public Scanner(CompatibleBlockSettings settings) {
+        super(settings);
+    }
+
+    public Scanner(CompatIdentifier id) {
+        this(defaultSettings.build(id));
+    }
 
     public Scanner() {
-        super(defaultSettings);
+        this(EnhancedQuarries._id("normal_scanner"));
     }
 
     @Override

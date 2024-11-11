@@ -15,6 +15,7 @@ import net.pitan76.enhancedquarries.screen.slot.TargetSlot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
 
 public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
 
@@ -111,7 +112,7 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
             ItemStack stack = targetInventory.getStack(i);
             if (ItemStackUtil.isEmpty(stack)) continue;
 
-            items.add(NbtString.of(ItemUtil.toCompatID(stack.getItem()).toString()));
+            items.add(NbtString.of(ItemUtil.toIdAsString(stack.getItem())));
         }
 
         CustomDataUtil.put(moduleStack, "Items", items);

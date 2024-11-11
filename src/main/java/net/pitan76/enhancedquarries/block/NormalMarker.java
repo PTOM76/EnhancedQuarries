@@ -1,25 +1,26 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.Blocks;
+import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
-import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
+import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.PropertyUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
@@ -28,22 +29,24 @@ import java.util.List;
 
 public class NormalMarker extends CompatBlock { //BlockWithEntity {
 
-    public static DirectionProperty FACING = Properties.FACING;
+    public static DirectionProperty FACING = PropertyUtil.facing();
     public static BooleanProperty ACTIVE = BooleanProperty.of("active");
 
+    public static BlockSettingsBuilder defaultSettings = new BlockSettingsBuilder()
+            .material(CompatibleMaterial.METAL)
+            .strength(1, 4);
+
     public NormalMarker() {
-        super(CompatibleBlockSettings.of(CompatibleMaterial.METAL).strength(1, 4));
-            setNewDefaultState(this.getNewDefaultState().with(FACING, Direction.NORTH).with(ACTIVE, false));
+        this(EnhancedQuarries._id("normal_marker"));
     }
 
-    public static Block INSTANCE = new NormalMarker();
-
-    public static Block getInstance() {
-        return INSTANCE;
+    public NormalMarker(CompatIdentifier id) {
+        this(defaultSettings.build(id));
     }
 
-    public static Block getBlock() {
-        return getInstance();
+    public NormalMarker(CompatibleBlockSettings settings) {
+        super(settings);
+        setNewDefaultState(this.getNewDefaultState().with(FACING.getProperty(), Direction.NORTH).with(ACTIVE, false));
     }
 
     protected static VoxelShape UP_SHAPE = Block.createCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
@@ -130,7 +133,7 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
         BlockPos pos = e.getPos();
         BlockState state = e.state;
 
-        if (WorldUtil.isClient(world)) return e.success();
+        if (e.isClient()) return e.success();
         List<BlockStatePos> markerList = new ArrayList<>();
         markerList.add(new BlockStatePos(state, pos, world));
         searchMarker(world, pos, markerList);
@@ -162,7 +165,7 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
         BlockPos pos = e.getPos();
         BlockState state = e.state;
 
-        if (WorldUtil.isClient(world)) return result;
+        if (e.isClient()) return result;
         if (getActive(state)) {
             List<BlockStatePos> markerList = new ArrayList<>();
             markerList.add(new BlockStatePos(state, pos, world));
@@ -186,7 +189,7 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
     }
 
     public static void setFacing(Direction facing, World world, BlockPos pos) {
-        world.setBlockState(pos, WorldUtil.getBlockState(world, pos).with(FACING, facing));
+        world.setBlockState(pos, WorldUtil.getBlockState(world, pos).with(FACING.getProperty(), facing));
     }
 
     public static void setActive(boolean active, World world, BlockPos pos) {
@@ -194,7 +197,7 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
     }
 
     public static Direction getFacing(BlockState state) {
-        return state.get(FACING);
+        return FACING.get(state);
     }
 
     public static boolean getActive(BlockState state) {
@@ -202,15 +205,15 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
+    public BlockState getPlacementState(PlacementStateArgs args) {
         BlockState blockState = this.getNewDefaultState();
-        Direction direction = ctx.getSide();
-        return blockState.with(FACING, direction);
+        Direction direction = args.getSide();
+        return FACING.with(blockState, direction);
     }
 
     @Override
     public void appendProperties(AppendPropertiesArgs args) {
-        args.addProperty(FACING, ACTIVE);
+        args.addProperty(FACING.getProperty(), ACTIVE);
         super.appendProperties(args);
     }
 

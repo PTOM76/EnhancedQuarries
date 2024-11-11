@@ -5,16 +5,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.base.Builder;
@@ -29,10 +26,14 @@ import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.ChestStyleSidedInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
 import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
+import net.pitan76.mcpitanlib.api.sound.CompatSoundCategory;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.event.BlockEventGenerator;
+import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +43,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInventory, SimpleScreenHandlerFactory {
+public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory, SimpleScreenHandlerFactory {
 
     // Container
     public ItemStackList invItems = ItemStackList.ofSize(28, ItemStackUtil.empty());
@@ -206,7 +207,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     public ItemStack latestGotStack = ItemStackUtil.empty();
 
     public static boolean isStorageBox(ItemStack stack) {
-        return ItemUtil.toID(stack.getItem()).toString().equals("storagebox:storagebox");
+        return ItemUtil.toIdAsString(stack.getItem()).equals("storagebox:storagebox");
     }
 
     public ItemStack getInventoryStack(Block block) {
@@ -232,7 +233,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
 
         if (WorldUtil.setBlockState(getWorld(), blockPos, state)) {
             BlockEventGenerator.onPlaced(state.getBlock(), new BlockPlacedEvent(getWorld(), blockPos, state, null, latestGotStack));
-            WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getSoundGroup(state).getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+            WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getCompatSoundGroup(state).getPlaceSound(), CompatSoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
                 if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
                     int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
@@ -254,7 +255,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     }
 
     public boolean tryBuilding() {
-        if (getWorld() == null || getWorld().isClient()) return false;
+        if (getWorld() == null || WorldUtil.isClient(getWorld())) return false;
         if (pos1 == null || pos2 == null)
             return false;
         int procX;
@@ -347,12 +348,8 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
         this.pos2 = pos2;
     }
 
-    public BuilderTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
-    }
-
-    public void init() {
-
+    public BuilderTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
     @Override
@@ -361,22 +358,12 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, SidedInve
     }
 
     @Override
-    public int[] getAvailableSlots(Direction side) {
+    public int[] getAvailableSlots(AvailableSlotsArgs args) {
         int[] result = new int[getItems().size()];
         for (int i = 0; i < result.length; i++) {
             result[i] = i;
         }
         return result;
-    }
-
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return dir != Direction.DOWN;
-    }
-
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return dir == Direction.DOWN;
     }
 
     @Override
