@@ -1,10 +1,12 @@
 package net.pitan76.enhancedquarries.block.base;
 
+import net.pitan76.enhancedquarries.EnhancedQuarries;
+import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -13,11 +15,12 @@ import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.block.NormalMarker;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.base.QuarryTile;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
@@ -29,8 +32,8 @@ import java.util.Objects;
 
 public abstract class Quarry extends BaseBlock {
 
-    public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
-            .of(CompatibleMaterial.METAL)
+    public static BlockSettingsBuilder defaultSettings = new BlockSettingsBuilder()
+            .material(CompatibleMaterial.METAL)
             .requiresTool()
             .strength(2, 8);
 
@@ -38,12 +41,16 @@ public abstract class Quarry extends BaseBlock {
         super(settings);
     }
 
+    public Quarry(CompatIdentifier id) {
+        super(defaultSettings.build(id));
+    }
+
     public Quarry() {
-        this(defaultSettings);
+        this(EnhancedQuarries._id("normal_quarry"));
     }
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent e) {
+    public CompatActionResult onRightClick(BlockUseEvent e) {
         if (e.isSneaking())
             return e.pass();
 

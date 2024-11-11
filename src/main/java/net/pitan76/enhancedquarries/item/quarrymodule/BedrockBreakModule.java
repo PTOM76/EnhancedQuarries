@@ -4,7 +4,7 @@ import net.minecraft.util.ActionResult;
 import net.pitan76.enhancedquarries.item.base.MachineModule;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 

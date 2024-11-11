@@ -12,9 +12,9 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
-import net.pitan76.mcpitanlib.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
@@ -23,7 +23,7 @@ import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.world.WorldAccessUtil;
 import org.jetbrains.annotations.Nullable;
 
-public class Frame extends ExtendBlock {
+public class Frame extends CompatBlock {
     public static BooleanProperty CONNECT_NORTH = BooleanProperty.of("north");
     public static BooleanProperty CONNECT_SOUTH = BooleanProperty.of("south");
     public static BooleanProperty CONNECT_WEST = BooleanProperty.of("west");

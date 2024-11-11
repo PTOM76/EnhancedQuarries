@@ -6,7 +6,7 @@ import net.minecraft.block.FluidBlock;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 
 public class TowerModule extends FillerModule {
     public TowerModule(CompatibleItemSettings settings) {

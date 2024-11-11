@@ -4,16 +4,17 @@ import net.minecraft.block.Block;
 import net.pitan76.enhancedquarries.block.*;
 import net.pitan76.enhancedquarries.block.base.*;
 
+import static net.pitan76.enhancedquarries.EnhancedQuarries._id;
 import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
 
 public class Blocks {
 
-    public static Quarry NORMAL_QUARRY = NormalQuarry.getQuarry();
-    public static Quarry ENHANCED_QUARRY = EnhancedQuarry.getQuarry();
-    public static Quarry FLUID_QUARRY = FluidQuarry.getQuarry();
-    public static Quarry OPTIMUM_QUARRY = OptimumQuarry.getQuarry();
-    public static Quarry ENHANCED_OPTIMUM_QUARRY = EnhancedOptimumQuarry.getQuarry();
-    public static Quarry FLUID_OPTIMUM_QUARRY = FluidOptimumQuarry.getQuarry();
+    public static Quarry NORMAL_QUARRY = new NormalQuarry(_id("normal_quarry"));
+    public static Quarry ENHANCED_QUARRY = new EnhancedQuarry(_id("enhanced_quarry"));
+    public static Quarry FLUID_QUARRY = new FluidQuarry(_id("fluid_quarry"));
+    public static Quarry OPTIMUM_QUARRY = new OptimumQuarry(_id("optimum_quarry"));
+    public static Quarry ENHANCED_OPTIMUM_QUARRY = new EnhancedOptimumQuarry(_id("enhanced_optimum_quarry"));
+    public static Quarry FLUID_OPTIMUM_QUARRY = new FluidOptimumQuarry(_id("fluid_optimum_quarry"));
 
     public static Filler NORMAL_FILLER = NormalFiller.getFiller();
     public static Filler ENHANCED_FILLER = EnhancedFiller.getFiller();

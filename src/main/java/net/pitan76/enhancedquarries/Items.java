@@ -7,15 +7,16 @@ import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.enhancedquarries.item.fillermodule.*;
 import net.pitan76.enhancedquarries.item.quarrymodule.*;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.item.ExtendItem;
-import net.pitan76.mcpitanlib.api.util.ItemUtil;
+import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.v2.CompatItem;
+import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
 
+import static net.pitan76.enhancedquarries.EnhancedQuarries._id;
 import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
 
 public class Items {
 
-    public static Item NORMAL_QUARRY = ItemUtil.ofBlock(Blocks.NORMAL_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+    public static Item NORMAL_QUARRY = ItemUtil.create(Blocks.NORMAL_QUARRY, CompatibleItemSettings.of(_id("normal_quarry")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     public static Item ENHANCED_QUARRY = ItemUtil.ofBlock(Blocks.ENHANCED_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     public static Item FLUID_QUARRY = ItemUtil.ofBlock(Blocks.FLUID_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
     public static Item OPTIMUM_QUARRY = ItemUtil.ofBlock(Blocks.OPTIMUM_QUARRY, CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));

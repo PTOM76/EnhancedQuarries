@@ -4,10 +4,10 @@ import net.minecraft.util.math.BlockPos;
 import net.pitan76.enhancedquarries.event.FillerModuleRange;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.v2.CompatItem;
 
-public abstract class FillerModule extends ExtendItem {
+public abstract class FillerModule extends CompatItem {
 
     public FillerModule(CompatibleItemSettings settings) {
         super(settings);

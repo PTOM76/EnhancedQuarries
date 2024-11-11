@@ -1,6 +1,6 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 
 public abstract class Pump extends BaseBlock {

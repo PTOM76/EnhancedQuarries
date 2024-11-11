@@ -1,5 +1,6 @@
 package net.pitan76.enhancedquarries.block;
 
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.state.property.DirectionProperty;
@@ -39,7 +40,7 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
     // ----
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent e) {
+    public CompatActionResult onRightClick(BlockUseEvent e) {
         if (WorldUtil.isClient(e.world))
             return e.success();
 

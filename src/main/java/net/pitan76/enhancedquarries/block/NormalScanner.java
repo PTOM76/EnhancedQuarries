@@ -1,5 +1,6 @@
 package net.pitan76.enhancedquarries.block;
 
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +38,7 @@ public class NormalScanner extends Scanner {
     // ----
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent e) {
+    public CompatActionResult onRightClick(BlockUseEvent e) {
         World world = e.getWorld();
         Player player = e.getPlayer();
         BlockPos pos = e.getPos();

@@ -3,7 +3,7 @@ package net.pitan76.enhancedquarries.block.base;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ItemScatterer;
 import net.pitan76.enhancedquarries.tile.base.BuilderTile;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 

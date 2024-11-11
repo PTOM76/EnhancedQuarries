@@ -1,5 +1,6 @@
 package net.pitan76.enhancedquarries.item;
 
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
@@ -12,19 +13,19 @@ import net.pitan76.enhancedquarries.block.base.BaseBlock;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.v2.CompatItem;
 import net.pitan76.mcpitanlib.api.util.BlockEntityDataUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
-public class WrenchItem extends ExtendItem {
+public class WrenchItem extends CompatItem {
     public WrenchItem(CompatibleItemSettings settings) {
         super(settings);
     }
 
     @Override
-    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
+    public CompatActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
         if (e.isClient()) return e.success();
         Player player = e.getPlayer();
         World world = e.getWorld();

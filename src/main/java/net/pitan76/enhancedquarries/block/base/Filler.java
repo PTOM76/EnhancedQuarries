@@ -7,14 +7,17 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.NormalMarker;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
@@ -25,8 +28,8 @@ import java.util.Objects;
 
 public abstract class Filler extends BaseBlock {
 
-    public static CompatibleBlockSettings defaultSettings = CompatibleBlockSettings
-            .of(CompatibleMaterial.METAL)
+    public static BlockSettingsBuilder defaultSettings = new BlockSettingsBuilder()
+            .material(CompatibleMaterial.METAL)
             .requiresTool()
             .strength(2, 8);
 
@@ -34,8 +37,12 @@ public abstract class Filler extends BaseBlock {
         super(settings);
     }
 
+    public Filler(CompatIdentifier id) {
+        super(defaultSettings.build(id));
+    }
+
     public Filler() {
-        this(defaultSettings);
+        this(EnhancedQuarries._id("normal_filler"));
     }
 
     @Override
@@ -72,7 +79,7 @@ public abstract class Filler extends BaseBlock {
         BlockState state;
         state = (WorldUtil.getBlockState(world, pos) == null) ? fstate : WorldUtil.getBlockState(world, pos);
         if (WorldUtil.isClient(world)) return;
-        if (world.getBlockEntity(pos) instanceof FillerTile) {
+        if (e.getBlockEntity() instanceof FillerTile) {
             FillerTile fillerTile = (FillerTile) world.getBlockEntity(pos);
             Objects.requireNonNull(fillerTile).init();
             if (fillerTile.canSetPosByMarker()) {

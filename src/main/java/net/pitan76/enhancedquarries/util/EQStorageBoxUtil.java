@@ -2,7 +2,7 @@ package net.pitan76.enhancedquarries.util;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.pitan76.mcpitanlib.api.util.ItemUtil;
+import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
 import net.pitan76.mcpitanlib.api.util.PlatformUtil;
 
 public class EQStorageBoxUtil {

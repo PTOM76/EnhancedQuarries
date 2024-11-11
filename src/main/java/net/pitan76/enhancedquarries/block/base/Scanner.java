@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.NormalMarker;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.base.ScannerTile;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;

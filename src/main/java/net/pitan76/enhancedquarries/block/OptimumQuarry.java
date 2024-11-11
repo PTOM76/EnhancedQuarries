@@ -4,23 +4,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.tile.OptimumQuarryTile;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 
 public class OptimumQuarry extends Quarry {
 
-    public OptimumQuarry() {
-        super();
+    public OptimumQuarry(CompatIdentifier id) {
+        super(id);
     }
 
-    // instance
-    public static Quarry INSTANCE = new OptimumQuarry();
-
-    public static Quarry getInstance() {
-        return INSTANCE;
-    }
-
-    public static Quarry getQuarry() {
-        return getInstance();
-    }
     // ----
 
     @Override

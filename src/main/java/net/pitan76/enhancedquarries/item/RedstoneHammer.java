@@ -6,8 +6,9 @@ import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.ActionResult;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.tool.CompatiblePickaxeItem;
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 
 public class RedstoneHammer extends CompatiblePickaxeItem {
     public RedstoneHammer(CompatibleItemSettings settings) {
@@ -15,7 +16,7 @@ public class RedstoneHammer extends CompatiblePickaxeItem {
     }
 
     @Override
-    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e, Options options) {
+    public CompatActionResult onRightClickOnBlock(ItemUseOnBlockEvent e, Options options) {
         if (e.getWorld().getBlockEntity(e.getBlockPos()) != null) {
             BlockEntity blockEntity = e.getWorld().getBlockEntity(e.getBlockPos());
             if (FabricLoader.getInstance().isModLoaded("reborncore")) {

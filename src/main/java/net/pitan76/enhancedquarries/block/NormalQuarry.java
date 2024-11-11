@@ -4,23 +4,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.tile.NormalQuarryTile;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 
 public class NormalQuarry extends Quarry {
 
-    public NormalQuarry() {
-        super();
+    public NormalQuarry(CompatIdentifier id) {
+        super(id);
     }
 
-    // instance
-    public static Quarry INSTANCE = new NormalQuarry();
-
-    public static Quarry getInstance() {
-        return INSTANCE;
-    }
-
-    public static Quarry getQuarry() {
-        return getInstance();
-    }
     // ----
 
     @Override

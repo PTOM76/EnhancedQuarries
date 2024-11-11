@@ -2,7 +2,7 @@ package net.pitan76.enhancedquarries.item.quarrymodule;
 
 import net.pitan76.enhancedquarries.item.base.MachineModule;
 import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.EnchantmentUtil;
 

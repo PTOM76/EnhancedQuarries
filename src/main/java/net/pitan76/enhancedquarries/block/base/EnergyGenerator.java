@@ -1,11 +1,12 @@
 package net.pitan76.enhancedquarries.block.base;
 
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
@@ -62,7 +63,7 @@ public class EnergyGenerator extends BaseBlock {
     }
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent e) {
+    public CompatActionResult onRightClick(BlockUseEvent e) {
         World world = e.getWorld();
         Player player = e.getPlayer();
 

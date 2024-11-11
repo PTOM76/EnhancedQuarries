@@ -4,43 +4,43 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
-import net.pitan76.mcpitanlib.api.block.ExtendBlock;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
 import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
 import net.pitan76.mcpitanlib.api.util.PropertyUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
-public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider {
+public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider {
 
     public static final DirectionProperty FACING = PropertyUtil.horizontalFacing();
     public static final BooleanProperty ACTIVE = PropertyUtil.createBooleanProperty("active");
 
     public BaseBlock(CompatibleBlockSettings settings) {
         super(settings);
-        setNewDefaultState(getNewDefaultState().with(ACTIVE, false).with(FACING, Direction.NORTH));
+        setNewDefaultState(getNewDefaultState().with(ACTIVE, false).with(FACING.getProperty(), Direction.NORTH));
     }
 
     public static void setFacing(Direction facing, World world, BlockPos pos) {
-        world.setBlockState(pos, WorldUtil.getBlockState(world, pos).with(FACING, facing));
+        world.setBlockState(pos, WorldUtil.getBlockState(world, pos).with(FACING.getProperty(), facing));
     }
 
     public static Direction getFacing(BlockState state) {
-        return state.get(FACING);
+        return state.get(FACING.getProperty());
     }
 
     public static void setActive(Boolean active, World world, BlockPos pos) {
-        Direction facing = WorldUtil.getBlockState(world, pos).get(FACING);
-        BlockState state = WorldUtil.getBlockState(world, pos).with(ACTIVE, active).with(FACING, facing);
+        Direction facing = WorldUtil.getBlockState(world, pos).get(FACING.getProperty());
+        BlockState state = WorldUtil.getBlockState(world, pos).with(ACTIVE, active).with(FACING.getProperty(), facing);
         WorldUtil.setBlockState(world, pos, state);
     }
 
@@ -73,12 +73,12 @@ public class BaseBlock extends ExtendBlock implements ExtendBlockEntityProvider 
     @Override
     public void appendProperties(AppendPropertiesArgs args) {
         super.appendProperties(args);
-        args.addProperty(FACING, ACTIVE);
+        args.addProperty(FACING.getProperty(), ACTIVE);
     }
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+        return state.with(FACING.getProperty(), rotation.rotate(state.get(FACING.getProperty())));
     }
 
     @Override

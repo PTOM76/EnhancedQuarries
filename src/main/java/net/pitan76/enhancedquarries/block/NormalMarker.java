@@ -1,5 +1,6 @@
 package net.pitan76.enhancedquarries.block;
 
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
@@ -14,9 +15,9 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.Blocks;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
-import net.pitan76.mcpitanlib.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
@@ -25,7 +26,7 @@ import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NormalMarker extends ExtendBlock { //BlockWithEntity {
+public class NormalMarker extends CompatBlock { //BlockWithEntity {
 
     public static DirectionProperty FACING = Properties.FACING;
     public static BooleanProperty ACTIVE = BooleanProperty.of("active");
@@ -124,7 +125,7 @@ public class NormalMarker extends ExtendBlock { //BlockWithEntity {
     }
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent e) {
+    public CompatActionResult onRightClick(BlockUseEvent e) {
         World world = e.world;
         BlockPos pos = e.getPos();
         BlockState state = e.state;
