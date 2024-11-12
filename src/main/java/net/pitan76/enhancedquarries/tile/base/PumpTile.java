@@ -41,8 +41,8 @@ public class PumpTile extends BaseEnergyTile {
         return 30;
     }
 
-    public PumpTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
+    public PumpTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
     @Override
@@ -153,8 +153,8 @@ public class PumpTile extends BaseEnergyTile {
 
             }
         }
-        if (sphere.isEmpty() && !getWorld().getFluidState(getPos().down()).isEmpty()) {
-            sphere.add(new BlockStatePos(getWorld().getBlockState(getPos().down()), getPos().down(), getWorld()));
+        if (sphere.isEmpty() && !WorldUtil.getFluidState(getWorld(), getPos().down()).isEmpty()) {
+            sphere.add(new BlockStatePos(WorldUtil.getBlockState(getWorld(), getPos().down()), getPos().down(), getWorld()));
         }
         return sphere;
     }
@@ -164,12 +164,12 @@ public class PumpTile extends BaseEnergyTile {
         if (storedFluid.getAmount() >= storedFluid.getCapacity()) {
             return false;
         }
-        if (world.getFluidState(getPos().down()).isEmpty() && world.getFluidState(getPos().down(2)).isEmpty() && world.getFluidState(getPos().down(3)).isEmpty())
+        if (WorldUtil.getFluidState(world, getPos().down()).isEmpty() && WorldUtil.getFluidState(world, getPos().down(2)).isEmpty() && WorldUtil.getFluidState(world, getPos().down(3)).isEmpty())
             return false;
         BlockStatePos statePos = getFarFluid();
         try {
             BlockState state = statePos.getBlockState();
-            world.removeBlock(statePos.getBlockPos(), false);
+            WorldUtil.removeBlock(world, statePos.getBlockPos(), false);
             FluidState fluidState = state.getFluidState();
             try (Transaction transaction = Transaction.openOuter()) {
                 storedFluid.insert(FluidVariant.of(fluidState.getFluid()), FluidConstants.BUCKET, transaction);

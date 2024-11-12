@@ -15,6 +15,7 @@ import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
 import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
 import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
 import net.pitan76.mcpitanlib.api.util.PropertyUtil;
@@ -22,7 +23,7 @@ import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider {
 
-    public static final DirectionProperty FACING = PropertyUtil.horizontalFacing();
+    public static final DirectionProperty FACING = CompatProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ACTIVE = PropertyUtil.createBooleanProperty("active");
 
     public BaseBlock(CompatibleBlockSettings settings) {

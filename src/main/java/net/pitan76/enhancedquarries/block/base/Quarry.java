@@ -4,7 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -18,6 +17,7 @@ import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
+import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
@@ -84,7 +84,7 @@ public abstract class Quarry extends BaseBlock {
             return;
         }
 
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+        BlockEntity blockEntity = e.getBlockEntity();
         if (blockEntity instanceof QuarryTile) {
             QuarryTile quarry = (QuarryTile) blockEntity;
             if (quarry.keepNbtOnDrop) {
@@ -92,7 +92,7 @@ public abstract class Quarry extends BaseBlock {
                 return;
             }
 
-            ItemScatterer.spawn(world, pos, quarry);
+            ItemScattererUtil.spawn(world, pos, blockEntity);
 
             // モジュールの返却
             if (!quarry.isEmptyInModules()) {
@@ -130,9 +130,10 @@ public abstract class Quarry extends BaseBlock {
 
         BlockState state;
         state = (WorldUtil.getBlockState(world, pos) == null) ? fstate : WorldUtil.getBlockState(world, pos);
-        if (WorldUtil.isClient(world)) return;
-        if (world.getBlockEntity(pos) instanceof QuarryTile) {
-            QuarryTile quarryTile = (QuarryTile) world.getBlockEntity(pos);
+        if (e.isClient()) return;
+        BlockEntity blockEntity = e.getBlockEntity();
+        if (blockEntity instanceof QuarryTile) {
+            QuarryTile quarryTile = (QuarryTile) blockEntity;
             Objects.requireNonNull(quarryTile).init();
             if (quarryTile.canSetPosByMarker()) {
                 BlockPos markerPos = null;

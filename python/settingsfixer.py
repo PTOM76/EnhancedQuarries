@@ -3,22 +3,19 @@ import re
 
 FOLDER_PATH = '../src/main/java'
 
-# Replacements r'(pattern)': r'(replacement)'
-REPLACEMENTS = {
-    r'CompatibleItemSettings\.of\(\)': r'CompatibleItemSettings.of(_id("default_id"))',
-}
+def extract_ids_from_init(content):
+    pattern = re.compile(r'registry\.registerItem\(\w+\._id\("(\w+)"\), \(\) -> (\w+)\);')
+    return {v: k for k, v in pattern.findall(content)}
 
-# Function to update CompatibleItemSettings.of() calls
-def update_compatible_item_settings(content):
-    pattern = re.compile(r'CompatibleItemSettings\.of\(\)')
-    matches = pattern.findall(content)
-    for match in matches:
-        # Extract the item name from the previous line
-        item_name_match = re.search(r'public static Item (\w+) =', content[:content.find(match)])
-        if item_name_match:
-            item_name = item_name_match.group(1).lower()
-            new_call = f'CompatibleItemSettings.of(_id("{item_name}"))'
-            content = content.replace(match, new_call, 1)
+def update_compatible_item_settings(content, id_map):
+    pattern = re.compile(r'public static Item (\w+) = .*?CompatibleItemSettings\.of\(\)')
+    matches = list(pattern.finditer(content))
+
+    for match in reversed(matches):
+        item_name = match.group(1)
+        if item_name in id_map:
+            new_call = f'CompatibleItemSettings.of(_id("{id_map[item_name]}"))'
+            content = content[:match.start()] + content[match.start():match.end()].replace('CompatibleItemSettings.of()', new_call) + content[match.end():]
     return content
 
 for root, dirs, files in os.walk(FOLDER_PATH):
@@ -29,10 +26,15 @@ for root, dirs, files in os.walk(FOLDER_PATH):
             with open(filepath, 'r', encoding='utf-8') as file:
                 content = file.read()
 
+            if 'public static void init()' in content:
+                id_map = extract_ids_from_init(content)
+            else:
+                id_map = {}
+
             content2 = content
 
             # Update CompatibleItemSettings.of() calls
-            content = update_compatible_item_settings(content)
+            content = update_compatible_item_settings(content, id_map)
 
             # Write if content is changed
             if content != content2:

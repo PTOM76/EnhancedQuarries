@@ -51,7 +51,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
     @Override
     public boolean tryQuarrying() {
         if (finishedQuarry) return true;
-        if (getWorld() == null || getWorld().isClient()) return false;
+        if (getWorld() == null || WorldUtil.isClient(getWorld())) return false;
 
         if (getMinPos() == null)
             setMinPos(getDefaultRangeMinPos());
@@ -74,9 +74,9 @@ public class OptimumQuarryTile extends NormalQuarryTile {
             if (procX < maxPos.getX() - 1) {
                 if (procZ < maxPos.getZ() - 1) {
                     BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                    if (getWorld().getBlockState(procPos) == null) return false;
-                    if (getWorld().getBlockEntity(procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continueQuarrying();
-                    Block procBlock = getWorld().getBlockState(procPos).getBlock();
+                    if (WorldUtil.getBlockState(getWorld(), procPos) == null) return false;
+                    if (WorldUtil.getBlockEntity(getWorld(), procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continueQuarrying();
+                    Block procBlock = WorldUtil.getBlockState(getWorld(), procPos).getBlock();
                     if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                         if (canReplaceFluid()) {
                             double time = tryFluidReplace(procPos);
@@ -114,7 +114,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         }
 
                         breakBlock(procPos, true);
-                        List<ItemEntity> entities = getWorld().getEntitiesByType(EntityType.ITEM, BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
+                        List<ItemEntity> entities = WorldUtil.getEntitiesByType(getWorld(), EntityType.ITEM, BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
                         if (entities.isEmpty()) return true;
                         for (ItemEntity itemEntity : entities) {
                             addStack(itemEntity.getStack());

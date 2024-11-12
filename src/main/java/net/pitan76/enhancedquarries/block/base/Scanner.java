@@ -44,7 +44,7 @@ public abstract class Scanner extends BaseBlock {
     @Override
     public void onStateReplaced(StateReplacedEvent e) {
         if (e.state.getBlock() != e.newState.getBlock()) {
-            BlockEntity blockEntity = e.world.getBlockEntity(e.pos);
+            BlockEntity blockEntity = e.getBlockEntity();
             if (blockEntity instanceof ScannerTile) {
                 ScannerTile scanner = (ScannerTile)blockEntity;
                 if (scanner.keepNbtOnDrop) {

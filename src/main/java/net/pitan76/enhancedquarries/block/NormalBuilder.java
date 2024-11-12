@@ -1,8 +1,6 @@
 package net.pitan76.enhancedquarries.block;
 
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.block.base.Builder;
 import net.pitan76.enhancedquarries.item.WrenchItem;
@@ -14,7 +12,6 @@ import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class NormalBuilder extends Builder {
 
@@ -37,15 +34,14 @@ public class NormalBuilder extends Builder {
 
     @Override
     public CompatActionResult onRightClick(BlockUseEvent e) {
-        World world = e.getWorld();
         Player player = e.getPlayer();
-        BlockPos pos = e.getPos();
 
-        if (WorldUtil.isClient(world)) return e.success();
+        if (e.isClient()) return e.success();
         if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
-        if (e.getBlockEntity() instanceof BuilderTile)
-            player.openGuiScreen((BuilderTile) world.getBlockEntity(pos));
+        BlockEntity blockEntity = e.getBlockEntity();
+        if (blockEntity instanceof BuilderTile)
+            player.openGuiScreen((BuilderTile) blockEntity);
 
         return e.consume();
     }

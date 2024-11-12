@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.pitan76.enhancedquarries.command.EnhancedQuarriesCommand;
 import net.pitan76.enhancedquarries.compat.RebornEnergyRegister;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
@@ -12,6 +11,7 @@ import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.PlatformUtil;
 import net.pitan76.mcpitanlib.fabric.ExtendModInitializer;
 
 public class EnhancedQuarries extends ExtendModInitializer {
@@ -77,7 +77,7 @@ public class EnhancedQuarries extends ExtendModInitializer {
      */
 
     public static void registerEnergyStorage() {
-        if (FabricLoader.getInstance().isModLoaded("team_reborn_energy")) {
+        if (PlatformUtil.isModLoaded("team_reborn_energy")) {
             RebornEnergyRegister.init();
         }
     }

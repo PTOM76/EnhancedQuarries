@@ -3,8 +3,6 @@ package net.pitan76.enhancedquarries.client.renderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -13,7 +11,12 @@ import net.minecraft.util.math.RotationAxis;
 import net.pitan76.enhancedquarries.block.NormalMarker;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.MarkerTile;
+import net.pitan76.mcpitanlib.api.client.registry.CompatRegistryClient;
+import net.pitan76.mcpitanlib.api.client.render.block.entity.event.BlockEntityRenderEvent;
+import net.pitan76.mcpitanlib.api.client.render.block.entity.event.CompatBlockEntityRendererConstructArgs;
+import net.pitan76.mcpitanlib.api.client.render.block.entity.v2.CompatBlockEntityRenderer;
 import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -21,21 +24,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 // 未完成というかわからない；；(do not know)
-public class MarkerRenderer implements BlockEntityRenderer<MarkerTile> {
+public class MarkerRenderer extends CompatBlockEntityRenderer<MarkerTile> {
 
-    public MarkerRenderer(BlockEntityRendererFactory.Context context) {}
+    public MarkerRenderer(CompatBlockEntityRendererConstructArgs args) {
+        super(args);
+    }
+
+    public MarkerRenderer(CompatRegistryClient.BlockEntityRendererFactory.Context ctx) {
+        super(ctx);
+    }
 
     @Override
-    public void render(MarkerTile entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(BlockEntityRenderEvent<MarkerTile> e) {
+        MarkerTile entity = e.getBlockEntity();
         BlockPos pos = entity.getPos();
 
-        long l = entity.getWorld().getTime();
+        long l = WorldUtil.getTime(entity.getWorld());
         List<BlockStatePos> markerList = new ArrayList<>();
         NormalMarker.searchMarker(entity.getWorld(), pos, markerList);
         if (markerList.size() < 3) return;
         for (BlockStatePos statePos : markerList) {
             BlockPos anotherPos = statePos.getBlockPos();
-            renderBeam(matrices, vertexConsumers, tickDelta, l, pos.getY(), statePos.getPosY(), new float[]{255, 0, 0, 50});
+            renderBeam(e.matrices, e.vertexConsumers, e.tickDelta, l, pos.getY(), statePos.getPosY(), new float[]{255, 0, 0, 50});
             /*
             int offsetX = Math.abs(pos.getX() - anotherPos.getX());
             int offsetY = Math.abs(pos.getY() - anotherPos.getY());

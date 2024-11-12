@@ -1,16 +1,16 @@
 package net.pitan76.enhancedquarries;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.pitan76.easyapi.FileControl;
 import net.pitan76.easyapi.config.YamlConfig;
 import net.pitan76.enhancedquarries.item.fillermodule.HorizontalLayerModule;
 import net.pitan76.enhancedquarries.item.fillermodule.TorchModule;
 import net.pitan76.enhancedquarries.item.fillermodule.VerticalLayerModule;
+import net.pitan76.mcpitanlib.api.util.PlatformUtil;
 
 import java.io.File;
 
 public class Config {
-    public static File configDir = new File(FabricLoader.getInstance().getConfigDir().toFile(), "enhanced_quarries");
+    public static File configDir = new File(PlatformUtil.getConfigFolderAsFile(), "enhanced_quarries");
     public static File configFile = new File(configDir, "config.yml");
 
     public static YamlConfig config = new YamlConfig(configFile);
