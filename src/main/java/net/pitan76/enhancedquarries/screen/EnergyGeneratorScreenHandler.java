@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.ScreenHandlers;
 import net.pitan76.enhancedquarries.inventory.slot.FuelSlot;
 import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
@@ -26,6 +27,8 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
     public int burnTime = 0;
     public int maxBurnTime = 0;
 
+    public World world;
+
     public EnergyGeneratorScreenHandler(CreateMenuEvent e, PacketByteBuf buf) {
         this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, e.syncId, e.playerInventory, InventoryUtil.createSimpleInventory(1));
         if (buf == null) return;
@@ -33,21 +36,24 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
         maxEnergy = PacketByteUtil.readLong(buf);
         burnTime = PacketByteUtil.readInt(buf);
         maxBurnTime = PacketByteUtil.readInt(buf);
+        this.world = new Player(e.playerInventory.player).getWorld();
     }
 
     public EnergyGeneratorScreenHandler(CreateMenuEvent e, EnergyGeneratorTile tile) {
         this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, e.syncId, e.playerInventory, tile);
         this.tile = tile;
+        this.world = tile.getWorld();
     }
 
     public EnergyGeneratorScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(type, syncId);
         this.inventory = inventory;
+        this.world = new Player(playerInventory.player).getWorld();
 
         addPlayerMainInventorySlots(playerInventory, 8, 84);
         addPlayerHotbarSlots(playerInventory, 8, 142);
 
-        callAddSlot(new FuelSlot(inventory, 0, 80, 24));
+        callAddSlot(new FuelSlot(this, inventory, 0, 80, 24));
     }
 
     @Override
