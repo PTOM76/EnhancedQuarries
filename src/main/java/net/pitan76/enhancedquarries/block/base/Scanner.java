@@ -17,6 +17,7 @@ import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,19 +77,15 @@ public abstract class Scanner extends BaseBlock {
 
         BlockPos markerPos = null;
 
-        switch (getFacing(state)) {
-            case NORTH:
-                markerPos = pos.add(0, 0, 1);
-                break;
-            case SOUTH:
-                markerPos = pos.add(0, 0, -1);
-                break;
-            case WEST:
-                markerPos = pos.add(1, 0, 0);
-                break;
-            case EAST:
-                markerPos = pos.add(-1, 0, 0);
-                break;
+        Direction facing = getFacing(state);
+        if (facing.equals(Direction.NORTH)) {
+            markerPos = pos.add(0, 0, 1);
+        } else if (facing.equals(Direction.SOUTH)) {
+            markerPos = pos.add(0, 0, -1);
+        } else if (facing.equals(Direction.WEST)) {
+            markerPos = pos.add(1, 0, 0);
+        } else if (facing.equals(Direction.EAST)) {
+            markerPos = pos.add(-1, 0, 0);
         }
 
         if (markerPos == null) return;

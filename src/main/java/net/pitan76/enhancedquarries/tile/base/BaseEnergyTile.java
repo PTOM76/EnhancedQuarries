@@ -136,7 +136,7 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
     }
 
     public Direction getFacing(BlockState state) {
-        return BaseBlock.getFacing(state);
+        return BaseBlock.getFacing(state).toMinecraft();
     }
 
     public Direction getFacing() {

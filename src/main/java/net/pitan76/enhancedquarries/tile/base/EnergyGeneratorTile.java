@@ -1,9 +1,7 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -33,10 +31,10 @@ import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
+import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
+import net.pitan76.mcpitanlib.core.registry.FuelRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
 
 public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, VanillaStyleSidedInventory, ExtendedScreenHandlerFactory {
     public EnergyGeneratorTile(BlockEntityType<?> type, TileCreateEvent event) {
@@ -97,13 +95,13 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
 
         // 燃焼時間が0の場合
         if (burnTime == 0 && !WorldUtil.isClient(world)) {
-            burnTime = getBurnTimeFrom(getItems().get(0));
+            burnTime = getBurnTimeFrom(world, getItems().get(0));
             maxBurnTime = burnTime;
             if (burnTime > 0) {
                 ItemStack stack = getItems().get(0);
                 // レシピリマインダーがある場合
                 if (stack.getItem().hasRecipeRemainder()) {
-                    ItemStack remainder = ItemStackUtil.create(stack.getItem().getRecipeRemainder(), 1);
+                    ItemStack remainder = ItemStackUtil.create(ItemUtil.getRecipeRemainder(stack.getItem()), 1);
                     if (stack.getCount() == 1)
                         // 最大スタック数が1の場合はスタックを置き換える
                         getItems().set(0, remainder);
@@ -180,11 +178,16 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
         return output;
     }
 
-    public static int getBurnTimeFrom(@NotNull ItemStack stack) {
+    public static int getBurnTimeFrom(World world, @NotNull ItemStack stack) {
         if (stack.isEmpty()) return 0;
 
-        Map<Item, Integer> burnMap = AbstractFurnaceBlockEntity.createFuelTimeMap();
-        return burnMap.containsKey(stack.getItem()) ? burnMap.get(stack.getItem()) / 4 : 0;
+        //Map<Item, Integer> burnMap = AbstractFurnaceBlockEntity.createFuelTimeMap();
+        ItemStack copy = ItemStackUtil.copyWithCount(stack, 1);
+        try {
+            return FuelRegistry.get(world, copy) / 4;
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     @Override

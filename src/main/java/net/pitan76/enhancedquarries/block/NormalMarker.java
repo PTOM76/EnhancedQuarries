@@ -2,9 +2,7 @@ package net.pitan76.enhancedquarries.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
@@ -17,19 +15,21 @@ import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
+import net.pitan76.mcpitanlib.api.state.property.BooleanProperty;
+import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
 import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.PropertyUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NormalMarker extends CompatBlock { //BlockWithEntity {
 
-    public static DirectionProperty FACING = PropertyUtil.facing();
+    public static DirectionProperty FACING = CompatProperties.FACING;
     public static BooleanProperty ACTIVE = BooleanProperty.of("active");
 
     public static BlockSettingsBuilder defaultSettings = new BlockSettingsBuilder()
@@ -46,7 +46,7 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
 
     public NormalMarker(CompatibleBlockSettings settings) {
         super(settings);
-        setNewDefaultState(this.getNewDefaultState().with(FACING.getProperty(), Direction.NORTH).with(ACTIVE, false));
+        setDefaultState(this.getDefaultMidohraState().with(FACING, Direction.NORTH).with(ACTIVE, false));
     }
 
     protected static VoxelShape UP_SHAPE = Block.createCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
@@ -59,12 +59,14 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
 
     @Override
     public VoxelShape getOutlineShape(OutlineShapeEvent e) {
-        if (getFacing(e.state).equals(Direction.UP)) return UP_SHAPE;
-        if (getFacing(e.state).equals(Direction.DOWN)) return DOWN_SHAPE;
-        if (getFacing(e.state).equals(Direction.NORTH)) return NORTH_SHAPE;
-        if (getFacing(e.state).equals(Direction.SOUTH)) return SOUTH_SHAPE;
-        if (getFacing(e.state).equals(Direction.EAST)) return EAST_SHAPE;
-        if (getFacing(e.state).equals(Direction.WEST)) return WEST_SHAPE;
+        net.pitan76.mcpitanlib.midohra.block.BlockState state = net.pitan76.mcpitanlib.midohra.block.BlockState.of(e.state);
+
+        if (getFacing(state).equals(Direction.UP)) return UP_SHAPE;
+        if (getFacing(state).equals(Direction.DOWN)) return DOWN_SHAPE;
+        if (getFacing(state).equals(Direction.NORTH)) return NORTH_SHAPE;
+        if (getFacing(state).equals(Direction.SOUTH)) return SOUTH_SHAPE;
+        if (getFacing(state).equals(Direction.EAST)) return EAST_SHAPE;
+        if (getFacing(state).equals(Direction.WEST)) return WEST_SHAPE;
         return UP_SHAPE;
     }
 
@@ -189,31 +191,41 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
     }
 
     public static void setFacing(Direction facing, World world, BlockPos pos) {
-        world.setBlockState(pos, WorldUtil.getBlockState(world, pos).with(FACING.getProperty(), facing));
+        net.pitan76.mcpitanlib.midohra.block.BlockState state = net.pitan76.mcpitanlib.midohra.block.BlockState.of(WorldUtil.getBlockState(world, pos));
+        WorldUtil.setBlockState(world, pos, state.with(FACING, facing).toMinecraft());
     }
 
     public static void setActive(boolean active, World world, BlockPos pos) {
-        world.setBlockState(pos, WorldUtil.getBlockState(world, pos).with(ACTIVE, active));
+        net.pitan76.mcpitanlib.midohra.block.BlockState state = net.pitan76.mcpitanlib.midohra.block.BlockState.of(WorldUtil.getBlockState(world, pos));
+        WorldUtil.setBlockState(world, pos, state.with(ACTIVE, active).toMinecraft());
     }
 
-    public static Direction getFacing(BlockState state) {
-        return FACING.get(state);
+    public static Direction getFacing(net.pitan76.mcpitanlib.midohra.block.BlockState state) {
+        return FACING.getAsMidohra(state);
+    }
+
+    public static net.minecraft.util.math.Direction getFacing(BlockState state) {
+        return getFacing(net.pitan76.mcpitanlib.midohra.block.BlockState.of(state)).toMinecraft();
+    }
+
+    public static boolean getActive(net.pitan76.mcpitanlib.midohra.block.BlockState state) {
+        return state.get(ACTIVE);
     }
 
     public static boolean getActive(BlockState state) {
-        return state.get(ACTIVE);
+        return getActive(net.pitan76.mcpitanlib.midohra.block.BlockState.of(state));
     }
 
     @Override
     public BlockState getPlacementState(PlacementStateArgs args) {
-        BlockState blockState = this.getNewDefaultState();
-        Direction direction = args.getSide();
-        return FACING.with(blockState, direction);
+        net.pitan76.mcpitanlib.midohra.block.BlockState blockState = this.getDefaultMidohraState();
+        Direction direction = Direction.of(args.getSide());
+        return FACING.with(blockState, direction).toMinecraft();
     }
 
     @Override
     public void appendProperties(AppendPropertiesArgs args) {
-        args.addProperty(FACING.getProperty(), ACTIVE);
+        args.addProperty(FACING, ACTIVE);
         super.appendProperties(args);
     }
 
