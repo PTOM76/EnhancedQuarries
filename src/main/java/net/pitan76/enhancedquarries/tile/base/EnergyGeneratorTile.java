@@ -37,12 +37,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, VanillaStyleSidedInventory, ExtendedScreenHandlerFactory {
-    public EnergyGeneratorTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
+    public EnergyGeneratorTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
-    public EnergyGeneratorTile(TileCreateEvent event) {
-        this(Tiles.ENERGY_GENERATOR_TILE.getOrNull(), event);
+    public EnergyGeneratorTile(TileCreateEvent e) {
+        this(Tiles.ENERGY_GENERATOR_TILE.getOrNull(), e);
     }
 
     public ItemStackList invItems = ItemStackList.ofSize(1, ItemStackUtil.empty());

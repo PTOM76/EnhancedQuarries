@@ -1,16 +1,12 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.block.NormalMarker;
-import net.pitan76.enhancedquarries.event.BlockStatePos;
+import net.pitan76.enhancedquarries.event.v2.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.base.QuarryTile;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
@@ -25,6 +21,10 @@ import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.mcpitanlib.midohra.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public abstract class Quarry extends BaseBlock {
 
         ItemStack stack = e.player.getMainHandStack();
         if (stack != null && stack.getItem() == net.minecraft.item.Items.GLASS_BOTTLE) {
-            if (WorldUtil.isClient(e.world)) return e.success();
+            if (e.isClient()) return e.success();
             if (e.getBlockEntity() instanceof QuarryTile) {
                 QuarryTile quarry = (QuarryTile) e.getBlockEntity();
                 if (quarry.getStoredExp() >= 4) {
@@ -74,12 +74,12 @@ public abstract class Quarry extends BaseBlock {
 
     @Override
     public void onStateReplaced(StateReplacedEvent e) {
-        World world = e.world;
-        BlockPos pos = e.pos;
-        BlockState state = e.state;
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        BlockState state = e.getMidohraState();
 
         if (state == null) return;
-        if (state.getBlock() == e.newState.getBlock()) {
+        if (state.getBlock().get() == e.newState.getBlock()) {
             super.onStateReplaced(e);
             return;
         }
@@ -92,14 +92,14 @@ public abstract class Quarry extends BaseBlock {
                 return;
             }
 
-            ItemScattererUtil.spawn(world, pos, blockEntity);
+            ItemScattererUtil.spawn(world.getRaw(), pos.toMinecraft(), blockEntity);
 
             // モジュールの返却
             if (!quarry.isEmptyInModules()) {
                 for (ItemStack module : quarry.getModuleStacks()) {
-                    ItemEntity itemEntity = ItemEntityUtil.create(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, module);
+                    ItemEntity itemEntity = ItemEntityUtil.create(world.getRaw(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, module);
                     ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
-                    WorldUtil.spawnEntity(world, itemEntity);
+                    WorldUtil.spawnEntity(world.getRaw(), itemEntity);
                 }
             }
 
@@ -114,7 +114,7 @@ public abstract class Quarry extends BaseBlock {
             if (getFacing(state).equals(Direction.EAST))
                 framePos = pos.add(-1, 0, 0);
             if (framePos != null)
-                if (WorldUtil.getBlockState(world, framePos).getBlock() instanceof Frame) {
+                if (world.getBlockState(framePos).getBlock().get() instanceof Frame) {
                     Frame.breakConnectFrames(world, framePos);
                 }
         }
@@ -124,12 +124,12 @@ public abstract class Quarry extends BaseBlock {
     @Override
     public void onPlaced(BlockPlacedEvent e) {
         super.onPlaced(e);
-        World world = e.world;
-        BlockPos pos = e.pos;
-        BlockState fstate = e.state;
+        World world = World.of(e.world);
+        BlockPos pos = BlockPos.of(e.pos);
+        BlockState fstate = BlockState.of(e.state);
 
         BlockState state;
-        state = (WorldUtil.getBlockState(world, pos) == null) ? fstate : WorldUtil.getBlockState(world, pos);
+        state = (world.getBlockState(pos) == null) ? fstate : world.getBlockState(pos);
         if (e.isClient()) return;
         BlockEntity blockEntity = e.getBlockEntity();
         if (blockEntity instanceof QuarryTile) {
@@ -146,8 +146,8 @@ public abstract class Quarry extends BaseBlock {
                 if (getFacing(state).equals(Direction.EAST))
                     markerPos = pos.add(-1, 0, 0);
                 if (markerPos == null) return;
-                if (WorldUtil.getBlockState(world, markerPos).getBlock() instanceof NormalMarker) {
-                    BlockState markerState = WorldUtil.getBlockState(world, markerPos);
+                if (world.getBlockState(markerPos).getBlock().get() instanceof NormalMarker) {
+                    BlockState markerState = world.getBlockState(markerPos);
 
                     List<BlockStatePos> markerList = new ArrayList<>();
                     markerList.add(new BlockStatePos(markerState, markerPos, world));
@@ -163,7 +163,7 @@ public abstract class Quarry extends BaseBlock {
                         if (minPosX == null || markerSP.getPosX() < minPosX) minPosX = markerSP.getPosX();
                         if (minPosY == null || markerSP.getPosY() < minPosY) minPosY = markerSP.getPosY();
                         if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
-                        WorldUtil.breakBlock(world, markerSP.getBlockPos(), true);
+                        world.breakBlock(markerSP.getBlockPos(), true);
                     }
                     if (markerList.size() <= 2 ) return;
                     if (maxPosY.equals(minPosY)) maxPosY += 4;

@@ -1,12 +1,9 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.block.NormalMarker;
-import net.pitan76.enhancedquarries.event.BlockStatePos;
+import net.pitan76.enhancedquarries.event.v2.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.base.ScannerTile;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
@@ -15,9 +12,11 @@ import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.mcpitanlib.midohra.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,13 +61,11 @@ public abstract class Scanner extends BaseBlock {
     @Override
     public void onPlaced(BlockPlacedEvent e) {
         super.onPlaced(e);
-        World world = e.world;
-        BlockPos pos = e.pos;
-        BlockState fstate = e.state;
+        World world = World.of(e.world);
+        BlockPos pos = BlockPos.of(e.pos);
+        BlockState state = (world.getBlockState(pos) == null) ? BlockState.of(e.state) : world.getBlockState(pos);
 
-        BlockState state = (WorldUtil.getBlockState(world, pos) == null) ? fstate : WorldUtil.getBlockState(world, pos);
-
-        if (WorldUtil.isClient(world)) return;
+        if (e.isClient()) return;
         if (!(e.getBlockEntity() instanceof ScannerTile)) return;
 
         ScannerTile scannerTile = (ScannerTile) e.getBlockEntity();
@@ -89,8 +86,8 @@ public abstract class Scanner extends BaseBlock {
         }
 
         if (markerPos == null) return;
-        if (WorldUtil.getBlockState(world, markerPos).getBlock() instanceof NormalMarker) {
-            BlockState markerState = WorldUtil.getBlockState(world, markerPos);
+        if (world.getBlockState(markerPos).getBlock().get() instanceof NormalMarker) {
+            BlockState markerState = world.getBlockState(markerPos);
 
             List<BlockStatePos> markerList = new ArrayList<>();
             markerList.add(new BlockStatePos(markerState, markerPos, world));
@@ -106,7 +103,7 @@ public abstract class Scanner extends BaseBlock {
                 if (minPosX == null || markerSP.getPosX() < minPosX) minPosX = markerSP.getPosX();
                 if (minPosY == null || markerSP.getPosY() < minPosY) minPosY = markerSP.getPosY();
                 if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
-                WorldUtil.breakBlock(world, markerSP.getBlockPos(), true);
+                world.breakBlock(markerSP.getBlockPos(), true);
             }
             if (markerList.size() <= 2) return;
             scannerTile.setPos1(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));

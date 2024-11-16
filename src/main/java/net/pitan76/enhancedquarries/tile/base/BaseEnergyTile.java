@@ -136,7 +136,11 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
     }
 
     public Direction getFacing(BlockState state) {
-        return BaseBlock.getFacing(state).toMinecraft();
+        return BaseBlock.getFacing(state);
+    }
+
+    public net.pitan76.mcpitanlib.midohra.util.math.Direction getFacing(net.pitan76.mcpitanlib.midohra.block.BlockState state) {
+        return BaseBlock.getFacing(state);
     }
 
     public Direction getFacing() {

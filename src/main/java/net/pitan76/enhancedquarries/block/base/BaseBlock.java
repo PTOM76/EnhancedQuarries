@@ -1,10 +1,7 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
 import net.pitan76.mcpitanlib.api.block.args.RotateArgs;
@@ -17,8 +14,10 @@ import net.pitan76.mcpitanlib.api.state.property.BooleanProperty;
 import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
 import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
 import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.mcpitanlib.midohra.world.World;
 
 public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider {
 
@@ -30,32 +29,47 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
         setDefaultState(getDefaultMidohraState().with(ACTIVE, false).with(FACING, Direction.NORTH));
     }
 
+    public static void setFacing(net.minecraft.util.math.Direction facing, net.minecraft.world.World world, net.minecraft.util.math.BlockPos pos) {
+        setFacing(Direction.of(facing), World.of(world), BlockPos.of(pos));
+    }
+
     public static void setFacing(Direction facing, World world, BlockPos pos) {
-        net.pitan76.mcpitanlib.midohra.block.BlockState state = net.pitan76.mcpitanlib.midohra.block.BlockState.of(WorldUtil.getBlockState(world, pos));
-        WorldUtil.setBlockState(world, pos, state.with(FACING, facing).toMinecraft());
+        BlockState state = world.getBlockState(pos);
+        world.setBlockState(pos, state.with(FACING, facing));
+    }
+
+    public static net.minecraft.util.math.Direction getFacing(net.minecraft.block.BlockState state) {
+        return getFacing(BlockState.of(state)).toMinecraft();
     }
 
     public static Direction getFacing(BlockState state) {
-        return FACING.getAsMidohra(net.pitan76.mcpitanlib.midohra.block.BlockState.of(state));
+        return FACING.getAsMidohra(state);
+    }
+
+    public static void setActive(Boolean active, net.minecraft.world.World world, net.minecraft.util.math.BlockPos pos) {
+        setActive(active, World.of(world), BlockPos.of(pos));
     }
 
     public static void setActive(Boolean active, World world, BlockPos pos) {
-        net.pitan76.mcpitanlib.midohra.block.BlockState state = net.pitan76.mcpitanlib.midohra.block.BlockState.of(WorldUtil.getBlockState(world, pos));
-
+        BlockState state = world.getBlockState(pos);
         Direction facing = state.get(FACING);
-        BlockState newState = state.with(ACTIVE, active).with(FACING, facing).toMinecraft();
-        WorldUtil.setBlockState(world, pos, newState);
+        BlockState newState = state.with(ACTIVE, active).with(FACING, facing);
+        world.setBlockState(pos, newState);
+    }
+
+    public static boolean isActive(net.minecraft.block.BlockState state) {
+        return isActive(BlockState.of(state));
     }
 
     public static boolean isActive(BlockState state) {
-        return net.pitan76.mcpitanlib.midohra.block.BlockState.of(state).get(ACTIVE);
+        return state.get(ACTIVE);
     }
 
     @Override
     public void onPlaced(BlockPlacedEvent e) {
         super.onPlaced(e);
         if (e.placer != null)
-            setFacing(Direction.of(e.placer.getHorizontalFacing().getOpposite()), e.world, e.pos);
+            setFacing(e.placer.getHorizontalFacing().getOpposite(), e.getWorld(), e.getPos());
 
         loadBlockEntityTag(e);
     }
@@ -80,8 +94,8 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
     }
 
     @Override
-    public BlockState rotate(RotateArgs args) {
-        net.pitan76.mcpitanlib.midohra.block.BlockState state = args.getBlockState();
+    public net.minecraft.block.BlockState rotate(RotateArgs args) {
+        BlockState state = args.getBlockState();
         Direction facing = state.get(FACING);
         return state.with(FACING, args.rotate(facing)).toMinecraft();
     }

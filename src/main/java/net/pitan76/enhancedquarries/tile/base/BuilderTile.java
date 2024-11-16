@@ -128,7 +128,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
     public double coolTime = getSettingCoolTime();
 
-    public Map<BlockPos, BlockState> blueprintMap = new LinkedHashMap<>();
+    public Map<net.pitan76.mcpitanlib.midohra.util.math.BlockPos, net.pitan76.mcpitanlib.midohra.block.BlockState> blueprintMap = new LinkedHashMap<>();
 
     @Override
     public void tick(TileTickEvent<BaseEnergyTile> e) {
@@ -149,12 +149,13 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         if (CustomDataUtil.hasNbt(blueprint) && blueprint.getItem() == Items.BLUEPRINT) {
             if (blueprintMap.isEmpty()) {
                 blueprintMap = BlueprintUtil.readNBt(blueprint, getFacing());
-                pos1 = pos.add(BlueprintUtil.getMinPos(blueprintMap));
-                pos2 = pos.add(BlueprintUtil.getMaxPos(blueprintMap));
+                pos1 = pos.add(BlueprintUtil.getMinPos(blueprintMap).toMinecraft());
+                pos2 = pos.add(BlueprintUtil.getMaxPos(blueprintMap).toMinecraft());
 
                 // 必要なアイテム数
                 List<ItemStack> needStacks = new ArrayList<>();
-                for (BlockState blockState : blueprintMap.values()) {
+                for (net.pitan76.mcpitanlib.midohra.block.BlockState rawBlockState : blueprintMap.values()) {
+                    BlockState blockState = rawBlockState.toMinecraft();
                     if (blockState.isAir()) continue;
                     Item item = blockState.getBlock().asItem();
 
@@ -267,15 +268,15 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                     BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                     Block procBlock = getWorld().getBlockState(procPos).getBlock();
 
-                    BlockState buildingState = blueprintMap.get(procPos.add(-pos.getX(), -pos.getY(), -pos.getZ()));
+                    net.pitan76.mcpitanlib.midohra.block.BlockState buildingState = blueprintMap.get(procPos.add(-pos.getX(), -pos.getY(), -pos.getZ()));
                     if (buildingState == null) continue;
-                    if (buildingState.getBlock() == Blocks.AIR || procBlock == buildingState.getBlock()) continue;
+                    if (buildingState.getBlock().get() == Blocks.AIR || procBlock == buildingState.getBlock().get()) continue;
                     if (procBlock != Blocks.AIR) continue;
 
                     if (procBlock.asItem() == Items.NORMAL_BUILDER) {
                         continue;
                     }
-                    if (tryPlacing(procPos, buildingState)) {
+                    if (tryPlacing(procPos, buildingState.toMinecraft())) {
                         return true;
                     }
                 }
