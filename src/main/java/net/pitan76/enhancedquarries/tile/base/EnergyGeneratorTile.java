@@ -100,7 +100,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
             if (burnTime > 0) {
                 ItemStack stack = getItems().get(0);
                 // レシピリマインダーがある場合
-                if (stack.getItem().hasRecipeRemainder()) {
+                if (ItemUtil.hasRecipeRemainder(stack.getItem())) {
                     ItemStack remainder = ItemStackUtil.create(ItemUtil.getRecipeRemainder(stack.getItem()), 1);
                     if (stack.getCount() == 1)
                         // 最大スタック数が1の場合はスタックを置き換える
