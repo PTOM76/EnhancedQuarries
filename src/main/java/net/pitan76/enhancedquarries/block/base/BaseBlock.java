@@ -94,10 +94,10 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
     }
 
     @Override
-    public net.minecraft.block.BlockState rotate(RotateArgs args) {
+    public BlockState rotate(RotateArgs args) {
         BlockState state = args.getBlockState();
         Direction facing = state.get(FACING);
-        return state.with(FACING, args.rotate(facing)).toMinecraft();
+        return state.with(FACING, args.rotate(facing));
     }
 
     @Override

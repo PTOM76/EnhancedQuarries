@@ -18,7 +18,6 @@ import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
@@ -92,14 +91,14 @@ public abstract class Quarry extends BaseBlock {
                 return;
             }
 
-            ItemScattererUtil.spawn(world.getRaw(), pos.toMinecraft(), blockEntity);
+            ItemScattererUtil.spawn(world, pos, (QuarryTile) blockEntity);
 
             // モジュールの返却
             if (!quarry.isEmptyInModules()) {
                 for (ItemStack module : quarry.getModuleStacks()) {
                     ItemEntity itemEntity = ItemEntityUtil.create(world.getRaw(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, module);
                     ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
-                    WorldUtil.spawnEntity(world.getRaw(), itemEntity);
+                    world.spawnEntity(itemEntity);
                 }
             }
 
@@ -124,9 +123,9 @@ public abstract class Quarry extends BaseBlock {
     @Override
     public void onPlaced(BlockPlacedEvent e) {
         super.onPlaced(e);
-        World world = World.of(e.world);
-        BlockPos pos = BlockPos.of(e.pos);
-        BlockState fstate = BlockState.of(e.state);
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        BlockState fstate = e.getMidohraState();
 
         BlockState state;
         state = (world.getBlockState(pos) == null) ? fstate : world.getBlockState(pos);

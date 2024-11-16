@@ -1,5 +1,6 @@
 package net.pitan76.enhancedquarries.block;
 
+import net.minecraft.block.Waterloggable;
 import net.minecraft.util.shape.VoxelShape;
 import net.pitan76.enhancedquarries.Blocks;
 import net.pitan76.mcpitanlib.api.block.CompatBlockRenderType;
@@ -19,7 +20,7 @@ import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.world.*;
 import org.jetbrains.annotations.Nullable;
 
-public class Frame extends CompatBlock {
+public class Frame extends CompatBlock implements Waterloggable {
     public static BooleanProperty CONNECT_NORTH = BooleanProperty.of("north");
     public static BooleanProperty CONNECT_SOUTH = BooleanProperty.of("south");
     public static BooleanProperty CONNECT_WEST = BooleanProperty.of("west");
@@ -91,7 +92,7 @@ public class Frame extends CompatBlock {
     }
 
     @Override
-    public net.minecraft.block.BlockState getStateForNeighborUpdate(net.pitan76.mcpitanlib.api.block.args.v2.StateForNeighborUpdateArgs args) {
+    public BlockState getStateForNeighborUpdate(net.pitan76.mcpitanlib.api.block.args.v2.StateForNeighborUpdateArgs args) {
         IWorldView world = args.getWorldView();
         BlockPos pos = args.getPos();
         BlockState state = args.getBlockState();
@@ -102,17 +103,17 @@ public class Frame extends CompatBlock {
 
         try {
             if (direction.equals(Direction.NORTH))
-                return state.with(CONNECT_NORTH, canConnect(world, pos.offset(direction, 1))).toMinecraft();
+                return state.with(CONNECT_NORTH, canConnect(world, pos.offset(direction)));
             if (direction.equals(Direction.SOUTH))
-                return state.with(CONNECT_SOUTH, canConnect(world, pos.offset(direction, 1))).toMinecraft();
+                return state.with(CONNECT_SOUTH, canConnect(world, pos.offset(direction)));
             if (direction.equals(Direction.WEST))
-                return state.with(CONNECT_WEST, canConnect(world, pos.offset(direction, 1))).toMinecraft();
+                return state.with(CONNECT_WEST, canConnect(world, pos.offset(direction)));
             if (direction.equals(Direction.EAST))
-                return state.with(CONNECT_EAST, canConnect(world, pos.offset(direction, 1))).toMinecraft();
+                return state.with(CONNECT_EAST, canConnect(world, pos.offset(direction)));
             if (direction.equals(Direction.UP))
-                return state.with(CONNECT_UP, canConnect(world, pos.offset(direction, 1))).toMinecraft();
+                return state.with(CONNECT_UP, canConnect(world, pos.offset(direction)));
             if (direction.equals(Direction.DOWN))
-                return state.with(CONNECT_DOWN, canConnect(world, pos.offset(direction, 1))).toMinecraft();
+                return state.with(CONNECT_DOWN, canConnect(world, pos.offset(direction)));
         } catch (IllegalArgumentException e) {
             return super.getStateForNeighborUpdate(args);
         }
