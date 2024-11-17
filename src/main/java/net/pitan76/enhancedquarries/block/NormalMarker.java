@@ -7,6 +7,7 @@ import net.pitan76.enhancedquarries.Blocks;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.event.v2.BlockStatePos;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.args.v2.CollisionShapeEvent;
 import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
@@ -223,7 +224,7 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
     }
 
     public static Direction getFacing(BlockState state) {
-        return FACING.getAsMidohra(state);
+        return state.get(FACING);
     }
 
     public static boolean getActive(net.minecraft.block.BlockState state) {
@@ -237,7 +238,7 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
     @Override
     public @Nullable BlockState getPlacementState(net.pitan76.mcpitanlib.api.block.args.v2.PlacementStateArgs args) {
         BlockState blockState = this.getDefaultMidohraState();
-        return FACING.with(blockState, args.getSide());
+        return blockState.with(FACING, args.getSide());
     }
 
     @Override

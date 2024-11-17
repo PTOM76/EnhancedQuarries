@@ -29,12 +29,12 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
 
     public NormalLibrary(CompatIdentifier id) {
         super(id);
-       setNewDefaultState(FACING.with(getNewDefaultState(), Direction.NORTH));
+       setDefaultState(getDefaultMidohraState().with(FACING, Direction.NORTH));
     }
 
     public NormalLibrary(CompatibleBlockSettings settings) {
         super(settings);
-        setNewDefaultState(FACING.with(getNewDefaultState(), Direction.NORTH));
+        setDefaultState(getDefaultMidohraState().with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -66,6 +66,6 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
     @Override
     public BlockState getPlacementState(PlacementStateArgs args) {
         if (args.getPlayer() == null) super.getPlacementState(args);
-        return FACING.with(getDefaultMidohraState(), args.getHorizontalPlayerFacing().getOpposite());
+        return super.getPlacementState(args).with(FACING, args.getHorizontalPlayerFacing().getOpposite());
     }
 }

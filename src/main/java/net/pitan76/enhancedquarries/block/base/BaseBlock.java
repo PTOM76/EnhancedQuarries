@@ -26,7 +26,7 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
 
     public BaseBlock(CompatibleBlockSettings settings) {
         super(settings);
-        setDefaultState(getDefaultMidohraState().with(ACTIVE, false).with(FACING, Direction.NORTH.getRaw()));
+        setDefaultState(getDefaultMidohraState().with(ACTIVE, false).with(FACING, Direction.NORTH));
     }
 
     public static void setFacing(net.minecraft.util.math.Direction facing, net.minecraft.world.World world, net.minecraft.util.math.BlockPos pos) {
@@ -43,7 +43,7 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
     }
 
     public static Direction getFacing(BlockState state) {
-        return FACING.getAsMidohra(state);
+        return state.get(FACING);
     }
 
     public static void setActive(Boolean active, net.minecraft.world.World world, net.minecraft.util.math.BlockPos pos) {
