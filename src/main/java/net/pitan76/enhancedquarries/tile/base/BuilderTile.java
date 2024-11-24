@@ -135,7 +135,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         super.tick(e);
         World world = e.world;
         BlockPos pos = e.pos;
-        if (WorldUtil.isClient(world)) return;
+        if (e.isClient()) return;
 
         // レッドストーン受信で無効
         if (WorldUtil.isReceivingRedstonePower(world, pos)) {
@@ -162,7 +162,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                     boolean b = false;
                     for (ItemStack stack : needStacks) {
                         if (stack.getItem() != item) continue;
-                        stack.increment(1);
+                        ItemStackUtil.incrementCount(stack, 1);
                         b = true;
                     }
                     if (b) continue;
@@ -248,7 +248,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                     return true;
                 }
             }
-            latestGotStack.decrement(1);
+            ItemStackUtil.decrementCount(latestGotStack, 1);
             return true;
         }
         return false;
@@ -266,7 +266,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                    Block procBlock = getWorld().getBlockState(procPos).getBlock();
+                    Block procBlock = WorldUtil.getBlockState(getWorld(), procPos).getBlock();
 
                     net.pitan76.mcpitanlib.midohra.block.BlockState buildingState = blueprintMap.get(procPos.add(-pos.getX(), -pos.getY(), -pos.getZ()));
                     if (buildingState == null) continue;
