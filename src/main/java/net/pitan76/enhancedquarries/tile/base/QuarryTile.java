@@ -272,6 +272,12 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                     args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
 
                 InventoryUtil.readNbt(args.registryLookup, moduleNbt, getModuleStacks());
+                if (!isEmptyInModules()) {
+                    CACHE_isEnchanted = null;
+                    for (ItemStack stack : getModuleStacks()) {
+                        CACHE_moduleItems.add(stack.getItem());
+                    }
+                }
             }
         }
 
