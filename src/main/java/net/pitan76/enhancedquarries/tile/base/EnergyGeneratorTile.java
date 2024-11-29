@@ -94,7 +94,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
             EnergyGenerator.setActive(isBurning(), world, pos);
 
         // 燃焼時間が0の場合
-        if (burnTime == 0 && !WorldUtil.isClient(world)) {
+        if (burnTime == 0 && !e.isClient()) {
             burnTime = getBurnTimeFrom(world, getItems().get(0));
             maxBurnTime = burnTime;
             if (burnTime > 0) {
