@@ -88,7 +88,7 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
 
     public static void searchMarker(World world, BlockPos pos, List<BlockStatePos> list) {
         int i;
-        for (i = 0;i <= 64;i++) {
+        for (i = 0; i <= 64; i++) {
             BlockPos blockPosX1 = BlockPos.of(pos.getX() + i, pos.getY(), pos.getZ());
             BlockPos blockPosX2 = BlockPos.of(pos.getX() - i, pos.getY(), pos.getZ());
             BlockPos blockPosY1 = BlockPos.of(pos.getX(), pos.getY() + i, pos.getZ());
@@ -97,47 +97,71 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
             BlockPos blockPosZ2 = BlockPos.of(pos.getX(), pos.getY(), pos.getZ() - i);
 
             BlockState blockState;
+
+            // Loop through the blockStatePos list to get the already visited positions
             List<BlockPos> blockPosList = new ArrayList<>();
             for (BlockStatePos blockStatePos : list) {
                 blockPosList.add(blockStatePos.getBlockPos());
             }
+
             blockState = world.getBlockState(blockPosX1);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER))
-                if (!blockPosList.contains(blockPosX1)) {
+            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+                if (!_has(blockPosList, blockPosX1)) {
                     list.add(new BlockStatePos(blockState, blockPosX1, world));
                     searchMarker(world, blockPosX1, list);
                 }
+            }
+
             blockState = world.getBlockState(blockPosX2);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER))
-                if (!blockPosList.contains(blockPosX2)) {
+            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+                if (!_has(blockPosList, blockPosX2)) {
                     list.add(new BlockStatePos(blockState, blockPosX2, world));
                     searchMarker(world, blockPosX2, list);
                 }
+            }
+
             blockState = world.getBlockState(blockPosY1);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER))
-                if (!blockPosList.contains(blockPosY1)) {
+            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+                if (!_has(blockPosList, blockPosY1)) {
                     list.add(new BlockStatePos(blockState, blockPosY1, world));
                     searchMarker(world, blockPosY1, list);
                 }
+            }
+
             blockState = world.getBlockState(blockPosY2);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER))
-                if (!blockPosList.contains(blockPosY2)) {
+            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+                if (!_has(blockPosList, blockPosY2)) {
                     list.add(new BlockStatePos(blockState, blockPosY2, world));
                     searchMarker(world, blockPosY2, list);
                 }
+            }
+
             blockState = world.getBlockState(blockPosZ1);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER))
-                if (!blockPosList.contains(blockPosZ1)) {
+            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+                if (!_has(blockPosList, blockPosZ1)) {
                     list.add(new BlockStatePos(blockState, blockPosZ1, world));
                     searchMarker(world, blockPosZ1, list);
                 }
+            }
+
             blockState = world.getBlockState(blockPosZ2);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER))
-                if (!blockPosList.contains(blockPosZ2)) {
+            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+                if (!_has(blockPosList, blockPosZ2)) {
                     list.add(new BlockStatePos(blockState, blockPosZ2, world));
                     searchMarker(world, blockPosZ2, list);
                 }
+            }
         }
+    }
+
+    // Helper method to check if the position already exists in the list
+    private static boolean _has(List<BlockPos> list, BlockPos pos) {
+        for (BlockPos p : list) {
+            if (p.getX() == pos.getX() && p.getY() == pos.getY() && p.getZ() == pos.getZ()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
