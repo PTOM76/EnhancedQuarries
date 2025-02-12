@@ -57,8 +57,6 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
     protected static VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
     protected static VoxelShape WEST_SHAPE = Block.createCuboidShape(6.0D, 6.0D, 6.0D, 16.0D, 10.0D, 10.0D);
 
-
-
     @Override
     public VoxelShape getOutlineShape(OutlineShapeEvent e) {
         BlockState state = e.state;
