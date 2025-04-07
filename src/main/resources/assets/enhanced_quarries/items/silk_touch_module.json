@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "enhanced_quarries:item/silk_touch_module"
+  }
+}
