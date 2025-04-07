@@ -3,6 +3,7 @@ package net.pitan76.enhancedquarries.inventory.slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.slot.CompatibleSlot;
 
 public class DisabledSlot extends CompatibleSlot {
@@ -21,7 +22,7 @@ public class DisabledSlot extends CompatibleSlot {
     }
 
     @Override
-    public boolean canTakeItems(PlayerEntity playerEntity) {
+    public boolean canTakeItems(Player player) {
         return false;
     }
 }

@@ -14,8 +14,7 @@ public class FillerScreen extends BaseHandledScreen<FillerScreenHandler> {
 
     public FillerScreen(FillerScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        titleX = 45;
-        titleY = 7;
+        setTitlePos(45, 8);
 
         playerInventoryTitleY = 143;
         setBackgroundWidth(176);

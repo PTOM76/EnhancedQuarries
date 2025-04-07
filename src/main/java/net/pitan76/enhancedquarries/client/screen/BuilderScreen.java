@@ -14,8 +14,7 @@ public class BuilderScreen extends BaseHandledScreen<BuilderScreenHandler> {
 
     public BuilderScreen(BuilderScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        titleX = backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2;
-        titleY = 7;
+        setTitlePos(backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2, 7);
 
         playerInventoryTitleY = 142;
         setBackgroundWidth(238);

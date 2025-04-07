@@ -3,6 +3,7 @@ package net.pitan76.enhancedquarries.event;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class BlockStatePos {
     private BlockState blockState = null;
@@ -26,7 +27,7 @@ public class BlockStatePos {
     }
 
     public BlockState getBlockState() {
-        if (blockState == null) return getWorld().getBlockState(getBlockPos());
+        if (blockState == null) return WorldUtil.getBlockState(getWorld(), getBlockPos());
         return blockState;
     }
 

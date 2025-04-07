@@ -13,8 +13,7 @@ public class ScannerScreen extends BaseHandledScreen<ScannerScreenHandler> {
 
     public ScannerScreen(ScannerScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        titleX = backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2;
-        titleY = 7;
+        setTitlePos(backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2, 7);
 
         playerInventoryTitleY = 72;
         setBackgroundWidth(176);

@@ -20,20 +20,20 @@ public class EnhancedQuarriesCommand extends LiteralCommand {
             }
 
             @Override
-            public void execute(ServerCommandEvent event) {
-                event.sendSuccess(TextUtil.literal("[Enhanced Quarries] Reloading..."), false);
+            public void execute(ServerCommandEvent e) {
+                e.sendSuccess(TextUtil.literal("[Enhanced Quarries] Reloading..."), false);
                 if (Config.reload()) {
-                    event.sendSuccess(TextUtil.literal("[Enhanced Quarries] Reloaded!"), false);
+                    e.sendSuccess(TextUtil.literal("[Enhanced Quarries] Reloaded!"), false);
                 } else {
-                    event.sendFailure(TextUtil.literal("[Enhanced Quarries] Failed to reload!"));
+                    e.sendFailure(TextUtil.literal("[Enhanced Quarries] Failed to reload!"));
                 }
             }
         });
     }
 
     @Override
-    public void execute(ServerCommandEvent event) {
-        event.sendSuccess(TextUtil.literal("[Enhanced Quarries]"
+    public void execute(ServerCommandEvent e) {
+        e.sendSuccess(TextUtil.literal("[Enhanced Quarries]"
                 + "\n- /enhancedquarries reload...Reload config"
                 + "\n- /enhancedquarries config set [Key] [Value]...Set config"
                 + "\n- /enhancedquarries config get [Key]...Get config"

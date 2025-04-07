@@ -8,7 +8,6 @@ import net.pitan76.mcpitanlib.api.item.tool.CompatiblePickaxeItem;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.v3.VanillaCompatToolMaterial;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
-import net.pitan76.mcpitanlib.api.util.PlatformUtil;
 
 public class RedstoneHammer extends CompatiblePickaxeItem {
     public RedstoneHammer(CompatibleItemSettings settings) {

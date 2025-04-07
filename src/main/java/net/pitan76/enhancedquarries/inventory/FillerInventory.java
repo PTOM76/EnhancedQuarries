@@ -1,8 +1,8 @@
 package net.pitan76.enhancedquarries.inventory;
 
-import net.minecraft.inventory.SimpleInventory;
+import net.pitan76.mcpitanlib.api.util.inventory.CompatInventory;
 
-public class FillerInventory extends SimpleInventory {
+public class FillerInventory extends CompatInventory {
     public FillerInventory() {
         super(27);
     }

@@ -7,6 +7,6 @@ import net.pitan76.mcpitanlib.api.client.registry.CompatRegistryClient;
 
 public class TileRenderers {
     public static void init() {
-        CompatRegistryClient.registerCompatBlockEntityRenderer((BlockEntityType<MarkerTile>) Tiles.NORMAL_MARKER.getOrNull(), (dispatcher) -> new MarkerRenderer(dispatcher));
+        CompatRegistryClient.registerCompatBlockEntityRenderer((BlockEntityType<MarkerTile>) Tiles.NORMAL_MARKER.getOrNull(), MarkerRenderer::new);
     }
 }

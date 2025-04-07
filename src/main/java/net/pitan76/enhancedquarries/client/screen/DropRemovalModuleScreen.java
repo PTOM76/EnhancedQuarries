@@ -7,11 +7,9 @@ import net.pitan76.enhancedquarries.screen.DropRemovalModuleScreenHandler;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 
 public class DropRemovalModuleScreen extends BaseHandledScreen<DropRemovalModuleScreenHandler> {
-    public DropRemovalModuleScreenHandler screenHandler;
 
     public DropRemovalModuleScreen(DropRemovalModuleScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        this.screenHandler = handler;
         setBackgroundWidth(176);
         setBackgroundHeight(133);
         this.playerInventoryTitleY = getBackgroundHeight() - 94;
