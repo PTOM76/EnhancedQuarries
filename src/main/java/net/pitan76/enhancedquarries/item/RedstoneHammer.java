@@ -1,6 +1,7 @@
 package net.pitan76.enhancedquarries.item;
 
 import net.minecraft.block.entity.BlockEntity;
+import net.pitan76.enhancedquarries.CompatUtil;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.item.tool.CompatiblePickaxeItem;
@@ -18,7 +19,7 @@ public class RedstoneHammer extends CompatiblePickaxeItem {
     public CompatActionResult onRightClickOnBlock(ItemUseOnBlockEvent e, Options options) {
         if (e.hasBlockEntity()) {
             BlockEntity blockEntity = e.getBlockEntity();
-            if (PlatformUtil.isModLoaded("reborncore")) {
+            if (CompatUtil.isUsableRebornCore()) {
                 if (blockEntity instanceof reborncore.common.powerSystem.PowerAcceptorBlockEntity) {
                     reborncore.common.powerSystem.PowerAcceptorBlockEntity energyStorage = (reborncore.common.powerSystem.PowerAcceptorBlockEntity) blockEntity;
                     energyStorage.addEnergy(5);
