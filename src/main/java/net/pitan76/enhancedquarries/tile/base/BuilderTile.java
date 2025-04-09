@@ -148,7 +148,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
         if (CustomDataUtil.hasNbt(blueprint) && blueprint.getItem() == Items.BLUEPRINT) {
             if (blueprintMap.isEmpty()) {
-                blueprintMap = BlueprintUtil.readNBt(blueprint, getFacing());
+                blueprintMap = BlueprintUtil.readNbt(blueprint, getFacing());
                 pos1 = pos.add(BlueprintUtil.getMinPos(blueprintMap).toMinecraft());
                 pos2 = pos.add(BlueprintUtil.getMaxPos(blueprintMap).toMinecraft());
 

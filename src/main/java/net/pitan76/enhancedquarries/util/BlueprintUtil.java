@@ -47,7 +47,7 @@ public class BlueprintUtil {
     }
 
     public static BlockPos getMaxPos(ItemStack stack) {
-        return getMaxPos(readNBt(stack));
+        return getMaxPos(readNbt(stack));
     }
 
     public static BlockPos getMinPos(Map<BlockPos, BlockState> blocks) {
@@ -63,7 +63,7 @@ public class BlueprintUtil {
     }
 
     public static BlockPos getMinPos(ItemStack stack) {
-        return getMinPos(readNBt(stack));
+        return getMinPos(readNbt(stack));
     }
 
 
@@ -77,18 +77,18 @@ public class BlueprintUtil {
         CustomDataUtil.set(stack, "blueprint", nbt);
     }
 
-    public static Map<BlockPos, BlockState> readNBt(ItemStack stack) {
+    public static Map<BlockPos, BlockState> readNbt(ItemStack stack) {
         NbtCompound nbt = CustomDataUtil.get(stack, "blueprint");
         return readData(nbt);
     }
 
-    public static Map<BlockPos, BlockState> readNBt(ItemStack stack, Direction direction) {
+    public static Map<BlockPos, BlockState> readNbt(ItemStack stack, Direction direction) {
         NbtCompound nbt = CustomDataUtil.get(stack, "blueprint");
         return readData(nbt, direction);
     }
 
-    public static Map<BlockPos, BlockState> readNBt(ItemStack stack, net.minecraft.util.math.Direction direction) {
-        return readNBt(stack, Direction.of(direction));
+    public static Map<BlockPos, BlockState> readNbt(ItemStack stack, net.minecraft.util.math.Direction direction) {
+        return readNbt(stack, Direction.of(direction));
     }
 
     public static NbtCompound writeData(NbtCompound nbt, Map<BlockPos, BlockState> blocks) {
