@@ -13,6 +13,7 @@ import net.pitan76.mcpitanlib.api.network.v2.ClientNetworking;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
+import net.pitan76.mcpitanlib.api.util.client.widget.TextFieldUtil;
 
 public class LibraryScreen extends BaseHandledScreen<LibraryScreenHandler> {
 
@@ -34,18 +35,18 @@ public class LibraryScreen extends BaseHandledScreen<LibraryScreenHandler> {
     @Override
     public void initOverride() {
         super.initOverride();
-        nameBox = new TextFieldWidget(this.textRenderer, x + 85,  y + 40, 60, 9, TextUtil.literal(""));
-        nameBox.setDrawsBackground(true);
-        nameBox.setFocusUnlocked(true);
-        ScreenUtil.TextFieldUtil.setFocused(nameBox, false);
-        ScreenUtil.TextFieldUtil.setMaxLength(nameBox, 256);
-        nameBox.setText("");
+        nameBox = TextFieldUtil.create(callGetTextRenderer(), x + 85,  y + 40, 60, 9, TextUtil.literal(""));
+        TextFieldUtil.setDrawsBackground(nameBox, true);
+        TextFieldUtil.setFocusUnlocked(nameBox, true);
+        TextFieldUtil.setFocused(nameBox, false);
+        TextFieldUtil.setMaxLength(nameBox, 256);
+        TextFieldUtil.setText(nameBox, "");
         addDrawableChild_compatibility(nameBox);
     }
 
     @Override
     public boolean keyReleased(KeyEventArgs args) {
-        if (nameBox.isFocused()) {
+        if (TextFieldUtil.isFocused(nameBox)) {
             if (args.keyCode != 256) {
                 PacketByteBuf buf = PacketByteUtil.create();
                 PacketByteUtil.writeString(buf, nameBox.getText());
@@ -58,9 +59,9 @@ public class LibraryScreen extends BaseHandledScreen<LibraryScreenHandler> {
 
     @Override
     public boolean keyPressed(KeyEventArgs args) {
-        if (nameBox.isFocused()) {
+        if (TextFieldUtil.isFocused(nameBox)) {
             if (args.keyCode != 256) {
-                return nameBox.keyPressed(args.keyCode, args.scanCode, args.modifiers);
+                return TextFieldUtil.keyPressed(nameBox, args.keyCode, args.scanCode, args.modifiers);
             }
         }
         return super.keyPressed(args);
@@ -69,7 +70,7 @@ public class LibraryScreen extends BaseHandledScreen<LibraryScreenHandler> {
     @Override
     public void removedOverride() {
         super.removedOverride();
-        if (nameBox.isFocused())
+        if (TextFieldUtil.isFocused(nameBox))
             ScreenUtil.setRepeatEvents(false);
     }
 }
