@@ -39,16 +39,12 @@ public class NormalFiller extends Filler {
 
     @Override
     public CompatActionResult onRightClick(BlockUseEvent e) {
-        World world = e.getWorld();
-        Player player = e.getPlayer();
-        BlockPos pos = e.getPos();
-
-        if (WorldUtil.isClient(world)) return e.success();
-        if (e.stack.getItem() instanceof WrenchItem) return e.pass();
+        if (e.isClient()) return e.success();
+        if (e.getStack().getItem() instanceof WrenchItem) return e.pass();
 
         BlockEntity blockEntity = e.getBlockEntity();
         if (blockEntity instanceof FillerTile)
-            player.openGuiScreen((FillerTile) blockEntity);
+            e.getPlayer().openGuiScreen((FillerTile) blockEntity);
 
         return e.consume();
     }
