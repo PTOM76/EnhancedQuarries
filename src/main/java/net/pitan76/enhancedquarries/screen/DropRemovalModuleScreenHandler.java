@@ -35,7 +35,7 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
 
             if (!ItemUtil.isExist(id)) continue;
 
-            targetInventory.setStack(i, ItemStackUtil.create(ItemUtil.fromId(id)));
+            InventoryUtil.setStack(targetInventory, i, ItemStackUtil.create(ItemUtil.fromId(id)));
         }
     }
 

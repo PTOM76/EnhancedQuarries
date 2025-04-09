@@ -6,6 +6,7 @@ import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.enhancedquarries.util.BlueprintUtil;
 import net.pitan76.mcpitanlib.api.gui.slot.CompatibleSlot;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 
 public class LibrarySlot extends CompatibleSlot {
@@ -30,13 +31,13 @@ public class LibrarySlot extends CompatibleSlot {
         if (getIndex() == 3) { // Save
             BlueprintUtil.save(stack, screenHandler.blueprintName);
             super.callSetStack(ItemStackUtil.empty());
-            inventory.setStack(2, stack);
+            InventoryUtil.setStack(inventory, 2, stack);
         }
         if (getIndex() == 0) { // Load
             ItemStack newStack = ItemStackUtil.create(Items.BLUEPRINT, ItemStackUtil.getCount(stack));
             BlueprintUtil.load(newStack, screenHandler.blueprintName);
             super.callSetStack(ItemStackUtil.empty());
-            inventory.setStack(1, newStack);
+            InventoryUtil.setStack(inventory, 1, newStack);
         }
     }
 }
