@@ -12,6 +12,7 @@ import net.pitan76.enhancedquarries.inventory.slot.BuilderSlot;
 import net.pitan76.enhancedquarries.inventory.slot.DisabledSlot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
@@ -84,7 +85,7 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
             ItemStack originalStack = SlotUtil.getStack(slot);
             newStack = originalStack.copy();
             if (index < 36) {
-                if (!this.callInsertItem(originalStack, 36,  36 + builderInventory.size() - 1, false)) {
+                if (!this.callInsertItem(originalStack, 36,  36 + InventoryUtil.getSize(builderInventory) - 1, false)) {
                     return ItemStackUtil.empty();
                 }
             } else {

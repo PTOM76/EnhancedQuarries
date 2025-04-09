@@ -788,7 +788,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     public Integer getEmptyOrCanInsertIndex(Inventory inventory, ItemStack stack) {
         int index = 0;
         for (; index < getItems().size(); index++) {
-            if (inventory.getStack(index).isEmpty()) {
+            if (InventoryUtil.getStack(inventory, index).isEmpty()) {
                 return index;
             }
             ItemStack inStack = getItems().get(index);

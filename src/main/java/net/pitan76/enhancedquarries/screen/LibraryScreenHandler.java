@@ -51,7 +51,7 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
         if (SlotUtil.hasStack(slot)) {
             ItemStack originalStack = SlotUtil.getStack(slot);
             if (index < 36) {
-                if (!this.callInsertItem(originalStack, 36,  36 + libraryInventory.size() - 1, false)) {
+                if (!this.callInsertItem(originalStack, 36,  36 + InventoryUtil.getSize(libraryInventory) - 1, false)) {
                     return ItemStackUtil.empty();
                 }
             } else {

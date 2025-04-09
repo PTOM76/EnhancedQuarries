@@ -54,7 +54,8 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public ItemStack getModule() {
-        return getCraftingInventory().getStack(9).copy();
+        ItemStack stack = InventoryUtil.getStack(getCraftingInventory(), 9);
+        return ItemStackUtil.copy(stack);
     }
 
     // ----

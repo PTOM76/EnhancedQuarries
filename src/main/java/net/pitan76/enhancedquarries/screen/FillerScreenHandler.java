@@ -11,7 +11,9 @@ import net.pitan76.enhancedquarries.inventory.FillerInventory;
 import net.pitan76.enhancedquarries.inventory.slot.FillerCraftingSlot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
 
 public class FillerScreenHandler extends SimpleScreenHandler {
@@ -62,7 +64,7 @@ public class FillerScreenHandler extends SimpleScreenHandler {
     @Override
     public ItemStack quickMoveOverride(Player player, int invSlot) {
         ItemStack newStack = ItemStackUtil.empty();
-        Slot slot = this.slots.get(invSlot);
+        Slot slot = ScreenHandlerUtil.getSlots(this).get(invSlot);
         if (slot instanceof FillerCraftingSlot) {
             if (invSlot != 9)
                 return ItemStackUtil.empty();
@@ -70,11 +72,11 @@ public class FillerScreenHandler extends SimpleScreenHandler {
         if (slot != null && SlotUtil.hasStack(slot)) {
             ItemStack originalStack = SlotUtil.getStack(slot);
             newStack = originalStack.copy();
-            if (invSlot < inventory.size() + craftingInventory.size()) {
-                if (!this.callInsertItem(originalStack, inventory.size() + craftingInventory.size(), this.slots.size(), true)) {
+            if (invSlot < InventoryUtil.getSize(inventory) + InventoryUtil.getSize(craftingInventory)) {
+                if (!this.callInsertItem(originalStack, InventoryUtil.getSize(inventory) + InventoryUtil.getSize(craftingInventory), ScreenHandlerUtil.getSlots(this).size(), true)) {
                     return ItemStackUtil.empty();
                 }
-            } else if (!this.callInsertItem(originalStack, craftingInventory.size(),craftingInventory.size() + inventory.size(), false)) {
+            } else if (!this.callInsertItem(originalStack, InventoryUtil.getSize(craftingInventory),InventoryUtil.getSize(craftingInventory) + InventoryUtil.getSize(inventory), false)) {
                 return ItemStackUtil.empty();
             }
 

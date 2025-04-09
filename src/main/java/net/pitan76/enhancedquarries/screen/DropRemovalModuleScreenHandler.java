@@ -108,11 +108,11 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
         }
 
         NbtList items = NbtUtil.createNbtList();
-        for (int i = 0; i < targetInventory.size(); i++) {
-            ItemStack stack = targetInventory.getStack(i);
+        for (int i = 0; i < InventoryUtil.getSize(targetInventory); i++) {
+            ItemStack stack = InventoryUtil.getStack(targetInventory, i);
             if (ItemStackUtil.isEmpty(stack)) continue;
 
-            items.add(NbtString.of(ItemUtil.toIdAsString(stack.getItem())));
+            items.add(NbtUtil.createString(ItemUtil.toIdAsString(stack.getItem())));
         }
 
         CustomDataUtil.put(moduleStack, "Items", items);

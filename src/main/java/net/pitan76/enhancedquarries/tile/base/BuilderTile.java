@@ -144,7 +144,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
             return;
         }
 
-        ItemStack blueprint = inventory.getStack(0);
+        ItemStack blueprint = InventoryUtil.getStack(inventory, 0);
 
         if (CustomDataUtil.hasNbt(blueprint) && blueprint.getItem() == Items.BLUEPRINT) {
             if (blueprintMap.isEmpty()) {
@@ -171,16 +171,16 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                 int i = 0;
                 for (ItemStack stack : needStacks) {
                     if (stack.isEmpty()) continue;
-                    needInventory.setStack(i, stack);
+                    InventoryUtil.setStack(needInventory, i, stack);
                     i++;
-                    if (i == needInventory.size()) break;
+                    if (i == InventoryUtil.getSize(needInventory)) break;
                 }
             }
         } else {
             pos1 = pos2 = null;
             blueprintMap = new LinkedHashMap<>();
-            for (int i = 0; i < needInventory.size(); i++) {
-                needInventory.setStack(i, ItemStackUtil.empty());
+            for (int i = 0; i < InventoryUtil.getSize(needInventory); i++) {
+                InventoryUtil.setStack(needInventory, i, ItemStackUtil.empty());
             }
             return;
         }

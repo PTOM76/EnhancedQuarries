@@ -6,6 +6,7 @@ import net.pitan76.enhancedquarries.FillerCraftingPattern;
 import net.pitan76.enhancedquarries.FillerCraftingPatterns;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.mcpitanlib.api.gui.slot.CompatibleSlot;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 
 public class FillerCraftingSlot extends CompatibleSlot {
@@ -63,9 +64,9 @@ public class FillerCraftingSlot extends CompatibleSlot {
     public void tryCraft() {
         for(FillerCraftingPattern pattern : FillerCraftingPatterns.getPatterns()) {
             if (pattern.inputEquals(new FillerCraftingPattern(
-                    ItemStackUtil.empty(), inventory.getStack(0), inventory.getStack(1), inventory.getStack(2),
-                    inventory.getStack(3), inventory.getStack(4), inventory.getStack(5), inventory.getStack(6),
-                    inventory.getStack(7), inventory.getStack(8)
+                    ItemStackUtil.empty(), InventoryUtil.getStack(inventory, 0), InventoryUtil.getStack(inventory, 1), InventoryUtil.getStack(inventory, 2),
+                    InventoryUtil.getStack(inventory, 3), InventoryUtil.getStack(inventory, 4), InventoryUtil.getStack(inventory, 5), InventoryUtil.getStack(inventory, 6),
+                    InventoryUtil.getStack(inventory, 7), InventoryUtil.getStack(inventory, 8)
             ))) {
                 inventory.setStack(9, pattern.getOutput());
                 return;
@@ -75,13 +76,13 @@ public class FillerCraftingSlot extends CompatibleSlot {
         int moduleAmount = 0;
         int moduleSlot = 0;
         for (i = 0;i < 9;i++) {
-            if (inventory.getStack(i).getItem() instanceof FillerModule) {
+            if (InventoryUtil.getStack(inventory, i).getItem() instanceof FillerModule) {
                 moduleAmount++;
                 moduleSlot = i;
             }
         }
         if (moduleAmount == 1) {
-            inventory.setStack(9, inventory.getStack(moduleSlot).copy());
+            inventory.setStack(9, InventoryUtil.getStack(inventory, moduleSlot).copy());
             return;
         }
         inventory.setStack(9, ItemStackUtil.empty());
