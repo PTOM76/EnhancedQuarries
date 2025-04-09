@@ -28,6 +28,8 @@ public class LibrarySlot extends CompatibleSlot {
     @Override
     public void callSetStack(ItemStack stack) {
         super.callSetStack(stack);
+        Inventory inventory = callGetInventory();
+
         if (getIndex() == 3) { // Save
             BlueprintUtil.save(stack, screenHandler.blueprintName);
             super.callSetStack(ItemStackUtil.empty());
