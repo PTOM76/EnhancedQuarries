@@ -13,6 +13,7 @@ import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
@@ -53,17 +54,17 @@ public abstract class Filler extends BaseBlock {
                 }
 
                 ItemScattererUtil.spawn(e.world, e.pos, filler.inventory);
-                filler.getCraftingInventory().setStack(9, ItemStackUtil.empty());
+                InventoryUtil.setStack(filler.getCraftingInventory(), 9, ItemStackUtil.empty());
                 ItemScattererUtil.spawn(e.world, e.pos, filler.getCraftingInventory());
 
                 // モジュールの返却
                 if (filler.canBedrockBreak()) {
-                    ItemEntity itemEntity = ItemEntityUtil.create(e.world, PosUtil.x(e.pos), PosUtil.y(e.pos), PosUtil.z(e.pos), ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1));
+                    ItemEntity itemEntity = ItemEntityUtil.create(e.world, e.pos, ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1));
                     WorldUtil.spawnEntity(e.world, itemEntity);
                 }
             }
-            super.onStateReplaced(e);
         }
+        super.onStateReplaced(e);
     }
 
     @Override

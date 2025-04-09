@@ -63,11 +63,11 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
 
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
-        ItemStack newStack = ItemStackUtil.empty();
+        //ItemStack newStack = ItemStackUtil.empty();
         Slot slot = ScreenHandlerUtil.getSlot(this, index);
         if (SlotUtil.hasStack(slot)) {
             ItemStack originalStack = SlotUtil.getStack(slot);
-            newStack = originalStack.copy();
+            //newStack = originalStack.copy();
             if (index < 36) {
                 if (!this.callInsertItem(originalStack, 36, 37, false)) {
                     return ItemStackUtil.empty();
