@@ -1,8 +1,8 @@
 package net.pitan76.enhancedquarries.inventory.slot;
 
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.pitan76.mcpitanlib.api.gui.slot.CompatibleSlot;
+import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 
 public class ScannerSlot extends CompatibleSlot {
     public ScannerSlot(Inventory inventory, int index, int x, int y) {

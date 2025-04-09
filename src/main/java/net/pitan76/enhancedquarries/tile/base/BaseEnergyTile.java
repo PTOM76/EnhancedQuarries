@@ -47,14 +47,14 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
     @Override
     public void writeNbt(WriteNbtArgs args) {
         NbtCompound nbt = args.getNbt();
-        nbt.putLong("energy", holdEnergy);
+        NbtUtil.putLong(nbt, "energy", holdEnergy);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
         NbtCompound nbt = args.getNbt();
         if (NbtUtil.has(nbt, "energy"))
-            holdEnergy = nbt.getLong("energy");
+            holdEnergy = NbtUtil.getLong(nbt, "energy");
     }
 
     private long holdEnergy = 0;
@@ -132,7 +132,7 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
     }
 
     public void setActive(boolean bool) {
-        setActive(bool, getWorld(), getPos());
+        setActive(bool, callGetWorld(), callGetPos());
     }
 
     public Direction getFacing(BlockState state) {
@@ -152,10 +152,10 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
     }
 
     public Optional<BlockState> getBlockState() {
-        if (getWorld() == null)
+        if (callGetWorld() == null)
             return Optional.empty();
 
-        return Optional.ofNullable(WorldUtil.getBlockState(getWorld(), getPos()));
+        return Optional.ofNullable(WorldUtil.getBlockState(callGetWorld(), callGetPos()));
     }
 
     public void init() {

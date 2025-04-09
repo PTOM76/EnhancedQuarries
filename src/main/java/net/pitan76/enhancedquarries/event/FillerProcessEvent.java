@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
+import net.pitan76.mcpitanlib.api.util.block.BlockUtil;
+import net.pitan76.mcpitanlib.api.util.v2.BlockUtilV2;
 
 public class FillerProcessEvent {
     private final FillerTile tile;
@@ -37,7 +39,7 @@ public class FillerProcessEvent {
     }
 
     public BlockPos getTilePos() {
-        return getTile().getPos();
+        return getTile().callGetPos();
     }
 
     public BlockState getBlockState() {
@@ -53,7 +55,7 @@ public class FillerProcessEvent {
     }
 
     public World getWorld() {
-        return getTile().getWorld();
+        return getTile().callGetWorld();
     }
 
     public ItemStack getStack() { return getTile().getInventoryStack(); }
@@ -62,7 +64,7 @@ public class FillerProcessEvent {
         ItemStack stack = getStack();
         if (stack.isEmpty()) return FillerModuleReturn.RETURN_FALSE;
 
-        Block itemBlock = Block.getBlockFromItem(stack.getItem());
+        Block itemBlock = BlockUtilV2.fromItem(stack);
         // Skip if it's the same block. E.g., don't replace stone with stone!
         if (itemBlock.equals(getProcessBlock())) return FillerModuleReturn.CONTINUE;
         // New block!

@@ -17,6 +17,7 @@ import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
+import net.pitan76.mcpitanlib.api.util.world.ServerWorldUtil;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,8 +64,8 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
 
     @Override
     public boolean tryBreaking(BlockPos procPos) {
-        List<ItemStack> drops = Block.getDroppedStacks(WorldUtil.getBlockState(getWorld(), procPos), (ServerWorld) getWorld(), procPos, WorldUtil.getBlockEntity(getWorld(), procPos));
-        if (WorldUtil.breakBlock(getWorld(), procPos, false)) {
+        List<ItemStack> drops = ServerWorldUtil.getDroppedStacksOnBlock(WorldUtil.getBlockState(callGetWorld(), procPos), (ServerWorld) callGetWorld(), procPos, WorldUtil.getBlockEntity(callGetWorld(), procPos));
+        if (WorldUtil.breakBlock(callGetWorld(), procPos, false)) {
             drops.forEach(this::addStack);
             return true;
         }
@@ -72,7 +73,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
     }
 
     public void addStack(ItemStack stack) {
-        if (getWorld() == null || getWorld().isClient()) return;
+        if (callGetWorld() == null || callGetWorld().isClient()) return;
         int index = 27;
         for (;index < getItems().size();index++) {
             if (stack.isEmpty() || stack.getCount() == 0) return;
@@ -83,15 +84,15 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
             ItemStack inStack = getItems().get(index);
             if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
                 int originInCount = getItems().get(index).getCount();
-                getItems().get(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
-                if (stack.getMaxCount() >= stack.getCount() + originInCount) {
+                getItems().get(index).setCount(Math.min(ItemStackUtil.getMaxCount(stack), ItemStackUtil.getCount(stack) + originInCount));
+                if (ItemStackUtil.getMaxCount(stack) >= ItemStackUtil.getCount(stack) + originInCount) {
                     return;
                 }
-                stack.setCount(stack.getCount() + originInCount - stack.getMaxCount());
+                ItemStackUtil.setCount(stack, ItemStackUtil.getCount(stack) + originInCount - ItemStackUtil.getMaxCount(stack));
             }
         }
-        ItemEntity itemEntity = ItemEntityUtil.create(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ(), stack);
-        WorldUtil.spawnEntity(getWorld(), itemEntity);
+        ItemEntity itemEntity = ItemEntityUtil.create(callGetWorld(), callGetPos(), stack);
+        WorldUtil.spawnEntity(callGetWorld(), itemEntity);
     }
 
     @Nullable

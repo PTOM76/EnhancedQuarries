@@ -30,7 +30,7 @@ public class FillerCraftingSlot extends CompatibleSlot {
     public void callSetStack(ItemStack stack) {
         super.callSetStack(stack);
         if (isOutput) {
-            if (stack.isEmpty() && !isCrafting) {
+            if (ItemStackUtil.isEmpty(stack) && !isCrafting) {
                 int i;
                 for (i = 0;i < 9;i++) {
                     inventory.setStack(i, ItemStackUtil.empty());

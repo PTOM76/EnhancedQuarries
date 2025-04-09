@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.inventory.slot;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.pitan76.mcpitanlib.api.entity.Player;
@@ -17,7 +16,7 @@ public class DisabledSlot extends CompatibleSlot {
     }
 
     @Override
-    public boolean canTakePartial(PlayerEntity player) {
+    public boolean canTakePartial(Player player) {
         return false;
     }
 

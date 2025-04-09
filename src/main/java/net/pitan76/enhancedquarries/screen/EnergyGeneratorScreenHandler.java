@@ -42,7 +42,7 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
     public EnergyGeneratorScreenHandler(CreateMenuEvent e, EnergyGeneratorTile tile) {
         this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, e.syncId, e.playerInventory, tile);
         this.tile = tile;
-        this.world = tile.getWorld();
+        this.world = tile.callGetWorld();
     }
 
     public EnergyGeneratorScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory) {

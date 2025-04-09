@@ -123,7 +123,7 @@ public class PumpTile extends BaseEnergyTile {
     }
 
     public BlockStatePos getFarFluid() {
-        for (BlockStatePos statePos : sphereAround(getPos(), 30)) {
+        for (BlockStatePos statePos : sphereAround(callGetPos(), 30)) {
             if (statePos.getBlockState().getFluidState().getFluid() != null && statePos.getBlockState().getFluidState().isStill()) {
                 //if (statePos.getBlockState().getFluidState().getFluid().equals(fluid))
                 return statePos;
@@ -134,18 +134,21 @@ public class PumpTile extends BaseEnergyTile {
 
     public Set<BlockStatePos> sphereAround(BlockPos pos, int radius) {
         Set<BlockStatePos> sphere = new HashSet<>();
-        BlockStatePos center = new BlockStatePos(WorldUtil.getBlockState(getWorld(), pos), pos, getWorld());
-        for(int x = -radius; x <= radius; x++) {
+        BlockStatePos center = new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), pos), pos, callGetWorld());
+        for (int x = -radius; x <= radius; x++) {
             for(int y = -radius; y <= radius; y++) {
                 for(int z = -radius; z <= radius; z++) {
                     BlockPos procPos = center.getBlockPos().add(x, y, z);
-                    if (getWorld().getBlockState(procPos).getBlock() instanceof AirBlock) continue;
-                    if (getWorld().getFluidState(procPos).isEmpty()) continue;
-                    if (getWorld().getFluidState(procPos).getFluid() == null) continue;
-                    if (!getWorld().getFluidState(procPos).isStill()) continue;
-                    BlockStatePos b = new BlockStatePos(getWorld().getBlockState(procPos), procPos, getWorld());
+                    if (WorldUtil.getBlockState(callGetWorld(), procPos).getBlock() instanceof AirBlock) continue;
+
+                    FluidState fluidState = WorldUtil.getFluidState(callGetWorld(), procPos);
+                    if (fluidState.isEmpty()) continue;
+                    if (fluidState.getFluid() == null) continue;
+                    if (!fluidState.isStill()) continue;
+
+                    BlockStatePos b = new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), procPos), procPos, callGetWorld());
                     if (center.getBlockPos().getManhattanDistance(b.getBlockPos()) <= radius) {
-                        if (b.getBlockPos().equals(getPos().down())) continue;
+                        if (b.getBlockPos().equals(callGetPos().down())) continue;
                         sphere.add(b);
                         return sphere;
                     }
@@ -153,8 +156,8 @@ public class PumpTile extends BaseEnergyTile {
 
             }
         }
-        if (sphere.isEmpty() && !WorldUtil.getFluidState(getWorld(), getPos().down()).isEmpty()) {
-            sphere.add(new BlockStatePos(WorldUtil.getBlockState(getWorld(), getPos().down()), getPos().down(), getWorld()));
+        if (!WorldUtil.getFluidState(callGetWorld(), callGetPos().down()).isEmpty()) {
+            sphere.add(new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), callGetPos().down()), callGetPos().down(), callGetWorld()));
         }
         return sphere;
     }
@@ -164,7 +167,7 @@ public class PumpTile extends BaseEnergyTile {
         if (storedFluid.getAmount() >= storedFluid.getCapacity()) {
             return false;
         }
-        if (WorldUtil.getFluidState(world, getPos().down()).isEmpty() && WorldUtil.getFluidState(world, getPos().down(2)).isEmpty() && WorldUtil.getFluidState(world, getPos().down(3)).isEmpty())
+        if (WorldUtil.getFluidState(world, callGetPos().down()).isEmpty() && WorldUtil.getFluidState(world, callGetPos().down(2)).isEmpty() && WorldUtil.getFluidState(world, callGetPos().down(3)).isEmpty())
             return false;
         BlockStatePos statePos = getFarFluid();
         try {

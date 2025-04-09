@@ -17,10 +17,10 @@ public class LibrarySlot extends CompatibleSlot {
     }
 
     @Override
-    public boolean canInsert(ItemStack stack) {
+    public boolean canInsert(net.pitan76.mcpitanlib.midohra.item.ItemStack stack) {
         if (getIndex() == 1 || getIndex() == 2) return false;
-        if (getIndex() == 0 && (stack.getItem().equals(Items.BLUEPRINT) || stack.getItem().equals(Items.EMPTY_BLUEPRINT))) return true;
-        if (getIndex() == 3 && stack.getItem().equals(Items.BLUEPRINT)) return true;
+        if (getIndex() == 0 && (stack.getItem().get() == Items.BLUEPRINT || stack.getItem().get() == Items.EMPTY_BLUEPRINT)) return true;
+        if (getIndex() == 3 && stack.getItem().get() == Items.BLUEPRINT) return true;
         return false;
     }
 
@@ -33,7 +33,7 @@ public class LibrarySlot extends CompatibleSlot {
             inventory.setStack(2, stack);
         }
         if (getIndex() == 0) { // Load
-            ItemStack newStack = ItemStackUtil.create(Items.BLUEPRINT, stack.getCount());
+            ItemStack newStack = ItemStackUtil.create(Items.BLUEPRINT, ItemStackUtil.getCount(stack));
             BlueprintUtil.load(newStack, screenHandler.blueprintName);
             super.callSetStack(ItemStackUtil.empty());
             inventory.setStack(1, newStack);

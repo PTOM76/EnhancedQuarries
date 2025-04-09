@@ -16,7 +16,7 @@ public class FillerWithChestScreen extends FillerScreen {
         super(handler, inventory, title);
         setTitlePos(45, 7);
 
-        playerInventoryTitleY = 143;
+        setPlayerInvTitleY(143);
         setBackgroundWidth(238);
         setBackgroundHeight(235);
     }

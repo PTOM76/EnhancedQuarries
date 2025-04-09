@@ -232,9 +232,9 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
     public boolean tryPlacing(BlockPos blockPos, BlockState state) {
         if (getInventoryStack(state.getBlock()).isEmpty()) return false;
 
-        if (WorldUtil.setBlockState(getWorld(), blockPos, state)) {
-            BlockEventGenerator.onPlaced(state.getBlock(), new BlockPlacedEvent(getWorld(), blockPos, state, null, latestGotStack));
-            WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getCompatSoundGroup(state).getPlaceSound(), CompatSoundCategory.BLOCKS, 1F, 1F);
+        if (WorldUtil.setBlockState(callGetWorld(), blockPos, state)) {
+            BlockEventGenerator.onPlaced(state.getBlock(), new BlockPlacedEvent(callGetWorld(), blockPos, state, null, latestGotStack));
+            WorldUtil.playSound(callGetWorld(), null, blockPos, BlockStateUtil.getCompatSoundGroup(state).getPlaceSound(), CompatSoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
                 if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
                     int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
@@ -256,7 +256,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
     }
 
     public boolean tryBuilding() {
-        if (getWorld() == null || WorldUtil.isClient(getWorld())) return false;
+        if (callGetWorld() == null || WorldUtil.isClient(callGetWorld())) return false;
         if (pos1 == null || pos2 == null)
             return false;
         int procX;
@@ -266,9 +266,10 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                    Block procBlock = WorldUtil.getBlockState(getWorld(), procPos).getBlock();
+                    Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
 
-                    net.pitan76.mcpitanlib.midohra.block.BlockState buildingState = blueprintMap.get(procPos.add(-pos.getX(), -pos.getY(), -pos.getZ()));
+                    net.pitan76.mcpitanlib.midohra.util.math.BlockPos posM = net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(procPos.add(-pos.getX(), -pos.getY(), -pos.getZ()));
+                    net.pitan76.mcpitanlib.midohra.block.BlockState buildingState = blueprintMap.get(posM);
                     if (buildingState == null) continue;
                     if (buildingState.getBlock().get() == Blocks.AIR || procBlock == buildingState.getBlock().get()) continue;
                     if (procBlock != Blocks.AIR) continue;

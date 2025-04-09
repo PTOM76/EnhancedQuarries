@@ -37,11 +37,11 @@ public class MarkerRenderer extends CompatBlockEntityRenderer<MarkerTile> {
     @Override
     public void render(BlockEntityRenderEvent<MarkerTile> e) {
         MarkerTile entity = e.getBlockEntity();
-        BlockPos pos = entity.getPos();
+        BlockPos pos = entity.callGetPos();
 
-        long l = WorldUtil.getTime(entity.getWorld());
+        long l = WorldUtil.getTime(entity.callGetWorld());
         List<BlockStatePos> markerList = new ArrayList<>();
-        NormalMarker.searchMarker(entity.getWorld(), pos, markerList);
+        NormalMarker.searchMarker(entity.callGetWorld(), pos, markerList);
         if (markerList.size() < 3) return;
         for (BlockStatePos statePos : markerList) {
             BlockPos anotherPos = statePos.getBlockPos();

@@ -21,7 +21,7 @@ public class EnergyGeneratorScreen extends BaseHandledScreen<EnergyGeneratorScre
         super(handler, inventory, title);
         setTitlePos(backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2, 7);
 
-        playerInventoryTitleY = 72;
+        setPlayerInvTitleY(72);
         setBackgroundWidth(176);
         setBackgroundHeight(166);
         screenHandler = handler;
@@ -36,7 +36,7 @@ public class EnergyGeneratorScreen extends BaseHandledScreen<EnergyGeneratorScre
     public void drawForegroundOverride(DrawForegroundArgs args) {
         super.drawForegroundOverride(args);
         int textWidth = ScreenUtil.getWidth(TextUtil.literal(String.format("%d / %d", screenHandler.energy, screenHandler.maxEnergy)));
-        ScreenUtil.RendererUtil.drawText(textRenderer, args.drawObjectDM, TextUtil.literal(String.format("%d / %d EU", screenHandler.energy, screenHandler.maxEnergy)), 54 - textWidth / 2, 60, 4210752);
+        ScreenUtil.RendererUtil.drawText(callGetTextRenderer(), args.drawObjectDM, TextUtil.literal(String.format("%d / %d EU", screenHandler.energy, screenHandler.maxEnergy)), 54 - textWidth / 2, 60, 4210752);
     }
 
     @Override

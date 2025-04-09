@@ -12,7 +12,7 @@ public class BuilderSlot extends CompatibleSlot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        if (getIndex() == 0 && stack.toMinecraft().getItem() != Items.BLUEPRINT) return false;
+        if (getIndex() == 0 && stack.getItem().get() != Items.BLUEPRINT) return false;
         return super.canInsert(stack);
     }
 }

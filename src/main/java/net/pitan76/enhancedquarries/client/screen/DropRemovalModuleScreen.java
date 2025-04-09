@@ -12,7 +12,7 @@ public class DropRemovalModuleScreen extends BaseHandledScreen<DropRemovalModule
         super(handler, inventory, title);
         setBackgroundWidth(176);
         setBackgroundHeight(133);
-        this.playerInventoryTitleY = getBackgroundHeight() - 94;
+        setPlayerInvTitleY(getBackgroundHeight() - 94);
     }
 
     @Override

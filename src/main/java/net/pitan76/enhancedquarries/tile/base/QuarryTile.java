@@ -227,9 +227,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
         if (!isEmptyInModules()) {
             NbtCompound moduleNbt = NbtUtil.create();
-            if (getWorld() != null) {
+            if (callGetWorld() != null) {
                 if (!args.hasRegistryLookup())
-                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
+                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
                 InventoryUtil.writeNbt(args.registryLookup, moduleNbt, getModuleStacks());
             }
@@ -267,9 +267,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         if (NbtUtil.has(nbt, "modules")) {
             NbtCompound moduleNbt = NbtUtil.get(nbt, "modules");
 
-            if (getWorld() != null) {
+            if (callGetWorld() != null) {
                 if (!args.hasRegistryLookup())
-                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
+                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
                 InventoryUtil.readNbt(args.registryLookup, moduleNbt, getModuleStacks());
                 if (!isEmptyInModules()) {
@@ -409,7 +409,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                 ItemStack stack = getItems().get(i);
                 if (stack.isEmpty()) continue;
 
-                long amount = StorageUtil.move(InventoryStorage.of(this, null).getSlot(i), ItemStorage.SIDED.find(getWorld(), getPos().offset(dir), dir.getOpposite()), (iv) -> true, Long.MAX_VALUE, null);
+                long amount = StorageUtil.move(InventoryStorage.of(this, null).getSlot(i), ItemStorage.SIDED.find(callGetWorld(), callGetPos().offset(dir), dir.getOpposite()), (iv) -> true, Long.MAX_VALUE, null);
                 if (amount < stack.getCount()) continue;
 
                 ++time;
@@ -419,14 +419,14 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public List<Direction> getDirsOfAnyContainerBlock() {
-        if (getWorld() == null) return new ArrayList<>();
+        if (callGetWorld() == null) return new ArrayList<>();
 
         Direction[] dirs = new Direction[]{Direction.UP, Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
         List<Direction> usableDirs = new ArrayList<>();
 
         for (Direction dir : dirs) {
-            BlockPos pos = getPos().offset(dir);
-            if (WorldUtil.getBlockEntity(getWorld(), pos) == null) continue;
+            BlockPos pos = callGetPos().offset(dir);
+            if (WorldUtil.getBlockEntity(callGetWorld(), pos) == null) continue;
             usableDirs.add(dir);
         }
         return usableDirs;
@@ -476,13 +476,13 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         // default
         switch (getFacing()) {
             case NORTH:
-                return PosUtil.flooredBlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() + 1);
+                return PosUtil.flooredBlockPos(callGetPos().getX() - 5, callGetPos().getY(), callGetPos().getZ() + 1);
             case SOUTH:
-                return PosUtil.flooredBlockPos(getPos().getX() - 5, getPos().getY(), getPos().getZ() - 11);
+                return PosUtil.flooredBlockPos(callGetPos().getX() - 5, callGetPos().getY(), callGetPos().getZ() - 11);
             case WEST:
-                return PosUtil.flooredBlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ() - 5);
+                return PosUtil.flooredBlockPos(callGetPos().getX() + 1, callGetPos().getY(), callGetPos().getZ() - 5);
             case EAST:
-                return PosUtil.flooredBlockPos(getPos().getX() - 11, getPos().getY(), getPos().getZ() - 5);
+                return PosUtil.flooredBlockPos(callGetPos().getX() - 11, callGetPos().getY(), callGetPos().getZ() - 5);
             default:
                 return null;
         }
@@ -492,14 +492,14 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         // default
         switch (getFacing()) {
             case NORTH:
-                return PosUtil.flooredBlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ() + 12);
+                return PosUtil.flooredBlockPos(callGetPos().getX() + 6, callGetPos().getY() + 4, callGetPos().getZ() + 12);
             case SOUTH:
-                return PosUtil.flooredBlockPos(getPos().getX() + 6, getPos().getY() + 4, getPos().getZ());
+                return PosUtil.flooredBlockPos(callGetPos().getX() + 6, callGetPos().getY() + 4, callGetPos().getZ());
 
             case WEST:
-                return PosUtil.flooredBlockPos(getPos().getX() + 12, getPos().getY() + 4, getPos().getZ() + 6);
+                return PosUtil.flooredBlockPos(callGetPos().getX() + 12, callGetPos().getY() + 4, callGetPos().getZ() + 6);
             case EAST:
-                return PosUtil.flooredBlockPos(getPos().getX(), getPos().getY() + 4, getPos().getZ() + 6);
+                return PosUtil.flooredBlockPos(callGetPos().getX(), callGetPos().getY() + 4, callGetPos().getZ() + 6);
             default:
                 return null;
         }
@@ -530,16 +530,16 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public void breakBlock(BlockPos pos, boolean drop) {
-        if (WorldUtil.isClient(getWorld())) return;
+        if (WorldUtil.isClient(callGetWorld())) return;
 
         if (isEnchanted()) {
             if (drop) {
-                List<ItemStack> drops = Block.getDroppedStacks(WorldUtil.getBlockState(getWorld(), pos), (ServerWorld) getWorld(), pos, getWorld().getBlockEntity(pos), null, getQuarryStack());
+                List<ItemStack> drops = Block.getDroppedStacks(WorldUtil.getBlockState(callGetWorld(), pos), (ServerWorld) callGetWorld(), pos, callGetWorld().getBlockEntity(pos), null, getQuarryStack());
                 drops.forEach(this::addStack);
             }
-            WorldUtil.breakBlock(getWorld(), pos, false);
+            WorldUtil.breakBlock(callGetWorld(), pos, false);
         } else {
-            WorldUtil.breakBlock(getWorld(), pos, drop);
+            WorldUtil.breakBlock(callGetWorld(), pos, drop);
         }
     }
 
@@ -571,7 +571,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     private void applyEnchantment(ItemStack stack) {
         boolean applied = false;
 
-        Map<CompatEnchantment, Integer> enchantments = EnchantmentUtil.getEnchantment(stack, getWorld());
+        Map<CompatEnchantment, Integer> enchantments = EnchantmentUtil.getEnchantment(stack, callGetWorld());
 
         if (isEmptyInModules()) return;
         for (ItemStack moduleStack : getModuleStacks()) {
@@ -584,24 +584,24 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         }
 
         if (applied)
-            EnchantmentUtil.setEnchantment(stack, enchantments, getWorld());
+            EnchantmentUtil.setEnchantment(stack, enchantments, callGetWorld());
     }
 
     public void tryDeleteMob(BlockPos blockPos) {
-        if (getWorld() == null || getWorld().isClient()) return;
-        List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
+        if (callGetWorld() == null || callGetWorld().isClient()) return;
+        List<MobEntity> mobs = callGetWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
         mobs.forEach(EntityUtil::discard);
     }
 
     public void tryKillMob(BlockPos blockPos) {
-        if (getWorld() == null || getWorld().isClient()) return;
-        List<MobEntity> mobs = getWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
+        if (callGetWorld() == null || callGetWorld().isClient()) return;
+        List<MobEntity> mobs = callGetWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
         mobs.forEach(EntityUtil::kill);
     }
 
     public void tryCollectExp(BlockPos blockPos) {
-        if (getWorld() == null || getWorld().isClient()) return;
-        List<ExperienceOrbEntity> entities = getWorld().getEntitiesByClass(ExperienceOrbEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
+        if (callGetWorld() == null || callGetWorld().isClient()) return;
+        List<ExperienceOrbEntity> entities = callGetWorld().getEntitiesByClass(ExperienceOrbEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
         entities.forEach((entity) -> {
             if (getStoredExp() + entity.getExperienceAmount() > getMaxStoredExp()) return;
             addStoredExp(entity.getExperienceAmount());
@@ -618,22 +618,22 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         for (Direction value : Direction.values()) {
             BlockPos offsetBlockPos = blockPos.offset(value);
 
-            if (WorldUtil.getBlockState(getWorld(), offsetBlockPos).getBlock() instanceof FluidBlock) {
+            if (WorldUtil.getBlockState(callGetWorld(), offsetBlockPos).getBlock() instanceof FluidBlock) {
                 // replace fluid block
-                WorldUtil.setBlockState(getWorld(), offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
+                WorldUtil.setBlockState(callGetWorld(), offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
                 time += 0.1;
             }
 
-            if(!WorldUtil.getFluidState(getWorld(), offsetBlockPos).isEmpty() || getWorld().getFluidState(offsetBlockPos).isStill()) {
+            if(!WorldUtil.getFluidState(callGetWorld(), offsetBlockPos).isEmpty() || callGetWorld().getFluidState(offsetBlockPos).isStill()) {
                 breakBlock(offsetBlockPos, true);
 
-                List<ItemEntity> entities = WorldUtil.getEntitiesByType(getWorld(), EntityType.ITEM, BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add( 1,  1, 1)), EntityPredicates.VALID_ENTITY);
+                List<ItemEntity> entities = WorldUtil.getEntitiesByType(callGetWorld(), EntityType.ITEM, BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add( 1,  1, 1)), EntityPredicates.VALID_ENTITY);
                 for(ItemEntity itemEntity : entities) {
                     addStack(itemEntity.getStack());
                     EntityUtil.kill(itemEntity);
                 }
 
-                WorldUtil.setBlockState(getWorld(), offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
+                WorldUtil.setBlockState(callGetWorld(), offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
                 time += 0.1;
             }
         }
@@ -643,7 +643,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public boolean tryPlaceFrame(BlockPos blockPos) {
         if (getEnergy() > getPlaceFrameEnergyCost()) {
-            Block block = WorldUtil.getBlockState(getWorld(), blockPos).getBlock();
+            Block block = WorldUtil.getBlockState(callGetWorld(), blockPos).getBlock();
             if (block instanceof Frame) return false;
             if (
                     ((blockPos.getX() == minPos.getX()
@@ -661,7 +661,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                                     || (blockPos.getX() + 1 == maxPos.getX() && blockPos.getZ() == minPos.getZ())
                     )
             ) {
-                WorldUtil.setBlockState(getWorld(), blockPos, Frame.getPlacementStateByTile(getWorld(), blockPos));
+                WorldUtil.setBlockState(callGetWorld(), blockPos, Frame.getPlacementStateByTile(callGetWorld(), blockPos));
                 return true;
             }
 
@@ -670,7 +670,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public boolean tryQuarrying() {
-        if (getWorld() == null || WorldUtil.isClient(getWorld())) return false;
+        if (callGetWorld() == null || WorldUtil.isClient(callGetWorld())) return false;
         if (minPos == null)
             minPos = getDefaultRangeMinPos();
         if (maxPos == null)
@@ -678,15 +678,15 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         int procX;
         int procY;
         int procZ;
-        for (procY = maxPos.getY(); procY > WorldUtil.getBottomY(getWorld()); procY--) {
+        for (procY = maxPos.getY(); procY > WorldUtil.getBottomY(callGetWorld()); procY--) {
             if (minPos.getY() - 1 >= procY) {
                 for (procX = minPos.getX() + 1; procX < maxPos.getX() - 1; procX++) {
                     for (procZ = minPos.getZ() + 1; procZ < maxPos.getZ() - 1; procZ++) {
                         BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                        if (WorldUtil.getBlockState(getWorld(), procPos) == null) continue;
-                        if (WorldUtil.getBlockEntity(getWorld(), procPos) instanceof QuarryTile && getWorld().getBlockEntity(procPos) == this) continue;
+                        if (WorldUtil.getBlockState(callGetWorld(), procPos) == null) continue;
+                        if (WorldUtil.getBlockEntity(callGetWorld(), procPos) instanceof QuarryTile && callGetWorld().getBlockEntity(procPos) == this) continue;
 
-                        Block procBlock = WorldUtil.getBlockState(getWorld(), procPos).getBlock();
+                        Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
                         if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (canReplaceFluid()) {
                                 double time = tryFluidReplace(procPos);
@@ -699,9 +699,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                         if (minPos.getY() - 1 >= procY) {
                             if ( procBlock instanceof FluidBlock) {
                                 if (canReplaceFluid()
-                                        && WorldUtil.getFluidState(getWorld(), procPos).isStill()
+                                        && WorldUtil.getFluidState(callGetWorld(), procPos).isStill()
                                         && getEnergy() > getReplaceFluidEnergyCost()) {
-                                    WorldUtil.setBlockState(getWorld(), procPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
+                                    WorldUtil.setBlockState(callGetWorld(), procPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
                                     useEnergy(getReplaceFluidEnergyCost());
                                 } else {
                                     continue;
@@ -723,7 +723,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                                 tryCollectExp(procPos);
                             }
                             breakBlock(procPos, true);
-                            List<ItemEntity> entities = WorldUtil.getEntitiesByType(getWorld(), EntityType.ITEM, BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
+                            List<ItemEntity> entities = WorldUtil.getEntitiesByType(callGetWorld(), EntityType.ITEM, BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
                             if (entities.isEmpty()) return true;
                             for(ItemEntity itemEntity : entities) {
                                 addStack(itemEntity.getStack());
@@ -739,10 +739,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                 for (procX = minPos.getX(); procX < maxPos.getX(); procX++) {
                     for (procZ = minPos.getZ(); procZ < maxPos.getZ(); procZ++) {
                         BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                        if (WorldUtil.getBlockState(getWorld(), procPos) == null) continue;
-                        if (WorldUtil.getBlockEntity(getWorld(), procPos) instanceof QuarryTile && WorldUtil.getBlockEntity(getWorld(), procPos) == this) continue;
+                        if (WorldUtil.getBlockState(callGetWorld(), procPos) == null) continue;
+                        if (WorldUtil.getBlockEntity(callGetWorld(), procPos) instanceof QuarryTile && WorldUtil.getBlockEntity(callGetWorld(), procPos) == this) continue;
 
-                        Block procBlock = WorldUtil.getBlockState(getWorld(), procPos).getBlock();
+                        Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
                         if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (tryPlaceFrame(procPos)) {
                                 useEnergy(getPlaceFrameEnergyCost());
@@ -772,7 +772,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                             tryCollectExp(procPos);
                         }
                         if (procBlock instanceof FluidBlock
-                                && !FluidUtil.isStill(WorldUtil.getFluidState(getWorld(), procPos))) {
+                                && !FluidUtil.isStill(WorldUtil.getFluidState(callGetWorld(), procPos))) {
                             continue;
                         }
                         if (procBlock instanceof Frame) continue;
@@ -805,7 +805,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public void addStack(ItemStack stack) {
-        if (getWorld() == null || getWorld().isClient()) return;
+        if (callGetWorld() == null || callGetWorld().isClient()) return;
 
         if (isRemovalItem(stack)) return;
 
@@ -827,8 +827,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
             }
         }
 
-        ItemEntity itemEntity = ItemEntityUtil.create(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ(), stack);
-        WorldUtil.spawnEntity(getWorld(), itemEntity);
+        ItemEntity itemEntity = ItemEntityUtil.create(callGetWorld(), callGetPos(), stack);
+        WorldUtil.spawnEntity(callGetWorld(), itemEntity);
     }
 
     public QuarryTile(BlockEntityType<?> type, TileCreateEvent e) {

@@ -1,6 +1,7 @@
 package net.pitan76.enhancedquarries.tile.base;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
@@ -108,9 +109,9 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
         NbtCompound nbt = args.getNbt();
         NbtCompound invNbt = NbtUtil.create();
 
-        if (getWorld() != null) {
+        if (callGetWorld() != null) {
             if (!args.hasRegistryLookup())
-                args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
+                args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
             InventoryUtil.writeNbt(args.registryLookup, invNbt, craftingInvItems);
         }
@@ -146,9 +147,9 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
         if (NbtUtil.has(nbt, "craftingInv")) {
             NbtCompound invNbt = NbtUtil.get(nbt, "craftingInv");
 
-            if (getWorld() != null) {
+            if (callGetWorld() != null) {
                 if (!args.hasRegistryLookup())
-                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(getWorld());
+                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
                 InventoryUtil.readNbt(args.registryLookup, invNbt, craftingInvItems);
             }
@@ -245,8 +246,8 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
-        if (WorldUtil.setBlockState(getWorld(), blockPos, BlockStateUtil.getDefaultState(block))) {
-            WorldUtil.playSound(getWorld(), null, blockPos, BlockStateUtil.getCompatSoundGroup(BlockStateUtil.getDefaultState(block)).getPlaceSound(), CompatSoundCategory.BLOCKS, 1F, 1F);
+        if (WorldUtil.setBlockState(callGetWorld(), blockPos, BlockStateUtil.getDefaultState(block))) {
+            WorldUtil.playSound(callGetWorld(), null, blockPos, BlockStateUtil.getCompatSoundGroup(BlockStateUtil.getDefaultState(block)).getPlaceSound(), CompatSoundCategory.BLOCKS, 1F, 1F);
             if (EQStorageBoxUtil.isStorageBox(latestGotStack)) {
                 if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
                     int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
@@ -260,7 +261,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
                     return true;
                 }
             }
-            latestGotStack.decrement(1);
+            ItemStackUtil.decrementCount(latestGotStack, 1);
             return true;
         }
         return false;
@@ -268,7 +269,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public boolean tryBreaking(BlockPos procPos) {
-        return WorldUtil.breakBlock(getWorld(), procPos, true);
+        return WorldUtil.breakBlock(callGetWorld(), procPos, true);
     }
 
     private int getScanStartY(FillerModule module) {
@@ -285,7 +286,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public boolean tryFilling(Item item) {
-        if (getWorld() == null || WorldUtil.isClient(getWorld())) return false;
+        if (callGetWorld() == null || WorldUtil.isClient(callGetWorld())) return false;
         if (pos1 == null || pos2 == null) return false;
         
         // Get item type
@@ -346,9 +347,10 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
 
             BlockPos procPos = PosUtil.flooredBlockPos(x, y, z);
             this.setLastCheckedPos(procPos);
-            Block procBlock = getWorld().getBlockState(procPos).getBlock();
+            Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
 
-            boolean isThis = getWorld().getBlockEntity(procPos) instanceof FillerTile || getWorld().getBlockEntity(procPos) == this;
+            BlockEntity blockEntity = WorldUtil.getBlockEntity(callGetWorld(), procPos);
+            boolean isThis = blockEntity instanceof FillerTile || blockEntity == this;
             if (!isThis) {
                 FillerProcessEvent event = new FillerProcessEvent(this, procPos, procBlock);
                 FillerModuleReturn returnEvent = module.onProcess(event);

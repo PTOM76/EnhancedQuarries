@@ -21,7 +21,7 @@ public class LibraryScreen extends BaseHandledScreen<LibraryScreenHandler> {
     public LibraryScreen(LibraryScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         setTitlePos(backgroundWidth / 2 - ScreenUtil.getWidth(title) / 2, 6);
-        playerInventoryTitleY = 72;
+        setPlayerInvTitleY(72);
         setBackgroundWidth(176);
         setBackgroundHeight(166);
     }
