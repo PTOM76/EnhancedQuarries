@@ -17,6 +17,7 @@ import net.pitan76.mcpitanlib.api.client.render.block.entity.event.CompatBlockEn
 import net.pitan76.mcpitanlib.api.client.render.block.entity.v2.CompatBlockEntityRenderer;
 import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -45,11 +46,11 @@ public class MarkerRenderer extends CompatBlockEntityRenderer<MarkerTile> {
         if (markerList.size() < 3) return;
         for (BlockStatePos statePos : markerList) {
             BlockPos anotherPos = statePos.getBlockPos();
-            renderBeam(e.matrices, e.vertexConsumers, e.tickDelta, l, pos.getY(), statePos.getPosY(), new float[]{255, 0, 0, 50});
+            renderBeam(e.matrices, e.vertexConsumers, e.tickDelta, l, PosUtil.y(pos), statePos.getPosY(), new float[]{255, 0, 0, 50});
             /*
-            int offsetX = Math.abs(pos.getX() - anotherPos.getX());
-            int offsetY = Math.abs(pos.getY() - anotherPos.getY());
-            int offsetZ = Math.abs(pos.getZ() - anotherPos.getZ());
+            int offsetX = Math.abs(PosUtil.x(pos) - anotherPosUtil.x(pos));
+            int offsetY = Math.abs(PosUtil.y(pos) - anotherPosUtil.y(pos));
+            int offsetZ = Math.abs(PosUtil.z(pos) - anotherPosUtil.z(pos));
 
             buffer.vertex(offsetX, offsetY, offsetZ).color(255, 0 ,0, 255);
 

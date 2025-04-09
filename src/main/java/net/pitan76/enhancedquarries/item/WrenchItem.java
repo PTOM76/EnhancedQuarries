@@ -18,6 +18,7 @@ import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 public class WrenchItem extends CompatItem {
     public WrenchItem(CompatibleItemSettings settings) {
@@ -41,7 +42,7 @@ public class WrenchItem extends CompatItem {
 
             BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, energyTile);
 
-            ItemEntity itemEntity = ItemEntityUtil.create(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
+            ItemEntity itemEntity = ItemEntityUtil.create(world, PosUtil.x(pos) + 0.5D, PosUtil.y(pos) + 0.5D, PosUtil.z(pos) + 0.5D, stack);
             ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
             WorldUtil.spawnEntity(world, itemEntity);
 

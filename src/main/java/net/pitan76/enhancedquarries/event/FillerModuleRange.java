@@ -3,6 +3,7 @@ package net.pitan76.enhancedquarries.event;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 public class FillerModuleRange {
     public final int start;
@@ -35,7 +36,7 @@ public class FillerModuleRange {
     }
 
     public static FillerModuleRange singleLayer(BlockPos pos) {
-        return new FillerModuleRange(pos.getY(), pos.getY());
+        return new FillerModuleRange(PosUtil.y(pos), PosUtil.y(pos));
     }
     public static FillerModuleRange singleLayer(int posY) {
         return new FillerModuleRange(posY, posY);

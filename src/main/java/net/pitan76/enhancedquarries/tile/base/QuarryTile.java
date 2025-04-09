@@ -646,19 +646,19 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
             Block block = WorldUtil.getBlockState(callGetWorld(), blockPos).getBlock();
             if (block instanceof Frame) return false;
             if (
-                    ((blockPos.getX() == minPos.getX()
-                    || blockPos.getZ() == minPos.getZ()
-                    || blockPos.getX() + 1 == maxPos.getX()
-                    || blockPos.getZ() + 1 == maxPos.getZ())
-                            && (blockPos.getY() == minPos.getY()
-                            || blockPos.getY() == maxPos.getY())
+                    ((PosUtil.x(blockPos) == PosUtil.x(minPos)
+                    || PosUtil.z(blockPos) == PosUtil.z(minPos)
+                    || PosUtil.x(blockPos) + 1 == PosUtil.x(maxPos)
+                    || PosUtil.z(blockPos) + 1 == PosUtil.z(maxPos))
+                            && (PosUtil.y(blockPos) == PosUtil.y(minPos)
+                            || PosUtil.y(blockPos) == PosUtil.y(maxPos))
                     )
                     ||
                     (
-                            (blockPos.getX() == minPos.getX() && blockPos.getZ() == minPos.getZ())
-                                    || (blockPos.getX() + 1 == maxPos.getX() && blockPos.getZ() + 1 == maxPos.getZ())
-                                    || (blockPos.getX() == minPos.getX() && blockPos.getZ() + 1 == maxPos.getZ())
-                                    || (blockPos.getX() + 1 == maxPos.getX() && blockPos.getZ() == minPos.getZ())
+                            (PosUtil.x(blockPos) == PosUtil.x(minPos) && PosUtil.z(blockPos) == PosUtil.z(minPos))
+                                    || (PosUtil.x(blockPos) + 1 == PosUtil.x(maxPos) && PosUtil.z(blockPos) + 1 == PosUtil.z(maxPos))
+                                    || (PosUtil.x(blockPos) == PosUtil.x(minPos) && PosUtil.z(blockPos) + 1 == PosUtil.z(maxPos))
+                                    || (PosUtil.x(blockPos) + 1 == PosUtil.x(maxPos) && PosUtil.z(blockPos) == PosUtil.z(minPos))
                     )
             ) {
                 WorldUtil.setBlockState(callGetWorld(), blockPos, Frame.getPlacementStateByTile(callGetWorld(), blockPos));
@@ -678,10 +678,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         int procX;
         int procY;
         int procZ;
-        for (procY = maxPos.getY(); procY > WorldUtil.getBottomY(callGetWorld()); procY--) {
-            if (minPos.getY() - 1 >= procY) {
-                for (procX = minPos.getX() + 1; procX < maxPos.getX() - 1; procX++) {
-                    for (procZ = minPos.getZ() + 1; procZ < maxPos.getZ() - 1; procZ++) {
+        for (procY = PosUtil.y(maxPos); procY > WorldUtil.getBottomY(callGetWorld()); procY--) {
+            if (PosUtil.y(minPos) - 1 >= procY) {
+                for (procX = PosUtil.x(minPos) + 1; procX < PosUtil.x(maxPos) - 1; procX++) {
+                    for (procZ = PosUtil.z(minPos) + 1; procZ < PosUtil.z(maxPos) - 1; procZ++) {
                         BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                         if (WorldUtil.getBlockState(callGetWorld(), procPos) == null) continue;
                         if (WorldUtil.getBlockEntity(callGetWorld(), procPos) instanceof QuarryTile && callGetWorld().getBlockEntity(procPos) == this) continue;
@@ -696,7 +696,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                             }
                             continue;
                         }
-                        if (minPos.getY() - 1 >= procY) {
+                        if (PosUtil.y(minPos) - 1 >= procY) {
                             if ( procBlock instanceof FluidBlock) {
                                 if (canReplaceFluid()
                                         && WorldUtil.getFluidState(callGetWorld(), procPos).isStill()
@@ -734,10 +734,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                     }
                 }
             }
-            else if (minPos.getY() <= procY && maxPos.getY() >= procY) {
+            else if (PosUtil.y(minPos) <= procY && PosUtil.y(maxPos) >= procY) {
                 // procX < pos2.getX()を=<するとposのずれ問題は修正可能だが、別の方法で対処しているので、時間があればこっちで修正したい。
-                for (procX = minPos.getX(); procX < maxPos.getX(); procX++) {
-                    for (procZ = minPos.getZ(); procZ < maxPos.getZ(); procZ++) {
+                for (procX = PosUtil.x(minPos); procX < PosUtil.x(maxPos); procX++) {
+                    for (procZ = PosUtil.z(minPos); procZ < PosUtil.z(maxPos); procZ++) {
                         BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                         if (WorldUtil.getBlockState(callGetWorld(), procPos) == null) continue;
                         if (WorldUtil.getBlockEntity(callGetWorld(), procPos) instanceof QuarryTile && WorldUtil.getBlockEntity(callGetWorld(), procPos) == this) continue;

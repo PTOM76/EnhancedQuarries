@@ -22,7 +22,7 @@ public class EnhancedFiller extends NormalFiller {
     }
 
     @Override
-    public BlockEntity createBlockEntity(TileCreateEvent event) {
-        return new EnhancedFillerTile(event);
+    public BlockEntity createBlockEntity(TileCreateEvent e) {
+        return new EnhancedFillerTile(e);
     }
 }

@@ -60,18 +60,18 @@ public class OptimumQuarryTile extends NormalQuarryTile {
         BlockPos minPos = getMinPos();
         BlockPos maxPos = getMaxPos();
         if (procX == null || procY == null || procZ == null) {
-            procX = minPos.getX();
-            procY = maxPos.getY();
-            procZ = minPos.getZ();
+            procX = PosUtil.x(minPos);
+            procY = PosUtil.y(maxPos);
+            procZ = PosUtil.z(minPos);
         }
 
         if (procY <= WorldUtil.getBottomY(callGetWorld())) {
             finishedQuarry = true;
             return false;
         }
-        if (minPos.getY() - 1 >= procY) {
-            if (procX < maxPos.getX() - 1) {
-                if (procZ < maxPos.getZ() - 1) {
+        if (PosUtil.y(minPos) - 1 >= procY) {
+            if (procX < PosUtil.x(maxPos) - 1) {
+                if (procZ < PosUtil.z(maxPos) - 1) {
                     BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                     if (WorldUtil.getBlockState(callGetWorld(), procPos) == null) return false;
 
@@ -89,7 +89,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         }
                         return continueQuarrying();
                     }
-                    if (minPos.getY() >= procY) {
+                    if (PosUtil.y(minPos) >= procY) {
                         if (procBlock instanceof FluidBlock) {
                             if (canReplaceFluid()
                                     && FluidUtil.isStill(WorldUtil.getFluidState(callGetWorld(), procPos))
@@ -139,9 +139,9 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                 return continueQuarrying();
             }
             //procZ++;
-        } else if (minPos.getY() <= procY && maxPos.getY() >= procY) {
-            if (procX < maxPos.getX()) {
-                if (procZ < maxPos.getZ()) {
+        } else if (PosUtil.y(minPos) <= procY && PosUtil.y(maxPos) >= procY) {
+            if (procX < PosUtil.x(maxPos)) {
+                if (procZ < PosUtil.z(maxPos)) {
                     // procX < pos2.getX()を=<するとposのずれ問題は修正可能だが、別の方法で対処しているので、時間があればこっちで修正したい。
                     BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                     BlockState state = WorldUtil.getBlockState(callGetWorld(), procPos);
@@ -194,9 +194,9 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                 procX = getMinPos().getX();
                 procZ--;
                 procY--;
-                if (minPos.getY() - 1 >= procY) {
-                    procX = minPos.getX() + 1;
-                    procZ = minPos.getZ() + 1;
+                if (PosUtil.y(minPos) - 1 >= procY) {
+                    procX = PosUtil.x(minPos) + 1;
+                    procZ = PosUtil.z(minPos) + 1;
                 }
                 return continueQuarrying();
             }
@@ -219,9 +219,9 @@ public class OptimumQuarryTile extends NormalQuarryTile {
         if (!NbtUtil.has(nbt, "procPos")) return;
 
         BlockPos procPos = NbtUtil.getBlockPos(nbt, "procPos");
-        procX = procPos.getX();
-        procY = procPos.getY();
-        procZ = procPos.getZ();
+        procX = PosUtil.x(procPos);
+        procY = PosUtil.y(procPos);
+        procZ = PosUtil.z(procPos);
 
         if (NbtUtil.has(nbt, "finished")) finishedQuarry = NbtUtil.getBoolean(nbt, "finished");
     }

@@ -268,7 +268,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                     BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
                     Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
 
-                    net.pitan76.mcpitanlib.midohra.util.math.BlockPos posM = net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(procPos.add(-pos.getX(), -pos.getY(), -pos.getZ()));
+                    net.pitan76.mcpitanlib.midohra.util.math.BlockPos posM = net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(procPos.add(-PosUtil.x(pos), -PosUtil.y(pos), -PosUtil.z(pos)));
                     net.pitan76.mcpitanlib.midohra.block.BlockState buildingState = blueprintMap.get(posM);
                     if (buildingState == null) continue;
                     if (buildingState.getBlock().get() == Blocks.AIR || procBlock == buildingState.getBlock().get()) continue;

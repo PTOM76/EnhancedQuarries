@@ -7,11 +7,11 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 
 public class NormalFillerTile extends FillerTile {
 
-    public NormalFillerTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
+    public NormalFillerTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
-    public NormalFillerTile(TileCreateEvent event) {
-        this(Tiles.NORMAL_FILLER_TILE.getOrNull(), event);
+    public NormalFillerTile(TileCreateEvent e) {
+        this(Tiles.NORMAL_FILLER_TILE.getOrNull(), e);
     }
 }

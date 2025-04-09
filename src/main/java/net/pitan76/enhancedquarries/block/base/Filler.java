@@ -58,7 +58,7 @@ public abstract class Filler extends BaseBlock {
 
                 // モジュールの返却
                 if (filler.canBedrockBreak()) {
-                    ItemEntity itemEntity = ItemEntityUtil.create(e.world, e.pos.getX(), e.pos.getY(), e.pos.getZ(), ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1));
+                    ItemEntity itemEntity = ItemEntityUtil.create(e.world, PosUtil.x(e.pos), PosUtil.y(e.pos), PosUtil.z(e.pos), ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1));
                     WorldUtil.spawnEntity(e.world, itemEntity);
                 }
             }
