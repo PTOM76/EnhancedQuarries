@@ -27,6 +27,7 @@ import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.item.base.MachineModule;
 import net.pitan76.enhancedquarries.item.quarrymodule.DropRemovalModule;
 import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
+import net.pitan76.mcpitanlib.api.block.CompatBlocks;
 import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
@@ -117,7 +118,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     public ItemStackList moduleStacks = ItemStackList.ofSize(getMaxModuleCount(), ItemStackUtil.empty());
 
     public void addModuleStack(ItemStack stack) {
-        if (!(stack.getItem() instanceof MachineModule))
+        Item item = ItemStackUtil.getItem(stack);
+        if (!(item instanceof MachineModule))
             return;
 
         int nextIndex = 0;
@@ -128,7 +130,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
         moduleStacks.set(nextIndex, stack);
         CACHE_isEnchanted = null;
-        CACHE_moduleItems.add(stack.getItem());
+        CACHE_moduleItems.add(item);
     }
 
     public void insertModuleStack(ItemStack stack) {
@@ -141,7 +143,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public boolean removeModuleStack(ItemStack stack) {
         CACHE_isEnchanted = null;
-        CACHE_moduleItems.remove(stack.getItem());
+        CACHE_moduleItems.remove(ItemStackUtil.getItem(stack));
 
         return moduleStacks.remove(stack);
     }
@@ -156,7 +158,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         if (CACHE_moduleItems.contains(item)) return true;
 
         for (ItemStack stack : getModuleStacks()) {
-            if (stack.getItem().equals(item)) {
+            if (ItemStackUtil.getItem(stack).equals(item)) {
                 CACHE_moduleItems.add(item);
                 return true;
             }
@@ -182,7 +184,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     // 液体を何に置き換えるか？
     public Block getReplaceFluidWithBlock() {
-        return Blocks.GLASS;
+        return CompatBlocks.GLASS;
     }
 
     // ブロック1回破壊分に対するエネルギーのコスト
@@ -549,9 +551,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         if (CACHE_isEnchanted != null) return CACHE_isEnchanted;
 
         for (ItemStack stack : getModuleStacks()) {
-            if (!(stack.getItem() instanceof MachineModule)) continue;
+            Item item = ItemStackUtil.getItem(stack);
+            if (!(item instanceof MachineModule)) continue;
 
-            MachineModule module = (MachineModule) stack.getItem();
+            MachineModule module = (MachineModule) item;
             if (module.getEnchantments() != null) {
                 CACHE_isEnchanted = true;
                 return true;

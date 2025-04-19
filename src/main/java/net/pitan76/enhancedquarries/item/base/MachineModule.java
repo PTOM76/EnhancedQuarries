@@ -1,8 +1,8 @@
 package net.pitan76.enhancedquarries.item.base;
 
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.pitan76.enhancedquarries.tile.base.QuarryTile;
 import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
@@ -11,8 +11,8 @@ import net.pitan76.mcpitanlib.api.item.v2.CompatItem;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.text.TextComponent;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 import java.util.Map;
 
@@ -36,11 +36,9 @@ public abstract class MachineModule extends CompatItem {
 
     @Override
     public CompatActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
-        World world = e.getWorld();
-        if (WorldUtil.isClient(world)) return super.onRightClickOnBlock(e);
+        if (e.isClient()) return super.onRightClickOnBlock(e);
 
         BlockEntity blockEntity = e.getBlockEntity();
-
         if (blockEntity instanceof QuarryTile) {
             QuarryTile quarry = (QuarryTile) blockEntity;
             CompatActionResult result = onRightClickOnQuarry(e, quarry);
@@ -69,8 +67,9 @@ public abstract class MachineModule extends CompatItem {
         }
 
         for (ItemStack stack : quarry.getModuleStacks()) {
-            if (!(stack.getItem() instanceof MachineModule)) continue;
-            if (checkConflict(e, (MachineModule) stack.getItem())) {
+            Item item = ItemStackUtil.getItem(stack);
+            if (!(item instanceof MachineModule)) continue;
+            if (checkConflict(e, (MachineModule) item)) {
                 return e.pass();
             }
         }

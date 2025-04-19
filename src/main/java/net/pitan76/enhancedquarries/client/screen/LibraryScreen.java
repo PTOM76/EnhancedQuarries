@@ -48,10 +48,11 @@ public class LibraryScreen extends BaseHandledScreen<LibraryScreenHandler> {
     public boolean keyReleased(KeyEventArgs args) {
         if (TextFieldUtil.isFocused(nameBox)) {
             if (args.keyCode != 256) {
+                String text = TextFieldUtil.getText(nameBox);
                 PacketByteBuf buf = PacketByteUtil.create();
-                PacketByteUtil.writeString(buf, nameBox.getText());
+                PacketByteUtil.writeString(buf, text);
                 ClientNetworking.send(EnhancedQuarries._id("blueprint_name"), buf);
-                handler.setBlueprintName(nameBox.getText());
+                handler.setBlueprintName(text);
             }
         }
         return super.keyReleased(args);
