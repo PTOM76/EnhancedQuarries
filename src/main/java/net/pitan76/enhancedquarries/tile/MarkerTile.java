@@ -9,9 +9,11 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 
 public class MarkerTile extends CompatBlockEntity {
+
+    public Integer maxX, maxY, maxZ, minX, minY, minZ;
+
     public MarkerTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-
     }
 
     public MarkerTile(BlockPos pos, BlockState state) {
@@ -22,5 +24,12 @@ public class MarkerTile extends CompatBlockEntity {
         this(event.getBlockPos(), event.getBlockState());
     }
 
-
+    public void clear() {
+        maxX = null;
+        maxY = null;
+        maxZ = null;
+        minX = null;
+        minY = null;
+        minZ = null;
+    }
 }

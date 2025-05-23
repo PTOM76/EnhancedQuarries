@@ -1,12 +1,17 @@
 package net.pitan76.enhancedquarries.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.pitan76.enhancedquarries.Blocks;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.event.v2.BlockStatePos;
+import net.pitan76.enhancedquarries.tile.MarkerTile;
+import net.pitan76.mcpitanlib.api.block.CompatBlockRenderType;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
+import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.block.args.RenderTypeArgs;
 import net.pitan76.mcpitanlib.api.block.args.v2.CollisionShapeEvent;
 import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
@@ -29,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NormalMarker extends CompatBlock { //BlockWithEntity {
+public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvider {
 
     public static DirectionProperty FACING = CompatProperties.FACING;
     public static BooleanProperty ACTIVE = BooleanProperty.of("active");
@@ -169,10 +174,19 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
         BlockPos pos = e.getMidohraPos();
         BlockState state = e.getMidohraState();
 
-        if (e.isClient()) return e.success();
         List<BlockStatePos> markerList = new ArrayList<>();
         markerList.add(new BlockStatePos(state, pos, world));
         searchMarker(world, pos, markerList);
+
+        MarkerTile tile = null;
+        if (e.hasBlockEntity()) {
+            BlockEntity blockEntity = e.getBlockEntity();
+            if (blockEntity instanceof MarkerTile) {
+                tile = (MarkerTile) blockEntity;
+                tile.clear();
+            }
+        }
+
         //for (BlockStatePos blockStatePos : markerList) {
         //    FillerPlus.log(Level.INFO, blockStatePos.toString());
         //}
@@ -186,11 +200,24 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
             if (minPosY == null || markerSP.getPosY() < minPosY) minPosY = markerSP.getPosY();
             if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
         }
-        if ((maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null) || markerList.size() <= 2) {
+
+        if (!e.isClient() && (markerList.size() <= 2 || (maxPosX == null || maxPosY == null || maxPosZ == null || minPosX == null || minPosY == null || minPosZ == null))) {
             markerList.forEach((markerSP) -> setActive(false, markerSP.getWorld(), markerSP.getBlockPos()));
-        } else {
-            markerList.forEach((markerSP) -> setActive(true, markerSP.getWorld(), markerSP.getBlockPos()));
+            return e.success();
         }
+
+        if (tile != null) {
+            tile.maxX = maxPosX;
+            tile.maxY = maxPosY;
+            tile.maxZ = maxPosZ;
+            tile.minX = minPosX;
+            tile.minY = minPosY;
+            tile.minZ = minPosZ;
+        }
+
+        if (!e.isClient())
+            markerList.forEach((markerSP) -> setActive(true, markerSP.getWorld(), markerSP.getBlockPos()));
+
         return e.success();
     }
 
@@ -270,11 +297,13 @@ public class NormalMarker extends CompatBlock { //BlockWithEntity {
         super.appendProperties(args);
     }
 
-    /*
-    @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new MarkerTile(new TileCreateEvent(pos, state));
+    public @Nullable BlockEntity createBlockEntity(TileCreateEvent e) {
+        return new MarkerTile(e);
     }
-     */
+
+    @Override
+    public CompatBlockRenderType getRenderType(RenderTypeArgs args) {
+        return CompatBlockRenderType.MODEL;
+    }
 }
