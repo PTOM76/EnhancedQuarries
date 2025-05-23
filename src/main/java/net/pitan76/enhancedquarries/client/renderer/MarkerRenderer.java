@@ -1,24 +1,15 @@
 package net.pitan76.enhancedquarries.client.renderer;
 
-import net.fabricmc.fabric.api.blockview.v2.FabricBlockView;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.pitan76.enhancedquarries.block.NormalMarker;
-import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.enhancedquarries.tile.MarkerTile;
 import net.pitan76.mcpitanlib.api.client.registry.CompatRegistryClient;
 import net.pitan76.mcpitanlib.api.client.render.block.entity.event.BlockEntityRenderEvent;
 import net.pitan76.mcpitanlib.api.client.render.block.entity.event.CompatBlockEntityRendererConstructArgs;
 import net.pitan76.mcpitanlib.api.client.render.block.entity.v2.CompatBlockEntityRenderer;
-import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
-import org.joml.Matrix4f;
-
-import java.util.ArrayList;
-import java.util.List;
 
 // 未完成というかわからない；；しね
 public class MarkerRenderer extends CompatBlockEntityRenderer<MarkerTile> {
