@@ -13,6 +13,7 @@ import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.state.property.BooleanProperty;
 import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
 import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
+import net.pitan76.mcpitanlib.api.util.BlockEntityDataUtil;
 import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
@@ -35,6 +36,8 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
 
     public static void setFacing(Direction facing, World world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
+
+        if (!state.contains(FACING)) return;
         world.setBlockState(pos, state.with(FACING, facing));
     }
 
@@ -43,6 +46,7 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
     }
 
     public static Direction getFacing(BlockState state) {
+        if (!state.contains(FACING)) return Direction.NORTH;
         return state.get(FACING);
     }
 
@@ -52,6 +56,8 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
 
     public static void setActive(Boolean active, World world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
+        if (!state.contains(FACING) || !state.contains(ACTIVE)) return;
+
         Direction facing = state.get(FACING);
         BlockState newState = state.with(ACTIVE, active).with(FACING, facing);
         world.setBlockState(pos, newState);
@@ -62,7 +68,7 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
     }
 
     public static boolean isActive(BlockState state) {
-        return state.get(ACTIVE);
+        return state.contains(ACTIVE) && state.get(ACTIVE);
     }
 
     @Override
@@ -71,20 +77,10 @@ public class BaseBlock extends CompatBlock implements ExtendBlockEntityProvider 
         if (e.placer != null)
             setFacing(e.placer.getHorizontalFacing().getOpposite(), e.getWorld(), e.getPos());
 
-        loadBlockEntityTag(e);
-    }
-
-    @Deprecated
-    private static void loadBlockEntityTag(BlockPlacedEvent e) {
-        if (!CustomDataUtil.hasNbt(e.stack)) return;
-        if (!CustomDataUtil.getNbt(e.stack).contains("BlockEntityTag")) return;
-
-        NbtCompound nbt = CustomDataUtil.get(e.stack, "BlockEntityTag");
         BlockEntity blockEntity = e.getBlockEntity();
-        if (blockEntity instanceof BaseEnergyTile) {
-            BaseEnergyTile energyTile = (BaseEnergyTile) blockEntity;
-            energyTile.readNbt(new ReadNbtArgs(nbt));
-        }
+        if (BlockEntityDataUtil.hasBlockEntityNbt(e.stack) && blockEntity instanceof BaseEnergyTile)
+            BlockEntityDataUtil.readCompatBlockEntityNbtFromStack(e.stack, (BaseEnergyTile) blockEntity);
+
     }
 
     @Override

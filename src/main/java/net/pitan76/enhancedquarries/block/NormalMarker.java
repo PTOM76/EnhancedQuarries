@@ -282,7 +282,7 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
     }
 
     public static boolean getActive(BlockState state) {
-        return state.get(ACTIVE);
+        return state.contains(ACTIVE) && state.get(ACTIVE);
     }
 
     @Override
