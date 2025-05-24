@@ -12,10 +12,8 @@
     "sources": "https://github.com/PTOM76/EnhancedQuarries",
     "issues": "https://github.com/PTOM76/EnhancedQuarries/issues"
   },
-
   "license": "MPL-2.0",
   "icon": "assets/enhanced_quarries/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -28,20 +26,9 @@
       "net.pitan76.enhancedquarries.client.compat.ModMenuAddon"
     ]
   },
-  "mixins": [
-    {
-      "config": "enhanced_quarries.client.mixins.json",
-      "environment": "client"
-    },
-    {
-      "config": "enhanced_quarries.mixins.json",
-      "environment": "*"
-    }
-  ],
-
   "depends": {
     "fabricloader": "*",
     "minecraft": "*",
-    "mcpitanlib": ">2.3.0"
+    "mcpitanlib": ">3.2.6"
   }
 }

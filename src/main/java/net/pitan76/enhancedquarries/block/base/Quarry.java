@@ -15,6 +15,7 @@ import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.item.CompatItems;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
@@ -54,12 +55,12 @@ public abstract class Quarry extends BaseBlock {
             return e.pass();
 
         ItemStack stack = e.player.getMainHandStack();
-        if (stack != null && stack.getItem() == net.minecraft.item.Items.GLASS_BOTTLE) {
+        if (stack != null && ItemStackUtil.getItem(stack) == CompatItems.GLASS_BOTTLE) {
             if (e.isClient()) return e.success();
             if (e.getBlockEntity() instanceof QuarryTile) {
                 QuarryTile quarry = (QuarryTile) e.getBlockEntity();
                 if (quarry.getStoredExp() >= 4) {
-                    e.player.giveStack(ItemStackUtil.create(net.minecraft.item.Items.EXPERIENCE_BOTTLE, 1));
+                    e.player.giveStack(ItemStackUtil.create(CompatItems.EXP_BOTTLE, 1));
                     ItemStackUtil.decrementCount(stack, 1);
                     quarry.removeStoredExp(4);
                     return e.success();

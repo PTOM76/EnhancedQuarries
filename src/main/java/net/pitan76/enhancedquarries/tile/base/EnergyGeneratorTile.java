@@ -2,6 +2,7 @@ package net.pitan76.enhancedquarries.tile.base;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -99,13 +100,15 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
             maxBurnTime = burnTime;
             if (burnTime > 0) {
                 ItemStack stack = getItems().get(0);
+                Item item = ItemStackUtil.getItem(stack);
+
                 // レシピリマインダーがある場合
-                if (ItemUtil.hasRecipeRemainder(stack.getItem())) {
-                    ItemStack remainder = ItemStackUtil.create(ItemUtil.getRecipeRemainder(stack.getItem()), 1);
-                    if (stack.getCount() == 1)
+                if (item != null && ItemUtil.hasRecipeRemainder(item)) {
+                    ItemStack remainder = ItemStackUtil.create(ItemUtil.getRecipeRemainder(item), 1);
+                    if (ItemStackUtil.getCount(stack) == 1) {
                         // 最大スタック数が1の場合はスタックを置き換える
                         getItems().set(0, remainder);
-                    else {
+                    } else {
                         // 最大スタック数が1より大きい場合は1つ減らしてドロップ
                         ItemStackUtil.decrementCount(stack, 1);
                         ItemScattererUtil.spawn(world, pos, remainder);
@@ -131,7 +134,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
 
         outputEnergy(this, world, pos);
 
-        if (lastEnergy == getEnergy() || WorldUtil.isClient(world)) return;
+        if (lastEnergy == getEnergy() || e.isClient()) return;
         
         for (Player player : WorldUtil.getPlayers(world)) {
             if (player.hasNetworkHandler() && player.getCurrentScreenHandler() instanceof EnergyGeneratorScreenHandler
@@ -179,7 +182,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
     }
 
     public static int getBurnTimeFrom(World world, @NotNull ItemStack stack) {
-        if (stack.isEmpty()) return 0;
+        if (ItemStackUtil.isEmpty(stack)) return 0;
 
         //Map<Item, Integer> burnMap = AbstractFurnaceBlockEntity.createFuelTimeMap();
         ItemStack copy = ItemStackUtil.copyWithCount(stack, 1);

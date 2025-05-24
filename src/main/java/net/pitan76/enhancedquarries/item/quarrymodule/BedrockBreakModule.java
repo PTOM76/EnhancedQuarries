@@ -24,6 +24,7 @@ public class BedrockBreakModule extends MachineModule {
             e.getPlayer().sendMessage(TextUtil.translatable("message.enhanced_quarries.bedrock_break_module.1"));
             return e.pass();
         }
+
         filler.setBedrockBreak(true);
         ItemStackUtil.decrementCount(e.stack, 1);
         return e.success();

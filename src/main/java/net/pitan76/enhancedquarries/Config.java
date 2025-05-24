@@ -15,6 +15,8 @@ public class Config {
 
     public static YamlConfig config = new YamlConfig(configFile);
 
+    public static boolean client_marker_rendering_range_box = true;
+
     public static boolean initialized = false;
     public static void init() {
         if (initialized) return;
@@ -24,10 +26,9 @@ public class Config {
             configDir.mkdirs();
 
         TorchModule.interval = config.getIntOrDefault("module_interval", 6);
-
         VerticalLayerModule.interval = config.getIntOrDefault("vertical_layer_interval", 6);
-
         HorizontalLayerModule.interval = config.getIntOrDefault("horizontal_layer_interval", 6);
+        client_marker_rendering_range_box = config.getBooleanOrDefault("client_marker_rendering_range_box", true);
 
         if (!config.configMap.containsKey("reborn_energy_conversion_rate"))
             config.setDouble("reborn_energy_conversion_rate", 1.0);

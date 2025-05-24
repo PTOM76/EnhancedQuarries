@@ -20,8 +20,8 @@ public class MarkerTile extends CompatBlockEntity {
         super(Tiles.NORMAL_MARKER.getOrNull(), pos, state);
     }
 
-    public MarkerTile(TileCreateEvent event) {
-        this(event.getBlockPos(), event.getBlockState());
+    public MarkerTile(TileCreateEvent e) {
+        this(e.getBlockPos(), e.getBlockState());
     }
 
     public void clear() {

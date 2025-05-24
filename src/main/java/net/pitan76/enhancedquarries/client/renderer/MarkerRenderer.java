@@ -1,17 +1,16 @@
 package net.pitan76.enhancedquarries.client.renderer;
 
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.pitan76.enhancedquarries.tile.MarkerTile;
 import net.pitan76.mcpitanlib.api.client.registry.CompatRegistryClient;
+import net.pitan76.mcpitanlib.api.client.render.CompatRenderLayer;
+import net.pitan76.mcpitanlib.api.client.render.DrawObjectMV;
 import net.pitan76.mcpitanlib.api.client.render.block.entity.event.BlockEntityRenderEvent;
 import net.pitan76.mcpitanlib.api.client.render.block.entity.event.CompatBlockEntityRendererConstructArgs;
 import net.pitan76.mcpitanlib.api.client.render.block.entity.v2.CompatBlockEntityRenderer;
+import net.pitan76.mcpitanlib.api.util.client.render.VertexRenderingUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
-// 未完成というかわからない；；しね
 public class MarkerRenderer extends CompatBlockEntityRenderer<MarkerTile> {
 
     public MarkerRenderer(CompatBlockEntityRendererConstructArgs args) {
@@ -25,36 +24,36 @@ public class MarkerRenderer extends CompatBlockEntityRenderer<MarkerTile> {
     @Override
     public void render(BlockEntityRenderEvent<MarkerTile> e) {
         MarkerTile entity = e.getBlockEntity();
-        BlockPos pos = entity.getPos();
+        BlockPos pos = entity.callGetPos();
 
-        if (entity.maxX == null || entity.maxY == null || entity.maxZ == null || entity.minX == null || entity.minY == null || entity.minZ == null)
+        if (entity.maxX == null || entity.maxY == null || entity.maxZ == null
+                || entity.minX == null || entity.minY == null || entity.minZ == null)
             return;
 
-        double maxX = entity.maxX - pos.getX();
-        double maxY = entity.maxY - pos.getY();
-        double maxZ = entity.maxZ - pos.getZ();
-        double minX = entity.minX - pos.getX();
-        double minY = entity.minY - pos.getY();
-        double minZ = entity.minZ - pos.getZ();
+        int x = PosUtil.x(pos);
+        int y = PosUtil.y(pos);
+        int z = PosUtil.z(pos);
+
+        double maxX = entity.maxX - x;
+        double maxY = entity.maxY - y;
+        double maxZ = entity.maxZ - z;
+        double minX = entity.minX - x;
+        double minY = entity.minY - y;
+        double minZ = entity.minZ - z;
 
         e.push();
-        VertexConsumer buffer = e.getVertexConsumer(RenderLayer.getLines());
-        WorldRenderer.drawBox(e.matrices, buffer, minX + 0.5, minY + 0.5, minZ + 0.5, maxX + 0.5, maxY + 0.5, maxZ + 0.5, 1F, 0.0F, 0.0F, 1.0F);
+        DrawObjectMV drawObject = e.getDrawObject(CompatRenderLayer.LINES);
+        VertexRenderingUtil.drawBox(drawObject, minX + 0.5, minY + 0.5, minZ + 0.5, maxX + 0.5, maxY + 0.5, maxZ + 0.5, 1F, 0.0F, 0.0F, 1.0F);
         e.pop();
     }
 
     @Override
-    public int getRenderDistance() {
+    public int getRenderDistanceOverride() {
         return 64;
     }
 
     @Override
-    public boolean rendersOutsideBoundingBox(MarkerTile blockEntity) {
+    public boolean rendersOutsideBoundingBoxOverride(MarkerTile blockEntity) {
         return true;
-    }
-
-    @Override
-    public boolean isInRenderDistance(MarkerTile blockEntity, Vec3d pos) {
-        return super.isInRenderDistance(blockEntity, pos);
     }
 }
