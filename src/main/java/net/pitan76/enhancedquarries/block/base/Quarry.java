@@ -16,6 +16,7 @@ import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.item.CompatItems;
+import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
@@ -78,8 +79,8 @@ public abstract class Quarry extends BaseBlock {
         BlockPos pos = e.getMidohraPos();
         BlockState state = e.getMidohraState();
 
-        if (state == null) return;
-        if (state.getBlock().get() == e.newState.getBlock()) {
+        if (state.isEmpty() || e.newState == null) return;
+        if (state.getBlock().get() == BlockStateUtil.getBlock(e.newState)) {
             super.onStateReplaced(e);
             return;
         }
@@ -132,46 +133,49 @@ public abstract class Quarry extends BaseBlock {
         state = (world.getBlockState(pos) == null) ? fstate : world.getBlockState(pos);
         if (e.isClient()) return;
         BlockEntity blockEntity = e.getBlockEntity();
-        if (blockEntity instanceof QuarryTile) {
-            QuarryTile quarryTile = (QuarryTile) blockEntity;
-            Objects.requireNonNull(quarryTile).init();
-            if (quarryTile.canSetPosByMarker()) {
-                BlockPos markerPos = null;
-                if (getFacing(state).equals(Direction.NORTH))
-                    markerPos = pos.add(0, 0, 1);
-                if (getFacing(state).equals(Direction.SOUTH))
-                    markerPos = pos.add(0, 0, -1);
-                if (getFacing(state).equals(Direction.WEST))
-                    markerPos = pos.add(1, 0, 0);
-                if (getFacing(state).equals(Direction.EAST))
-                    markerPos = pos.add(-1, 0, 0);
-                if (markerPos == null) return;
-                if (world.getBlockState(markerPos).getBlock().get() instanceof NormalMarker) {
-                    BlockState markerState = world.getBlockState(markerPos);
 
-                    List<BlockStatePos> markerList = new ArrayList<>();
-                    markerList.add(new BlockStatePos(markerState, markerPos, world));
-                    NormalMarker.searchMarker(world, markerPos, markerList);
+        if (!(blockEntity instanceof QuarryTile)) return;
 
-                    Integer maxPosX = null, maxPosY = null, maxPosZ = null;
-                    Integer minPosX = null, minPosY = null, minPosZ = null;
+        QuarryTile quarryTile = (QuarryTile) blockEntity;
+        Objects.requireNonNull(quarryTile).init();
 
-                    for (BlockStatePos markerSP : markerList) {
-                        if (maxPosX == null || markerSP.getPosX() > maxPosX) maxPosX = markerSP.getPosX();
-                        if (maxPosY == null || markerSP.getPosY() > maxPosY) maxPosY = markerSP.getPosY();
-                        if (maxPosZ == null || markerSP.getPosZ() > maxPosZ) maxPosZ = markerSP.getPosZ();
-                        if (minPosX == null || markerSP.getPosX() < minPosX) minPosX = markerSP.getPosX();
-                        if (minPosY == null || markerSP.getPosY() < minPosY) minPosY = markerSP.getPosY();
-                        if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
-                        world.breakBlock(markerSP.getBlockPos(), true);
-                    }
-                    if (markerList.size() <= 2 ) return;
-                    if (maxPosY.equals(minPosY)) maxPosY += 4;
+        if (quarryTile.canSetPosByMarker()) {
+            BlockPos markerPos = null;
+            if (getFacing(state).equals(Direction.NORTH))
+                markerPos = pos.add(0, 0, 1);
+            if (getFacing(state).equals(Direction.SOUTH))
+                markerPos = pos.add(0, 0, -1);
+            if (getFacing(state).equals(Direction.WEST))
+                markerPos = pos.add(1, 0, 0);
+            if (getFacing(state).equals(Direction.EAST))
+                markerPos = pos.add(-1, 0, 0);
+            if (markerPos == null) return;
+            if (world.getBlockState(markerPos).getBlock().get() instanceof NormalMarker) {
+                BlockState markerState = world.getBlockState(markerPos);
 
-                    quarryTile.setMinPos(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
-                    quarryTile.setMaxPos(PosUtil.flooredBlockPos(maxPosX + 1, maxPosY, maxPosZ + 1));
+                List<BlockStatePos> markerList = new ArrayList<>();
+                markerList.add(new BlockStatePos(markerState, markerPos, world));
+                NormalMarker.searchMarker(world, markerPos, markerList);
+
+                Integer maxPosX = null, maxPosY = null, maxPosZ = null;
+                Integer minPosX = null, minPosY = null, minPosZ = null;
+
+                for (BlockStatePos markerSP : markerList) {
+                    if (maxPosX == null || markerSP.getPosX() > maxPosX) maxPosX = markerSP.getPosX();
+                    if (maxPosY == null || markerSP.getPosY() > maxPosY) maxPosY = markerSP.getPosY();
+                    if (maxPosZ == null || markerSP.getPosZ() > maxPosZ) maxPosZ = markerSP.getPosZ();
+                    if (minPosX == null || markerSP.getPosX() < minPosX) minPosX = markerSP.getPosX();
+                    if (minPosY == null || markerSP.getPosY() < minPosY) minPosY = markerSP.getPosY();
+                    if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
+                    world.breakBlock(markerSP.getBlockPos(), true);
                 }
+                if (markerList.size() <= 2 ) return;
+                if (maxPosY.equals(minPosY)) maxPosY += 4;
+
+                quarryTile.setMinPos(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
+                quarryTile.setMaxPos(PosUtil.flooredBlockPos(maxPosX + 1, maxPosY, maxPosZ + 1));
             }
         }
+
     }
 }

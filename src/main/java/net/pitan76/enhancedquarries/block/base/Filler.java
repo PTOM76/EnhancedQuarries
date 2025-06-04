@@ -1,7 +1,6 @@
 package net.pitan76.enhancedquarries.block.base;
 
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
 import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.NormalMarker;
 import net.pitan76.enhancedquarries.event.v2.BlockStatePos;
@@ -12,10 +11,7 @@ import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
-import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.InventoryUtil;
-import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
@@ -44,7 +40,9 @@ public abstract class Filler extends BaseBlock {
 
     @Override
     public void onStateReplaced(StateReplacedEvent e) {
-        if (e.state.getBlock() != e.newState.getBlock()) {
+        if (e.state == null || e.newState == null) return;
+
+        if (BlockStateUtil.getBlock(e.state) != BlockStateUtil.getBlock(e.newState)) {
             BlockEntity blockEntity = e.getBlockEntity();
             if (blockEntity instanceof FillerTile) {
                 FillerTile filler = (FillerTile) blockEntity;
@@ -58,10 +56,9 @@ public abstract class Filler extends BaseBlock {
                 ItemScattererUtil.spawn(e.world, e.pos, filler.getCraftingInventory());
 
                 // モジュールの返却
-                if (filler.canBedrockBreak()) {
-                    ItemEntity itemEntity = ItemEntityUtil.create(e.world, e.pos, ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1));
-                    WorldUtil.spawnEntity(e.world, itemEntity);
-                }
+                if (filler.canBedrockBreak())
+                    ItemEntityUtil.createWithSpawn(e.world,
+                            ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1), e.pos);
             }
         }
         super.onStateReplaced(e);
@@ -70,9 +67,9 @@ public abstract class Filler extends BaseBlock {
     @Override
     public void onPlaced(BlockPlacedEvent e) {
         super.onPlaced(e);
-        World world = World.of(e.world);
-        BlockPos pos = BlockPos.of(e.pos);
-        BlockState fstate = BlockState.of(e.state);
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        BlockState fstate = e.getMidohraState();
 
         BlockState state;
         state = (world.getBlockState(pos) == null) ? fstate : world.getBlockState(pos);
@@ -112,7 +109,9 @@ public abstract class Filler extends BaseBlock {
                         if (minPosZ == null || markerSP.getPosZ() < minPosZ) minPosZ = markerSP.getPosZ();
                         world.breakBlock(markerSP.getBlockPos(), true);
                     }
+
                     if (markerList.size() <= 2) return;
+
                     fillerTile.setPos1(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
                     fillerTile.setPos2(PosUtil.flooredBlockPos(maxPosX, maxPosY, maxPosZ));
                 }
