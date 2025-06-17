@@ -27,6 +27,7 @@ import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.item.base.MachineModule;
 import net.pitan76.enhancedquarries.item.quarrymodule.DropRemovalModule;
 import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
+import net.pitan76.enhancedquarries.util.UnbreakableBlocks;
 import net.pitan76.mcpitanlib.api.block.CompatBlocks;
 import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
@@ -690,7 +691,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                         if (WorldUtil.getBlockEntity(callGetWorld(), procPos) instanceof QuarryTile && callGetWorld().getBlockEntity(procPos) == this) continue;
 
                         Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
-                        if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
+                        if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (canReplaceFluid()) {
                                 double time = tryFluidReplace(procPos);
                                 if (time != 0) {
@@ -746,7 +747,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                         if (WorldUtil.getBlockEntity(callGetWorld(), procPos) instanceof QuarryTile && WorldUtil.getBlockEntity(callGetWorld(), procPos) == this) continue;
 
                         Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
-                        if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
+                        if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (tryPlaceFrame(procPos)) {
                                 useEnergy(getPlaceFrameEnergyCost());
                                 return false;

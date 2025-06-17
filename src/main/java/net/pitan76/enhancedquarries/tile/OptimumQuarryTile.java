@@ -12,6 +12,7 @@ import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
 import net.pitan76.enhancedquarries.tile.base.QuarryTile;
+import net.pitan76.enhancedquarries.util.UnbreakableBlocks;
 import net.pitan76.mcpitanlib.api.block.CompatBlocks;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
@@ -80,7 +81,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         continueQuarrying();
 
                     Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
-                    if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
+                    if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                         if (canReplaceFluid()) {
                             double time = tryFluidReplace(procPos);
                             if (time != 0) {

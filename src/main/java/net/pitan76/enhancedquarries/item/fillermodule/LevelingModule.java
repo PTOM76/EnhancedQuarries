@@ -8,6 +8,7 @@ import net.pitan76.enhancedquarries.event.FillerModuleRange;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
+import net.pitan76.enhancedquarries.util.UnbreakableBlocks;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 
 public class LevelingModule extends FillerModule {
@@ -38,7 +39,7 @@ public class LevelingModule extends FillerModule {
             return e.placeBlock();
         } else {
             // Destroy
-            if (procBlock instanceof AirBlock || (procBlock.equals(Blocks.BEDROCK) && !e.canBreakBedrock())) {
+            if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !e.canBreakBedrock())) {
                 return FillerModuleReturn.CONTINUE;
             }
             return e.destroyBlock();
