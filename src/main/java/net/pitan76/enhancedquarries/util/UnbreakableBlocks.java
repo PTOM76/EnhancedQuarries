@@ -3,6 +3,7 @@ package net.pitan76.enhancedquarries.util;
 import net.minecraft.block.Block;
 import net.pitan76.mcpitanlib.api.util.block.BlockUtil;
 
+// TODO: とりあえず、破壊不可ブロックを定義しているが、破壊できないブロックを動的に取得する調査する必要がある or もしくはクァーリーのブロック破壊処理を変更する
 public class UnbreakableBlocks {
     public static final String[] UNBREAKABLE_BLOCKS = {
         "minecraft:bedrock",
