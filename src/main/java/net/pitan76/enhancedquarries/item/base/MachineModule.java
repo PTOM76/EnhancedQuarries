@@ -13,6 +13,7 @@ import net.pitan76.mcpitanlib.api.text.TextComponent;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
 
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public abstract class MachineModule extends CompatItem {
             }
         }
 
-        e.player.sendMessage(TextUtil.translatable("message.enhanced_quarries.appended_module", getName()));
+        e.player.sendMessage(TextUtil.translatable("message.enhanced_quarries.appended_module", ItemUtil.getNameAsString(this)));
         quarry.insertModuleStack(e.stack);
         return null;
     }
@@ -84,7 +85,7 @@ public abstract class MachineModule extends CompatItem {
     }
 
     public TextComponent getAlreadyAppliedMessage() {
-        return TextComponent.translatable("message.enhanced_quarries.already_applied", getName());
+        return TextComponent.translatable("message.enhanced_quarries.already_applied", ItemUtil.getNameAsString(this));
     }
 
     public Map<CompatEnchantment, Integer> getEnchantments() {
