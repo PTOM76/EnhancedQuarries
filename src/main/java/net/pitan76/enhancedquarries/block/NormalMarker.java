@@ -24,7 +24,6 @@ import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
 import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
@@ -41,7 +40,7 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
 
     public static BlockSettingsBuilder defaultSettings = new BlockSettingsBuilder()
             .material(CompatibleMaterial.METAL)
-            .strength(1, 4);
+            .strength(0.5F, 4);
 
     public NormalMarker() {
         this(EnhancedQuarries._id("normal_marker"));

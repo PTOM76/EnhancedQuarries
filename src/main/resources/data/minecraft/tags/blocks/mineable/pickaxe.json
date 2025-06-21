@@ -1,19 +1,21 @@
 {
   "replace": false,
   "values": [
-    "enhanced_quarries:normal_quarry",
-    "enhanced_quarries:enhanced_quarry",
-    "enhanced_quarries:fluid_quarry",
-    "enhanced_quarries:optimum_quarry",
-    "enhanced_quarries:enhanced_optimum_quarry",
-    "enhanced_quarries:fluid_optimum_quarry",
-    "enhanced_quarries:normal_filler",
+
+    "enhanced_quarries:energy_generator",
     "enhanced_quarries:enhanced_filler",
     "enhanced_quarries:enhanced_filler_with_chest",
-    "enhanced_quarries:normal_pump",
+    "enhanced_quarries:enhanced_optimum_quarry",
     "enhanced_quarries:enhanced_pump",
-    "enhanced_quarries:normal_scanner",
+    "enhanced_quarries:enhanced_quarry",
+    "enhanced_quarries:fluid_optimum_quarry",
+    "enhanced_quarries:fluid_quarry",
     "enhanced_quarries:normal_builder",
-    "enhanced_quarries:normal_library"
+    "enhanced_quarries:normal_filler",
+    "enhanced_quarries:normal_library",
+    "enhanced_quarries:normal_pump",
+    "enhanced_quarries:normal_quarry",
+    "enhanced_quarries:normal_scanner",
+    "enhanced_quarries:optimum_quarry"
   ]
 }
