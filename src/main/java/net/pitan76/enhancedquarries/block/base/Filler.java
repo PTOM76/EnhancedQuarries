@@ -112,8 +112,8 @@ public abstract class Filler extends BaseBlock {
 
                     if (markerList.size() <= 2) return;
 
-                    fillerTile.setPos1(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
-                    fillerTile.setPos2(PosUtil.flooredBlockPos(maxPosX, maxPosY, maxPosZ));
+                    fillerTile.setPos1(PosUtil.flooredMidohraBlockPos(minPosX, minPosY, minPosZ));
+                    fillerTile.setPos2(PosUtil.flooredMidohraBlockPos(maxPosX, maxPosY, maxPosZ));
                 }
             }
         }

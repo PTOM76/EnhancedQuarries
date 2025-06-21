@@ -2,14 +2,13 @@ package net.pitan76.enhancedquarries.event;
 
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
-import net.pitan76.mcpitanlib.api.util.block.BlockUtil;
 import net.pitan76.mcpitanlib.api.util.v2.BlockUtilV2;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
 
 public class FillerProcessEvent {
     private final FillerTile tile;
@@ -27,7 +26,7 @@ public class FillerProcessEvent {
     }
 
     public BlockState getProcessBlockState() {
-        return getWorld().getBlockState(processPos);
+        return getMidohraWorld().getBlockState(processPos);
     }
 
     public BlockPos getProcessPos() {
@@ -39,11 +38,11 @@ public class FillerProcessEvent {
     }
 
     public BlockPos getTilePos() {
-        return getTile().callGetPos();
+        return BlockPos.of(getTile().callGetPos());
     }
 
     public BlockState getBlockState() {
-        return getWorld().getBlockState(getTilePos());
+        return getMidohraWorld().getBlockState(getTilePos());
     }
 
     public BlockPos getPos1() {
@@ -54,8 +53,12 @@ public class FillerProcessEvent {
         return getTile().getPos2();
     }
 
-    public World getWorld() {
+    public net.minecraft.world.World getWorld() {
         return getTile().callGetWorld();
+    }
+
+    public World getMidohraWorld() {
+        return World.of(getWorld());
     }
 
     public ItemStack getStack() { return getTile().getInventoryStack(); }

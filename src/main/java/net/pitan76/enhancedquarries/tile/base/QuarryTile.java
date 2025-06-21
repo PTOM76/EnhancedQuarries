@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
@@ -124,7 +123,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
             return;
 
         int nextIndex = 0;
-        for (nextIndex = 0; nextIndex < moduleStacks.size(); nextIndex++) {
+        int size = moduleStacks.size();
+        for (nextIndex = 0; nextIndex < size; nextIndex++) {
             if (moduleStacks.get(nextIndex).isEmpty())
                 break;
         }

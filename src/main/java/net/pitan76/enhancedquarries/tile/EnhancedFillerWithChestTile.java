@@ -1,13 +1,9 @@
 package net.pitan76.enhancedquarries.tile;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.screen.FillerWithChestScreenHandler;
 import net.pitan76.enhancedquarries.util.EQStorageBoxUtil;
@@ -18,6 +14,8 @@ import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.world.ServerWorldUtil;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +62,8 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
 
     @Override
     public boolean tryBreaking(BlockPos procPos) {
-        List<ItemStack> drops = ServerWorldUtil.getDroppedStacksOnBlock(WorldUtil.getBlockState(callGetWorld(), procPos), (ServerWorld) callGetWorld(), procPos, WorldUtil.getBlockEntity(callGetWorld(), procPos));
+        World world = getWorldM();
+        List<ItemStack> drops = ServerWorldUtil.getDroppedStacksOnBlock(world.getBlockState(procPos).toMinecraft(), world.toServerWorld().get().getRaw(), procPos.toRaw(), world.getBlockEntity(procPos));
         if (WorldUtil.breakBlock(callGetWorld(), procPos, false)) {
             drops.forEach(this::addStack);
             return true;
@@ -73,7 +72,8 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
     }
 
     public void addStack(ItemStack stack) {
-        if (callGetWorld() == null || callGetWorld().isClient()) return;
+        World world = getWorldM();
+        if (world.getRaw() == null || world.isClient()) return;
         int index = 27;
         for (;index < getItems().size();index++) {
             if (stack.isEmpty() || stack.getCount() == 0) return;
@@ -91,8 +91,8 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
                 ItemStackUtil.setCount(stack, ItemStackUtil.getCount(stack) + originInCount - ItemStackUtil.getMaxCount(stack));
             }
         }
-        ItemEntity itemEntity = ItemEntityUtil.create(callGetWorld(), callGetPos(), stack);
-        WorldUtil.spawnEntity(callGetWorld(), itemEntity);
+
+        ItemEntityUtil.createWithSpawn(world.getRaw(), stack, callGetPos());
     }
 
     @Nullable

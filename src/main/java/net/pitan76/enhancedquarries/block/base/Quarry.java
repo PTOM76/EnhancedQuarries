@@ -98,9 +98,7 @@ public abstract class Quarry extends BaseBlock {
             // モジュールの返却
             if (!quarry.isEmptyInModules()) {
                 for (ItemStack module : quarry.getModuleStacks()) {
-                    ItemEntity itemEntity = ItemEntityUtil.create(world.getRaw(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, module);
-                    ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
-                    world.spawnEntity(itemEntity);
+                    ItemEntityUtil.createWithSpawn(world.getRaw(), module, pos.toRaw());
                 }
             }
 

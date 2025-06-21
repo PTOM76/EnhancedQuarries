@@ -10,8 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.Filler;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
@@ -33,6 +31,8 @@ import net.pitan76.mcpitanlib.api.sound.CompatSoundCategory;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -167,11 +167,11 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
                 && NbtUtil.has(nbt, "rangePos2X")
                 && NbtUtil.has(nbt, "rangePos2Y")
                 && NbtUtil.has(nbt, "rangePos2Z")) {
-            setPos1(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
-            setPos2(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
+            setPos1(PosUtil.flooredMidohraBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
+            setPos2(PosUtil.flooredMidohraBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
         }
         if (NbtUtil.has(nbt, "lastPosX") && NbtUtil.has(nbt, "lastPosY") && NbtUtil.has(nbt, "lastPosZ")) {
-            this.lastCheckedPos = PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "lastPosX"), NbtUtil.getInt(nbt, "lastPosY"), NbtUtil.getInt(nbt, "lastPosZ"));
+            this.lastCheckedPos = PosUtil.flooredMidohraBlockPos(NbtUtil.getInt(nbt, "lastPosX"), NbtUtil.getInt(nbt, "lastPosY"), NbtUtil.getInt(nbt, "lastPosZ"));
         }
 
         if (NbtUtil.has(nbt, "module_bedrock_break"))
@@ -197,12 +197,12 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     @Override
     public void tick(TileTickEvent<BaseEnergyTile> e) {
         super.tick(e);
-        World world = e.world;
-        BlockPos pos = e.pos;
-        if (WorldUtil.isClient(world)) return;
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        if (world.isClient()) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
+        if (world.isReceivingRedstonePower(pos)) {
             if (isActive())
                 Filler.setActive(false, world, pos);
             return;
@@ -246,9 +246,15 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
         return ItemStackUtil.empty();
     }
 
+    public net.pitan76.mcpitanlib.midohra.world.World getWorldM() {
+        return net.pitan76.mcpitanlib.midohra.world.World.of(callGetWorld());
+    }
+
     public boolean tryPlacing(BlockPos blockPos, Block block, ItemStack stack) {
-        if (WorldUtil.setBlockState(callGetWorld(), blockPos, BlockStateUtil.getDefaultState(block))) {
-            WorldUtil.playSound(callGetWorld(), null, blockPos, BlockStateUtil.getCompatSoundGroup(BlockStateUtil.getDefaultState(block)).getPlaceSound(), CompatSoundCategory.BLOCKS, 1F, 1F);
+        net.pitan76.mcpitanlib.midohra.world.World world = getWorldM();
+
+        if (world.setBlockState(blockPos, BlockStateUtil.getMidohraDefaultState(block))) {
+            world.playSound(blockPos, BlockStateUtil.getCompatSoundGroup(BlockStateUtil.getDefaultState(block)).getPlaceSound(), CompatSoundCategory.BLOCKS, 1F, 1F);
             if (EQStorageBoxUtil.isStorageBox(latestGotStack)) {
                 if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
                     int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
@@ -262,6 +268,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
                     return true;
                 }
             }
+
             ItemStackUtil.decrementCount(latestGotStack, 1);
             return true;
         }
@@ -270,7 +277,8 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public boolean tryBreaking(BlockPos procPos) {
-        return WorldUtil.breakBlock(callGetWorld(), procPos, true);
+        World world = getWorldM();
+        return world.breakBlock(procPos, true);
     }
 
     private int getScanStartY(FillerModule module) {
@@ -287,7 +295,8 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public boolean tryFilling(Item item) {
-        if (callGetWorld() == null || WorldUtil.isClient(callGetWorld())) return false;
+        World world = getWorldM();
+        if (world.getRaw() == null || world.isClient()) return false;
         if (pos1 == null || pos2 == null) return false;
         
         // Get item type
@@ -346,11 +355,11 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
                 }
             }
 
-            BlockPos procPos = PosUtil.flooredBlockPos(x, y, z);
+            BlockPos procPos = PosUtil.flooredMidohraBlockPos(x, y, z);
             this.setLastCheckedPos(procPos);
-            Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
+            Block procBlock = world.getBlockState(procPos).getBlock().get();
 
-            BlockEntity blockEntity = WorldUtil.getBlockEntity(callGetWorld(), procPos);
+            BlockEntity blockEntity = world.getBlockEntity(procPos.toRaw());
             boolean isThis = blockEntity instanceof FillerTile || blockEntity == this;
             if (!isThis) {
                 FillerProcessEvent event = new FillerProcessEvent(this, procPos, procBlock);
