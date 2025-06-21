@@ -16,6 +16,7 @@ import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.NbtListUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +49,10 @@ public class DropRemovalModule extends MachineModule implements SimpleScreenHand
         NbtCompound nbt = CustomDataUtil.getNbt(stack);
         NbtList list = NbtUtil.getList(nbt, "Items");
 
-        for (int i = 0; i < list.size(); i++) {
-            String itemId = list.getString(i);
+        int size = NbtListUtil.size(list);
+
+        for (int i = 0; i < size; i++) {
+            String itemId = NbtListUtil.getString(list, i);
             if (itemId == null || itemId.isEmpty()) continue;
 
             items.add(ItemUtil.fromId(CompatIdentifier.of(itemId)));

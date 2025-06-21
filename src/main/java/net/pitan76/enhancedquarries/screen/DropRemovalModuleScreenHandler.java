@@ -5,7 +5,6 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
@@ -16,6 +15,7 @@ import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.NbtListUtil;
 
 public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
 
@@ -29,7 +29,7 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
 
         NbtList items = NbtUtil.getList(nbt, "Items");
         for (int i = 0; i < 5; i++) {
-            String item = items.getString(i);
+            String item = NbtListUtil.getString(items, i);
             if (item.isEmpty()) continue;
             CompatIdentifier id = CompatIdentifier.of(item);
 
