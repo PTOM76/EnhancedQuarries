@@ -95,7 +95,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
         NbtRWUtil.getInv(args, getItems());
-        coolTime = NbtRWUtil.getDoubleOrDefault(args, "coolTime", 0);
+        coolTime = NbtRWUtil.getDoubleOrDefault(args, "coolTime", getSettingCoolTime());
 
         int pos1x = NbtRWUtil.getIntOrDefault(args, "rangePos1X", 0);
         int pos1y = NbtRWUtil.getIntOrDefault(args, "rangePos1Y", 0);

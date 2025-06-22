@@ -167,12 +167,12 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
         setPos1(PosUtil.flooredMidohraBlockPos(pos1x, pos1y, pos1z));
         setPos2(PosUtil.flooredMidohraBlockPos(pos2x, pos2y, pos2z));
 
-        if (NbtUtil.has(nbt, "lastPosX") && NbtUtil.has(nbt, "lastPosY") && NbtUtil.has(nbt, "lastPosZ")) {
-            this.lastCheckedPos = PosUtil.flooredMidohraBlockPos(NbtUtil.getInt(nbt, "lastPosX"), NbtUtil.getInt(nbt, "lastPosY"), NbtUtil.getInt(nbt, "lastPosZ"));
-        }
+        int lastCheckedX = NbtRWUtil.getIntOrDefault(args, "lastPosX", 0);
+        int lastCheckedY = NbtRWUtil.getIntOrDefault(args, "lastPosY", 0);
+        int lastCheckedZ = NbtRWUtil.getIntOrDefault(args, "lastPosZ", 0);
+        this.lastCheckedPos = PosUtil.flooredMidohraBlockPos(lastCheckedX, lastCheckedY, lastCheckedZ);
 
-        if (NbtUtil.has(nbt, "module_bedrock_break"))
-            canBedrockBreak = NbtUtil.getBoolean(nbt, "module_bedrock_break");
+        canBedrockBreak = NbtRWUtil.getBooleanOrDefault(args, "module_bedrock_break", false);
     }
 
     // ----

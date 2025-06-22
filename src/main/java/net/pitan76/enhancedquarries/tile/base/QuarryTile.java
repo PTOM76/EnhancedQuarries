@@ -43,6 +43,7 @@ import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -223,34 +224,29 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
-        NbtCompound nbt = args.getNbt();
-        InventoryUtil.writeNbt(args, getItems());
 
-        NbtUtil.putDouble(nbt, "coolTime", coolTime);
+        NbtRWUtil.putInv(args, getItems());
+        NbtRWUtil.putDouble(args, "coolTime", coolTime);
 
-        if (!isEmptyInModules()) {
-            NbtCompound moduleNbt = NbtUtil.create();
-            if (callGetWorld() != null) {
-                if (!args.hasRegistryLookup())
-                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
+        if (!args.hasRegistryLookup() && callGetWorld() != null)
+            args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
-                InventoryUtil.writeNbt(args.registryLookup, moduleNbt, getModuleStacks());
-            }
-            NbtUtil.put(nbt, "modules", moduleNbt);
-        }
+        WriteNbtArgs moduleArgs = NbtRWUtil.putWithCreate(args, "modules");
+
+        NbtRWUtil.putInv(moduleArgs, getModuleStacks());
 
         if (minPos != null) {
-            NbtUtil.putInt(nbt, "rangePos1X", getMinPos().getX());
-            NbtUtil.putInt(nbt, "rangePos1Y", getMinPos().getY());
-            NbtUtil.putInt(nbt, "rangePos1Z", getMinPos().getZ());
+            NbtRWUtil.putInt(args, "rangePos1X", PosUtil.x(minPos));
+            NbtRWUtil.putInt(args, "rangePos1Y", PosUtil.y(minPos));
+            NbtRWUtil.putInt(args, "rangePos1Z", PosUtil.z(minPos));
         }
         if (maxPos != null) {
-            NbtUtil.putInt(nbt, "rangePos2X", getMaxPos().getX());
-            NbtUtil.putInt(nbt, "rangePos2Y", getMaxPos().getY());
-            NbtUtil.putInt(nbt, "rangePos2Z", getMaxPos().getZ());
+            NbtRWUtil.putInt(args, "rangePos2X", PosUtil.x(maxPos));
+            NbtRWUtil.putInt(args, "rangePos2Y", PosUtil.y(maxPos));
+            NbtRWUtil.putInt(args, "rangePos2Z", PosUtil.z(maxPos));
         }
 
-        NbtUtil.putInt(nbt, "storedExp", getStoredExp());
+        NbtRWUtil.putInt(args, "storedExp", getStoredExp());
 
         /*
         NbtUtil.put(nbt, "variant", fluidStorage.variant.toNbt());
@@ -260,43 +256,39 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
-        NbtCompound nbt = args.getNbt();
-        if (NbtUtil.has(nbt, "Items"))
-            InventoryUtil.readNbt(args, getItems());
 
-        if (NbtUtil.has(nbt, "coolTime"))
-            coolTime = NbtUtil.getDouble(nbt, "coolTime");
+        NbtRWUtil.getInv(args, getItems());
+        coolTime = NbtRWUtil.getDoubleOrDefault(args, "coolTime", getSettingCoolTime());
 
-        if (NbtUtil.has(nbt, "modules")) {
-            NbtCompound moduleNbt = NbtUtil.get(nbt, "modules");
+        if (!args.hasRegistryLookup() && callGetWorld() != null)
+            args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
-            if (callGetWorld() != null) {
-                if (!args.hasRegistryLookup())
-                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
-
-                InventoryUtil.readNbt(args.registryLookup, moduleNbt, getModuleStacks());
-                if (!isEmptyInModules()) {
-                    CACHE_isEnchanted = null;
-                    for (ItemStack stack : getModuleStacks()) {
-                        CACHE_moduleItems.add(stack.getItem());
-                    }
+        ReadNbtArgs moduleArgs = NbtRWUtil.get(args, "modules");
+        if (moduleArgs != null) {
+            NbtRWUtil.getInv(moduleArgs, getModuleStacks());
+            if (!isEmptyInModules()) {
+                CACHE_isEnchanted = null;
+                CACHE_moduleItems.clear();
+                for (ItemStack stack : getModuleStacks()) {
+                    CACHE_moduleItems.add(ItemStackUtil.getItem(stack));
                 }
             }
         }
 
-        addModulesFromOldNbt(nbt);
+        addModulesFromOldNbt(args.nbt);
 
-        if (NbtUtil.has(nbt, "rangePos1X")
-                && NbtUtil.has(nbt, "rangePos1Y")
-                && NbtUtil.has(nbt, "rangePos1Z")
-                && NbtUtil.has(nbt, "rangePos2X")
-                && NbtUtil.has(nbt, "rangePos2Y")
-                && NbtUtil.has(nbt, "rangePos2Z")) {
-            setMinPos(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
-            setMaxPos(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
-        }
+        int pos1x = NbtRWUtil.getIntOrDefault(args, "rangePos1X", 0);
+        int pos1y = NbtRWUtil.getIntOrDefault(args, "rangePos1Y", 0);
+        int pos1z = NbtRWUtil.getIntOrDefault(args, "rangePos1Z", 0);
 
-        if (NbtUtil.has(nbt, "storedExp")) setStoredExp(NbtUtil.getInt(nbt, "storedExp"));
+        int pos2x = NbtRWUtil.getIntOrDefault(args, "rangePos2X", 0);
+        int pos2y = NbtRWUtil.getIntOrDefault(args, "rangePos2Y", 0);
+        int pos2z = NbtRWUtil.getIntOrDefault(args, "rangePos2Z", 0);
+
+        setMinPos(PosUtil.flooredBlockPos(pos1x, pos1y, pos1z));
+        setMaxPos(PosUtil.flooredBlockPos(pos2x, pos2y, pos2z));
+
+        setStoredExp(NbtRWUtil.getIntOrDefault(args, "storedExp", 0));
 
         /*
         if (NbtUtil.has(nbt, "variant"))

@@ -2,7 +2,6 @@ package net.pitan76.enhancedquarries.tile.base;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -14,8 +13,8 @@ import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntityTicker;
-import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 
 import java.util.Optional;
 
@@ -46,15 +45,12 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
-        NbtCompound nbt = args.getNbt();
-        NbtUtil.putLong(nbt, "energy", holdEnergy);
+        NbtRWUtil.putLong(args, "energy", holdEnergy);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
-        NbtCompound nbt = args.getNbt();
-        if (NbtUtil.has(nbt, "energy"))
-            holdEnergy = NbtUtil.getLong(nbt, "energy");
+        holdEnergy = NbtRWUtil.getLongOrDefault(args, "energy", 0);
     }
 
     private long holdEnergy = 0;

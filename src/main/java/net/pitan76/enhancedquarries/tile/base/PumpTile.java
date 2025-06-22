@@ -20,6 +20,7 @@ import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.extra.transfer.util.FluidStorageUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -70,8 +71,7 @@ public class PumpTile extends BaseEnergyTile {
 
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
-        NbtCompound nbt = args.getNbt();
-        if(!storedFluid.isResourceBlank() && !FluidStorageUtil.isEmpty(storedFluid)) {
+        if (!storedFluid.isResourceBlank() && !FluidStorageUtil.isEmpty(storedFluid)) {
             FluidStorageUtil.writeNbt(storedFluid, args);
         }
     }
