@@ -31,6 +31,7 @@ import net.pitan76.mcpitanlib.api.sound.CompatSoundCategory;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.storagebox.api.StorageBoxUtil;
@@ -107,71 +108,65 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
-        NbtCompound nbt = args.getNbt();
-        NbtCompound invNbt = NbtUtil.create();
+        WriteNbtArgs invArgs = NbtRWUtil.putWithCreate(args, "craftingInv");
 
         if (callGetWorld() != null) {
             if (!args.hasRegistryLookup())
                 args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
-            InventoryUtil.writeNbt(args.registryLookup, invNbt, craftingInvItems);
+            NbtRWUtil.putInv(invArgs, craftingInvItems);
         }
-        NbtUtil.put(nbt, "craftingInv", invNbt);
 
-        InventoryUtil.writeNbt(args, getItems());
-
-        NbtUtil.putDouble(nbt, "coolTime", coolTime);
+        NbtRWUtil.putInv(args, getItems());
+        NbtRWUtil.putDouble(args, "coolTime", coolTime);
         if (pos1 != null) {
-            NbtUtil.putInt(nbt, "rangePos1X", getPos1().getX());
-            NbtUtil.putInt(nbt, "rangePos1Y", getPos1().getY());
-            NbtUtil.putInt(nbt, "rangePos1Z", getPos1().getZ());
+            NbtRWUtil.putInt(args, "rangePos1X", pos1.getX());
+            NbtRWUtil.putInt(args, "rangePos1Y", pos1.getY());
+            NbtRWUtil.putInt(args, "rangePos1Z", pos1.getZ());
         }
         if (pos2 != null) {
-            NbtUtil.putInt(nbt, "rangePos2X", getPos2().getX());
-            NbtUtil.putInt(nbt, "rangePos2Y", getPos2().getY());
-            NbtUtil.putInt(nbt, "rangePos2Z", getPos2().getZ());
+            NbtRWUtil.putInt(args, "rangePos2X", pos2.getX());
+            NbtRWUtil.putInt(args, "rangePos2Y", pos2.getY());
+            NbtRWUtil.putInt(args, "rangePos2Z", pos2.getZ());
         }
 
         if (lastCheckedPos != null) {
-            NbtUtil.putInt(nbt, "lastPosX", getLastCheckedPos().getX());
-            NbtUtil.putInt(nbt, "lastPosY", getLastCheckedPos().getY());
-            NbtUtil.putInt(nbt, "lastPosZ", getLastCheckedPos().getZ());
+            NbtRWUtil.putInt(args, "lastPosX", getLastCheckedPos().getX());
+            NbtRWUtil.putInt(args, "lastPosY", getLastCheckedPos().getY());
+            NbtRWUtil.putInt(args, "lastPosZ", getLastCheckedPos().getZ());
         }
 
         if (canBedrockBreak)
-            NbtUtil.putBoolean(nbt, "module_bedrock_break", true);
+            NbtRWUtil.putBoolean(args, "module_bedrock_break", true);
     }
 
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
         NbtCompound nbt = args.getNbt();
-        if (NbtUtil.has(nbt, "craftingInv")) {
-            NbtCompound invNbt = NbtUtil.get(nbt, "craftingInv");
 
-            System.out.println("FillerTile readNbt: " + invNbt);
+        if (callGetWorld() != null) {
+            if (!args.hasRegistryLookup())
+                args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
-            if (callGetWorld() != null) {
-                if (!args.hasRegistryLookup())
-                    args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
-
-                InventoryUtil.readNbt(args.registryLookup, invNbt, craftingInvItems);
-            }
+            ReadNbtArgs invArgs = NbtRWUtil.get(args, "craftingInv");
+            NbtRWUtil.getInv(invArgs, craftingInvItems);
         }
 
-        if (NbtUtil.has(nbt, "Items")) {
-            InventoryUtil.readNbt(args, getItems());
-        }
+        NbtRWUtil.getInv(args, getItems());
 
-        if (NbtUtil.has(nbt, "coolTime")) coolTime = NbtUtil.getDouble(nbt, "coolTime");
-        if (NbtUtil.has(nbt, "rangePos1X")
-                && NbtUtil.has(nbt, "rangePos1Y")
-                && NbtUtil.has(nbt, "rangePos1Z")
-                && NbtUtil.has(nbt, "rangePos2X")
-                && NbtUtil.has(nbt, "rangePos2Y")
-                && NbtUtil.has(nbt, "rangePos2Z")) {
-            setPos1(PosUtil.flooredMidohraBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
-            setPos2(PosUtil.flooredMidohraBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
-        }
+        coolTime = NbtRWUtil.getDoubleOrDefault(args, "coolTime", getSettingCoolTime());
+
+        int pos1x = NbtRWUtil.getIntOrDefault(args, "rangePos1X", 0);
+        int pos1y = NbtRWUtil.getIntOrDefault(args, "rangePos1Y", 0);
+        int pos1z = NbtRWUtil.getIntOrDefault(args, "rangePos1Z", 0);
+
+        int pos2x = NbtRWUtil.getIntOrDefault(args, "rangePos2X", 0);
+        int pos2y = NbtRWUtil.getIntOrDefault(args, "rangePos2Y", 0);
+        int pos2z = NbtRWUtil.getIntOrDefault(args, "rangePos2Z", 0);
+
+        setPos1(PosUtil.flooredMidohraBlockPos(pos1x, pos1y, pos1z));
+        setPos2(PosUtil.flooredMidohraBlockPos(pos2x, pos2y, pos2z));
+
         if (NbtUtil.has(nbt, "lastPosX") && NbtUtil.has(nbt, "lastPosY") && NbtUtil.has(nbt, "lastPosZ")) {
             this.lastCheckedPos = PosUtil.flooredMidohraBlockPos(NbtUtil.getInt(nbt, "lastPosX"), NbtUtil.getInt(nbt, "lastPosY"), NbtUtil.getInt(nbt, "lastPosZ"));
         }

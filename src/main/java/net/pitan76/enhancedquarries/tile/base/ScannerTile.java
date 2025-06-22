@@ -25,6 +25,7 @@ import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
@@ -63,41 +64,35 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
     @Override
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
-        NbtCompound nbt = args.getNbt();
-
-        InventoryUtil.writeNbt(args, getItems());
-
-        NbtUtil.putDouble(nbt, "coolTime", coolTime);
+        NbtRWUtil.putInv(args, getItems());
+        NbtRWUtil.putDouble(args, "coolTime", coolTime);
         if (pos1 != null) {
-            NbtUtil.putInt(nbt, "rangePos1X", getPos1().getX());
-            NbtUtil.putInt(nbt, "rangePos1Y", getPos1().getY());
-            NbtUtil.putInt(nbt, "rangePos1Z", getPos1().getZ());
+            NbtRWUtil.putInt(args, "rangePos1X", PosUtil.x(pos1));
+            NbtRWUtil.putInt(args, "rangePos1Y", PosUtil.y(pos1));
+            NbtRWUtil.putInt(args, "rangePos1Z", PosUtil.z(pos1));
         }
         if (pos2 != null) {
-            NbtUtil.putInt(nbt, "rangePos2X", getPos2().getX());
-            NbtUtil.putInt(nbt, "rangePos2Y", getPos2().getY());
-            NbtUtil.putInt(nbt, "rangePos2Z", getPos2().getZ());
+            NbtRWUtil.putInt(args, "rangePos2X", PosUtil.x(pos2));
+            NbtRWUtil.putInt(args, "rangePos2Y", PosUtil.y(pos2));
+            NbtRWUtil.putInt(args, "rangePos2Z", PosUtil.z(pos2));
         }
     }
 
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
-        NbtCompound nbt = args.getNbt();
+        NbtRWUtil.getInv(args, getItems());
+        coolTime = NbtRWUtil.getDoubleOrDefault(args, "coolTime", getSettingCoolTime());
 
-        if (NbtUtil.has(nbt, "Items")) {
-            InventoryUtil.readNbt(args, getItems());
-        }
+        int pos1x = NbtRWUtil.getIntOrDefault(args, "rangePos1X", 0);
+        int pos1y = NbtRWUtil.getIntOrDefault(args, "rangePos1Y", 0);
+        int pos1z = NbtRWUtil.getIntOrDefault(args, "rangePos1Z", 0);
 
-        if (NbtUtil.has(nbt, "coolTime")) coolTime = NbtUtil.getDouble(nbt, "coolTime");
-        if (NbtUtil.has(nbt, "rangePos1X")
-                && NbtUtil.has(nbt, "rangePos1Y")
-                && NbtUtil.has(nbt, "rangePos1Z")
-                && NbtUtil.has(nbt, "rangePos2X")
-                && NbtUtil.has(nbt, "rangePos2Y")
-                && NbtUtil.has(nbt, "rangePos2Z")) {
-            setPos1(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos1X"), NbtUtil.getInt(nbt, "rangePos1Y"), NbtUtil.getInt(nbt, "rangePos1Z")));
-            setPos2(PosUtil.flooredBlockPos(NbtUtil.getInt(nbt, "rangePos2X"), NbtUtil.getInt(nbt, "rangePos2Y"), NbtUtil.getInt(nbt, "rangePos2Z")));
-        }
+        int pos2x = NbtRWUtil.getIntOrDefault(args, "rangePos2X", 0);
+        int pos2y = NbtRWUtil.getIntOrDefault(args, "rangePos2Y", 0);
+        int pos2z = NbtRWUtil.getIntOrDefault(args, "rangePos2Z", 0);
+
+        setPos1(PosUtil.flooredBlockPos(pos1x, pos1y, pos1z));
+        setPos2(PosUtil.flooredBlockPos(pos2x, pos2y, pos2z));
     }
 
     // ----

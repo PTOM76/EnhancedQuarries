@@ -33,6 +33,7 @@ import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 import net.pitan76.mcpitanlib.core.registry.FuelRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -196,25 +197,19 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
     @Override
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
-        NbtCompound nbt = args.getNbt();
-        if (NbtUtil.has(nbt, "BurnTime"))
-            burnTime = NbtUtil.getInt(nbt, "BurnTime");
-        if (NbtUtil.has(nbt, "MaxBurnTime"))
-            maxBurnTime = NbtUtil.getInt(nbt, "MaxBurnTime");
-        if (NbtUtil.has(nbt, "Burning"))
-            burning = NbtUtil.getBoolean(nbt, "Burning");
-        if (NbtUtil.has(nbt, "Items"))
-            InventoryUtil.readNbt(args, invItems);
+        burnTime = NbtRWUtil.getInt(args, "BurnTime");
+        maxBurnTime = NbtRWUtil.getInt(args, "MaxBurnTime");
+        burning = NbtRWUtil.getBoolean(args, "Burning");
+        NbtRWUtil.getInv(args, invItems);
     }
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
-        NbtCompound nbt = args.getNbt();
-        NbtUtil.putInt(nbt, "BurnTime", burnTime);
-        NbtUtil.putInt(nbt, "MaxBurnTime", maxBurnTime);
-        NbtUtil.putBoolean(nbt, "Burning", burning);
-        InventoryUtil.writeNbt(args, invItems);
+        NbtRWUtil.putInt(args, "BurnTime", burnTime);
+        NbtRWUtil.putInt(args, "MaxBurnTime", maxBurnTime);
+        NbtRWUtil.putBoolean(args, "Burning", burning);
+        NbtRWUtil.putInv(args, invItems);
     }
 
     @Override
