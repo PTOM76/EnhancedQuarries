@@ -3,23 +3,22 @@ package net.pitan76.enhancedquarries.tile;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.math.BlockPos;
 import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
-import net.pitan76.enhancedquarries.tile.base.QuarryTile;
 import net.pitan76.enhancedquarries.util.UnbreakableBlocks;
 import net.pitan76.mcpitanlib.api.block.CompatBlocks;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
 
 import java.util.List;
 
@@ -52,35 +51,36 @@ public class OptimumQuarryTile extends NormalQuarryTile {
     public boolean tryQuarrying() {
         if (finishedQuarry) return true;
         if (callGetWorld() == null || WorldUtil.isClient(callGetWorld())) return false;
+        World world = World.of(callGetWorld());
 
         if (getMinPos() == null)
             setMinPos(getDefaultRangeMinPos());
         if (getMaxPos() == null)
             setMaxPos(getDefaultRangeMaxPos());
 
-        BlockPos minPos = getMinPos();
-        BlockPos maxPos = getMaxPos();
+        BlockPos minPos = BlockPos.of(getMinPos());
+        BlockPos maxPos = BlockPos.of(getMaxPos());
         if (procX == null || procY == null || procZ == null) {
-            procX = PosUtil.x(minPos);
-            procY = PosUtil.y(maxPos);
-            procZ = PosUtil.z(minPos);
+            procX = minPos.getX();
+            procY = maxPos.getY();
+            procZ = minPos.getZ();
         }
 
-        if (procY <= WorldUtil.getBottomY(callGetWorld())) {
+        if (procY <= world.getBottomY()) {
             finishedQuarry = true;
             return false;
         }
-        if (PosUtil.y(minPos) - 1 >= procY) {
-            if (procX < PosUtil.x(maxPos) - 1) {
-                if (procZ < PosUtil.z(maxPos) - 1) {
-                    BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                    if (WorldUtil.getBlockState(callGetWorld(), procPos) == null) return false;
+        if (minPos.getY() - 1 >= procY) {
+            if (procX < maxPos.getX() - 1) {
+                if (procZ < maxPos.getZ() - 1) {
+                    BlockPos procPos = PosUtil.flooredMidohraBlockPos(procX, procY, procZ);
+                    if (world.getBlockState(procPos) == null) return false;
 
-                    BlockEntity blockEntity = WorldUtil.getBlockEntity(callGetWorld(), procPos);
+                    BlockEntity blockEntity = world.getBlockEntity(procPos).get();
                     if (blockEntity == this)
                         continueQuarrying();
 
-                    Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
+                    Block procBlock = world.getBlockState(procPos).getBlock().get();
                     if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                         if (canReplaceFluid()) {
                             double time = tryFluidReplace(procPos);
@@ -90,12 +90,12 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         }
                         return continueQuarrying();
                     }
-                    if (PosUtil.y(minPos) >= procY) {
+                    if (minPos.getY() >= procY) {
                         if (procBlock instanceof FluidBlock) {
                             if (canReplaceFluid()
-                                    && FluidUtil.isStill(WorldUtil.getFluidState(callGetWorld(), procPos))
+                                    && FluidUtil.isStill(world.getRawFluidState(procPos))
                                     && getEnergy() > getReplaceFluidEnergyCost()) {
-                                WorldUtil.setBlockState(callGetWorld(), procPos, BlockStateUtil.getDefaultState(getReplaceFluidWithBlock()));
+                                world.setBlockState(procPos, BlockStateUtil.getMidohraDefaultState(getReplaceFluidWithBlock()));
                                 useEnergy(getReplaceFluidEnergyCost());
                             } else {
                                 return continueQuarrying();
@@ -108,48 +108,48 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                             }
                         }
                         if (hasModuleItem(ModuleItems.MOB_DELETE_MODULE)) {
-                            tryDeleteMob(procPos);
+                            tryDeleteMob(procPos.toRaw());
                         }
                         if (hasModuleItem(ModuleItems.MOB_KILL_MODULE)) {
-                            tryKillMob(procPos);
+                            tryKillMob(procPos.toRaw());
                         }
                         if (hasModuleItem(ModuleItems.EXP_COLLECT_MODULE)) {
-                            tryCollectExp(procPos);
+                            tryCollectExp(procPos.toRaw());
                         }
 
-                        breakBlock(procPos, true);
-                        List<ItemEntity> entities = WorldUtil.getEntitiesByType(callGetWorld(), EntityType.ITEM, BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
+                        breakBlock(procPos.toRaw(), true);
+                        List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)));
                         if (entities.isEmpty()) return true;
                         for (ItemEntity itemEntity : entities) {
-                            addStack(itemEntity.getStack());
+                            addStack(ItemEntityUtil.getStack(itemEntity));
                             EntityUtil.kill(itemEntity);
                         }
                         procZ++;
                         return true;
                     }
                 } else {
-                    procZ = getMinPos().getZ() + 1;
+                    procZ = minPos.getZ() + 1;
                     procZ--; // continue先でprocZ++されるためここで追加しておく。
                     procX++;
                     return continueQuarrying();
                 }
             } else {
-                procX = getMinPos().getX() + 1;
+                procX = minPos.getX() + 1;
                 procZ--;
                 procY--;
                 return continueQuarrying();
             }
             //procZ++;
-        } else if (PosUtil.y(minPos) <= procY && PosUtil.y(maxPos) >= procY) {
-            if (procX < PosUtil.x(maxPos)) {
-                if (procZ < PosUtil.z(maxPos)) {
+        } else if (minPos.getY() <= procY && maxPos.getY() >= procY) {
+            if (procX < maxPos.getX()) {
+                if (procZ < maxPos.getZ()) {
                     // procX < pos2.getX()を=<するとposのずれ問題は修正可能だが、別の方法で対処しているので、時間があればこっちで修正したい。
-                    BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                    BlockState state = WorldUtil.getBlockState(callGetWorld(), procPos);
+                    BlockPos procPos = PosUtil.flooredMidohraBlockPos(procX, procY, procZ);
+                    BlockState state = world.getBlockState(procPos).toMinecraft();
                     if (state == null)
                         return false;
 
-                    Block procBlock = state.getBlock();
+                    Block procBlock = BlockStateUtil.getBlock(state);
                     if (procBlock instanceof AirBlock || (procBlock.equals(CompatBlocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                         if (tryPlaceFrame(procPos)) {
                             useEnergy(getPlaceFrameEnergyCost());
@@ -170,34 +170,34 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         }
                     }
                     if (hasModuleItem(ModuleItems.MOB_DELETE_MODULE))
-                        tryDeleteMob(procPos);
+                        tryDeleteMob(procPos.toRaw());
 
                     if (hasModuleItem(ModuleItems.MOB_KILL_MODULE))
-                        tryKillMob(procPos);
+                        tryKillMob(procPos.toRaw());
 
                     if (hasModuleItem(ModuleItems.EXP_COLLECT_MODULE))
-                        tryCollectExp(procPos);
+                        tryCollectExp(procPos.toRaw());
 
-                    if (procBlock instanceof FluidBlock && !FluidUtil.isStill(WorldUtil.getFluidState(callGetWorld(), procPos)))
+                    if (procBlock instanceof FluidBlock && !FluidUtil.isStill(world.getRawFluidState(procPos)))
                         return continueQuarrying();
 
                     if (procBlock instanceof Frame) return continueQuarrying();
 
-                    breakBlock(procPos, false);
+                    breakBlock(procPos.toRaw(), false);
                     return true;
                 } else {
-                    procZ = getMinPos().getZ();
+                    procZ = minPos.getZ();
                     procX++;
                     procZ--;
                     return continueQuarrying();
                 }
             } else {
-                procX = getMinPos().getX();
+                procX = minPos.getX();
                 procZ--;
                 procY--;
-                if (PosUtil.y(minPos) - 1 >= procY) {
-                    procX = PosUtil.x(minPos) + 1;
-                    procZ = PosUtil.z(minPos) + 1;
+                if (minPos.getY() - 1 >= procY) {
+                    procX = minPos.getX() + 1;
+                    procZ = minPos.getZ() + 1;
                 }
                 return continueQuarrying();
             }
@@ -207,23 +207,19 @@ public class OptimumQuarryTile extends NormalQuarryTile {
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
-        NbtCompound nbt = args.getNbt();
-
         if (procX != null && procY != null && procZ != null)
-            NbtUtil.setBlockPos(nbt, "procPos", PosUtil.flooredBlockPos(procX, procY, procZ));
-        NbtUtil.putBoolean(nbt, "finished", finishedQuarry);
+            NbtRWUtil.putBlockPos(args, "procPos", PosUtil.flooredBlockPos(procX, procY, procZ));
+        NbtRWUtil.putBoolean(args, "finished", finishedQuarry);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
-        NbtCompound nbt = args.getNbt();
-        if (!NbtUtil.has(nbt, "procPos")) return;
+        BlockPos procPos = NbtRWUtil.getBlockPos(args, "procPos");
 
-        BlockPos procPos = NbtUtil.getBlockPos(nbt, "procPos");
-        procX = PosUtil.x(procPos);
-        procY = PosUtil.y(procPos);
-        procZ = PosUtil.z(procPos);
+        procX = procPos.getX();
+        procY = procPos.getY();
+        procZ = procPos.getZ();
 
-        if (NbtUtil.has(nbt, "finished")) finishedQuarry = NbtUtil.getBoolean(nbt, "finished");
+        finishedQuarry = NbtRWUtil.getBoolean(args, "finished");
     }
 }

@@ -7,7 +7,6 @@ import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -585,24 +584,28 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public void tryDeleteMob(BlockPos blockPos) {
         if (callGetWorld() == null || callGetWorld().isClient()) return;
-        List<MobEntity> mobs = callGetWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
+        List<MobEntity> mobs = WorldUtil.getEntitiesByClass(callGetWorld(), MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
         mobs.forEach(EntityUtil::discard);
     }
 
     public void tryKillMob(BlockPos blockPos) {
         if (callGetWorld() == null || callGetWorld().isClient()) return;
-        List<MobEntity> mobs = callGetWorld().getEntitiesByClass(MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
+        List<MobEntity> mobs = WorldUtil.getEntitiesByClass(callGetWorld(), MobEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
         mobs.forEach(EntityUtil::kill);
     }
 
     public void tryCollectExp(BlockPos blockPos) {
         if (callGetWorld() == null || callGetWorld().isClient()) return;
-        List<ExperienceOrbEntity> entities = callGetWorld().getEntitiesByClass(ExperienceOrbEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
+        List<ExperienceOrbEntity> entities = WorldUtil.getEntitiesByClass(callGetWorld(), ExperienceOrbEntity.class, BoxUtil.createBox(blockPos.add(-2, -2, -2), blockPos.add(2, 2, 2)), EntityPredicates.VALID_ENTITY);
         entities.forEach((entity) -> {
             if (getStoredExp() + entity.getExperienceAmount() > getMaxStoredExp()) return;
             addStoredExp(entity.getExperienceAmount());
             EntityUtil.discard(entity);
         });
+    }
+
+    public double tryFluidReplace(net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos) {
+        return tryFluidReplace(pos.toMinecraft());
     }
 
     public double tryFluidReplace(BlockPos blockPos) {
@@ -620,12 +623,12 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                 time += 0.1;
             }
 
-            if(!WorldUtil.getFluidState(callGetWorld(), offsetBlockPos).isEmpty() || callGetWorld().getFluidState(offsetBlockPos).isStill()) {
+            if (!WorldUtil.getFluidState(callGetWorld(), offsetBlockPos).isEmpty() || callGetWorld().getFluidState(offsetBlockPos).isStill()) {
                 breakBlock(offsetBlockPos, true);
 
-                List<ItemEntity> entities = WorldUtil.getEntitiesByType(callGetWorld(), EntityType.ITEM, BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add( 1,  1, 1)), EntityPredicates.VALID_ENTITY);
-                for(ItemEntity itemEntity : entities) {
-                    addStack(itemEntity.getStack());
+                List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add( 1,  1, 1)));
+                for (ItemEntity itemEntity : entities) {
+                    addStack(ItemEntityUtil.getStack(itemEntity));
                     EntityUtil.kill(itemEntity);
                 }
 
@@ -635,6 +638,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         }
 
         return time;
+    }
+
+    public boolean tryPlaceFrame(net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos) {
+        return tryPlaceFrame(pos.toMinecraft());
     }
 
     public boolean tryPlaceFrame(BlockPos blockPos) {
@@ -719,10 +726,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                                 tryCollectExp(procPos);
                             }
                             breakBlock(procPos, true);
-                            List<ItemEntity> entities = WorldUtil.getEntitiesByType(callGetWorld(), EntityType.ITEM, BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)), EntityPredicates.VALID_ENTITY);
+                            List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)));
                             if (entities.isEmpty()) return true;
                             for(ItemEntity itemEntity : entities) {
-                                addStack(itemEntity.getStack());
+                                addStack(ItemEntityUtil.getStack(itemEntity));
                                 EntityUtil.kill(itemEntity);
                             }
                             return true;
@@ -819,12 +826,11 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {
                     return;
                 }
-                stack.setCount(stack.getCount() + originInCount - stack.getMaxCount());
+                ItemStackUtil.setCount(stack, stack.getCount() + originInCount - stack.getMaxCount());
             }
         }
 
-        ItemEntity itemEntity = ItemEntityUtil.create(callGetWorld(), callGetPos(), stack);
-        WorldUtil.spawnEntity(callGetWorld(), itemEntity);
+        ItemEntityUtil.createWithSpawn(callGetWorld(), stack, callGetPos());
     }
 
     public QuarryTile(BlockEntityType<?> type, TileCreateEvent e) {
