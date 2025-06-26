@@ -142,8 +142,6 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
-        NbtCompound nbt = args.getNbt();
-
         if (callGetWorld() != null) {
             if (!args.hasRegistryLookup())
                 args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
@@ -194,9 +192,9 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     @Override
     public void tick(TileTickEvent<BaseEnergyTile> e) {
         super.tick(e);
+        if (e.isClient()) return;
         World world = e.getMidohraWorld();
         BlockPos pos = e.getMidohraPos();
-        if (world.isClient()) return;
 
         // レッドストーン受信で無効
         if (world.isReceivingRedstonePower(pos)) {

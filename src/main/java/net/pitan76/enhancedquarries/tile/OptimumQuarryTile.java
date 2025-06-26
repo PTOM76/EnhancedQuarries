@@ -207,6 +207,8 @@ public class OptimumQuarryTile extends NormalQuarryTile {
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
+
         if (procX != null && procY != null && procZ != null)
             NbtRWUtil.putBlockPos(args, "procPos", PosUtil.flooredBlockPos(procX, procY, procZ));
         NbtRWUtil.putBoolean(args, "finished", finishedQuarry);
@@ -214,6 +216,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
 
     @Override
     public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
         BlockPos procPos = NbtRWUtil.getBlockPos(args, "procPos");
 
         procX = procPos.getX();

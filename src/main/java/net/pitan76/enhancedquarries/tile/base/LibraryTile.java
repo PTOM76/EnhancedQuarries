@@ -27,11 +27,13 @@ public class LibraryTile extends CompatBlockEntity implements IInventory, Simple
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
         NbtRWUtil.putInv(args, inventory);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
         NbtRWUtil.getInv(args, inventory);
     }
 

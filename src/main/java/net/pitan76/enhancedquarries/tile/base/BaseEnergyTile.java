@@ -45,11 +45,13 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
 
     @Override
     public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
         NbtRWUtil.putLong(args, "energy", holdEnergy);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
         holdEnergy = NbtRWUtil.getLongOrDefault(args, "energy", 0);
     }
 
