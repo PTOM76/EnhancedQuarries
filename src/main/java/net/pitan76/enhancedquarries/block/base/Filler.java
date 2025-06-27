@@ -51,8 +51,9 @@ public abstract class Filler extends BaseBlock {
                     return;
                 }
 
-                ItemScattererUtil.spawn(e.world, e.pos, filler.inventory);
-                InventoryUtil.setStack(filler.getCraftingInventory(), 9, ItemStackUtil.empty());
+                ItemScattererUtil.spawn(e.world, e.pos, filler.getItems());
+                filler.getCraftingInventory().set(9, ItemStackUtil.empty());
+                //InventoryUtil.setStack(filler.getCraftingInventory(), 9, ItemStackUtil.empty());
                 ItemScattererUtil.spawn(e.world, e.pos, filler.getCraftingInventory());
 
                 // モジュールの返却

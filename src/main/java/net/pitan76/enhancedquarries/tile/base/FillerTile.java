@@ -3,11 +3,9 @@ package net.pitan76.enhancedquarries.tile.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.pitan76.enhancedquarries.block.base.Filler;
@@ -16,6 +14,7 @@ import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.enhancedquarries.registry.ModuleRegistry;
 import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
+import net.pitan76.enhancedquarries.util.ClippedItemStackList;
 import net.pitan76.enhancedquarries.util.EQStorageBoxUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
@@ -39,14 +38,24 @@ import org.jetbrains.annotations.Nullable;
 
 public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory, SimpleScreenHandlerFactory {
 
+    public int getInvSize() {
+        return 27;
+    }
+
     // Container
-    public ItemStackList invItems = ItemStackList.ofSize(27, ItemStackUtil.empty());
-    public ItemStackList craftingInvItems = ItemStackList.ofSize(10, ItemStackUtil.empty());
+    public ItemStackList allItems = ItemStackList.ofSize(getInvSize() + 10, ItemStackUtil.empty()); // 27 + 10 slots
+    //public ItemStackList craftingInvItems = ItemStackList.ofSize(10, ItemStackUtil.empty());
 
-    public IInventory craftingInventory = () -> craftingInvItems;
-    public IInventory inventory = this;
 
-    public Inventory getCraftingInventory() {
+    public ItemStackList getAllItems() {
+        return allItems;
+    }
+
+    public ClippedItemStackList invItems = ClippedItemStackList.of(getAllItems(), 0, getInvSize());
+    //public ClippedInventory craftingInventory = ClippedInventory.of(this, getInvSize());
+    public ClippedItemStackList craftingInventory = ClippedItemStackList.of(getAllItems(), getInvSize(), getInvSize() + 10);
+
+    public ClippedItemStackList getCraftingInventory() {
         return craftingInventory;
     }
 
@@ -55,7 +64,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public ItemStack getModule() {
-        ItemStack stack = InventoryUtil.getStack(getCraftingInventory(), 9);
+        ItemStack stack = craftingInventory.get(9);
         return ItemStackUtil.copy(stack);
     }
 
@@ -106,18 +115,19 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     // NBT
 
+    private boolean needRemoveCraftingInv = false;
+
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
-        WriteNbtArgs invArgs = NbtRWUtil.putWithCreate(args, "craftingInv");
+        if (callGetWorld() != null && !args.hasRegistryLookup())
+            args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
-        if (callGetWorld() != null) {
-            if (!args.hasRegistryLookup())
-                args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
-
-            NbtRWUtil.putInv(invArgs, craftingInvItems);
+        if (needRemoveCraftingInv && NbtUtil.has(args.getNbt(), "craftingInv")) {
+            NbtUtil.remove(args.getNbt(), "craftingInv");
+            needRemoveCraftingInv = false;
         }
 
-        NbtRWUtil.putInv(args, getItems());
+        NbtRWUtil.putInv(args, getAllItems());
         NbtRWUtil.putDouble(args, "coolTime", coolTime);
         if (pos1 != null) {
             NbtRWUtil.putInt(args, "rangePos1X", pos1.getX());
@@ -142,15 +152,27 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
-        if (callGetWorld() != null) {
-            if (!args.hasRegistryLookup())
-                args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
+        if (callGetWorld() != null || !args.hasRegistryLookup())
+            args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
+        NbtRWUtil.getInv(args, getAllItems());
+
+        // Inventory統合前の旧バージョンのNBT互換性のため
+        if (NbtUtil.has(args.getNbt(), "craftingInv")) {
+            ItemStackList craftingInvItems = ItemStackList.ofSize(10, ItemStackUtil.empty());
             ReadNbtArgs invArgs = NbtRWUtil.get(args, "craftingInv");
             NbtRWUtil.getInv(invArgs, craftingInvItems);
-        }
 
-        NbtRWUtil.getInv(args, getItems());
+            // inventoryに統合
+            int size = craftingInvItems.size();
+            int size2 = craftingInventory.size();
+            for (int i = 0; i < size; i++) {
+                if (i < size2)
+                    craftingInventory.set(i, craftingInvItems.get(i));
+            }
+
+            needRemoveCraftingInv = true;
+        }
 
         coolTime = NbtRWUtil.getDoubleOrDefault(args, "coolTime", getSettingCoolTime());
 
@@ -225,19 +247,23 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     public ItemStack latestGotStack = ItemStackUtil.empty();
 
     public ItemStack getInventoryStack() {
-        for (ItemStack stack : getItems()) {
+        int size = getItems().size();
+        for (int i = 0; i < size; i++) {
+            ItemStack stack = getItems().get(i);
+
             latestGotStack = stack;
-            if (stack.isEmpty()) continue;
-            if (stack.getItem() instanceof BlockItem) return stack;
+            if (ItemStackUtil.isEmpty(stack)) continue;
+            if (ItemStackUtil.getItem(stack) instanceof BlockItem) return stack;
+
             // StorageBox
             if (EQStorageBoxUtil.isStorageBox(stack)) {
-                ItemStack itemInBox = StorageBoxUtil.getStackInStorageBox(stack);
-                if (itemInBox == null) continue;
-
-                if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
+                ItemStack stackInBox = StorageBoxUtil.getStackInStorageBox(stack);
+                if (stackInBox == null) continue;
+                if (ItemStackUtil.getItem(stackInBox) instanceof BlockItem) return stackInBox;
             }
             // ---- StorageBox
         }
+
         return ItemStackUtil.empty();
     }
 
@@ -309,7 +335,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
 
         // Out of blocks!
         ItemStack stack = getInventoryStack();
-        if (stack.isEmpty() && module.requiresBlocks()) return false;
+        if (ItemStackUtil.isEmpty(stack) && module.requiresBlocks()) return false;
 
         BlockPos lastChecked = this.getLastCheckedPos();
         int x = (lastChecked != null) ? lastChecked.getX() : pos1.getX();
@@ -465,6 +491,6 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     @Nullable
     @Override
     public ScreenHandler createMenu(CreateMenuEvent e) {
-        return new FillerScreenHandler(e.syncId, e.playerInventory, this, getCraftingInventory());
+        return new FillerScreenHandler(e.syncId, e.playerInventory, this, craftingInventory.toInventory());
     }
 }

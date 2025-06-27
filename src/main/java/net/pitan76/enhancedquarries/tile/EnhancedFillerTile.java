@@ -6,8 +6,8 @@ import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 
 public class EnhancedFillerTile extends FillerTile {
-    public EnhancedFillerTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
+    public EnhancedFillerTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
     public EnhancedFillerTile(TileCreateEvent event) {

@@ -25,6 +25,7 @@ import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.item.base.MachineModule;
 import net.pitan76.enhancedquarries.item.quarrymodule.DropRemovalModule;
 import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
+import net.pitan76.enhancedquarries.util.ClippedItemStackList;
 import net.pitan76.enhancedquarries.util.UnbreakableBlocks;
 import net.pitan76.mcpitanlib.api.block.CompatBlocks;
 import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
@@ -50,10 +51,27 @@ import java.util.Map;
 
 //@SuppressWarnings("UnstableApiUsage")
 public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory {
-    // Container
-    public ItemStackList invItems = ItemStackList.ofSize(27, ItemStackUtil.empty());
 
-    public IInventory inventory = this;
+    public int getInvSize() {
+        return 27;
+    }
+
+    public int getMaxModuleCount() {
+        return 64;
+    }
+
+    // モジュール
+    //public ItemStackList moduleStacks = ItemStackList.ofSize(getMaxModuleCount(), ItemStackUtil.empty());
+
+    // Container
+    public ItemStackList allStacks = ItemStackList.ofSize(getInvSize() + getMaxModuleCount(), ItemStackUtil.empty());
+
+    public ClippedItemStackList invItems = ClippedItemStackList.of(getAllStacks(), 0, getInvSize());
+    public ClippedItemStackList moduleStacks = ClippedItemStackList.of(getAllStacks(), getInvSize(), getInvSize() + getMaxModuleCount());
+
+    public ItemStackList getAllStacks() {
+        return allStacks;
+    }
 
     // Fluid
     /*
@@ -109,13 +127,6 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     public void removeStoredExp(int storedExp) {
         this.storedExp -= storedExp;
     }
-
-    public int getMaxModuleCount() {
-        return 64;
-    }
-
-    // モジュール
-    public ItemStackList moduleStacks = ItemStackList.ofSize(getMaxModuleCount(), ItemStackUtil.empty());
 
     public void addModuleStack(ItemStack stack) {
         Item item = ItemStackUtil.getItem(stack);
@@ -220,19 +231,24 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     // ----
 
     // NBT
+    boolean needRemoveModules = false;
 
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
 
-        NbtRWUtil.putInv(args, getItems());
+        NbtRWUtil.putInv(args, getAllStacks());
         NbtRWUtil.putDouble(args, "coolTime", coolTime);
 
         if (!args.hasRegistryLookup() && callGetWorld() != null)
             args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
-        WriteNbtArgs moduleArgs = NbtRWUtil.putWithCreate(args, "modules");
+        if (needRemoveModules && NbtUtil.has(args.getNbt(), "modules")) {
+            args.getNbt().remove("modules");
+            needRemoveModules = false;
+        }
 
-        NbtRWUtil.putInv(moduleArgs, getModuleStacks());
+        //WriteNbtArgs moduleArgs = NbtRWUtil.putWithCreate(args, "modules");
+        //NbtRWUtil.putInv(moduleArgs, getModuleStacks());
 
         if (minPos != null) {
             NbtRWUtil.putInt(args, "rangePos1X", PosUtil.x(minPos));
@@ -256,15 +272,15 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
 
-        NbtRWUtil.getInv(args, getItems());
+        NbtRWUtil.getInv(args, getAllStacks());
         coolTime = NbtRWUtil.getDoubleOrDefault(args, "coolTime", getSettingCoolTime());
 
         if (!args.hasRegistryLookup() && callGetWorld() != null)
             args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
-        ReadNbtArgs moduleArgs = NbtRWUtil.get(args, "modules");
-        if (moduleArgs != null) {
-            NbtRWUtil.getInv(moduleArgs, getModuleStacks());
+        //ReadNbtArgs moduleArgs = NbtRWUtil.get(args, "modules");
+        if (!getModuleStacks().isEmpty()) {
+            //NbtRWUtil.getInv(moduleArgs, getModuleStacks());
             if (!isEmptyInModules()) {
                 CACHE_isEnchanted = null;
                 CACHE_moduleItems.clear();
@@ -397,7 +413,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         if (dirs.isEmpty()) return;
 
         int time = 0;
-        for (int i = 0; i < getItems().size(); i++) {
+
+        int size = getItems().size();
+        for (int i = 0; i < size; i++) {
             if (time > limit) break;
             for (Direction dir : dirs) {
                 ItemStack stack = getItems().get(i);
@@ -789,17 +807,17 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public Integer getEmptyOrCanInsertIndex(Inventory inventory, ItemStack stack) {
-        int index = 0;
-        for (; index < getItems().size(); index++) {
-            if (InventoryUtil.getStack(inventory, index).isEmpty()) {
-                return index;
-            }
-            ItemStack inStack = getItems().get(index);
+        int size = getItems().size();
+        for (int i = 0; i < size; i++) {
+            if (InventoryUtil.getStack(inventory, i).isEmpty())
+                return i;
+
+            ItemStack inStack = getItems().get(i);
             if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
-                int originInCount = getItems().get(index).getCount();
-                getItems().get(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
+                int originInCount = getItems().get(i).getCount();
+                getItems().get(i).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
                 if (stack.getMaxCount() >= stack.getCount() + originInCount) {
-                    return index;
+                    return i;
                 }
             }
         }
@@ -812,20 +830,20 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
         if (isRemovalItem(stack)) return;
 
-        int index = 0;
-        for (; index < getItems().size(); index++) {
+        int size = getItems().size();
+        for (int i = 0; i < size; i++) {
             if (stack.isEmpty() || stack.getCount() == 0) return;
-            if (getItems().get(index).isEmpty()) {
-                getItems().set(index, stack);
+            if (getItems().get(i).isEmpty()) {
+                getItems().set(i, stack);
                 return;
             }
-            ItemStack inStack = getItems().get(index);
+            ItemStack inStack = getItems().get(i);
             if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
-                int originInCount = getItems().get(index).getCount();
-                getItems().get(index).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
-                if (stack.getMaxCount() >= stack.getCount() + originInCount) {
+                int originInCount = getItems().get(i).getCount();
+                getItems().get(i).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
+                if (stack.getMaxCount() >= stack.getCount() + originInCount)
                     return;
-                }
+
                 ItemStackUtil.setCount(stack, stack.getCount() + originInCount - stack.getMaxCount());
             }
         }

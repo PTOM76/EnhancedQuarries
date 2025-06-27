@@ -11,7 +11,6 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
-import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.world.ServerWorldUtil;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
@@ -23,13 +22,6 @@ import java.util.List;
 
 public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
 
-    public ItemStackList invItems = ItemStackList.ofSize(54, ItemStackUtil.empty());
-    
-    @Override
-    public ItemStackList getItems() {
-        return invItems;
-    }
-
     public EnhancedFillerWithChestTile(BlockEntityType<?> type, TileCreateEvent event) {
         super(type, event);
     }
@@ -39,21 +31,26 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
     }
 
     @Override
+    public int getInvSize() {
+        return 54;
+    }
+
+    @Override
     public ItemStack getInventoryStack() {
-        int i = 0;
-        for (ItemStack stack : getItems()) {
-            i++;
-            if (i >= 27)
+        int size = getItems().size();
+        for (int i = 0; i < size; i++) {
+            ItemStack stack = getItems().get(i);
+            if (i >= 26)
                 break;
             latestGotStack = stack;
-            if (stack.isEmpty()) continue;
-            if (stack.getItem() instanceof BlockItem) return stack;
+            if (ItemStackUtil.isEmpty(stack)) continue;
+            if (ItemStackUtil.getItem(stack) instanceof BlockItem) return stack;
             // StorageBox
             if (EQStorageBoxUtil.isStorageBox(stack)) {
-                ItemStack itemInBox = StorageBoxUtil.getStackInStorageBox(stack);
-                if (itemInBox == null) continue;
+                ItemStack stackInBox = StorageBoxUtil.getStackInStorageBox(stack);
+                if (stackInBox == null) continue;
 
-                if (itemInBox.getItem() instanceof BlockItem) return itemInBox;
+                if (ItemStackUtil.getItem(stackInBox) instanceof BlockItem) return stackInBox;
             }
             // ---- StorageBox
         }
@@ -74,17 +71,18 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
     public void addStack(ItemStack stack) {
         World world = getWorldM();
         if (world.getRaw() == null || world.isClient()) return;
-        int index = 27;
-        for (;index < getItems().size();index++) {
+
+        int size = getItems().size();
+        for (int i = 27; i < size; i++) {
             if (stack.isEmpty() || stack.getCount() == 0) return;
-            if (getItems().get(index).isEmpty()) {
-                getItems().set(index, stack);
+            if (getItems().get(i).isEmpty()) {
+                getItems().set(i, stack);
                 return;
             }
-            ItemStack inStack = getItems().get(index);
+            ItemStack inStack = getItems().get(i);
             if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
-                int originInCount = getItems().get(index).getCount();
-                getItems().get(index).setCount(Math.min(ItemStackUtil.getMaxCount(stack), ItemStackUtil.getCount(stack) + originInCount));
+                int originInCount = getItems().get(i).getCount();
+                getItems().get(i).setCount(Math.min(ItemStackUtil.getMaxCount(stack), ItemStackUtil.getCount(stack) + originInCount));
                 if (ItemStackUtil.getMaxCount(stack) >= ItemStackUtil.getCount(stack) + originInCount) {
                     return;
                 }
@@ -98,6 +96,6 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
     @Nullable
     @Override
     public ScreenHandler createMenu(CreateMenuEvent e) {
-        return new FillerWithChestScreenHandler(e.syncId, e.playerInventory, this, getCraftingInventory());
+        return new FillerWithChestScreenHandler(e.syncId, e.playerInventory, this, craftingInventory.toInventory());
     }
 }

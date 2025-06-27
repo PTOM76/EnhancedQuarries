@@ -7,8 +7,8 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 
 public class NormalQuarryTile extends QuarryTile {
 
-    public NormalQuarryTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
+    public NormalQuarryTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
     public NormalQuarryTile(TileCreateEvent event) {
