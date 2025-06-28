@@ -10,8 +10,8 @@ public class EnhancedFillerTile extends FillerTile {
         super(type, e);
     }
 
-    public EnhancedFillerTile(TileCreateEvent event) {
-        this(Tiles.ENHANCED_FILLER_TILE.getOrNull(), event);
+    public EnhancedFillerTile(TileCreateEvent e) {
+        this(Tiles.ENHANCED_FILLER_TILE.getOrNull(), e);
     }
 
     @Override

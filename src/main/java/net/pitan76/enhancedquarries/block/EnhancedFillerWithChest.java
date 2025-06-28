@@ -27,8 +27,8 @@ public class EnhancedFillerWithChest extends Filler {
     }
 
     @Override
-    public BlockEntity createBlockEntity(TileCreateEvent event) {
-        return new EnhancedFillerWithChestTile(event);
+    public BlockEntity createBlockEntity(TileCreateEvent e) {
+        return new EnhancedFillerWithChestTile(e);
     }
 
     // ----

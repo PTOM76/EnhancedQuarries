@@ -8,8 +8,8 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 public class EnhancedQuarryTile extends QuarryTile {
 
     // 継承のため
-    public EnhancedQuarryTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
+    public EnhancedQuarryTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
     public EnhancedQuarryTile(TileCreateEvent event) {

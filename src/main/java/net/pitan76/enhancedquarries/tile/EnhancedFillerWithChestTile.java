@@ -22,8 +22,8 @@ import java.util.List;
 
 public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
 
-    public EnhancedFillerWithChestTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
+    public EnhancedFillerWithChestTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
     public EnhancedFillerWithChestTile(TileCreateEvent event) {
