@@ -14,7 +14,6 @@ import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
 import net.pitan76.enhancedquarries.registry.ModuleRegistry;
 import net.pitan76.enhancedquarries.screen.FillerScreenHandler;
-import net.pitan76.enhancedquarries.util.ClippedItemStackList;
 import net.pitan76.enhancedquarries.util.EQStorageBoxUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
@@ -28,6 +27,7 @@ import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
 import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.sound.CompatSoundCategory;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.collection.ClippedItemStackList;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
@@ -52,9 +52,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public ClippedItemStackList invItems = ClippedItemStackList.of(getAllItems(), 0, getInvSize());
-    //public ClippedInventory craftingInventory = ClippedInventory.of(this, getInvSize());
     public ClippedItemStackList craftingInventory = ClippedItemStackList.of(getAllItems(), getInvSize(), getInvSize() + 10);
-
     public ClippedItemStackList getCraftingInventory() {
         return craftingInventory;
     }
