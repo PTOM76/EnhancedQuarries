@@ -10,10 +10,8 @@ import net.pitan76.enhancedquarries.tile.base.QuarryTile;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
-import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
-import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
-import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
-import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.event.block.*;
+import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.item.CompatItems;
 import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
@@ -93,14 +91,15 @@ public abstract class Quarry extends BaseBlock {
             }
 
             // モジュールの返却
-            if (!quarry.isEmptyInModules()) {
-                for (ItemStack module : quarry.getModuleStacks()) {
-                    ItemEntityUtil.createWithSpawn(world.getRaw(), module, pos.toRaw());
-                }
-                quarry.getModuleStacks().clear();
-            }
+//            if (!quarry.isEmptyInModules()) {
+//                for (ItemStack module : quarry.getModuleStacks()) {
+//                    ItemEntityUtil.createWithSpawn(world.getRaw(), module, pos.toRaw());
+//                }
+//                quarry.getModuleStacks().clear();
+//            }
 
-            ItemScattererUtil.spawn(world, pos, (QuarryTile) blockEntity);
+            ItemScattererUtil.spawn(world, pos, quarry.getAllStacks());
+            quarry.getAllStacks().clear();
 
             // フレーム破壊
             BlockPos framePos = null;
@@ -117,7 +116,45 @@ public abstract class Quarry extends BaseBlock {
                     Frame.breakConnectFrames(world, framePos);
                 }
         }
+
         super.onStateReplaced(e);
+    }
+
+    @Override
+    public BlockBreakResult onBreak(BlockBreakEvent e) {
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        BlockState state = e.getMidohraState();
+
+        if (state.isEmpty()) return super.onBreak(e);
+
+        BlockEntity blockEntity = e.getBlockEntity();
+        if (blockEntity instanceof QuarryTile) {
+            QuarryTile quarry = (QuarryTile) blockEntity;
+            if (quarry.keepNbtOnDrop) {
+                return super.onBreak(e);
+            }
+
+            ItemScattererUtil.spawn(world, pos, quarry.getAllStacks());
+            quarry.getAllStacks().clear();
+
+            // フレーム破壊
+            BlockPos framePos = null;
+            if (getFacing(state).equals(Direction.NORTH))
+                framePos = pos.add(0, 0, 1);
+            if (getFacing(state).equals(Direction.SOUTH))
+                framePos = pos.add(0, 0, -1);
+            if (getFacing(state).equals(Direction.WEST))
+                framePos = pos.add(1, 0, 0);
+            if (getFacing(state).equals(Direction.EAST))
+                framePos = pos.add(-1, 0, 0);
+            if (framePos != null)
+                if (world.getBlockState(framePos).getBlock().get() instanceof Frame) {
+                    Frame.breakConnectFrames(world, framePos);
+                }
+        }
+
+        return super.onBreak(e);
     }
 
     @Override

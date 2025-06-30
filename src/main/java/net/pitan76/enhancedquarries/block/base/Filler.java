@@ -8,9 +8,11 @@ import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
 import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.event.block.BlockBreakEvent;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
@@ -60,12 +62,39 @@ public abstract class Filler extends BaseBlock {
                 ItemEntityUtil.createWithSpawn(e.world, ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1), e.pos);
 
             filler.getCraftingInventory().set(9, ItemStackUtil.empty());
-            ItemScattererUtil.spawn(e.world, e.pos, filler.getAllItems());
+            ItemScattererUtil.spawn(e.world, e.pos, filler.getAllStacks());
+            filler.getAllStacks().clear();
             //InventoryUtil.setStack(filler.getCraftingInventory(), 9, ItemStackUtil.empty());
             //ItemScattererUtil.spawn(e.world, e.pos, filler.getCraftingInventory());
         }
 
         super.onStateReplaced(e);
+    }
+
+    public BlockBreakResult onBreak(BlockBreakEvent e) {
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        BlockState state = e.getMidohraState();
+
+        if (state.isEmpty()) return super.onBreak(e);
+
+        BlockEntity blockEntity = e.getBlockEntity();
+        if (blockEntity instanceof FillerTile) {
+            FillerTile filler = (FillerTile) blockEntity;
+            if (filler.keepNbtOnDrop) {
+                return super.onBreak(e);
+            }
+
+            // モジュールの返却
+            if (filler.canBedrockBreak())
+                ItemEntityUtil.createWithSpawn(e.world, ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1), e.pos);
+
+            filler.getCraftingInventory().set(9, ItemStackUtil.empty());
+            ItemScattererUtil.spawn(world, pos, filler.getAllStacks());
+            filler.getAllStacks().clear();
+        }
+
+        return super.onBreak(e);
     }
 
     @Override

@@ -43,16 +43,16 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     // Container
-    public ItemStackList allItems = ItemStackList.ofSize(getInvSize() + 10, ItemStackUtil.empty()); // 27 + 10 slots
+    public ItemStackList allStacks = ItemStackList.ofSize(getInvSize() + 10, ItemStackUtil.empty()); // 27 + 10 slots
     //public ItemStackList craftingInvItems = ItemStackList.ofSize(10, ItemStackUtil.empty());
 
 
-    public ItemStackList getAllItems() {
-        return allItems;
+    public ItemStackList getAllStacks() {
+        return allStacks;
     }
 
-    public ClippedItemStackList invItems = ClippedItemStackList.of(getAllItems(), 0, getInvSize());
-    public ClippedItemStackList craftingInventory = ClippedItemStackList.of(getAllItems(), getInvSize(), getInvSize() + 10);
+    public ClippedItemStackList invItems = ClippedItemStackList.of(getAllStacks(), 0, getInvSize());
+    public ClippedItemStackList craftingInventory = ClippedItemStackList.of(getAllStacks(), getInvSize(), getInvSize() + 10);
     public ClippedItemStackList getCraftingInventory() {
         return craftingInventory;
     }
@@ -125,7 +125,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
             needRemoveCraftingInv = false;
         }
 
-        NbtRWUtil.putInv(args, getAllItems());
+        NbtRWUtil.putInv(args, getAllStacks());
         NbtRWUtil.putDouble(args, "coolTime", coolTime);
         if (pos1 != null) {
             NbtRWUtil.putInt(args, "rangePos1X", pos1.getX());
@@ -153,7 +153,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
         if (callGetWorld() != null || !args.hasRegistryLookup())
             args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
-        NbtRWUtil.getInv(args, getAllItems());
+        NbtRWUtil.getInv(args, getAllStacks());
 
         // Inventory統合前の旧バージョンのNBT互換性のため
         if (NbtUtil.has(args.getNbt(), "craftingInv")) {
