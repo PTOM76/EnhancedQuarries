@@ -30,10 +30,13 @@ public class FillerCraftingSlot extends CompatibleSlot {
     @Override
     public void callSetStack(ItemStack stack) {
         super.callSetStack(stack);
+
+        if (isCrafting) return;
+
         if (isOutput) {
-            if (ItemStackUtil.isEmpty(stack) && !isCrafting) {
+            if (ItemStackUtil.isEmpty(stack)) {
                 int i;
-                for (i = 0;i < 9;i++) {
+                for (i = 0; i < 9; i++) {
                     InventoryUtil.setStack(callGetInventory(), i, ItemStackUtil.empty());
                 }
             }
@@ -49,15 +52,24 @@ public class FillerCraftingSlot extends CompatibleSlot {
     @Override
     public ItemStack callTakeStack(int amount) {
         ItemStack stack = super.callTakeStack(amount);
+
+        if (isCrafting) return stack;
+
         if (isOutput) {
-            if (callGetStack().isEmpty() && !isCrafting) {
+            if (callGetStack().isEmpty()) {
                 int i;
                 for (i = 0;i < 9;i++) {
                     InventoryUtil.setStack(callGetInventory(), i, ItemStackUtil.empty());
                 }
             }
 
+            return stack;
         }
+
+        isCrafting = true;
+        tryCraft();
+        isCrafting = false;
+
         return stack;
     }
 
