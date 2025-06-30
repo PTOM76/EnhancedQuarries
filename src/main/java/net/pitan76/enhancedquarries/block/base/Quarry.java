@@ -1,7 +1,6 @@
 package net.pitan76.enhancedquarries.block.base;
 
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.block.Frame;
@@ -80,7 +79,7 @@ public abstract class Quarry extends BaseBlock {
         BlockState state = e.getMidohraState();
 
         if (state.isEmpty() || e.newState == null) return;
-        if (state.getBlock().get() == BlockStateUtil.getBlock(e.newState)) {
+        if (e.isSameState()) {
             super.onStateReplaced(e);
             return;
         }
@@ -93,14 +92,15 @@ public abstract class Quarry extends BaseBlock {
                 return;
             }
 
-            ItemScattererUtil.spawn(world, pos, (QuarryTile) blockEntity);
-
             // モジュールの返却
             if (!quarry.isEmptyInModules()) {
                 for (ItemStack module : quarry.getModuleStacks()) {
                     ItemEntityUtil.createWithSpawn(world.getRaw(), module, pos.toRaw());
                 }
+                quarry.getModuleStacks().clear();
             }
+
+            ItemScattererUtil.spawn(world, pos, (QuarryTile) blockEntity);
 
             // フレーム破壊
             BlockPos framePos = null;
@@ -128,7 +128,7 @@ public abstract class Quarry extends BaseBlock {
         BlockState fstate = e.getMidohraState();
 
         BlockState state;
-        state = (world.getBlockState(pos) == null) ? fstate : world.getBlockState(pos);
+        state = (e.getState() == null) ? fstate : e.getMidohraState();
         if (e.isClient()) return;
         BlockEntity blockEntity = e.getBlockEntity();
 

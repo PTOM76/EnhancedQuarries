@@ -42,26 +42,29 @@ public abstract class Filler extends BaseBlock {
     public void onStateReplaced(StateReplacedEvent e) {
         if (e.state == null || e.newState == null) return;
 
-        if (BlockStateUtil.getBlock(e.state) != BlockStateUtil.getBlock(e.newState)) {
-            BlockEntity blockEntity = e.getBlockEntity();
-            if (blockEntity instanceof FillerTile) {
-                FillerTile filler = (FillerTile) blockEntity;
-                if (filler.keepNbtOnDrop) {
-                    super.onStateReplaced(e);
-                    return;
-                }
-
-                ItemScattererUtil.spawn(e.world, e.pos, filler.getItems());
-                filler.getCraftingInventory().set(9, ItemStackUtil.empty());
-                //InventoryUtil.setStack(filler.getCraftingInventory(), 9, ItemStackUtil.empty());
-                ItemScattererUtil.spawn(e.world, e.pos, filler.getCraftingInventory());
-
-                // モジュールの返却
-                if (filler.canBedrockBreak())
-                    ItemEntityUtil.createWithSpawn(e.world,
-                            ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1), e.pos);
-            }
+        if (e.isSameState()) {
+            super.onStateReplaced(e);
+            return;
         }
+
+        BlockEntity blockEntity = e.getBlockEntity();
+        if (blockEntity instanceof FillerTile) {
+            FillerTile filler = (FillerTile) blockEntity;
+            if (filler.keepNbtOnDrop) {
+                super.onStateReplaced(e);
+                return;
+            }
+
+            // モジュールの返却
+            if (filler.canBedrockBreak())
+                ItemEntityUtil.createWithSpawn(e.world, ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1), e.pos);
+
+            filler.getCraftingInventory().set(9, ItemStackUtil.empty());
+            ItemScattererUtil.spawn(e.world, e.pos, filler.getAllItems());
+            //InventoryUtil.setStack(filler.getCraftingInventory(), 9, ItemStackUtil.empty());
+            //ItemScattererUtil.spawn(e.world, e.pos, filler.getCraftingInventory());
+        }
+
         super.onStateReplaced(e);
     }
 
