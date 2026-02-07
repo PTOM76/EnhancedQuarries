@@ -24,6 +24,8 @@ public class MarkerRenderer extends CompatBlockEntityRenderer<MarkerTile> {
     @Override
     public void render(BlockEntityRenderEvent<MarkerTile> e) {
         MarkerTile entity = e.getBlockEntity();
+        if (e.blockEntity == null) return;
+
         BlockPos pos = entity.callGetPos();
 
         if (entity.maxX == null || entity.maxY == null || entity.maxZ == null
