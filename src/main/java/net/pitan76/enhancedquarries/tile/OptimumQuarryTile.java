@@ -121,6 +121,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)));
                         if (entities.isEmpty()) return true;
                         for (ItemEntity itemEntity : entities) {
+                            if (!EntityUtil.isAlive(itemEntity)) continue;
                             addStack(ItemEntityUtil.getStack(itemEntity));
                             EntityUtil.discard(itemEntity);
                         }

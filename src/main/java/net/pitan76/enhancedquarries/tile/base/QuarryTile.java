@@ -645,6 +645,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
                 List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(PosUtil.add(blockPos, -1, -1, -1), PosUtil.add(blockPos,1 ,1 ,1)));
                 for (ItemEntity itemEntity : entities) {
+                    if (!EntityUtil.isAlive(itemEntity)) continue;
                     addStack(ItemEntityUtil.getStack(itemEntity));
                     EntityUtil.discard(itemEntity);
                 }
@@ -746,6 +747,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                             List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)));
                             if (entities.isEmpty()) return true;
                             for (ItemEntity itemEntity : entities) {
+                                if (!EntityUtil.isAlive(itemEntity)) continue;
                                 addStack(ItemEntityUtil.getStack(itemEntity));
                                 EntityUtil.discard(itemEntity);
                             }
