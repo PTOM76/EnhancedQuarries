@@ -122,7 +122,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         if (entities.isEmpty()) return true;
                         for (ItemEntity itemEntity : entities) {
                             addStack(ItemEntityUtil.getStack(itemEntity));
-                            EntityUtil.kill(itemEntity);
+                            EntityUtil.discard(itemEntity);
                         }
                         procZ++;
                         return true;

@@ -507,7 +507,6 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                 return PosUtil.flooredBlockPos(callGetPos().getX() + 6, callGetPos().getY() + 4, callGetPos().getZ() + 12);
             case SOUTH:
                 return PosUtil.flooredBlockPos(callGetPos().getX() + 6, callGetPos().getY() + 4, callGetPos().getZ());
-
             case WEST:
                 return PosUtil.flooredBlockPos(callGetPos().getX() + 12, callGetPos().getY() + 4, callGetPos().getZ() + 6);
             case EAST:
@@ -633,7 +632,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         }
 
         for (Direction value : Direction.values()) {
-            BlockPos offsetBlockPos = blockPos.offset(value);
+            BlockPos offsetBlockPos = PosUtil.offset(blockPos, value);
 
             if (WorldUtil.getBlockState(callGetWorld(), offsetBlockPos).getBlock() instanceof FluidBlock) {
                 // replace fluid block
@@ -644,10 +643,10 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
             if (!WorldUtil.getFluidState(callGetWorld(), offsetBlockPos).isEmpty() || callGetWorld().getFluidState(offsetBlockPos).isStill()) {
                 breakBlock(offsetBlockPos, true);
 
-                List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(blockPos.add(-1, -1, -1), blockPos.add( 1,  1, 1)));
+                List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(PosUtil.add(blockPos, -1, -1, -1), PosUtil.add(blockPos,1 ,1 ,1)));
                 for (ItemEntity itemEntity : entities) {
                     addStack(ItemEntityUtil.getStack(itemEntity));
-                    EntityUtil.kill(itemEntity);
+                    EntityUtil.discard(itemEntity);
                 }
 
                 WorldUtil.setBlockState(callGetWorld(), offsetBlockPos, getReplaceFluidWithBlock().getDefaultState());
@@ -718,7 +717,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                             continue;
                         }
                         if (PosUtil.y(minPos) - 1 >= procY) {
-                            if ( procBlock instanceof FluidBlock) {
+                            if (procBlock instanceof FluidBlock) {
                                 if (canReplaceFluid()
                                         && WorldUtil.getFluidState(callGetWorld(), procPos).isStill()
                                         && getEnergy() > getReplaceFluidEnergyCost()) {
@@ -746,9 +745,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                             breakBlock(procPos, true);
                             List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)));
                             if (entities.isEmpty()) return true;
-                            for(ItemEntity itemEntity : entities) {
+                            for (ItemEntity itemEntity : entities) {
                                 addStack(ItemEntityUtil.getStack(itemEntity));
-                                EntityUtil.kill(itemEntity);
+                                EntityUtil.discard(itemEntity);
                             }
                             return true;
                         }
