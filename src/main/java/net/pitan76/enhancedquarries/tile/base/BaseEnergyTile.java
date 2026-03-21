@@ -156,6 +156,10 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
         return Optional.ofNullable(WorldUtil.getBlockState(callGetWorld(), callGetPos()));
     }
 
+    abstract public boolean canInsertEnergy();
+
+    abstract public boolean canExtractEnergy();
+
     public void init() {
 
     }

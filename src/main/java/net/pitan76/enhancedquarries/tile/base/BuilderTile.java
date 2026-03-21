@@ -373,4 +373,14 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
     public ScreenHandler createMenu(CreateMenuEvent e) {
         return new BuilderScreenHandler(e.syncId, e.playerInventory, inventory, needInventory);
     }
+
+    @Override
+    public boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
+        return false;
+    }
 }

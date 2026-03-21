@@ -256,4 +256,14 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
     public ScreenHandler createMenu(CreateMenuEvent e) {
         return new ScannerScreenHandler(e.syncId, e.playerInventory, this);
     }
+
+    @Override
+    public boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
+        return false;
+    }
 }

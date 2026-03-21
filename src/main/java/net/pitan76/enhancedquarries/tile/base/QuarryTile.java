@@ -879,4 +879,14 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     public boolean canExtract(CanExtractArgs args) {
         return true;
     }
+
+    @Override
+    public boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
+        return false;
+    }
 }

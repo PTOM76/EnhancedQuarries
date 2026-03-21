@@ -491,4 +491,14 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     public ScreenHandler createMenu(CreateMenuEvent e) {
         return new FillerScreenHandler(e.syncId, e.playerInventory, this, craftingInventory.toInventory());
     }
+
+    @Override
+    public boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
+        return false;
+    }
 }

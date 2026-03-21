@@ -223,4 +223,14 @@ public class PumpTile extends BaseEnergyTile {
             coolTime = coolTime - getBasicSpeed();
         }
     }
+
+    @Override
+    public boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
+        return false;
+    }
 }

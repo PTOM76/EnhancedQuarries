@@ -70,4 +70,14 @@ public class TREnergyStorage extends SnapshotParticipant<Long> implements Energy
     protected void readSnapshot(Long snapshot) {
         tile.setEnergy(snapshot);
     }
+
+    @Override
+    public boolean supportsExtraction() {
+        return tile.canExtractEnergy();
+    }
+
+    @Override
+    public boolean supportsInsertion() {
+        return tile.canInsertEnergy();
+    }
 }

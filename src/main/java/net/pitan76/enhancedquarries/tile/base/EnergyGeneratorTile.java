@@ -242,4 +242,14 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
     public ScreenHandler createMenu(CreateMenuEvent e) {
         return new EnergyGeneratorScreenHandler(e, this);
     }
+
+    @Override
+    public boolean canInsertEnergy() {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
+        return true;
+    }
 }
