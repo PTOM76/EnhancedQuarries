@@ -13,6 +13,7 @@ import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.gui.v2.ExtendedScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
@@ -67,7 +68,7 @@ public class EnergyGenerator extends BaseBlock {
         if (e.stack.getItem() instanceof WrenchItem) return e.pass();
 
         if (e.getBlockEntity() instanceof EnergyGeneratorTile)
-            player.openExtendedMenu((EnergyGeneratorTile) e.getBlockEntity());
+            player.openExtendedMenu((ExtendedScreenHandlerFactory) e.getBlockEntity());
 
         return e.consume();
     }
