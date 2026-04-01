@@ -20,7 +20,7 @@ import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.extra.transfer.util.FluidStorageUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
-import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -148,7 +148,7 @@ public class PumpTile extends BaseEnergyTile {
 
                     BlockStatePos b = new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), procPos), procPos, callGetWorld());
                     if (center.getBlockPos().getManhattanDistance(b.getBlockPos()) <= radius) {
-                        if (b.getBlockPos().equals(callGetPos().down())) continue;
+                        if (b.getBlockPos().equals(PosUtil.down(callGetPos()))) continue;
                         sphere.add(b);
                         return sphere;
                     }
@@ -156,8 +156,8 @@ public class PumpTile extends BaseEnergyTile {
 
             }
         }
-        if (!WorldUtil.getFluidState(callGetWorld(), callGetPos().down()).isEmpty()) {
-            sphere.add(new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), callGetPos().down()), callGetPos().down(), callGetWorld()));
+        if (!WorldUtil.getFluidState(callGetWorld(), PosUtil.down(callGetPos())).isEmpty()) {
+            sphere.add(new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), PosUtil.down(callGetPos())), PosUtil.down(callGetPos()), callGetWorld()));
         }
         return sphere;
     }
@@ -167,7 +167,7 @@ public class PumpTile extends BaseEnergyTile {
         if (storedFluid.getAmount() >= storedFluid.getCapacity()) {
             return false;
         }
-        if (WorldUtil.getFluidState(world, callGetPos().down()).isEmpty() && WorldUtil.getFluidState(world, callGetPos().down(2)).isEmpty() && WorldUtil.getFluidState(world, callGetPos().down(3)).isEmpty())
+        if (WorldUtil.getFluidState(world, PosUtil.down(callGetPos())).isEmpty() && WorldUtil.getFluidState(world, callGetPos().down(2)).isEmpty() && WorldUtil.getFluidState(world, callGetPos().down(3)).isEmpty())
             return false;
         BlockStatePos statePos = getFarFluid();
         try {
