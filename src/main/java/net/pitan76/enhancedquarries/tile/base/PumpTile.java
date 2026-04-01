@@ -147,7 +147,7 @@ public class PumpTile extends BaseEnergyTile {
                     if (!fluidState.isStill()) continue;
 
                     BlockStatePos b = new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), procPos), procPos, callGetWorld());
-                    if (center.getBlockPos().getManhattanDistance(b.getBlockPos()) <= radius) {
+                    if (center.getBlockPos().getManhattanDistance(b.getBlockPos()) <= radius) { // TODO: getManhattanDistanceをMCPitanLibに実装して置き換える
                         if (b.getBlockPos().equals(PosUtil.down(callGetPos()))) continue;
                         sphere.add(b);
                         return sphere;
