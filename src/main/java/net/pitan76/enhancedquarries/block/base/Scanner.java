@@ -12,7 +12,6 @@ import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
@@ -61,9 +60,9 @@ public abstract class Scanner extends BaseBlock {
     @Override
     public void onPlaced(BlockPlacedEvent e) {
         super.onPlaced(e);
-        World world = World.of(e.world);
-        BlockPos pos = BlockPos.of(e.pos);
-        BlockState state = (world.getBlockState(pos) == null) ? BlockState.of(e.state) : world.getBlockState(pos);
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        BlockState state = (world.getBlockState(pos).toMinecraft() == null) ? e.getMidohraState() : world.getBlockState(pos);
 
         if (e.isClient()) return;
         if (!(e.getBlockEntity() instanceof ScannerTile)) return;
@@ -106,8 +105,8 @@ public abstract class Scanner extends BaseBlock {
                 world.breakBlock(markerSP.getBlockPos(), true);
             }
             if (markerList.size() <= 2) return;
-            scannerTile.setPos1(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
-            scannerTile.setPos2(PosUtil.flooredBlockPos(maxPosX, maxPosY, maxPosZ));
+            scannerTile.setPos1(BlockPos.of(minPosX, minPosY, minPosZ));
+            scannerTile.setPos2(BlockPos.of(maxPosX, maxPosY, maxPosZ));
         }
     }
 }

@@ -58,8 +58,8 @@ public class OptimumQuarryTile extends NormalQuarryTile {
         if (getMaxPos() == null)
             setMaxPos(getDefaultRangeMaxPos());
 
-        BlockPos minPos = BlockPos.of(getMinPos());
-        BlockPos maxPos = BlockPos.of(getMaxPos());
+        BlockPos minPos = getMinPos();
+        BlockPos maxPos = getMaxPos();
         if (procX == null || procY == null || procZ == null) {
             procX = minPos.getX();
             procY = maxPos.getY();
@@ -108,16 +108,16 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                             }
                         }
                         if (hasModuleItem(ModuleItems.MOB_DELETE_MODULE)) {
-                            tryDeleteMob(procPos.toRaw());
+                            tryDeleteMob(procPos);
                         }
                         if (hasModuleItem(ModuleItems.MOB_KILL_MODULE)) {
-                            tryKillMob(procPos.toRaw());
+                            tryKillMob(procPos);
                         }
                         if (hasModuleItem(ModuleItems.EXP_COLLECT_MODULE)) {
-                            tryCollectExp(procPos.toRaw());
+                            tryCollectExp(procPos);
                         }
 
-                        breakBlock(procPos.toRaw(), true);
+                        breakBlock(procPos, true);
                         List<ItemEntity> entities = ItemEntityUtil.getEntities(callGetWorld(), BoxUtil.createBox(PosUtil.flooredBlockPos(procX - 1, procY - 1, procZ - 1), PosUtil.flooredBlockPos(procX + 1, procY + 1, procZ + 1)));
                         if (entities.isEmpty()) return true;
                         for (ItemEntity itemEntity : entities) {
@@ -171,20 +171,20 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         }
                     }
                     if (hasModuleItem(ModuleItems.MOB_DELETE_MODULE))
-                        tryDeleteMob(procPos.toRaw());
+                        tryDeleteMob(procPos);
 
                     if (hasModuleItem(ModuleItems.MOB_KILL_MODULE))
-                        tryKillMob(procPos.toRaw());
+                        tryKillMob(procPos);
 
                     if (hasModuleItem(ModuleItems.EXP_COLLECT_MODULE))
-                        tryCollectExp(procPos.toRaw());
+                        tryCollectExp(procPos);
 
                     if (procBlock instanceof FluidBlock && !FluidUtil.isStill(world.getRawFluidState(procPos)))
                         return continueQuarrying();
 
                     if (procBlock instanceof Frame) return continueQuarrying();
 
-                    breakBlock(procPos.toRaw(), false);
+                    breakBlock(procPos, false);
                     return true;
                 } else {
                     procZ = minPos.getZ();

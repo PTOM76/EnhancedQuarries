@@ -16,7 +16,6 @@ import net.pitan76.mcpitanlib.api.item.CompatItems;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
@@ -205,8 +204,8 @@ public abstract class Quarry extends BaseBlock {
                 if (markerList.size() <= 2 ) return;
                 if (maxPosY.equals(minPosY)) maxPosY += 4;
 
-                quarryTile.setMinPos(PosUtil.flooredBlockPos(minPosX, minPosY, minPosZ));
-                quarryTile.setMaxPos(PosUtil.flooredBlockPos(maxPosX + 1, maxPosY, maxPosZ + 1));
+                quarryTile.setMinPos(BlockPos.of(minPosX, minPosY, minPosZ));
+                quarryTile.setMaxPos(BlockPos.of(maxPosX + 1, maxPosY, maxPosZ + 1));
             }
         }
 

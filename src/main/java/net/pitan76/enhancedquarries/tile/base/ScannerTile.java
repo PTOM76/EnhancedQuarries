@@ -1,14 +1,9 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.base.Scanner;
@@ -24,8 +19,11 @@ import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.block.MCBlocks;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
@@ -67,14 +65,14 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
         NbtRWUtil.putInv(args, getItems());
         NbtRWUtil.putDouble(args, "coolTime", coolTime);
         if (pos1 != null) {
-            NbtRWUtil.putInt(args, "rangePos1X", PosUtil.x(pos1));
-            NbtRWUtil.putInt(args, "rangePos1Y", PosUtil.y(pos1));
-            NbtRWUtil.putInt(args, "rangePos1Z", PosUtil.z(pos1));
+            NbtRWUtil.putInt(args, "rangePos1X", pos1.getX());
+            NbtRWUtil.putInt(args, "rangePos1Y", pos1.getY());
+            NbtRWUtil.putInt(args, "rangePos1Z", pos1.getZ());
         }
         if (pos2 != null) {
-            NbtRWUtil.putInt(args, "rangePos2X", PosUtil.x(pos2));
-            NbtRWUtil.putInt(args, "rangePos2Y", PosUtil.y(pos2));
-            NbtRWUtil.putInt(args, "rangePos2Z", PosUtil.z(pos2));
+            NbtRWUtil.putInt(args, "rangePos2X", pos2.getX());
+            NbtRWUtil.putInt(args, "rangePos2Y", pos2.getY());
+            NbtRWUtil.putInt(args, "rangePos2Z", pos2.getZ());
         }
     }
 
@@ -91,8 +89,8 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
         int pos2y = NbtRWUtil.getIntOrDefault(args, "rangePos2Y", 0);
         int pos2z = NbtRWUtil.getIntOrDefault(args, "rangePos2Z", 0);
 
-        setPos1(PosUtil.flooredBlockPos(pos1x, pos1y, pos1z));
-        setPos2(PosUtil.flooredBlockPos(pos2x, pos2y, pos2z));
+        setPos1(BlockPos.of(pos1x, pos1y, pos1z));
+        setPos2(BlockPos.of(pos2x, pos2y, pos2z));
     }
 
     // ----
@@ -111,12 +109,12 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
 
     public void tick(TileTickEvent<BaseEnergyTile> e) {
         super.tick(e);
-        World world = e.world;
-        BlockPos pos = e.pos;
-        if (world == null || WorldUtil.isClient(world)) return;
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        if (world == null || e.isClient()) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
+        if (world.isReceivingRedstonePower(pos)) {
             if (isActive())
                 Scanner.setActive(false, world, pos);
             
@@ -131,8 +129,8 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
                 coolTime = getSettingCoolTime();
                 Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
                 if (tryScanning(blocks)) {
-                    ItemStack stack = ItemStackUtil.create(Items.BLUEPRINT, getItems().get(0).getCount());
-                    BlueprintUtil.writeNbt2(stack, blocks);
+                    ItemStack stack = ItemStackUtil.create(Items.BLUEPRINT, getItems().getAsMidohra(0).getCount());
+                    BlueprintUtil.writeNbt(stack, blocks);
                     getItems().set(1, stack);
                     getItems().set(0, ItemStackUtil.empty());
                     useEnergy(getEnergyCost());
@@ -152,7 +150,10 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
     // blocks...スキャナーを基準とした相対的な座標
     public boolean tryScanning(Map<BlockPos, BlockState> blocks) {
         EnhancedQuarries.logIfDev("scanning");
-        if (callGetWorld() == null || WorldUtil.isClient(callGetWorld()) || pos1 == null || pos2 == null)
+
+        World world = getMidohraWorld();
+
+        if (world.toMinecraft() == null || world.isClient() || pos1 == null || pos2 == null)
             return false;
         
         int procX;
@@ -161,12 +162,12 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
         for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
-                    BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                    BlockState procState = WorldUtil.getBlockState(callGetWorld(), procPos);
+                    BlockPos procPos = BlockPos.of(procX, procY, procZ);
+                    BlockState procState = world.getBlockState(procPos);
 
-                    if (procState.getBlock() == Blocks.AIR) continue;
+                    if (procState.getBlock() == MCBlocks.AIR) continue;
 
-                    blocks.put(PosUtil.flooredBlockPos(procX - pos1.getX(), procY - pos1.getY(), procZ - pos1.getZ()), procState);
+                    blocks.put(BlockPos.of(procX - pos1.getX(), procY - pos1.getY(), procZ - pos1.getZ()), procState);
                 }
             }
         }
