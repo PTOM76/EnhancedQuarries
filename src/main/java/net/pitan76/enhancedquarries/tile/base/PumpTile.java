@@ -4,13 +4,9 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.Pump;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
@@ -18,9 +14,13 @@ import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.extra.transfer.util.FluidStorageUtil;
+import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
+import net.pitan76.mcpitanlib.api.util.FluidStateUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.fluid.FluidWrapper;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -90,16 +90,16 @@ public class PumpTile extends BaseEnergyTile {
 
     public void tick(TileTickEvent<BaseEnergyTile> e) {
         super.tick(e);
-        World world = e.world;
-        BlockPos pos = e.pos;
-        BlockState state = e.state;
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        BlockState state = e.getMidohraState();
 
-        if (world == null || WorldUtil.isClient(world)) return;
+        if (world == null || e.isClient()) return;
 
-        if (!(state.getBlock() instanceof Pump)) return;
+        if (!(e.getBlock() instanceof Pump)) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
+        if (world.isReceivingRedstonePower(pos)) {
             if (isActive())
                  Pump.setActive(false, world, pos);
             return;
@@ -123,9 +123,10 @@ public class PumpTile extends BaseEnergyTile {
     }
 
     public BlockStatePos getFarFluid() {
-        for (BlockStatePos statePos : sphereAround(callGetPos(), 30)) {
-            if (statePos.getBlockState().getFluidState().getFluid() != null && statePos.getBlockState().getFluidState().isStill()) {
-                //if (statePos.getBlockState().getFluidState().getFluid().equals(fluid))
+        BlockPos pos = getMidohraPos();
+        for (BlockStatePos statePos : sphereAround(pos, 30)) {
+            // TODO: MidohraのBlockStateにgetFluidStateを実装して置き換える
+            if (!FluidStateUtil.getFluidWrapper(statePos.getBlockState()).isEmpty() && BlockStateUtil.getFluidState(statePos.getBlockState().toMinecraft()).isStill()) {
                 return statePos;
             }
         }
@@ -133,22 +134,26 @@ public class PumpTile extends BaseEnergyTile {
     }
 
     public Set<BlockStatePos> sphereAround(BlockPos pos, int radius) {
+        World world = getMidohraWorld();
+
         Set<BlockStatePos> sphere = new HashSet<>();
-        BlockStatePos center = new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), pos), pos, callGetWorld());
+        BlockStatePos center = new BlockStatePos(world.getBlockState(pos), pos, world);
+        BlockPos tilePos = getMidohraPos();
+
         for (int x = -radius; x <= radius; x++) {
             for(int y = -radius; y <= radius; y++) {
                 for(int z = -radius; z <= radius; z++) {
                     BlockPos procPos = center.getBlockPos().add(x, y, z);
-                    if (WorldUtil.getBlockState(callGetWorld(), procPos).getBlock() instanceof AirBlock) continue;
+                    if (world.getBlockState(procPos).isAir()) continue;
 
-                    FluidState fluidState = WorldUtil.getFluidState(callGetWorld(), procPos);
+                    FluidState fluidState = world.getFluidState(procPos.toMinecraft());
                     if (fluidState.isEmpty()) continue;
                     if (fluidState.getFluid() == null) continue;
                     if (!fluidState.isStill()) continue;
 
-                    BlockStatePos b = new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), procPos), procPos, callGetWorld());
+                    BlockStatePos b = new BlockStatePos(world.getBlockState(procPos), procPos, world);
                     if (center.getBlockPos().getManhattanDistance(b.getBlockPos()) <= radius) { // TODO: getManhattanDistanceをMCPitanLibに実装して置き換える
-                        if (b.getBlockPos().equals(PosUtil.down(callGetPos()))) continue;
+                        if (b.getBlockPos().equals(tilePos.down())) continue;
                         sphere.add(b);
                         return sphere;
                     }
@@ -156,33 +161,37 @@ public class PumpTile extends BaseEnergyTile {
 
             }
         }
-        if (!WorldUtil.getFluidState(callGetWorld(), PosUtil.down(callGetPos())).isEmpty()) {
-            sphere.add(new BlockStatePos(WorldUtil.getBlockState(callGetWorld(), PosUtil.down(callGetPos())), PosUtil.down(callGetPos()), callGetWorld()));
+        if (!world.getFluidState(tilePos.down().toMinecraft()).isEmpty()) {
+            sphere.add(new BlockStatePos(world.getBlockState(tilePos.down()), tilePos.down(), world));
         }
         return sphere;
     }
 
     public boolean tryPump(World world) {
         //EnhancedQuarries.log(Level.INFO, getStored().amount().asInt(1) + "");
-        if (storedFluid.getAmount() >= storedFluid.getCapacity()) {
+        if (storedFluid.getAmount() >= storedFluid.getCapacity()) return false;
+
+        BlockPos pos = getMidohraPos();
+        if (world.getFluidState(pos.down().toMinecraft()).isEmpty() &&
+                world.getFluidState(pos.down(2).toMinecraft()).isEmpty() &&
+                world.getFluidState(pos.down(3).toMinecraft()).isEmpty())
             return false;
-        }
-        if (WorldUtil.getFluidState(world, PosUtil.down(callGetPos())).isEmpty() && WorldUtil.getFluidState(world, callGetPos().down(2)).isEmpty() && WorldUtil.getFluidState(world, callGetPos().down(3)).isEmpty())
-            return false;
+
         BlockStatePos statePos = getFarFluid();
         try {
             BlockState state = statePos.getBlockState();
-            WorldUtil.removeBlock(world, statePos.getBlockPos(), false);
-            FluidState fluidState = state.getFluidState();
+            world.removeBlock(statePos.getBlockPos(), false);
+            FluidWrapper fluid = FluidStateUtil.getFluidWrapper(state);
+            if (fluid.get() == null) return false;
+
             try (Transaction transaction = Transaction.openOuter()) {
-                storedFluid.insert(FluidVariant.of(fluidState.getFluid()), FluidConstants.BUCKET, transaction);
+                storedFluid.insert(FluidVariant.of(fluid.get()), FluidConstants.BUCKET, transaction);
                 transaction.commit();
             }
             return !FluidStorageUtil.isEmpty(storedFluid);
         } catch (NullPointerException e) {
             return false;
         }
-
     }
 
     public void coolTimeBonus() {

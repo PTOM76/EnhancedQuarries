@@ -7,12 +7,12 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 public class FluidQuarryTile extends EnhancedQuarryTile {
 
     // 継承のため
-    public FluidQuarryTile(BlockEntityType<?> type, TileCreateEvent event) {
-        super(type, event);
+    public FluidQuarryTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
     }
 
-    public FluidQuarryTile(TileCreateEvent event) {
-        this(Tiles.FLUID_QUARRY_TILE.getOrNull(), event);
+    public FluidQuarryTile(TileCreateEvent e) {
+        this(Tiles.FLUID_QUARRY_TILE.getOrNull(), e);
     }
 
     @Override

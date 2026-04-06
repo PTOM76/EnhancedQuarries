@@ -1,9 +1,7 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.pitan76.enhancedquarries.Blocks;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.event.v2.BlockStatePos;
@@ -22,9 +20,12 @@ import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.state.property.BooleanProperty;
 import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
 import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
+import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.VoxelShapeUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.world.World;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvider {
 
@@ -55,12 +57,12 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
         setDefaultState(this.getDefaultMidohraState().with(FACING, Direction.NORTH).with(ACTIVE, false));
     }
 
-    protected static VoxelShape UP_SHAPE = Block.createCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
-    protected static VoxelShape DOWN_SHAPE = Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 16.0D, 10.0D);
-    protected static VoxelShape NORTH_SHAPE = Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 16.0D);
-    protected static VoxelShape SOUTH_SHAPE = Block.createCuboidShape(6.0D, 6.0D, 0.0D, 10.0D, 10.0D, 10.0D);
-    protected static VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
-    protected static VoxelShape WEST_SHAPE = Block.createCuboidShape(6.0D, 6.0D, 6.0D, 16.0D, 10.0D, 10.0D);
+    protected static VoxelShape UP_SHAPE = VoxelShapeUtil.blockCuboid(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
+    protected static VoxelShape DOWN_SHAPE = VoxelShapeUtil.blockCuboid(6.0D, 6.0D, 6.0D, 10.0D, 16.0D, 10.0D);
+    protected static VoxelShape NORTH_SHAPE = VoxelShapeUtil.blockCuboid(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 16.0D);
+    protected static VoxelShape SOUTH_SHAPE = VoxelShapeUtil.blockCuboid(6.0D, 6.0D, 0.0D, 10.0D, 10.0D, 10.0D);
+    protected static VoxelShape EAST_SHAPE = VoxelShapeUtil.blockCuboid(0.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
+    protected static VoxelShape WEST_SHAPE = VoxelShapeUtil.blockCuboid(6.0D, 6.0D, 6.0D, 16.0D, 10.0D, 10.0D);
 
     @Override
     public VoxelShape getOutlineShape(OutlineShapeEvent e) {
@@ -76,14 +78,14 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
     }
 
     @Override
-    public VoxelShape getCollisionShape(CollisionShapeEvent event) {
-        return VoxelShapes.empty();
+    public VoxelShape getCollisionShape(CollisionShapeEvent e) {
+        return VoxelShapeUtil.empty();
     }
 
     public static void searchMarker(net.minecraft.world.World world, net.minecraft.util.math.BlockPos pos, List<net.pitan76.enhancedquarries.event.BlockStatePos> list) {
         List<BlockStatePos> list2 = new ArrayList<>();
         for (net.pitan76.enhancedquarries.event.BlockStatePos blockStatePos : list) {
-            list2.add(new BlockStatePos(BlockState.of(blockStatePos.getBlockState()), BlockPos.of(blockStatePos.getBlockPos()), World.of(blockStatePos.getWorld())));
+            list2.add(new BlockStatePos(blockStatePos.getBlockState(), blockStatePos.getBlockPos(), blockStatePos.getWorld()));
         }
 
         searchMarker(World.of(world), BlockPos.of(pos), list2);
@@ -179,9 +181,10 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
 
         MarkerTile tile = null;
         if (e.hasBlockEntity()) {
-            BlockEntity blockEntity = e.getBlockEntity();
-            if (blockEntity instanceof MarkerTile) {
-                tile = (MarkerTile) blockEntity;
+            BlockEntityWrapper blockEntity = e.getBlockEntityWrapper();
+            Optional<CompatBlockEntity> optionalBlockEntity = blockEntity.toCompatBlockEntity();
+            if (optionalBlockEntity.isPresent() && optionalBlockEntity.get() instanceof MarkerTile) {
+                tile = (MarkerTile) optionalBlockEntity.get();
                 tile.clear();
             }
         }
