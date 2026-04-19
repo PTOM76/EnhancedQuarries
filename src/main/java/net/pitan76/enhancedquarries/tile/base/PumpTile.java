@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.NbtCompound;
 import net.pitan76.enhancedquarries.block.base.Pump;
 import net.pitan76.enhancedquarries.event.BlockStatePos;
@@ -14,10 +13,10 @@ import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.extra.transfer.util.FluidStorageUtil;
-import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import net.pitan76.mcpitanlib.api.util.FluidStateUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.fluid.FluidState;
 import net.pitan76.mcpitanlib.midohra.fluid.FluidWrapper;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.world.World;
@@ -94,7 +93,7 @@ public class PumpTile extends BaseEnergyTile {
         BlockPos pos = e.getMidohraPos();
         BlockState state = e.getMidohraState();
 
-        if (world == null || e.isClient()) return;
+        if (world.isNull() || e.isClient()) return;
 
         if (!(e.getBlock() instanceof Pump)) return;
 
@@ -125,8 +124,8 @@ public class PumpTile extends BaseEnergyTile {
     public BlockStatePos getFarFluid() {
         BlockPos pos = getMidohraPos();
         for (BlockStatePos statePos : sphereAround(pos, 30)) {
-            // TODO: MidohraのBlockStateにgetFluidStateを実装して置き換える
-            if (!FluidStateUtil.getFluidWrapper(statePos.getBlockState()).isEmpty() && BlockStateUtil.getFluidState(statePos.getBlockState().toMinecraft()).isStill()) {
+            FluidState fluidState = statePos.getBlockState().getFluidState();
+            if (!fluidState.isEmpty() && fluidState.isStill()) {
                 return statePos;
             }
         }
@@ -146,13 +145,13 @@ public class PumpTile extends BaseEnergyTile {
                     BlockPos procPos = center.getBlockPos().add(x, y, z);
                     if (world.getBlockState(procPos).isAir()) continue;
 
-                    FluidState fluidState = world.getFluidState(procPos.toMinecraft());
+                    FluidState fluidState = world.getFluidState(procPos);
                     if (fluidState.isEmpty()) continue;
-                    if (fluidState.getFluid() == null) continue;
+                    if (fluidState.getFluid().isEmpty()) continue;
                     if (!fluidState.isStill()) continue;
 
                     BlockStatePos b = new BlockStatePos(world.getBlockState(procPos), procPos, world);
-                    if (center.getBlockPos().getManhattanDistance(b.getBlockPos()) <= radius) { // TODO: getManhattanDistanceをMCPitanLibに実装して置き換える
+                    if (center.getBlockPos().getManhattanDistance(b.getBlockPos()) <= radius) {
                         if (b.getBlockPos().equals(tilePos.down())) continue;
                         sphere.add(b);
                         return sphere;
@@ -161,7 +160,7 @@ public class PumpTile extends BaseEnergyTile {
 
             }
         }
-        if (!world.getFluidState(tilePos.down().toMinecraft()).isEmpty()) {
+        if (!world.getFluidState(tilePos.down()).isEmpty()) {
             sphere.add(new BlockStatePos(world.getBlockState(tilePos.down()), tilePos.down(), world));
         }
         return sphere;
@@ -182,7 +181,7 @@ public class PumpTile extends BaseEnergyTile {
             BlockState state = statePos.getBlockState();
             world.removeBlock(statePos.getBlockPos(), false);
             FluidWrapper fluid = FluidStateUtil.getFluidWrapper(state);
-            if (fluid.get() == null) return false;
+            if (fluid.isEmpty()) return false;
 
             try (Transaction transaction = Transaction.openOuter()) {
                 storedFluid.insert(FluidVariant.of(fluid.get()), FluidConstants.BUCKET, transaction);

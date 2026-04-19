@@ -1,18 +1,9 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.base.Builder;
 import net.pitan76.enhancedquarries.inventory.DisabledInventory;
@@ -34,8 +25,14 @@ import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.event.BlockEventGenerator;
 import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.block.BlockWrapper;
+import net.pitan76.mcpitanlib.midohra.block.MCBlocks;
+import net.pitan76.mcpitanlib.midohra.item.ItemStack;
+import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.storagebox.api.StorageBoxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,14 +78,14 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         NbtRWUtil.putInv(args, getItems());
         NbtRWUtil.putDouble(args, "coolTime", coolTime);
         if (pos1 != null) {
-            NbtRWUtil.putInt(args, "rangePos1X", PosUtil.x(pos1));
-            NbtRWUtil.putInt(args, "rangePos1Y", PosUtil.y(pos1));
-            NbtRWUtil.putInt(args, "rangePos1Z", PosUtil.z(pos1));
+            NbtRWUtil.putInt(args, "rangePos1X", pos1.getX());
+            NbtRWUtil.putInt(args, "rangePos1Y", pos1.getY());
+            NbtRWUtil.putInt(args, "rangePos1Z", pos1.getZ());
         }
         if (pos2 != null) {
-            NbtRWUtil.putInt(args, "rangePos2X", PosUtil.x(pos2));
-            NbtRWUtil.putInt(args, "rangePos2Y", PosUtil.y(pos2));
-            NbtRWUtil.putInt(args, "rangePos2Z", PosUtil.z(pos2));
+            NbtRWUtil.putInt(args, "rangePos2X", pos2.getX());
+            NbtRWUtil.putInt(args, "rangePos2Y", pos2.getY());
+            NbtRWUtil.putInt(args, "rangePos2Z", pos2.getZ());
         }
     }
 
@@ -105,8 +102,8 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         int pos2y = NbtRWUtil.getIntOrDefault(args, "rangePos2Y", 0);
         int pos2z = NbtRWUtil.getIntOrDefault(args, "rangePos2Z", 0);
 
-        setPos1(PosUtil.flooredBlockPos(pos1x, pos1y, pos1z));
-        setPos2(PosUtil.flooredBlockPos(pos2x, pos2y, pos2z));
+        setPos1(BlockPos.of(pos1x, pos1y, pos1z));
+        setPos2(BlockPos.of(pos2x, pos2y, pos2z));
     }
 
     // ----
@@ -128,45 +125,44 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
     @Override
     public void tick(TileTickEvent<BaseEnergyTile> e) {
         super.tick(e);
-        World world = e.world;
-        BlockPos pos = e.pos;
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
         if (e.isClient()) return;
 
         // レッドストーン受信で無効
-        if (WorldUtil.isReceivingRedstonePower(world, pos)) {
+        if (world.isReceivingRedstonePower(pos)) {
             if (isActive())
                 Builder.setActive(false, world, pos);
             return;
         }
 
-        ItemStack blueprint = InventoryUtil.getStack(inventory, 0);
+        ItemStack blueprint = ItemStack.of(InventoryUtil.getStack(inventory, 0));
 
-        if (CustomDataUtil.hasNbt(blueprint) && blueprint.getItem() == Items.BLUEPRINT) {
+        if (blueprint.hasCustomNbt() && blueprint.getRawItem() == Items.BLUEPRINT) {
             if (blueprintMap.isEmpty()) {
                 blueprintMap = BlueprintUtil.readNbt(blueprint, getFacing());
-                pos1 = pos.add(BlueprintUtil.getMinPos(blueprintMap).toMinecraft());
-                pos2 = pos.add(BlueprintUtil.getMaxPos(blueprintMap).toMinecraft());
+                pos1 = pos.add(BlueprintUtil.getMinPos(blueprintMap));
+                pos2 = pos.add(BlueprintUtil.getMaxPos(blueprintMap));
 
                 // 必要なアイテム数
                 List<ItemStack> needStacks = new ArrayList<>();
-                for (net.pitan76.mcpitanlib.midohra.block.BlockState rawBlockState : blueprintMap.values()) {
-                    BlockState blockState = rawBlockState.toMinecraft();
+                for (net.pitan76.mcpitanlib.midohra.block.BlockState blockState : blueprintMap.values()) {
                     if (blockState.isAir()) continue;
-                    Item item = blockState.getBlock().asItem();
+                    ItemWrapper item = blockState.getBlock().asItem();
 
                     boolean b = false;
                     for (ItemStack stack : needStacks) {
                         if (stack.getItem() != item) continue;
-                        ItemStackUtil.incrementCount(stack, 1);
+                        stack.increment(1);
                         b = true;
                     }
                     if (b) continue;
-                    needStacks.add(ItemStackUtil.create(item, 1));
+                    needStacks.add(item.createStack(1));
                 }
                 int i = 0;
                 for (ItemStack stack : needStacks) {
                     if (stack.isEmpty()) continue;
-                    InventoryUtil.setStack(needInventory, i, stack);
+                    InventoryUtil.setStack(needInventory, i, stack.toMinecraft());
                     i++;
                     if (i == InventoryUtil.getSize(needInventory)) break;
                 }
@@ -200,50 +196,52 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         }
     }
 
-    public ItemStack latestGotStack = ItemStackUtil.empty();
+    public ItemStack latestGotStack = ItemStack.EMPTY;
 
     public static boolean isStorageBox(ItemStack stack) {
-        return ItemUtil.toIdAsString(stack.getItem()).equals("storagebox:storagebox");
+        return ItemUtil.toIdAsString(stack.getRawItem()).equals("storagebox:storagebox");
     }
 
-    public ItemStack getInventoryStack(Block block) {
-        for (ItemStack stack : getItems()) {
+    public ItemStack getInventoryStack(BlockWrapper block) {
+        for (ItemStack stack : getItems().toMidohra()) {
             if (stack.isEmpty()) continue;
 
             latestGotStack = stack;
-            if (stack.getItem() instanceof BlockItem && stack.getItem() == block.asItem()) return stack;
+            if (stack.isBlockItem() && stack.getItem().equals(block.asItem())) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
-                ItemStack itemInBox = StorageBoxUtil.getStackInStorageBox(stack);
+                ItemStack itemInBox = ItemStack.of(StorageBoxUtil.getStackInStorageBox(stack.toMinecraft()));
                 if (itemInBox == null) continue;
 
-                if (itemInBox.getItem() instanceof BlockItem && itemInBox.getItem() == block.asItem()) return itemInBox;
+                if (itemInBox.isBlockItem() && itemInBox.getItem().equals(block.asItem())) return itemInBox;
             }
             // ---- StorageBox
         }
-        return ItemStackUtil.empty();
+        return ItemStack.EMPTY;
     }
 
     public boolean tryPlacing(BlockPos blockPos, BlockState state) {
         if (getInventoryStack(state.getBlock()).isEmpty()) return false;
 
-        if (WorldUtil.setBlockState(callGetWorld(), blockPos, state)) {
-            BlockEventGenerator.onPlaced(state.getBlock(), new BlockPlacedEvent(callGetWorld(), blockPos, state, null, latestGotStack));
-            WorldUtil.playSound(callGetWorld(), null, blockPos, BlockStateUtil.getCompatSoundGroup(state).getPlaceSound(), CompatSoundCategory.BLOCKS, 1F, 1F);
+        World world = getMidohraWorld();
+
+        if (world.setBlockState(blockPos, state)) {
+            BlockEventGenerator.onPlaced(state.getBlock().get(), new BlockPlacedEvent(callGetWorld(), blockPos.toMinecraft(), state.toMinecraft(), null, latestGotStack.toMinecraft()));
+            world.playSound(null, blockPos, state.getSoundGroup().getPlaceSound(), CompatSoundCategory.BLOCKS, 1F, 1F);
             if (isStorageBox(latestGotStack)) {
-                if (StorageBoxUtil.hasStackInStorageBox(latestGotStack)) {
-                    int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack);
+                if (StorageBoxUtil.hasStackInStorageBox(latestGotStack.toMinecraft())) {
+                    int countInBox = StorageBoxUtil.getAmountInStorageBox(latestGotStack.toMinecraft());
                     countInBox--;
                     if (countInBox < 1) {
-                        StorageBoxUtil.setStackInStorageBox(latestGotStack, ItemStackUtil.empty());
+                        StorageBoxUtil.setStackInStorageBox(latestGotStack.toMinecraft(), ItemStackUtil.empty());
                     } else {
-                        StorageBoxUtil.setAmountInStorageBox(latestGotStack, countInBox);
+                        StorageBoxUtil.setAmountInStorageBox(latestGotStack.toMinecraft(), countInBox);
                     }
 
                     return true;
                 }
             }
-            ItemStackUtil.decrementCount(latestGotStack, 1);
+            latestGotStack.decrement(1);
             return true;
         }
         return false;
@@ -251,7 +249,9 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
     }
 
     public boolean tryBuilding() {
-        if (callGetWorld() == null || WorldUtil.isClient(callGetWorld())) return false;
+        World world = getMidohraWorld();
+
+        if (world.isNull() || world.isClient()) return false;
         if (pos1 == null || pos2 == null)
             return false;
         int procX;
@@ -260,19 +260,20 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         for (procY = pos1.getY(); procY <= pos2.getY(); procY++) {
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
-                    BlockPos procPos = PosUtil.flooredBlockPos(procX, procY, procZ);
-                    Block procBlock = WorldUtil.getBlockState(callGetWorld(), procPos).getBlock();
+                    BlockPos procPos = BlockPos.of(procX, procY, procZ);
+                    BlockWrapper procBlock = world.getBlockState(procPos).getBlock();
 
-                    net.pitan76.mcpitanlib.midohra.util.math.BlockPos posM = net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(procPos.add(-PosUtil.x(pos), -PosUtil.y(pos), -PosUtil.z(pos)));
-                    net.pitan76.mcpitanlib.midohra.block.BlockState buildingState = blueprintMap.get(posM);
+                    BlockPos pos = procPos.subtract(getMidohraPos());
+
+                    net.pitan76.mcpitanlib.midohra.block.BlockState buildingState = blueprintMap.get(pos);
                     if (buildingState == null) continue;
-                    if (buildingState.getBlock().get() == Blocks.AIR || procBlock == buildingState.getBlock().get()) continue;
-                    if (procBlock != Blocks.AIR) continue;
+                    if (buildingState.getBlock().equals(MCBlocks.AIR) || procBlock.equals(buildingState.getBlock())) continue;
+                    if (!procBlock.equals(MCBlocks.AIR)) continue;
 
-                    if (procBlock.asItem() == Items.NORMAL_BUILDER) {
+                    if (procBlock.asItem().equals(ItemWrapper.of(Items.NORMAL_BUILDER))) {
                         continue;
                     }
-                    if (tryPlacing(procPos, buildingState.toMinecraft())) {
+                    if (tryPlacing(procPos, buildingState)) {
                         return true;
                     }
                 }

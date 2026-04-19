@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import net.minecraft.block.Block;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.enums.*;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -22,6 +21,7 @@ import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.block.BlockUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 
@@ -69,21 +69,21 @@ public class BlueprintUtil {
 
     public static void writeNbt(ItemStack stack, Map<BlockPos, BlockState> blocks) {
         NbtCompound nbt = writeData(NbtUtil.create(), blocks);
-        CustomDataUtil.set(stack, "blueprint", nbt);
+        CustomDataUtil.set(stack.toMinecraft(), "blueprint", nbt);
     }
 
     public static void writeNbt2(ItemStack stack, Map<net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState> blocks) {
         NbtCompound nbt = writeData2(NbtUtil.create(), blocks);
-        CustomDataUtil.set(stack, "blueprint", nbt);
+        CustomDataUtil.set(stack.toMinecraft(), "blueprint", nbt);
     }
 
     public static Map<BlockPos, BlockState> readNbt(ItemStack stack) {
-        NbtCompound nbt = CustomDataUtil.get(stack, "blueprint");
+        NbtCompound nbt = CustomDataUtil.get(stack.toMinecraft(), "blueprint");
         return readData(nbt);
     }
 
     public static Map<BlockPos, BlockState> readNbt(ItemStack stack, Direction direction) {
-        NbtCompound nbt = CustomDataUtil.get(stack, "blueprint");
+        NbtCompound nbt = CustomDataUtil.get(stack.toMinecraft(), "blueprint");
         return readData(nbt, direction);
     }
 
@@ -322,7 +322,7 @@ public class BlueprintUtil {
     public static boolean save(ItemStack stack, String name) {
         JsonConfig config = new JsonConfig();
 
-        NbtCompound nbt = CustomDataUtil.get(stack, "blueprint");
+        NbtCompound nbt = CustomDataUtil.get(stack.toMinecraft(), "blueprint");
 
         if (nbt == null) return false;
         if (!NbtUtil.has(nbt, "blocks")) return false;
@@ -429,7 +429,7 @@ public class BlueprintUtil {
         }
 
         NbtUtil.put(nbt, "blocks", nbtList);
-        CustomDataUtil.set(stack, "blueprint", nbt);
+        CustomDataUtil.set(stack.toMinecraft(), "blueprint", nbt);
         return true;
     }
 
