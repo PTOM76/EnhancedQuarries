@@ -130,7 +130,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
                 Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
                 if (tryScanning(blocks)) {
                     ItemStack stack = ItemStackUtil.create(Items.BLUEPRINT, getItems().getAsMidohra(0).getCount());
-                    BlueprintUtil.writeNbt(stack, blocks);
+                    BlueprintUtil.writeNbt(net.pitan76.mcpitanlib.midohra.item.ItemStack.of(stack), blocks);
                     getItems().set(1, stack);
                     getItems().set(0, ItemStackUtil.empty());
                     useEnergy(getEnergyCost());

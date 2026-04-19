@@ -31,13 +31,13 @@ public class LibrarySlot extends CompatibleSlot {
         Inventory inventory = callGetInventory();
 
         if (getIndex() == 3) { // Save
-            BlueprintUtil.save(stack, screenHandler.blueprintName);
+            BlueprintUtil.save(net.pitan76.mcpitanlib.midohra.item.ItemStack.of(stack), screenHandler.blueprintName);
             super.callSetStack(ItemStackUtil.empty());
             InventoryUtil.setStack(inventory, 2, stack);
         }
         if (getIndex() == 0) { // Load
             ItemStack newStack = ItemStackUtil.create(Items.BLUEPRINT, ItemStackUtil.getCount(stack));
-            BlueprintUtil.load(newStack, screenHandler.blueprintName);
+            BlueprintUtil.load(net.pitan76.mcpitanlib.midohra.item.ItemStack.of(newStack), screenHandler.blueprintName);
             super.callSetStack(ItemStackUtil.empty());
             InventoryUtil.setStack(inventory, 1, newStack);
         }
