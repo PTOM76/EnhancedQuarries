@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.forge;
 
-import dev.architectury.platform.forge.EventBuses;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -14,7 +13,7 @@ import net.pitan76.enhancedquarries.EnhancedQuarriesClient;
 public class EnhancedQuarriesForge {
     public EnhancedQuarriesForge() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        EventBuses.registerModEventBus(EnhancedQuarries.MOD_ID, modEventBus);
+//        EventBuses.registerModEventBus(EnhancedQuarries.MOD_ID, modEventBus);
 
         new EnhancedQuarries();
 
