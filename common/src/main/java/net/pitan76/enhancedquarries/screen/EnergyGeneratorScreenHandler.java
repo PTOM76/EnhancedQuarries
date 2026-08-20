@@ -3,7 +3,6 @@ package net.pitan76.enhancedquarries.screen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
@@ -13,11 +12,11 @@ import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.ExtendedScreenHandler;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
-import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
+import net.pitan76.mcpitanlib.midohra.network.PacketByteBuf;
 
 public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
     public Inventory inventory;
@@ -32,10 +31,10 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
     public EnergyGeneratorScreenHandler(CreateMenuEvent e, PacketByteBuf buf) {
         this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, e.syncId, e.playerInventory, InventoryUtil.createSimpleInventory(1));
         if (buf == null) return;
-        energy = PacketByteUtil.readLong(buf);
-        maxEnergy = PacketByteUtil.readLong(buf);
-        burnTime = PacketByteUtil.readInt(buf);
-        maxBurnTime = PacketByteUtil.readInt(buf);
+        energy = buf.readLong();
+        maxEnergy = buf.readLong();
+        burnTime = buf.readInt();
+        maxBurnTime = buf.readInt();
         this.world = new Player(e.playerInventory.player).getWorld();
     }
 
