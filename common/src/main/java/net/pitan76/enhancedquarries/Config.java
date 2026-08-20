@@ -33,7 +33,6 @@ public class Config {
         if (!config.configMap.containsKey("reborn_energy_conversion_rate"))
             config.setDouble("reborn_energy_conversion_rate", 1.0);
 
-        // Forge / NeoForge の Forge Energy (FE) との変換レート
         if (!config.configMap.containsKey("fe_conversion_rate"))
             config.setDouble("fe_conversion_rate", 1.0);
 

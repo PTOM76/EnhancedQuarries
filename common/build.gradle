@@ -4,9 +4,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
-    // mcpitanlib-common は intermediary 名で公開されているため common でのみ使う。
-    // 各ローダーは remap 可能な mcpitanlib-<loader> を使う。
-    modApi "net.pitan76:mcpitanlib-common${rootProject.mcpitanlib_version}"
+    modCompileOnly "net.pitan76:mcpitanlib-common${rootProject.mcpitanlib_version}"
 }
 
 architectury {

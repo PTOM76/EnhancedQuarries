@@ -14,7 +14,6 @@ import net.pitan76.enhancedquarries.EnhancedQuarriesClient;
 public class EnhancedQuarriesForge {
     public EnhancedQuarriesForge() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        // architectury に登録タイミングを伝える
         EventBuses.registerModEventBus(EnhancedQuarries.MOD_ID, modEventBus);
 
         new EnhancedQuarries();

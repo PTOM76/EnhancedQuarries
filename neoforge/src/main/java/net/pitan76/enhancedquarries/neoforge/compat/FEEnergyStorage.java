@@ -4,9 +4,6 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.pitan76.enhancedquarries.Config;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 
-/**
- * BaseEnergyTile を Forge Energy (FE) として公開するアダプタ。
- */
 public class FEEnergyStorage implements IEnergyStorage, net.pitan76.enhancedquarries.compat.IEnergyStorage {
 
     public static double getConversionRate() {

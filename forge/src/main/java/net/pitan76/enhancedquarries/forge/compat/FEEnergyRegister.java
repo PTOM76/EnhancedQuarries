@@ -14,9 +14,6 @@ import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * BaseEnergyTile 全部に FE キャパビリティを生やす。
- */
 public class FEEnergyRegister {
 
     public static void init() {

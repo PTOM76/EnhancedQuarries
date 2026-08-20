@@ -3,10 +3,7 @@ package net.pitan76.enhancedquarries.platform;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.ItemStack;
 
-/**
- * StorageBox 連携。StorageBox は Fabric 版しか存在しないため、
- * Forge / NeoForge では何もしない実装になる。
- */
+// StorageBox は Fabric 版しか無いため、Forge/NeoForge では no-op
 public class StorageBoxHooks {
 
     @ExpectPlatform

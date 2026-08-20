@@ -14,12 +14,8 @@ import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 
 public class PlatformHooksImpl {
 
-    /**
-     * NeoForge のキャパビリティ登録は RegisterCapabilitiesEvent 中でしか行えないため、
-     * 実際の登録は EnhancedQuarriesNeoForge がイベントリスナーとして行う。
-     */
+    // 登録は RegisterCapabilitiesEvent 中でしか行えないので EnhancedQuarriesNeoForge 側で行う
     public static void registerEnergyStorage() {
-        // no-op
     }
 
     public static long bucketAmount() {

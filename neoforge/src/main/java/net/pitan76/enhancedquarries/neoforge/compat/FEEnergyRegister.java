@@ -10,9 +10,6 @@ import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * NeoForge の新キャパビリティAPIで BaseEnergyTile を FE として公開する。
- */
 public class FEEnergyRegister {
 
     public static void register(RegisterCapabilitiesEvent event) {

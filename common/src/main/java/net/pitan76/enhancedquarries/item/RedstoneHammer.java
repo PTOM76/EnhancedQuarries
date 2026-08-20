@@ -18,7 +18,6 @@ public class RedstoneHammer extends CompatiblePickaxeItem {
     public CompatActionResult onRightClickOnBlock(ItemUseOnBlockEvent e, Options options) {
         if (e.hasBlockEntity()) {
             BlockEntity blockEntity = e.getBlockEntity();
-            // 他MODの機械 (Fabric: RebornCore / Forge・NeoForge: FE) へ
             if (PlatformHooks.addEnergyToForeignTile(blockEntity, 5))
                 return e.success();
 

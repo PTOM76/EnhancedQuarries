@@ -61,7 +61,6 @@ public class PumpTile extends BaseEnergyTile {
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
         NbtCompound nbt = args.getNbt();
-        // Fabricは "variant"、Forge系(FluidTank)は "FluidName" で保存する
         if (NbtUtil.has(nbt, "variant") || NbtUtil.has(nbt, "FluidName")) {
             storedFluid.readNbt(args);
         }

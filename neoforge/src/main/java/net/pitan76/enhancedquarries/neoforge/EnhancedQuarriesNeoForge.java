@@ -13,7 +13,6 @@ import net.pitan76.enhancedquarries.neoforge.compat.FEEnergyRegister;
 public class EnhancedQuarriesNeoForge {
 
     public EnhancedQuarriesNeoForge(ModContainer modContainer, IEventBus modEventBus, Dist dist) {
-        // キャパビリティ登録は専用イベント中でしか行えない
         modEventBus.addListener(FEEnergyRegister::register);
 
         new EnhancedQuarries();

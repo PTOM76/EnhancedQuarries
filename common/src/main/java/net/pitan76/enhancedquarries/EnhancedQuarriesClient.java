@@ -6,9 +6,6 @@ import net.pitan76.enhancedquarries.client.renderer.TileRenderers;
 import net.pitan76.enhancedquarries.screen.EnergyGeneratorScreenHandler;
 import net.pitan76.mcpitanlib.api.network.v2.ClientNetworking;
 
-/**
- * クライアント側の初期化。各ローダーのエントリポイントから {@link #init()} を呼ぶ。
- */
 public class EnhancedQuarriesClient {
 
     public static void init() {
