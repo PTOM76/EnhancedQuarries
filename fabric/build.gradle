@@ -25,7 +25,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
     modApi "net.pitan76:mcpitanlib-fabric${rootProject.mcpitanlib_version}"
-    include "net.pitan76:mcpitanlib_checker-fabric:${rootProject.mcpitanlib_checker_version}"
+//    include "net.pitan76:mcpitanlib_checker-fabric:${rootProject.mcpitanlib_checker_version}"
 
     modImplementation "RebornCore:RebornCore-1.20:${rootProject.reborncore_version}"
     modImplementation "TechReborn:TechReborn-1.20:${rootProject.techreborn_version}"
