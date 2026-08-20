@@ -8,4 +8,4 @@ CompactEngine、AkutoEngine、QuarryPlusをリスペクトしたようなMODで�
 ## 互換性
 - Fabric: TechRebornのエネルギー(RebornEnergy)
 - Forge/NeoForge: ForgeEnergy
-
+- StorageBox for Fabric
