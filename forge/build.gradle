@@ -11,7 +11,7 @@ configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     compileClasspath.extendsFrom common
-    runtimeClasspath.extendsFrom common
+//    runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
 }
 
@@ -97,4 +97,5 @@ publishing {
         }
     }
 }
+
 

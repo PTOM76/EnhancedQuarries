@@ -29,8 +29,8 @@ public class EnhancedQuarries extends CommonModInitializer {
         registry = super.registry;
 
         registry.registerItemGroup(ENHANCED_QUARRIES_GROUP);
-        Items.init();
         Blocks.init();
+        Items.init();
         Tiles.init();
         ScreenHandlers.init();
         FillerModules.init();
