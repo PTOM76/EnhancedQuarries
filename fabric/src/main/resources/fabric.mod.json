@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "enhanced_quarries",
+  "version": "${version}",
+  "name": "Enhanced Quarries",
+  "description": "This mod is Add Filler, Quarry etc",
+  "authors": [
+    "Pitan"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/enhancedquarries",
+    "sources": "https://github.com/PTOM76/EnhancedQuarries",
+    "issues": "https://github.com/PTOM76/EnhancedQuarries/issues"
+  },
+  "license": "MPL-2.0",
+  "icon": "assets/enhanced_quarries/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.pitan76.enhancedquarries.fabric.EnhancedQuarriesFabric"
+    ],
+    "client": [
+      "net.pitan76.enhancedquarries.fabric.EnhancedQuarriesClientFabric"
+    ],
+    "modmenu": [
+      "net.pitan76.enhancedquarries.fabric.client.compat.ModMenuAddon"
+    ]
+  },
+  "provides": [
+    "enhanced_quarries-impl"
+  ],
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "*",
+    "mcpitanlib": ">3.6.2"
+  }
+}

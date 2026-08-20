@@ -1,152 +1,166 @@
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
-	id 'maven-publish'
-	id 'com.matthewprenger.cursegradle' version '1.+'
-	id "com.modrinth.minotaur" version "2.+"
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
+    id 'com.matthewprenger.cursegradle' version '1.+'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
-
-repositories {
-	mavenLocal()
-	maven { url "https://maven.shedaniel.me/" }
-	maven {
-		name = "BuildCraft"
-		url = "https://mod-buildcraft.com/maven"
-	}
-	maven { url "https://maven.terraformersmc.com/releases" }
-	maven { url 'https://jitpack.io' }
-	maven { url "https://maven.pitan76.net/" }
-	maven { url "https://cursemaven.com" }
+architectury {
+    minecraft = rootProject.minecraft_version
 }
 
-dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+subprojects {
+    apply plugin: "dev.architectury.loom"
+    apply plugin: "com.modrinth.minotaur"
+    apply plugin: "com.matthewprenger.cursegradle"
 
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    loom {
+        silentMojangMappingsLicense()
+    }
 
-	// TRのエネルギー用
-	modImplementation 'RebornCore:RebornCore-1.20:5.10.3'
-	modImplementation 'TechReborn:TechReborn-1.20:5.10.3'
+    repositories {
+        mavenLocal()
+        maven { url "https://maven.shedaniel.me/" }
+        maven { url "https://maven.pitan76.net/" }
+        maven { url "https://maven.neoforged.net/releases" }
+        maven { url "https://maven.terraformersmc.com/releases" }
+        maven {
+            name = "BuildCraft"
+            url = "https://mod-buildcraft.com/maven"
+        }
+        maven { url "https://cursemaven.com" }
+        maven { url 'https://jitpack.io' }
+    }
 
-	modImplementation "net.pitan76:mcpitanlib-fabric-${project.mcpitanlib_version}"
-	include "net.pitan76:mcpitanlib_checker-fabric:${rootProject.mcpitanlib_checker_version}"
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
+    }
 
-	modImplementation "com.terraformersmc:modmenu:9.0.0"
+    if (name in "fabric,forge,neoforge".split(",")) {
+        var modLoader = name
 
-	modImplementation "curse.maven:storagebox-fabric-517673:5183616"
+        if (System.getenv("CURSEFORGE_TOKEN") != null) {
+            curseforge {
+                apiKey = System.getenv("CURSEFORGE_TOKEN")
+                project {
+                    id = '528338'
+                    changelog = rootProject.changelog + "\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
+                    releaseType = 'release'
+                    if (modLoader == "fabric") addGameVersion "Fabric"
+                    if (modLoader == "forge") addGameVersion "Forge"
+                    if (modLoader == "neoforge") addGameVersion "NeoForge"
+
+                    if (modLoader == "neoforge") {
+                        addGameVersion '1.20.3'
+                        addGameVersion '1.20.4'
+                    } else {
+                        addGameVersion '1.18'
+                        addGameVersion '1.18.1'
+                        addGameVersion '1.18.2'
+                        addGameVersion '1.19'
+                        addGameVersion '1.19.1'
+                        addGameVersion '1.19.2'
+                        addGameVersion '1.20'
+                        addGameVersion '1.20.1'
+                        addGameVersion '1.20.3'
+                        addGameVersion '1.20.4'
+                    }
+
+                    if (modLoader != "forge") {
+                        addGameVersion '1.21'
+                        addGameVersion '1.21.1'
+                        addGameVersion '1.21.2'
+                        addGameVersion '1.21.3'
+                        addGameVersion '1.21.4'
+                        addGameVersion '1.21.5'
+                        addGameVersion '1.21.6'
+                        addGameVersion '1.21.7'
+                        addGameVersion '1.21.8'
+                        addGameVersion '1.21.9'
+                        addGameVersion '1.21.10'
+                        addGameVersion '1.21.11'
+                        addGameVersion '26.1'
+                        addGameVersion '26.1.1'
+                    }
+
+                    relations {
+                        if (modLoader == "fabric") {
+                            requiredDependency "fabric-api"
+                            optionalDependency "techreborn"
+                            optionalDependency "modmenu"
+                            optionalDependency "storagebox-fabric"
+                        }
+                        requiredDependency "mcpitanlibarch"
+                        optionalDependency "cloth-config"
+                    }
+
+                    mainArtifact(tasks.remapJar)
+                }
+                options {
+                    forgeGradleIntegration = false
+                }
+            }
+        }
+
+        if (System.getenv("MODRINTH_TOKEN") != null) {
+            modrinth {
+                token = System.getenv("MODRINTH_TOKEN")
+                projectId = 'JcIgEOzn'
+                versionNumber = rootProject.mod_version + "-" + modLoader
+                gameVersions = ['1.18', '1.18.1', '1.18.2', '1.19', '1.19.1', '1.19.2', '1.20', '1.20.1', '1.20.3', '1.20.4']
+                if (modLoader == "neoforge") {
+                    gameVersions = ['1.20.3', '1.20.4']
+                }
+                if (modLoader != "forge") {
+                    gameVersions.addAll(['1.21', '1.21.1', '1.21.2', '1.21.3', '1.21.4', '1.21.5', '1.21.6',
+                                         '1.21.7', '1.21.8', '1.21.9', '1.21.10', '1.21.11', '26.1', '26.1.1'])
+                }
+
+                versionType = 'release'
+                uploadFile = tasks.remapJar
+                changelog = rootProject.changelog + "\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
+                loaders = [modLoader]
+                dependencies {
+                    if (modLoader == "fabric") {
+                        required.project "P7dR8mSH" // Fabric API
+                    }
+                    required.project "uNRoUnGT" // MCPitanLibarch
+                }
+            }
+        }
+    }
 }
 
-processResources {
-	inputs.property "version", project.version
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        if (project.name == "neoforge") {
+            options.release = 17
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+        } else {
+            options.release = 8
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+    }
+
+    java {
+        withSourcesJar()
+    }
 }
 
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-	it.options.release = 8
-}
-
-java {
-	withSourcesJar()
-}
-
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-		}
-	}
-
-	repositories {
-
-	}
-}
-
-apply plugin: "com.modrinth.minotaur"
-apply plugin: "com.matthewprenger.cursegradle"
-
-if (System.getenv("CURSEFORGE_TOKEN") != null) {
-	curseforge {
-		apiKey = System.getenv("CURSEFORGE_TOKEN")
-		project {
-			id = '528338'
-			changelog = project.changelog + "\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
-			releaseType = 'release'
-			addGameVersion "Fabric"
-			addGameVersion '1.18'
-			addGameVersion '1.18.1'
-			addGameVersion '1.18.2'
-			addGameVersion '1.19'
-			addGameVersion '1.19.1'
-			addGameVersion '1.19.2'
-			addGameVersion '1.20'
-			addGameVersion '1.20.1'
-			addGameVersion '1.20.3'
-			addGameVersion '1.20.4'
-			addGameVersion '1.21'
-			addGameVersion '1.21.1'
-			addGameVersion '1.21.2'
-			addGameVersion '1.21.3'
-			addGameVersion '1.21.4'
-			addGameVersion '1.21.5'
-			addGameVersion '1.21.6'
-            addGameVersion '1.21.7'
-            addGameVersion '1.21.8'
-            addGameVersion '1.21.9'
-            addGameVersion '1.21.10'
-            addGameVersion '1.21.11'
-            addGameVersion '26.1'
-            addGameVersion '26.1.1'
-			relations {
-				requiredDependency "fabric-api"
-				requiredDependency "mcpitanlibarch"
-				optionalDependency "techreborn"
-				optionalDependency "modmenu"
-				optionalDependency "storagebox-fabric"
-				optionalDependency "cloth-config"
-			}
-
-			mainArtifact(tasks.remapJar)
-		}
-	}
-}
-
-if (System.getenv("MODRINTH_TOKEN") != null) {
-	modrinth {
-		token = System.getenv("MODRINTH_TOKEN")
-		projectId = 'JcIgEOzn'
-		versionNumber = project.mod_version + "-fabric"
-		gameVersions = ['1.18', '1.18.1', '1.18.2', '1.19', '1.19.1', '1.19.2', '1.20', '1.20.1', '1.20.3', '1.20.4', '1.21', '1.21.1', '1.21.2', '1.21.3', '1.21.4', '1.21.5', '1.21.6', '1.21.7', '1.21.8', '1.21.9', '1.21.10', '1.21.11', '26.1', '26.1.1']
-		versionType = 'release'
-		uploadFile = tasks.remapJar
-		changelog = project.changelog + "\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
-		loaders = ["fabric"]
-		dependencies {
-			required.project "P7dR8mSH" // Fabric API
-			required.project "uNRoUnGT"
-		}
-	}
+tasks.register('releaseMods') {
+    dependsOn("fabric:modrinth")
+    dependsOn("forge:modrinth")
+    dependsOn("neoforge:modrinth")
 }

@@ -1,0 +1,36 @@
+modLoader = "javafml"
+loaderVersion = "[0,)"
+license = "MPL-2.0"
+issueTrackerURL = "https://github.com/PTOM76/EnhancedQuarries/issues"
+
+[[mods]]
+modId = "enhanced_quarries"
+version = "${version}"
+displayName = "Enhanced Quarries"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/enhancedquarries"
+logoFile = "icon.png"
+authors = "Pitan"
+description = '''
+This mod is Add Filler, Quarry etc
+'''
+
+[[dependencies.enhanced_quarries]]
+modId = "neoforge"
+type = "required"
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.enhanced_quarries]]
+modId = "minecraft"
+type = "required"
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.enhanced_quarries]]
+modId = "mcpitanlib"
+type = "required"
+versionRange = "[3.6.2,)"
+ordering = "BEFORE"
+side = "BOTH"

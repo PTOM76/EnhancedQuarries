@@ -1,0 +1,240 @@
+package net.pitan76.enhancedquarries.tile.base;
+
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.nbt.NbtCompound;
+import net.pitan76.enhancedquarries.block.base.Pump;
+import net.pitan76.enhancedquarries.event.BlockStatePos;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
+import net.pitan76.enhancedquarries.platform.PlatformHooks;
+import net.pitan76.mcpitanlib.api.transfer.fluid.v1.FluidStorageUtil;
+import net.pitan76.mcpitanlib.api.transfer.fluid.v1.IFluidStorage;
+import net.pitan76.mcpitanlib.api.util.FluidStateUtil;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.fluid.FluidState;
+import net.pitan76.mcpitanlib.midohra.fluid.FluidWrapper;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
+
+import java.util.HashSet;
+import java.util.Set;
+
+// reference: Kibe Utilities's tank
+public class PumpTile extends BaseEnergyTile {
+    private IFluidStorage storedFluid = FluidStorageUtil.withFixedCapacity(PlatformHooks.bucketAmount() * 4, this::markDirty);
+
+    public IFluidStorage getStoredFluid() {
+        return storedFluid;
+    }
+
+    public void setStoredFluid(IFluidStorage storedFluid) {
+        this.storedFluid = storedFluid;
+    }
+
+    // ブロック1回設置分に対するエネルギーのコスト
+    public long getEnergyCost() {
+        return 30;
+    }
+
+    public PumpTile(BlockEntityType<?> type, TileCreateEvent e) {
+        super(type, e);
+    }
+
+    @Override
+    public long getMaxEnergy() {
+        return 5000;
+    }
+
+    @Override
+    public long getMaxOutput() {
+        return 0;
+    }
+
+    @Override
+    public long getMaxInput() {
+        return 500;
+    }
+
+    public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
+        NbtCompound nbt = args.getNbt();
+        // Fabricは "variant"、Forge系(FluidTank)は "FluidName" で保存する
+        if (NbtUtil.has(nbt, "variant") || NbtUtil.has(nbt, "FluidName")) {
+            storedFluid.readNbt(args);
+        }
+    }
+
+    public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
+        if (!storedFluid.isResourceBlank() && !storedFluid.isEmpty()) {
+            storedFluid.writeNbt(args);
+        }
+    }
+
+    // 基準の速度
+    public double getBasicSpeed() {
+        return 5;
+    }
+
+    // クールダウンの基準
+    public double getSettingCoolTime() {
+        return 250;
+    }
+
+    public double coolTime = getSettingCoolTime();
+
+    public void tick(TileTickEvent<BaseEnergyTile> e) {
+        super.tick(e);
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        BlockState state = e.getMidohraState();
+
+        if (world.isNull() || e.isClient()) return;
+
+        if (!(e.getBlock() instanceof Pump)) return;
+
+        // レッドストーン受信で無効
+        if (world.isReceivingRedstonePower(pos)) {
+            if (isActive())
+                 Pump.setActive(false, world, pos);
+            return;
+        }
+        if (getEnergy() > getEnergyCost()) {
+            // ここに処理を記入
+            if (coolTime <= 0) {
+                coolTime = getSettingCoolTime();
+                if (tryPump(world)) {
+                    useEnergy(getEnergyCost());
+                }
+            }
+            coolTimeBonus();
+            coolTime = coolTime - getBasicSpeed();
+            if (!Pump.isActive(state)) {
+                Pump.setActive(true, world, pos);
+            }
+        } else if (Pump.isActive(state)) {
+            Pump.setActive(false, world, pos);
+        }
+    }
+
+    public BlockStatePos getFarFluid() {
+        BlockPos pos = getMidohraPos();
+        for (BlockStatePos statePos : sphereAround(pos, 30)) {
+            FluidState fluidState = statePos.getBlockState().getFluidState();
+            if (!fluidState.isEmpty() && fluidState.isStill()) {
+                return statePos;
+            }
+        }
+        return null;
+    }
+
+    public Set<BlockStatePos> sphereAround(BlockPos pos, int radius) {
+        World world = getMidohraWorld();
+
+        Set<BlockStatePos> sphere = new HashSet<>();
+        BlockStatePos center = new BlockStatePos(world.getBlockState(pos), pos, world);
+        BlockPos tilePos = getMidohraPos();
+
+        for (int x = -radius; x <= radius; x++) {
+            for(int y = -radius; y <= radius; y++) {
+                for(int z = -radius; z <= radius; z++) {
+                    BlockPos procPos = center.getBlockPos().add(x, y, z);
+                    if (world.getBlockState(procPos).isAir()) continue;
+
+                    FluidState fluidState = world.getFluidState(procPos);
+                    if (fluidState.isEmpty()) continue;
+                    if (fluidState.getFluid().isEmpty()) continue;
+                    if (!fluidState.isStill()) continue;
+
+                    BlockStatePos b = new BlockStatePos(world.getBlockState(procPos), procPos, world);
+                    if (center.getBlockPos().getManhattanDistance(b.getBlockPos()) <= radius) {
+                        if (b.getBlockPos().equals(tilePos.down())) continue;
+                        sphere.add(b);
+                        return sphere;
+                    }
+                }
+
+            }
+        }
+        if (!world.getFluidState(tilePos.down()).isEmpty()) {
+            sphere.add(new BlockStatePos(world.getBlockState(tilePos.down()), tilePos.down(), world));
+        }
+        return sphere;
+    }
+
+    public boolean tryPump(World world) {
+        //EnhancedQuarries.log(Level.INFO, getStored().amount().asInt(1) + "");
+        if (storedFluid.getAmount() >= storedFluid.getCapacity()) return false;
+
+        BlockPos pos = getMidohraPos();
+        if (world.getFluidState(pos.down().toMinecraft()).isEmpty() &&
+                world.getFluidState(pos.down(2).toMinecraft()).isEmpty() &&
+                world.getFluidState(pos.down(3).toMinecraft()).isEmpty())
+            return false;
+
+        BlockStatePos statePos = getFarFluid();
+        try {
+            BlockState state = statePos.getBlockState();
+            world.removeBlock(statePos.getBlockPos(), false);
+            FluidWrapper fluid = FluidStateUtil.getFluidWrapper(state);
+            if (fluid.isEmpty()) return false;
+
+            storedFluid.insert(fluid, PlatformHooks.bucketAmount());
+            return !storedFluid.isEmpty();
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    public void coolTimeBonus() {
+        if (getMaxEnergy() / 1.125 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed() * 5;
+        }
+        if (getMaxEnergy() / 1.25 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed() * 3;
+        }
+        if (getMaxEnergy() / 3 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed() * 2;
+        }
+        if (getMaxEnergy() / 5 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed();
+        }
+        if (getMaxEnergy() / 7 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed();
+        }
+        if (getMaxEnergy() / 10 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed();
+        }
+        if (getMaxEnergy() / 12 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed();
+        }
+        if (getMaxEnergy() / 15 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed();
+        }
+        if (getMaxEnergy() / 16 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed();
+        }
+        if (getMaxEnergy() / 20 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed();
+        }
+        if (getMaxEnergy() / 30 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed();
+        }
+        if (getMaxEnergy() / 40 < getEnergy()) {
+            coolTime = coolTime - getBasicSpeed();
+        }
+    }
+
+    @Override
+    public boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
+        return false;
+    }
+}
