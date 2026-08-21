@@ -5,6 +5,7 @@ import net.minecraft.util.math.Direction;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.block.base.Library;
 import net.pitan76.enhancedquarries.tile.NormalLibraryTile;
+import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.enhancedquarries.tile.base.LibraryTile;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
 import net.pitan76.mcpitanlib.api.block.args.v2.PlacementStateArgs;
@@ -46,6 +47,7 @@ public class NormalLibrary extends Library implements ExtendBlockEntityProvider 
         if (blockEntity instanceof LibraryTile) {
             LibraryTile tile = (LibraryTile) blockEntity;
             e.player.openGuiScreen(tile);
+            LibraryScreenHandler.sendList(e.getPlayer());
             return e.consume();
         }
 

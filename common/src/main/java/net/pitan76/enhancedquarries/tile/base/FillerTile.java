@@ -174,16 +174,9 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
 
         coolTime = NbtRWUtil.getDoubleOrDefault(args, "coolTime", getSettingCoolTime());
 
-        int pos1x = NbtRWUtil.getIntOrDefault(args, "rangePos1X", 0);
-        int pos1y = NbtRWUtil.getIntOrDefault(args, "rangePos1Y", 0);
-        int pos1z = NbtRWUtil.getIntOrDefault(args, "rangePos1Z", 0);
-
-        int pos2x = NbtRWUtil.getIntOrDefault(args, "rangePos2X", 0);
-        int pos2y = NbtRWUtil.getIntOrDefault(args, "rangePos2Y", 0);
-        int pos2z = NbtRWUtil.getIntOrDefault(args, "rangePos2Z", 0);
-
-        setPos1(PosUtil.flooredMidohraBlockPos(pos1x, pos1y, pos1z));
-        setPos2(PosUtil.flooredMidohraBlockPos(pos2x, pos2y, pos2z));
+        // 範囲が保存されていないときに(0,0,0)にしてしまうと、範囲なしではなく原点を指してしまう
+        setPos1(readRangePos(args, "rangePos1"));
+        setPos2(readRangePos(args, "rangePos2"));
 
         int lastCheckedX = NbtRWUtil.getIntOrDefault(args, "lastPosX", 0);
         int lastCheckedY = NbtRWUtil.getIntOrDefault(args, "lastPosY", 0);
@@ -191,6 +184,14 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
         this.lastCheckedPos = PosUtil.flooredMidohraBlockPos(lastCheckedX, lastCheckedY, lastCheckedZ);
 
         canBedrockBreak = NbtRWUtil.getBooleanOrDefault(args, "module_bedrock_break", false);
+    }
+
+    private BlockPos readRangePos(ReadNbtArgs args, String key) {
+        if (!NbtUtil.has(args.getNbt(), key + "X")) return null;
+
+        return PosUtil.flooredMidohraBlockPos(NbtRWUtil.getIntOrDefault(args, key + "X", 0),
+                NbtRWUtil.getIntOrDefault(args, key + "Y", 0),
+                NbtRWUtil.getIntOrDefault(args, key + "Z", 0));
     }
 
     // ----
@@ -230,6 +231,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
                 coolTime = getSettingCoolTime();
                 if (tryFilling(getModule().getItem())) {
                     useEnergy(getEnergyCost());
+                    markDirty();
                 }
             }
             coolTimeBonus();

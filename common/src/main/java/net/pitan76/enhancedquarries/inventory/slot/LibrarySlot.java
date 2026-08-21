@@ -5,6 +5,7 @@ import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.mcpitanlib.api.gui.slot.CompatibleSlot;
 import net.pitan76.mcpitanlib.midohra.item.ItemStack;
+import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
 
 public class LibrarySlot extends CompatibleSlot {
 
@@ -23,10 +24,12 @@ public class LibrarySlot extends CompatibleSlot {
     @Override
     public boolean canInsert(ItemStack stack) {
         // 書き込み済みのものを入れると上書きで中身が消えるため空のものだけ許可
+        ItemWrapper item = stack.getItem();
+
         if (getIndex() == SLOT_LOAD_INPUT)
-            return stack.getItem().get() == Items.EMPTY_BLUEPRINT || stack.getItem().get() == Items.EMPTY_TEMPLATE;
+            return item.equals(ItemWrapper.of(Items.EMPTY_BLUEPRINT)) || item.equals(ItemWrapper.of(Items.EMPTY_TEMPLATE));
         if (getIndex() == SLOT_SAVE_INPUT)
-            return stack.getItem().get() == Items.BLUEPRINT || stack.getItem().get() == Items.TEMPLATE;
+            return item.equals(ItemWrapper.of(Items.BLUEPRINT)) || item.equals(ItemWrapper.of(Items.TEMPLATE));
         return false;
     }
 }

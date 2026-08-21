@@ -25,6 +25,8 @@ import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -326,6 +328,30 @@ public class BlueprintUtil {
         }
 
         return normalized;
+    }
+
+    public static List<String> getBlueprintNames() {
+        return listNames(new File(Config.configDir, "blueprint"));
+    }
+
+    // ディレクトリ内の.jsonの拡張子を除いたファイル名を返す
+    public static List<String> listNames(File dir) {
+        List<String> names = new ArrayList<>();
+        if (!dir.isDirectory()) return names;
+
+        File[] files = dir.listFiles();
+        if (files == null) return names;
+
+        for (File file : files) {
+            if (!file.isFile()) continue;
+
+            String fileName = file.getName();
+            if (!fileName.endsWith(".json")) continue;
+
+            names.add(fileName.substring(0, fileName.length() - ".json".length()));
+        }
+        names.sort(String::compareToIgnoreCase);
+        return names;
     }
 
     public static File getBlueprintFile(String name) {

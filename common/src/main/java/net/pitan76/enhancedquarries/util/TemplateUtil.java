@@ -2,14 +2,12 @@ package net.pitan76.enhancedquarries.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
 import net.pitan76.easyapi.FileControl;
 import net.pitan76.enhancedquarries.Config;
-import net.pitan76.mcpitanlib.api.util.CustomDataUtil;
-import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.midohra.item.ItemStack;
+import net.pitan76.mcpitanlib.midohra.nbt.NbtCompound;
+import net.pitan76.mcpitanlib.midohra.nbt.NbtElement;
+import net.pitan76.mcpitanlib.midohra.nbt.NbtList;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 
@@ -27,7 +25,15 @@ public class TemplateUtil {
     public static final String KEY = "template";
 
     public static boolean has(ItemStack stack) {
-        return CustomDataUtil.get(stack.toMinecraft(), KEY) != null;
+        return getData(stack) != null;
+    }
+
+    public static NbtCompound getData(ItemStack stack) {
+        return stack.getCustomNbt(KEY);
+    }
+
+    public static void setData(ItemStack stack, NbtCompound nbt) {
+        stack.putCustomNbt(KEY, nbt);
     }
 
     public static BlockPos getMaxPos(Collection<BlockPos> positions) {
@@ -55,11 +61,11 @@ public class TemplateUtil {
     }
 
     public static void writeNbt(ItemStack stack, Collection<BlockPos> positions) {
-        CustomDataUtil.set(stack.toMinecraft(), KEY, writeData(NbtUtil.create(), positions));
+        setData(stack, writeData(NbtCompound.of(), positions));
     }
 
     public static Set<BlockPos> readNbt(ItemStack stack, Direction direction) {
-        return readData(CustomDataUtil.get(stack.toMinecraft(), KEY), direction);
+        return readData(getData(stack), direction);
     }
 
     public static Set<BlockPos> readNbt(ItemStack stack, net.minecraft.util.math.Direction direction) {
@@ -67,18 +73,18 @@ public class TemplateUtil {
     }
 
     public static NbtCompound writeData(NbtCompound nbt, Collection<BlockPos> positions) {
-        NbtList nbtList = NbtUtil.createNbtList();
+        NbtList nbtList = NbtList.of();
 
         for (BlockPos pos : positions) {
-            NbtCompound posNbt = NbtUtil.create();
-            NbtUtil.putInt(posNbt, "x", pos.getX());
-            NbtUtil.putInt(posNbt, "y", pos.getY());
-            NbtUtil.putInt(posNbt, "z", pos.getZ());
+            NbtCompound posNbt = NbtCompound.of();
+            posNbt.putInt("x", pos.getX());
+            posNbt.putInt("y", pos.getY());
+            posNbt.putInt("z", pos.getZ());
 
             nbtList.add(posNbt);
         }
 
-        NbtUtil.put(nbt, "positions", nbtList);
+        nbt.put("positions", nbtList);
         return nbt;
     }
 
@@ -88,15 +94,19 @@ public class TemplateUtil {
 
         int steps = BlueprintUtil.getRotationSteps(direction);
 
-        for (NbtElement element : NbtUtil.getNbtCompoundList(nbt, "positions")) {
-            if (!(element instanceof NbtCompound)) continue;
-            NbtCompound posNbt = (NbtCompound) element;
+        for (NbtElement element : nbt.getNbtCompoundList("positions")) {
+            if (!element.isNbtCompound()) continue;
+            NbtCompound posNbt = element.asNbtCompound();
 
-            positions.add(BlueprintUtil.rotatePos(BlockPos.of(NbtUtil.getInt(posNbt, "x"),
-                    NbtUtil.getInt(posNbt, "y"), NbtUtil.getInt(posNbt, "z")), steps));
+            positions.add(BlueprintUtil.rotatePos(BlockPos.of(posNbt.getInt("x"),
+                    posNbt.getInt("y"), posNbt.getInt("z")), steps));
         }
 
         return positions;
+    }
+
+    public static List<String> getTemplateNames() {
+        return BlueprintUtil.listNames(new File(Config.configDir, "template"));
     }
 
     public static File getTemplateFile(String name) {
@@ -110,15 +120,15 @@ public class TemplateUtil {
         File file = getTemplateFile(name);
         if (file == null) return false;
 
-        NbtCompound nbt = CustomDataUtil.get(stack.toMinecraft(), KEY);
+        NbtCompound nbt = getData(stack);
         if (nbt == null) return false;
 
         List<String> positions = new ArrayList<>();
-        for (NbtElement element : NbtUtil.getNbtCompoundList(nbt, "positions")) {
-            if (!(element instanceof NbtCompound)) continue;
-            NbtCompound posNbt = (NbtCompound) element;
+        for (NbtElement element : nbt.getNbtCompoundList("positions")) {
+            if (!element.isNbtCompound()) continue;
+            NbtCompound posNbt = element.asNbtCompound();
 
-            positions.add(NbtUtil.getInt(posNbt, "x") + "," + NbtUtil.getInt(posNbt, "y") + "," + NbtUtil.getInt(posNbt, "z"));
+            positions.add(posNbt.getInt("x") + "," + posNbt.getInt("y") + "," + posNbt.getInt("z"));
         }
         if (positions.isEmpty()) return false;
 
