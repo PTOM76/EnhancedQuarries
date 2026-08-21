@@ -9,3 +9,6 @@ CompactEngine、AkutoEngine、QuarryPlusをリスペクトしたようなMODで�
 - Fabric: TechRebornのエネルギー(RebornEnergy)
 - Forge/NeoForge: ForgeEnergy
 - StorageBox for Fabric
+
+## LICENSE
+- MPL-2.0 (include Legacy BuildCraft assets)
