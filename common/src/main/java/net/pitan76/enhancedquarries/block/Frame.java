@@ -121,7 +121,7 @@ public class Frame extends CompatBlock implements Waterloggable {
     }
 
     public static boolean canConnect(IWorldView world, BlockPos blockPos) {
-        return world.getBlockState(blockPos).getBlock().equals(Blocks.FRAME);
+        return world.getBlockState(blockPos).getBlock().rawEquals(Blocks.FRAME);
     }
 
     @Override

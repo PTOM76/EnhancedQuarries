@@ -271,13 +271,13 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
             if (stack.isEmpty()) continue;
 
             latestGotStack = stack;
-            if (stack.isBlockItem() && stack.getItem().equals(block.asItem())) return stack;
+            if (stack.isBlockItem() && stack.getItem().rawEquals(block.asItem())) return stack;
             // StorageBox
             if (isStorageBox(stack)) {
                 ItemStack itemInBox = ItemStack.of(StorageBoxHooks.getStackInStorageBox(stack.toMinecraft()));
                 if (itemInBox == null) continue;
 
-                if (itemInBox.isBlockItem() && itemInBox.getItem().equals(block.asItem())) return itemInBox;
+                if (itemInBox.isBlockItem() && itemInBox.getItem().rawEquals(block.asItem())) return itemInBox;
             }
             // ---- StorageBox
         }
@@ -340,7 +340,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
                     if (procPos.equals(getMidohraPos())) continue;
                     if (!templatePositions.contains(procPos.subtract(origin))) continue;
-                    if (!world.getBlockState(procPos).getBlock().equals(MCBlocks.AIR)) continue;
+                    if (!world.getBlockState(procPos).getBlock().rawEquals(MCBlocks.AIR)) continue;
 
                     ItemStack stack = getAnyBlockStack();
                     if (stack.isEmpty()) return false;

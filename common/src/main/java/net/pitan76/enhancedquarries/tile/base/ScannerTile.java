@@ -175,14 +175,14 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
         ItemWrapper item = getItemsM().get(0).getItem();
         if (item.isEmpty()) return false;
 
-        return item.equals(Items.EMPTY_TEMPLATE) || item.equals(Items.TEMPLATE);
+        return item.rawEquals(Items.EMPTY_TEMPLATE) || item.rawEquals(Items.TEMPLATE);
     }
 
     public boolean canScan() {
         ItemWrapper item = getItemsM().get(0).getItem();
         if (item.isEmpty()) return false;
 
-        return item.equals(Items.EMPTY_BLUEPRINT) || item.equals(Items.BLUEPRINT) || item.equals(Items.EMPTY_TEMPLATE) || item.equals(Items.TEMPLATE);
+        return item.rawEquals(Items.EMPTY_BLUEPRINT) || item.rawEquals(Items.BLUEPRINT) || item.rawEquals(Items.EMPTY_TEMPLATE) || item.rawEquals(Items.TEMPLATE);
     }
 
     public ItemStack createScannedStack(Map<BlockPos, BlockState> blocks) {
@@ -217,7 +217,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
                     BlockPos procPos = BlockPos.of(procX, procY, procZ);
                     BlockState procState = world.getBlockState(procPos);
 
-                    if (procState.getBlock() == MCBlocks.AIR) continue;
+                    if (procState.isAir()) continue;
 
                     blocks.put(procPos.subtract(pos1), procState);
                 }

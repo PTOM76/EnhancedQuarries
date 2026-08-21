@@ -120,7 +120,7 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
         if (!ItemStackUtil.isEmpty(InventoryUtil.getStack(libraryInventory, LibrarySlot.SLOT_SAVE_OUTPUT))) return false;
 
         net.pitan76.mcpitanlib.midohra.item.ItemStack midohraInput = net.pitan76.mcpitanlib.midohra.item.ItemStack.of(input);
-        boolean template = midohraInput.getItem().equals(Items.TEMPLATE);
+        boolean template = midohraInput.getItem().rawEquals(Items.TEMPLATE);
 
         if (!(template ? TemplateUtil.save(midohraInput, name) : BlueprintUtil.save(midohraInput, name))) return false;
 
@@ -135,7 +135,7 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
         if (ItemStackUtil.isEmpty(input)) return false;
         if (!ItemStackUtil.isEmpty(InventoryUtil.getStack(libraryInventory, LibrarySlot.SLOT_LOAD_OUTPUT))) return false;
 
-        boolean template = net.pitan76.mcpitanlib.midohra.item.ItemStack.of(input).getItem().equals(Items.EMPTY_TEMPLATE);
+        boolean template = net.pitan76.mcpitanlib.midohra.item.ItemStack.of(input).getItem().rawEquals(Items.EMPTY_TEMPLATE);
         ItemStack loaded = ItemStackUtil.create(template ? Items.TEMPLATE.get() : Items.BLUEPRINT.get(), ItemStackUtil.getCount(input));
         net.pitan76.mcpitanlib.midohra.item.ItemStack midohraLoaded = net.pitan76.mcpitanlib.midohra.item.ItemStack.of(loaded);
 

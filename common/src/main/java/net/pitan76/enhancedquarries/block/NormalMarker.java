@@ -110,7 +110,7 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
             }
 
             blockState = world.getBlockState(blockPosX1);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+            if (blockState.getBlock().rawEquals(Blocks.NORMAL_MARKER)) {
                 if (!_has(blockPosList, blockPosX1)) {
                     list.add(new BlockStatePos(blockState, blockPosX1, world));
                     searchMarker(world, blockPosX1, list);
@@ -118,7 +118,7 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
             }
 
             blockState = world.getBlockState(blockPosX2);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+            if (blockState.getBlock().rawEquals(Blocks.NORMAL_MARKER)) {
                 if (!_has(blockPosList, blockPosX2)) {
                     list.add(new BlockStatePos(blockState, blockPosX2, world));
                     searchMarker(world, blockPosX2, list);
@@ -126,7 +126,7 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
             }
 
             blockState = world.getBlockState(blockPosY1);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+            if (blockState.getBlock().rawEquals(Blocks.NORMAL_MARKER)) {
                 if (!_has(blockPosList, blockPosY1)) {
                     list.add(new BlockStatePos(blockState, blockPosY1, world));
                     searchMarker(world, blockPosY1, list);
@@ -134,7 +134,7 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
             }
 
             blockState = world.getBlockState(blockPosY2);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+            if (blockState.getBlock().rawEquals(Blocks.NORMAL_MARKER)) {
                 if (!_has(blockPosList, blockPosY2)) {
                     list.add(new BlockStatePos(blockState, blockPosY2, world));
                     searchMarker(world, blockPosY2, list);
@@ -142,7 +142,7 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
             }
 
             blockState = world.getBlockState(blockPosZ1);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+            if (blockState.getBlock().rawEquals(Blocks.NORMAL_MARKER)) {
                 if (!_has(blockPosList, blockPosZ1)) {
                     list.add(new BlockStatePos(blockState, blockPosZ1, world));
                     searchMarker(world, blockPosZ1, list);
@@ -150,7 +150,7 @@ public class NormalMarker extends CompatBlock implements ExtendBlockEntityProvid
             }
 
             blockState = world.getBlockState(blockPosZ2);
-            if (blockState.getBlock().get().equals(Blocks.NORMAL_MARKER)) {
+            if (blockState.getBlock().rawEquals(Blocks.NORMAL_MARKER)) {
                 if (!_has(blockPosList, blockPosZ2)) {
                     list.add(new BlockStatePos(blockState, blockPosZ2, world));
                     searchMarker(world, blockPosZ2, list);

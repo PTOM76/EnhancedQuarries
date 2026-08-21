@@ -27,9 +27,9 @@ public class LibrarySlot extends CompatibleSlot {
         ItemWrapper item = stack.getItem();
 
         if (getIndex() == SLOT_LOAD_INPUT)
-            return item.equals(Items.EMPTY_BLUEPRINT) || item.equals(Items.EMPTY_TEMPLATE);
+            return item.rawEquals(Items.EMPTY_BLUEPRINT) || item.rawEquals(Items.EMPTY_TEMPLATE);
         if (getIndex() == SLOT_SAVE_INPUT)
-            return item.equals(Items.BLUEPRINT) || item.equals(Items.TEMPLATE);
+            return item.rawEquals(Items.BLUEPRINT) || item.rawEquals(Items.TEMPLATE);
         return false;
     }
 }
