@@ -5,10 +5,14 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
+import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.ScreenHandlers;
 import net.pitan76.enhancedquarries.inventory.slot.LibrarySlot;
+import net.pitan76.enhancedquarries.util.BlueprintUtil;
+import net.pitan76.enhancedquarries.util.TemplateUtil;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.gui.args.SlotClickEvent;
 import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
@@ -75,6 +79,55 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
 
     public void setBlueprintName(String name) {
         blueprintName = name;
+        process();
+    }
+
+    @Override
+    public void onSlotClick(SlotClickEvent e) {
+        super.onSlotClick(e);
+        process();
+    }
+
+    public void process() {
+        if (isClient()) return;
+
+        String name = BlueprintUtil.normalizeName(blueprintName);
+        if (name == null) return;
+
+        trySaving(name);
+        tryLoading(name);
+    }
+
+    protected void trySaving(String name) {
+        ItemStack input = InventoryUtil.getStack(libraryInventory, LibrarySlot.SLOT_SAVE_INPUT);
+        if (ItemStackUtil.isEmpty(input)) return;
+        if (!ItemStackUtil.isEmpty(InventoryUtil.getStack(libraryInventory, LibrarySlot.SLOT_SAVE_OUTPUT))) return;
+
+        boolean template = input.getItem() == Items.TEMPLATE;
+        net.pitan76.mcpitanlib.midohra.item.ItemStack midohraInput = net.pitan76.mcpitanlib.midohra.item.ItemStack.of(input);
+
+        if (!(template ? TemplateUtil.save(midohraInput, name) : BlueprintUtil.save(midohraInput, name))) return;
+
+        InventoryUtil.setStack(libraryInventory, LibrarySlot.SLOT_SAVE_INPUT, ItemStackUtil.empty());
+        InventoryUtil.setStack(libraryInventory, LibrarySlot.SLOT_SAVE_OUTPUT, input);
+        libraryInventory.markDirty();
+    }
+
+    protected void tryLoading(String name) {
+        ItemStack input = InventoryUtil.getStack(libraryInventory, LibrarySlot.SLOT_LOAD_INPUT);
+        if (ItemStackUtil.isEmpty(input)) return;
+        if (!ItemStackUtil.isEmpty(InventoryUtil.getStack(libraryInventory, LibrarySlot.SLOT_LOAD_OUTPUT))) return;
+
+        boolean template = input.getItem() == Items.EMPTY_TEMPLATE;
+        ItemStack loaded = ItemStackUtil.create(template ? Items.TEMPLATE : Items.BLUEPRINT, ItemStackUtil.getCount(input));
+        net.pitan76.mcpitanlib.midohra.item.ItemStack midohraLoaded = net.pitan76.mcpitanlib.midohra.item.ItemStack.of(loaded);
+
+        // 読込に失敗したら入力はそのまま残す
+        if (!(template ? TemplateUtil.load(midohraLoaded, name) : BlueprintUtil.load(midohraLoaded, name))) return;
+
+        InventoryUtil.setStack(libraryInventory, LibrarySlot.SLOT_LOAD_INPUT, ItemStackUtil.empty());
+        InventoryUtil.setStack(libraryInventory, LibrarySlot.SLOT_LOAD_OUTPUT, loaded);
+        libraryInventory.markDirty();
     }
 
     public boolean isClient() {

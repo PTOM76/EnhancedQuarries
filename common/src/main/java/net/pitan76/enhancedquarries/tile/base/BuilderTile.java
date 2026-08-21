@@ -10,6 +10,7 @@ import net.pitan76.enhancedquarries.block.base.Builder;
 import net.pitan76.enhancedquarries.inventory.DisabledInventory;
 import net.pitan76.enhancedquarries.screen.BuilderScreenHandler;
 import net.pitan76.enhancedquarries.util.BlueprintUtil;
+import net.pitan76.enhancedquarries.util.TemplateUtil;
 import net.pitan76.mcpitanlib.api.event.block.BlockPlacedEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
@@ -41,8 +42,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory, SimpleScreenHandlerFactory {
 
@@ -138,6 +141,9 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
     public Map<net.pitan76.mcpitanlib.midohra.util.math.BlockPos, net.pitan76.mcpitanlib.midohra.block.BlockState> blueprintMap = new LinkedHashMap<>();
 
+    // テンプレート使用時の設置先。ブロックの種類は問わない
+    public Set<BlockPos> templatePositions = new LinkedHashSet<>();
+
     @Override
     public void tick(TileTickEvent<BaseEnergyTile> e) {
         super.tick(e);
@@ -154,7 +160,19 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
         ItemStack blueprint = ItemStack.of(InventoryUtil.getStack(inventory, 0));
 
-        if (blueprint.hasCustomNbt() && blueprint.getRawItem() == Items.BLUEPRINT) {
+        if (blueprint.hasCustomNbt() && blueprint.getRawItem() == Items.TEMPLATE) {
+            if (templatePositions.isEmpty()) {
+                templatePositions = TemplateUtil.readNbt(blueprint, getFacing());
+
+                BlockPos min = TemplateUtil.getMinPos(templatePositions);
+                BlockPos max = TemplateUtil.getMaxPos(templatePositions);
+                BlockPos origin = getBuildOrigin(pos, min, max);
+
+                pos1 = origin.add(min);
+                pos2 = origin.add(max);
+                syncRangeToClient();
+            }
+        } else if (blueprint.hasCustomNbt() && blueprint.getRawItem() == Items.BLUEPRINT) {
             if (blueprintMap.isEmpty()) {
                 blueprintMap = BlueprintUtil.readNbt(blueprint, getFacing());
 
@@ -174,9 +192,10 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
                     boolean b = false;
                     for (ItemStack stack : needStacks) {
-                        if (stack.getItem() != item) continue;
+                        if (!stack.getItem().equals(item)) continue;
                         stack.increment(1);
                         b = true;
+                        break;
                     }
                     if (b) continue;
                     needStacks.add(item.createStack(1));
@@ -195,6 +214,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                 syncRangeToClient();
             }
             blueprintMap = new LinkedHashMap<>();
+            templatePositions = new LinkedHashSet<>();
             for (int i = 0; i < InventoryUtil.getSize(needInventory); i++) {
                 InventoryUtil.setStack(needInventory, i, ItemStackUtil.empty());
             }
@@ -202,7 +222,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         }
         if (inventory.isEmpty()) return;
 
-        if (blueprintMap.isEmpty()) return;
+        if (blueprintMap.isEmpty() && templatePositions.isEmpty()) return;
         if (getEnergy() > getEnergyCost()) {
             // ここに処理を記入
             if (coolTime <= 0) {
@@ -294,7 +314,51 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
     }
 
+    // インベントリ内の任意のブロックを1つ返す (テンプレート用)
+    public ItemStack getAnyBlockStack() {
+        for (int i = 1; i < getItems().size(); i++) {
+            ItemStack stack = getItems().getAsMidohra(i);
+            if (stack.isEmpty() || !stack.isBlockItem()) continue;
+
+            return stack;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public boolean tryBuildingTemplate() {
+        World world = getMidohraWorld();
+
+        if (world.isNull() || world.isClient()) return false;
+        if (pos1 == null || pos2 == null) return false;
+
+        BlockPos origin = pos1.subtract(TemplateUtil.getMinPos(templatePositions));
+
+        for (int procY = pos1.getY(); procY <= pos2.getY(); procY++) {
+            for (int procX = pos1.getX(); procX <= pos2.getX(); procX++) {
+                for (int procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
+                    BlockPos procPos = BlockPos.of(procX, procY, procZ);
+
+                    if (procPos.equals(getMidohraPos())) continue;
+                    if (!templatePositions.contains(procPos.subtract(origin))) continue;
+                    if (!world.getBlockState(procPos).getBlock().equals(MCBlocks.AIR)) continue;
+
+                    ItemStack stack = getAnyBlockStack();
+                    if (stack.isEmpty()) return false;
+
+                    BlockWrapper block = stack.getItem().asBlock();
+                    if (block.isEmpty()) continue;
+
+                    if (tryPlacing(procPos, BlockState.of(BlockStateUtil.getDefaultState(block.get()))))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean tryBuilding() {
+        if (!templatePositions.isEmpty()) return tryBuildingTemplate();
+
         World world = getMidohraWorld();
 
         if (world.isNull() || world.isClient()) return false;

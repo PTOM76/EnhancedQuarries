@@ -9,6 +9,7 @@ import net.pitan76.enhancedquarries.Items;
 import net.pitan76.enhancedquarries.block.base.Scanner;
 import net.pitan76.enhancedquarries.screen.ScannerScreenHandler;
 import net.pitan76.enhancedquarries.util.BlueprintUtil;
+import net.pitan76.enhancedquarries.util.TemplateUtil;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
@@ -22,6 +23,7 @@ import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.block.MCBlocks;
+import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -122,15 +124,11 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
         }
         if (getEnergy() > getEnergyCost()) {
             // ここに処理を記入
-            if ((
-                    getItems().get(0).getItem().equals(Items.EMPTY_BLUEPRINT)
-                            || getItems().get(0).getItem().equals(Items.BLUEPRINT)
-                    ) && coolTime <= 0 && getItems().get(1).isEmpty()) {
+            if (canScan() && coolTime <= 0 && getItems().get(1).isEmpty()) {
                 coolTime = getSettingCoolTime();
                 Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
                 if (tryScanning(blocks)) {
-                    ItemStack stack = ItemStackUtil.create(Items.BLUEPRINT, getItems().getAsMidohra(0).getCount());
-                    BlueprintUtil.writeNbt(net.pitan76.mcpitanlib.midohra.item.ItemStack.of(stack), blocks);
+                    ItemStack stack = createScannedStack(blocks);
                     getItems().set(1, stack);
                     getItems().set(0, ItemStackUtil.empty());
                     useEnergy(getEnergyCost());
@@ -145,6 +143,34 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
         } else if (isActive()) {
             Scanner.setActive(false, world, pos);
         }
+    }
+
+    public boolean isTemplateInput() {
+        ItemWrapper item = getItemsM().get(0).getItem();
+        if (item.isEmpty()) return false;
+
+        return item.get().equals(Items.EMPTY_TEMPLATE) || item.get().equals(Items.TEMPLATE);
+    }
+
+    public boolean canScan() {
+        ItemWrapper item = getItemsM().get(0).getItem();
+        if (item.isEmpty()) return false;
+
+        return item.get().equals(Items.EMPTY_BLUEPRINT) || item.get().equals(Items.BLUEPRINT) || item.get().equals(Items.EMPTY_TEMPLATE) || item.get().equals(Items.TEMPLATE);
+    }
+
+    public ItemStack createScannedStack(Map<BlockPos, BlockState> blocks) {
+        int count = getItems().getAsMidohra(0).getCount();
+
+        if (isTemplateInput()) {
+            ItemStack stack = ItemStackUtil.create(Items.TEMPLATE, count);
+            TemplateUtil.writeNbt(net.pitan76.mcpitanlib.midohra.item.ItemStack.of(stack), blocks.keySet());
+            return stack;
+        }
+
+        ItemStack stack = ItemStackUtil.create(Items.BLUEPRINT, count);
+        BlueprintUtil.writeNbt(net.pitan76.mcpitanlib.midohra.item.ItemStack.of(stack), blocks);
+        return stack;
     }
 
     // blocks...スキャナーを基準とした相対的な座標

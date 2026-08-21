@@ -1,6 +1,7 @@
 package net.pitan76.enhancedquarries.util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.block.Block;
 import net.minecraft.block.enums.*;
@@ -9,7 +10,6 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.state.property.Properties;
 import net.pitan76.easyapi.FileControl;
-import net.pitan76.easyapi.config.JsonConfig;
 import net.pitan76.enhancedquarries.Config;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
@@ -27,7 +27,6 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class BlueprintUtil {
 
@@ -336,43 +335,41 @@ public class BlueprintUtil {
         return new File(new File(Config.configDir, "blueprint"), normalized + ".json");
     }
 
+    private static final Type BLOCK_MAP_TYPE = new TypeToken<LinkedHashMap<String, LinkedHashMap<String, String>>>() {}.getType();
+
     // WEST基準
     public static boolean save(ItemStack stack, String name) {
         File file = getBlueprintFile(name);
         if (file == null) return false;
 
-        JsonConfig config = new JsonConfig();
-
         NbtCompound nbt = CustomDataUtil.get(stack.toMinecraft(), "blueprint");
-
         if (nbt == null) return false;
         if (!NbtUtil.has(nbt, "blocks")) return false;
 
-        NbtList nbtList = NbtUtil.getNbtCompoundList(nbt, "blocks");
-        for (NbtElement element : nbtList) {
-            if (element instanceof NbtCompound) {
-                NbtCompound blockNbt = (NbtCompound) element;
-                NbtCompound posNbt = NbtUtil.get(blockNbt, "pos");
+        Map<String, Map<String, String>> blocks = new LinkedHashMap<>();
 
-                Map<String, Object> data = new LinkedHashMap<>();
+        for (NbtElement element : NbtUtil.getNbtCompoundList(nbt, "blocks")) {
+            if (!(element instanceof NbtCompound)) continue;
+            NbtCompound blockNbt = (NbtCompound) element;
 
-                for (String key : NbtUtil.getKeys(blockNbt)) {
-                    if (Objects.equals(key, "pos")) continue;
-                    data.put(key, NbtUtil.get(blockNbt, key));
-                }
+            NbtCompound posNbt = NbtUtil.get(blockNbt, "pos");
+            if (posNbt == null) continue;
 
-                config.set(NbtUtil.getInt(posNbt, "x") + "," + NbtUtil.getInt(posNbt, "y") + "," + NbtUtil.getInt(posNbt, "z"), data);
+            Map<String, String> data = new LinkedHashMap<>();
+            for (String key : NbtUtil.getKeys(blockNbt)) {
+                if (key.equals("pos")) continue;
+                data.put(key, NbtUtil.getString(blockNbt, key));
             }
+
+            blocks.put(NbtUtil.getInt(posNbt, "x") + "," + NbtUtil.getInt(posNbt, "y") + "," + NbtUtil.getInt(posNbt, "z"), data);
         }
 
-        String json = config.toJson(false);
+        if (blocks.isEmpty()) return false;
 
         File dir = file.getParentFile();
         if (!dir.exists() && !dir.mkdirs()) return false;
 
-        FileControl.fileWriteContents(file, json);
-
-        return true;
+        return FileControl.fileWriteContents(file, new Gson().toJson(blocks));
     }
 
     public static boolean load(ItemStack stack, String name) {
@@ -382,73 +379,46 @@ public class BlueprintUtil {
         String json = FileControl.fileReadContents(file);
         if (json == null || json.isEmpty()) return false;
 
-        Gson gson = new Gson();
-        Type jsonMap = new TypeToken<LinkedHashMap<String, Object>>() {
-        }.getType();
-
-        Map<String, Object> map = gson.fromJson(json, jsonMap);
-        if (map == null || map.isEmpty()) return false;
-
-        NbtCompound nbt = NbtUtil.create();
+        Map<String, Map<String, String>> blocks;
+        try {
+            blocks = new Gson().fromJson(json, BLOCK_MAP_TYPE);
+        } catch (JsonSyntaxException ignore) {
+            return false;
+        }
+        if (blocks == null || blocks.isEmpty()) return false;
 
         NbtList nbtList = NbtUtil.createNbtList();
 
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = entry.getKey();
-            String[] keys = key.split(",");
+        for (Map.Entry<String, Map<String, String>> entry : blocks.entrySet()) {
+            String[] keys = entry.getKey().split(",");
             if (keys.length != 3) continue;
-            BlockPos pos = BlockPos.of(Integer.parseInt(keys[0]), Integer.parseInt(keys[1]), Integer.parseInt(keys[2]));
-
-            if (!(entry.getValue() instanceof Map)) continue;
-            Map<String, Object> data = (Map<String, Object>) entry.getValue();
+            if (entry.getValue() == null) continue;
 
             NbtCompound blockNbt = NbtUtil.create();
-            NbtCompound posNbt = NbtUtil.create();
+            for (Map.Entry<String, String> data : entry.getValue().entrySet()) {
+                if (data.getValue() == null) continue;
+                NbtUtil.putString(blockNbt, data.getKey(), data.getValue());
+            }
+            if (!NbtUtil.has(blockNbt, "id")) continue;
 
-            for (Map.Entry<String, Object> entry1 : data.entrySet()) {
-                Object value = entry1.getValue();
-                if (value instanceof Map) {
-                    Map<String, Object> mapInValue = (Map<String, Object>) value;
-                    for (Map.Entry<String, Object> value2 : mapInValue.entrySet()) {
-                        if (Objects.equals(value2.getKey(), "value")) {
-                            value = value2.getValue();
-                            break;
-                        }
-                    }
-                }
-                if (value instanceof String)
-                    NbtUtil.putString(blockNbt, entry1.getKey(), (String) value);
-                if (value instanceof Integer)
-                    NbtUtil.putInt(blockNbt, entry1.getKey(), (int) value);
-                if (value instanceof Short)
-                    NbtUtil.putShort(blockNbt, entry1.getKey(), (short) value);
-                if (value instanceof Long)
-                    NbtUtil.putLong(blockNbt, entry1.getKey(), (long) value);
-                if (value instanceof Double)
-                    NbtUtil.putDouble(blockNbt, entry1.getKey(), (double) value);
-                if (value instanceof Float)
-                    NbtUtil.putFloat(blockNbt, entry1.getKey(), (float) value);
-                if (value instanceof Boolean)
-                    NbtUtil.putBoolean(blockNbt, entry1.getKey(), (boolean) value);
-                if (value instanceof Byte)
-                    NbtUtil.putByte(blockNbt, entry1.getKey(), (byte) value);
-                if (value instanceof NbtCompound)
-                    NbtUtil.put(blockNbt, entry1.getKey(), (NbtCompound) value);
+            NbtCompound posNbt = NbtUtil.create();
+            try {
+                NbtUtil.putInt(posNbt, "x", Integer.parseInt(keys[0]));
+                NbtUtil.putInt(posNbt, "y", Integer.parseInt(keys[1]));
+                NbtUtil.putInt(posNbt, "z", Integer.parseInt(keys[2]));
+            } catch (NumberFormatException ignore) {
+                continue;
             }
 
-            NbtUtil.putInt(posNbt, "x", pos.getX());
-            NbtUtil.putInt(posNbt, "y", pos.getY());
-            NbtUtil.putInt(posNbt, "z", pos.getZ());
             NbtUtil.put(blockNbt, "pos", posNbt);
-
             nbtList.add(blockNbt);
         }
 
         if (nbtList.isEmpty()) return false;
 
+        NbtCompound nbt = NbtUtil.create();
         NbtUtil.put(nbt, "blocks", nbtList);
         CustomDataUtil.set(stack.toMinecraft(), "blueprint", nbt);
         return true;
     }
-
 }
