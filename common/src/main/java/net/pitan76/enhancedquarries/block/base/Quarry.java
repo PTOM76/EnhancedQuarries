@@ -206,6 +206,7 @@ public abstract class Quarry extends BaseBlock {
 
                 quarryTile.setMinPos(BlockPos.of(minPosX, minPosY, minPosZ));
                 quarryTile.setMaxPos(BlockPos.of(maxPosX + 1, maxPosY, maxPosZ + 1));
+                quarryTile.callMarkDirty();
             }
         }
 

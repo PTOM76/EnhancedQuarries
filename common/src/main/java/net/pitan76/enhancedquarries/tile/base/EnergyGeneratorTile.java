@@ -116,6 +116,7 @@ public class EnergyGeneratorTile extends BaseEnergyTile implements IInventory, V
                 } else {
                     ItemStackUtil.decrementCount(stack, 1);
                 }
+                callMarkDirty();
             }
         }
 

@@ -77,12 +77,14 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
             if (stack.isEmpty() || stack.getCount() == 0) return;
             if (getItems().get(i).isEmpty()) {
                 getItems().set(i, stack);
+                callMarkDirty();
                 return;
             }
             ItemStack inStack = getItems().get(i);
             if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
                 int originInCount = getItems().get(i).getCount();
                 getItems().get(i).setCount(Math.min(ItemStackUtil.getMaxCount(stack), ItemStackUtil.getCount(stack) + originInCount));
+                callMarkDirty();
                 if (ItemStackUtil.getMaxCount(stack) >= ItemStackUtil.getCount(stack) + originInCount) {
                     return;
                 }

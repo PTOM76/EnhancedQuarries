@@ -117,11 +117,14 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public void setStoredExp(int storedExp) {
+        if (this.storedExp == storedExp) return;
+
         this.storedExp = storedExp;
+        callMarkDirty();
     }
 
     public void addStoredExp(int storedExp) {
-        this.storedExp += storedExp;
+        setStoredExp(this.storedExp + storedExp);
     }
 
     public void removeStoredExp(int storedExp) {
@@ -848,12 +851,14 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
             if (stack.isEmpty() || stack.getCount() == 0) return;
             if (getItems().get(i).isEmpty()) {
                 getItems().set(i, stack);
+                callMarkDirty();
                 return;
             }
             ItemStack inStack = getItems().get(i);
             if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
                 int originInCount = getItems().get(i).getCount();
                 getItems().get(i).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
+                callMarkDirty();
                 if (stack.getMaxCount() >= stack.getCount() + originInCount)
                     return;
 
