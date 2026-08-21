@@ -17,6 +17,8 @@ import net.pitan76.mcpitanlib.api.util.SlotUtil;
 public class LibraryScreenHandler extends SimpleScreenHandler {
     public Inventory libraryInventory;
 
+    public PlayerInventory playerInventory;
+
     public String blueprintName = "";
 
     public LibraryScreenHandler(int syncId, PlayerInventory playerInventory) {
@@ -30,6 +32,7 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
     public LibraryScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory libraryInventory) {
         super(type, syncId);
         this.libraryInventory = libraryInventory;
+        this.playerInventory = playerInventory;
 
         addPlayerMainInventorySlots(playerInventory, 8, 84);
         addPlayerHotbarSlots(playerInventory, 8, 142);
@@ -72,5 +75,9 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
 
     public void setBlueprintName(String name) {
         blueprintName = name;
+    }
+
+    public boolean isClient() {
+        return new Player(playerInventory.player).isClient();
     }
 }

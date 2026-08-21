@@ -238,10 +238,12 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                         StorageBoxHooks.setAmountInStorageBox(latestGotStack.toMinecraft(), countInBox);
                     }
 
+                    markDirty();
                     return true;
                 }
             }
             latestGotStack.decrement(1);
+            markDirty();
             return true;
         }
         return false;
@@ -261,6 +263,9 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
             for (procX = pos1.getX(); procX <= pos2.getX(); procX++) {
                 for (procZ = pos1.getZ(); procZ <= pos2.getZ(); procZ++) {
                     BlockPos procPos = BlockPos.of(procX, procY, procZ);
+
+                    if (procPos.equals(getMidohraPos())) continue;
+
                     BlockWrapper procBlock = world.getBlockState(procPos).getBlock();
 
                     BlockPos pos = procPos.subtract(getMidohraPos());
@@ -270,9 +275,6 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                     if (buildingState.getBlock().equals(MCBlocks.AIR) || procBlock.equals(buildingState.getBlock())) continue;
                     if (!procBlock.equals(MCBlocks.AIR)) continue;
 
-                    if (procBlock.asItem().equals(ItemWrapper.of(Items.NORMAL_BUILDER))) {
-                        continue;
-                    }
                     if (tryPlacing(procPos, buildingState)) {
                         return true;
                     }
