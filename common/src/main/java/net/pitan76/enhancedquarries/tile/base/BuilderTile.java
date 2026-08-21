@@ -141,8 +141,13 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         if (blueprint.hasCustomNbt() && blueprint.getRawItem() == Items.BLUEPRINT) {
             if (blueprintMap.isEmpty()) {
                 blueprintMap = BlueprintUtil.readNbt(blueprint, getFacing());
-                pos1 = pos.add(BlueprintUtil.getMinPos(blueprintMap));
-                pos2 = pos.add(BlueprintUtil.getMaxPos(blueprintMap));
+
+                BlockPos min = BlueprintUtil.getMinPos(blueprintMap);
+                BlockPos max = BlueprintUtil.getMaxPos(blueprintMap);
+                BlockPos origin = getBuildOrigin(pos, min, max);
+
+                pos1 = origin.add(min);
+                pos2 = origin.add(max);
 
                 // 必要なアイテム数
                 List<ItemStack> needStacks = new ArrayList<>();
@@ -194,6 +199,16 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         } else if (isActive()) {
             Builder.setActive(false, world, pos);
         }
+    }
+
+    // 構造物がビルダー自身に重ならないよう正面側に寄せた原点
+    public BlockPos getBuildOrigin(BlockPos pos, BlockPos min, BlockPos max) {
+        net.pitan76.mcpitanlib.midohra.util.math.Direction front = net.pitan76.mcpitanlib.midohra.util.math.Direction.of(getFacing()).getOpposite();
+
+        int nearMin = min.getX() * front.getOffsetX() + min.getZ() * front.getOffsetZ();
+        int nearMax = max.getX() * front.getOffsetX() + max.getZ() * front.getOffsetZ();
+
+        return pos.offset(front, 1 - Math.min(nearMin, nearMax));
     }
 
     public ItemStack latestGotStack = ItemStack.EMPTY;
@@ -256,6 +271,9 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
         if (world.isNull() || world.isClient()) return false;
         if (pos1 == null || pos2 == null)
             return false;
+
+        BlockPos origin = pos1.subtract(BlueprintUtil.getMinPos(blueprintMap));
+
         int procX;
         int procY;
         int procZ;
@@ -268,7 +286,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
                     BlockWrapper procBlock = world.getBlockState(procPos).getBlock();
 
-                    BlockPos pos = procPos.subtract(getMidohraPos());
+                    BlockPos pos = procPos.subtract(origin);
 
                     net.pitan76.mcpitanlib.midohra.block.BlockState buildingState = blueprintMap.get(pos);
                     if (buildingState == null) continue;
