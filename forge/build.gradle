@@ -15,6 +15,8 @@ configurations {
     developmentForge.extendsFrom common
 }
 
+sourceSets.main.output.resourcesDir = sourceSets.main.java.destinationDirectory
+
 project.archivesBaseName = project.archivesBaseName + "-forge"
 
 dependencies {
