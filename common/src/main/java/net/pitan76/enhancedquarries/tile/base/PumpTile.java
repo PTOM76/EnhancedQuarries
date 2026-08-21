@@ -13,7 +13,6 @@ import net.pitan76.mcpitanlib.api.transfer.fluid.v1.IFluidStorage;
 import net.pitan76.mcpitanlib.api.util.FluidStateUtil;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
@@ -182,7 +181,7 @@ public class PumpTile extends BaseEnergyTile {
         if (storedFluid.getAmount() < amount) return false;
 
         ItemStack held = player.getMidohraStackInHand(hand);
-        if (!held.getItem().equals(BUCKET)) return false;
+        if (!held.is(BUCKET)) return false;
 
         FluidWrapper fluid = getStoredFluidWrapper();
         if (fluid.isEmpty()) return false;
