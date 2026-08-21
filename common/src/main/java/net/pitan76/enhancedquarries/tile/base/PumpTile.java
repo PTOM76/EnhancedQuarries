@@ -12,7 +12,12 @@ import net.pitan76.enhancedquarries.platform.PlatformHooks;
 import net.pitan76.mcpitanlib.api.transfer.fluid.v1.FluidStorageUtil;
 import net.pitan76.mcpitanlib.api.transfer.fluid.v1.IFluidStorage;
 import net.pitan76.mcpitanlib.api.util.FluidStateUtil;
+import net.pitan76.mcpitanlib.api.entity.Player;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
+import net.pitan76.mcpitanlib.midohra.item.ItemStack;
+import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.fluid.FluidState;
 import net.pitan76.mcpitanlib.midohra.fluid.FluidWrapper;
@@ -24,7 +29,7 @@ import java.util.Set;
 
 // reference: Kibe Utilities's tank
 public class PumpTile extends BaseEnergyTile {
-    private IFluidStorage storedFluid = FluidStorageUtil.withFixedCapacity(PlatformHooks.bucketAmount() * 4, this::markDirty);
+    private IFluidStorage storedFluid = FluidStorageUtil.withFixedCapacity(PlatformHooks.bucketAmount() * 4, this::callMarkDirty);
 
     public IFluidStorage getStoredFluid() {
         return storedFluid;
@@ -162,6 +167,36 @@ public class PumpTile extends BaseEnergyTile {
             sphere.add(new BlockStatePos(world.getBlockState(tilePos.down()), tilePos.down(), world));
         }
         return sphere;
+    }
+
+    public static final ItemWrapper BUCKET = ItemWrapper.of(CompatIdentifier.of("bucket"));
+
+    public FluidWrapper getStoredFluidWrapper() {
+        if (storedFluid.isResourceBlank()) return FluidWrapper.of();
+
+        return storedFluid.getResource().getWrapper();
+    }
+
+    // 空のバケツで右クリックしたとき、1バケツ分を取り出す
+    public boolean tryFillBucket(Player player, net.minecraft.util.Hand hand) {
+        long amount = PlatformHooks.bucketAmount();
+        if (storedFluid.getAmount() < amount) return false;
+
+        ItemStack held = player.getMidohraStackInHand(hand);
+        if (!held.getItem().equals(BUCKET)) return false;
+
+        FluidWrapper fluid = getStoredFluidWrapper();
+        if (fluid.isEmpty()) return false;
+
+        ItemWrapper bucketItem = fluid.getBucketItem();
+        if (bucketItem.isEmpty()) return false;
+
+        if (storedFluid.extract(fluid, amount) != amount) return false;
+
+        held.decrement(1);
+        player.giveStack(bucketItem.createStack(1));
+        callMarkDirty();
+        return true;
     }
 
     public boolean tryPump(World world) {

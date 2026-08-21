@@ -2,7 +2,6 @@ package net.pitan76.enhancedquarries;
 
 import net.pitan76.enhancedquarries.block.*;
 import net.pitan76.enhancedquarries.block.base.EnergyGenerator;
-import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.item.Blueprint;
 import net.pitan76.enhancedquarries.item.Template;
 import net.pitan76.enhancedquarries.item.RedstoneHammer;
