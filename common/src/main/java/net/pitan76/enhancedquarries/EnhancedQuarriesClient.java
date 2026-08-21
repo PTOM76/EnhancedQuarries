@@ -26,10 +26,12 @@ public class EnhancedQuarriesClient {
         Screens.init();
     }
 
+    public static void initRenderers() {
+        TileRenderers.init();
+    }
+
     public static void init() {
         BlockRenders.init();
-
-        TileRenderers.init();
 
         ClientNetworking.registerReceiver(LibraryScreenHandler.LIST_PACKET_ID, (e) -> {
             List<String> blueprints = readNames(e.getCompatBuf());

@@ -21,6 +21,7 @@ public class EnhancedQuarriesForge {
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             EnhancedQuarriesClient.initScreens();
+            EnhancedQuarriesClient.initRenderers();
             modEventBus.addListener(EnhancedQuarriesForge::onClientSetup);
         });
     }

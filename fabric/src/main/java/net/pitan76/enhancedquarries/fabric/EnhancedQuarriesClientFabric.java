@@ -7,6 +7,7 @@ public class EnhancedQuarriesClientFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EnhancedQuarriesClient.initScreens();
+        EnhancedQuarriesClient.initRenderers();
         EnhancedQuarriesClient.init();
     }
 }

@@ -19,6 +19,7 @@ public class EnhancedQuarriesNeoForge {
 
         if (dist.isClient()) {
             EnhancedQuarriesClient.initScreens();
+            EnhancedQuarriesClient.initRenderers();
             modEventBus.addListener(EnhancedQuarriesNeoForge::onClientSetup);
         }
     }
