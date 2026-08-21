@@ -64,6 +64,9 @@ subprojects {
                     projectId = "528338"
                     minecraftVersions.addAll(versions)
 
+                    client = true
+                    server = true
+
                     requires("mcpitanlibarch")
                     optional("cloth-config")
                     if (loader == "fabric") {
