@@ -49,6 +49,8 @@
 
     "item.enhanced_quarries.empty_blueprint": "Blank Blueprint",
     "item.enhanced_quarries.blueprint": "Blueprint",
+    "item.enhanced_quarries.empty_template": "Blank Template",
+    "item.enhanced_quarries.template": "Template",
 
     "item.enhanced_quarries.refined_gear": "Refined Gear",
     "item.enhanced_quarries.enhanced_refined_gear": "Enhanced / Refined Gear",

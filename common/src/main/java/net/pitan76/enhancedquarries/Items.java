@@ -2,6 +2,7 @@ package net.pitan76.enhancedquarries;
 
 import net.minecraft.item.Item;
 import net.pitan76.enhancedquarries.item.Blueprint;
+import net.pitan76.enhancedquarries.item.Template;
 import net.pitan76.enhancedquarries.item.RedstoneHammer;
 import net.pitan76.enhancedquarries.item.WrenchItem;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
@@ -98,6 +99,10 @@ public class Items {
     public static Item BLUEPRINT;
     public static Item EMPTY_BLUEPRINT;
 
+    // テンプレート
+    public static Item TEMPLATE;
+    public static Item EMPTY_TEMPLATE;
+
     // ゆっくり饅頭 (未実装)
     //public static Item REIMU_BUN = new ExtendItem(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP).food(FoodComponents.COOKIE));
     //public static Item MARISA_BUN = new ExtendItem(CompatibleItemSettings.of().addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP).food(FoodComponents.COOKIE));
@@ -162,6 +167,9 @@ public class Items {
 
         registry.registerItem(EnhancedQuarries._id("empty_blueprint"), () -> EMPTY_BLUEPRINT = new Blueprint(CompatibleItemSettings.of(_id("empty_blueprint")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP)));
         registry.registerItem(EnhancedQuarries._id("blueprint"), () -> BLUEPRINT = new Blueprint(CompatibleItemSettings.of(_id("blueprint")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP)));
+
+        registry.registerItem(EnhancedQuarries._id("empty_template"), () -> EMPTY_TEMPLATE = new Template(CompatibleItemSettings.of(_id("empty_template")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP)));
+        registry.registerItem(EnhancedQuarries._id("template"), () -> TEMPLATE = new Template(CompatibleItemSettings.of(_id("template")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP)));
 
         //registry.registerItem(EnhancedQuarries.id("reimu_bun"), () -> REIMU_BUN);
         //registry.registerItem(EnhancedQuarries.id("marisa_bun"), () -> MARISA_BUN);

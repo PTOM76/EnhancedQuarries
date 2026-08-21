@@ -49,6 +49,8 @@
 
     "item.enhanced_quarries.empty_blueprint": "製図用紙",
     "item.enhanced_quarries.blueprint": "設計図",
+    "item.enhanced_quarries.empty_template": "空のテンプレート",
+    "item.enhanced_quarries.template": "テンプレート",
 
     "item.enhanced_quarries.refined_gear": "洗練されたギア",
     "item.enhanced_quarries.enhanced_refined_gear": "強化・洗練の歯車",
