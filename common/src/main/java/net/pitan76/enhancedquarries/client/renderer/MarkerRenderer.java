@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.client.renderer;
 
-import net.minecraft.util.math.BlockPos;
 import net.pitan76.enhancedquarries.tile.MarkerTile;
 import net.pitan76.mcpitanlib.api.client.registry.CompatRegistryClient;
 import net.pitan76.mcpitanlib.api.client.render.CompatRenderLayer;
@@ -9,7 +8,7 @@ import net.pitan76.mcpitanlib.api.client.render.block.entity.event.BlockEntityRe
 import net.pitan76.mcpitanlib.api.client.render.block.entity.event.CompatBlockEntityRendererConstructArgs;
 import net.pitan76.mcpitanlib.api.client.render.block.entity.v2.CompatBlockEntityRenderer;
 import net.pitan76.mcpitanlib.api.util.client.render.VertexRenderingUtil;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 
 public class MarkerRenderer extends CompatBlockEntityRenderer<MarkerTile> {
 
@@ -26,15 +25,15 @@ public class MarkerRenderer extends CompatBlockEntityRenderer<MarkerTile> {
         MarkerTile entity = e.getBlockEntity();
         if (e.blockEntity == null) return;
 
-        BlockPos pos = entity.callGetPos();
+        BlockPos pos = entity.getMidohraPos();
 
         if (entity.maxX == null || entity.maxY == null || entity.maxZ == null
                 || entity.minX == null || entity.minY == null || entity.minZ == null)
             return;
 
-        int x = PosUtil.x(pos);
-        int y = PosUtil.y(pos);
-        int z = PosUtil.z(pos);
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
 
         double maxX = entity.maxX - x;
         double maxY = entity.maxY - y;

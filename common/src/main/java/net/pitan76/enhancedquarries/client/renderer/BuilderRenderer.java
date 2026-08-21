@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.client.renderer;
 
-import net.minecraft.util.math.BlockPos;
 import net.pitan76.enhancedquarries.tile.base.BuilderTile;
 import net.pitan76.mcpitanlib.api.client.registry.CompatRegistryClient;
 import net.pitan76.mcpitanlib.api.client.render.CompatRenderLayer;
@@ -9,7 +8,7 @@ import net.pitan76.mcpitanlib.api.client.render.block.entity.event.BlockEntityRe
 import net.pitan76.mcpitanlib.api.client.render.block.entity.event.CompatBlockEntityRendererConstructArgs;
 import net.pitan76.mcpitanlib.api.client.render.block.entity.v2.CompatBlockEntityRenderer;
 import net.pitan76.mcpitanlib.api.util.client.render.VertexRenderingUtil;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 
 public class BuilderRenderer extends CompatBlockEntityRenderer<BuilderTile> {
 
@@ -26,14 +25,14 @@ public class BuilderRenderer extends CompatBlockEntityRenderer<BuilderTile> {
         BuilderTile entity = e.getBlockEntity();
         if (entity == null) return;
 
-        net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos1 = entity.getPos1();
-        net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos2 = entity.getPos2();
+        BlockPos pos1 = entity.getPos1();
+        BlockPos pos2 = entity.getPos2();
         if (pos1 == null || pos2 == null) return;
 
-        BlockPos pos = entity.callGetPos();
-        int x = PosUtil.x(pos);
-        int y = PosUtil.y(pos);
-        int z = PosUtil.z(pos);
+        BlockPos pos = entity.getMidohraPos();
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
 
         double minX = pos1.getX() - x;
         double minY = pos1.getY() - y;
