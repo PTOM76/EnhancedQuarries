@@ -24,8 +24,8 @@ public class CreateStairsModule extends FillerModule {
 
         boolean southCheck = procX >= e.getPos1().getX() + diffY && e.getTile().getFacing().equals(Direction.SOUTH);
         boolean northCheck = procX <= e.getPos2().getX() - diffY && e.getTile().getFacing().equals(Direction.NORTH);
-        boolean eastCheck = procZ <= e.getPos1().getZ() - diffY && e.getTile().getFacing().equals(Direction.EAST);
-        boolean westCheck = procZ >= e.getPos2().getZ() + diffY && e.getTile().getFacing().equals(Direction.WEST);
+        boolean eastCheck = procZ >= e.getPos1().getZ() + diffY && e.getTile().getFacing().equals(Direction.EAST);
+        boolean westCheck = procZ <= e.getPos2().getZ() - diffY && e.getTile().getFacing().equals(Direction.WEST);
         if (southCheck || northCheck || eastCheck || westCheck) {
             return e.placeBlock();
         }

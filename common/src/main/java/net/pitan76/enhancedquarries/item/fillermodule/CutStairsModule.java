@@ -24,7 +24,7 @@ public class CutStairsModule extends FillerModule {
             int procZ = e.getProcessPos().getZ();
             int procY = e.getProcessPos().getY();
             int diffY = procY - e.getPos1().getY();
-            if ((procX >= e.getPos1().getX() + diffY && e.getTile().getFacing().equals(Direction.SOUTH)) || (procX <= e.getPos2().getX() - diffY && e.getTile().getFacing().equals(Direction.NORTH)) || (procZ <= e.getPos1().getZ() - diffY && e.getTile().getFacing().equals(Direction.EAST)) || (procZ >= e.getPos2().getZ() + diffY && e.getTile().getFacing().equals(Direction.WEST))) {
+            if ((procX >= e.getPos1().getX() + diffY && e.getTile().getFacing().equals(Direction.SOUTH)) || (procX <= e.getPos2().getX() - diffY && e.getTile().getFacing().equals(Direction.NORTH)) || (procZ >= e.getPos1().getZ() + diffY && e.getTile().getFacing().equals(Direction.EAST)) || (procZ <= e.getPos2().getZ() - diffY && e.getTile().getFacing().equals(Direction.WEST))) {
                 return e.destroyBlock();
             }
         }
