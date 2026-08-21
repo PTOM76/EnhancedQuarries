@@ -5,6 +5,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.EnhancedQuarriesClient;
@@ -16,10 +17,16 @@ public class EnhancedQuarriesForge {
 
         new EnhancedQuarries();
 
+        modEventBus.addListener(EnhancedQuarriesForge::onCommonSetup);
+
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             EnhancedQuarriesClient.initScreens();
             modEventBus.addListener(EnhancedQuarriesForge::onClientSetup);
         });
+    }
+
+    private static void onCommonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(EnhancedQuarries::postInit);
     }
 
     private static void onClientSetup(FMLClientSetupEvent event) {

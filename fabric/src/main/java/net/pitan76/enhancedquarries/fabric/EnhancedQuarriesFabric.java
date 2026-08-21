@@ -7,5 +7,6 @@ public class EnhancedQuarriesFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         new EnhancedQuarries();
+        EnhancedQuarries.postInit();
     }
 }

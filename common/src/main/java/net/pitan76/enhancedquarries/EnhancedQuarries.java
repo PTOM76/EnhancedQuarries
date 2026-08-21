@@ -1,6 +1,7 @@
 package net.pitan76.enhancedquarries;
 
 import net.pitan76.enhancedquarries.command.EnhancedQuarriesCommand;
+import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.mcpitanlib.api.command.CommandRegistry;
 import net.pitan76.mcpitanlib.api.entity.Player;
@@ -33,8 +34,6 @@ public class EnhancedQuarries extends CommonModInitializer {
         Items.init();
         Tiles.init();
         ScreenHandlers.init();
-        FillerModules.init();
-        FillerCraftingPatterns.init();
         Config.init();
 
         ServerNetworking.registerReceiver(_id("blueprint_name"), (e -> {
@@ -49,6 +48,12 @@ public class EnhancedQuarries extends CommonModInitializer {
         registerEnergyStorage();
 
         CommandRegistry.register("enhancedquarries", new EnhancedQuarriesCommand());
+    }
+
+    public static void postInit() {
+        ModuleItems.init();
+        FillerModules.init();
+        FillerCraftingPatterns.init();
     }
 
     @Override
