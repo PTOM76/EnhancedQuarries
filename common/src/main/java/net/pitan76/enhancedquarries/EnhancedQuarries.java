@@ -9,11 +9,15 @@ import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.EnergyLookup;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
-import net.pitan76.enhancedquarries.platform.PlatformHooks;
 import net.pitan76.mcpitanlib.api.CommonModInitializer;
 import net.pitan76.mcpitanlib.midohra.registry.MidohraRegistryV2;
+import net.minecraft.block.entity.BlockEntityType;
+import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
+import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.EnergyLookup;
 
 public class EnhancedQuarries extends CommonModInitializer {
 
@@ -84,7 +88,18 @@ public class EnhancedQuarries extends CommonModInitializer {
      */
 
     public static void registerEnergyStorage() {
-        PlatformHooks.registerEnergyStorage();
+        if (!EnergyLookup.ENERGY.isSupported()) return;
+
+        for (RegistryResult<BlockEntityType<?>> tileType : Tiles.getEnergyTileTypes()) {
+            BlockEntityType<?> type = tileType.getOrNull();
+            if (type == null) continue;
+
+            EnergyLookup.ENERGY.registerForBlockEntity((blockEntity, dir) -> {
+                if (!(blockEntity instanceof BaseEnergyTile)) return null;
+
+                return ((BaseEnergyTile) blockEntity).getEnergyStorage();
+            }, type);
+        }
     }
 
     public static void log(String message, boolean isDebug) {

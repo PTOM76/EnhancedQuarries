@@ -8,14 +8,11 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.EnhancedQuarriesClient;
-import net.pitan76.enhancedquarries.neoforge.compat.FEEnergyRegister;
 
 @Mod(EnhancedQuarries.MOD_ID)
 public class EnhancedQuarriesNeoForge {
 
     public EnhancedQuarriesNeoForge(ModContainer modContainer, IEventBus modEventBus, Dist dist) {
-        modEventBus.addListener(FEEnergyRegister::register);
-
         new EnhancedQuarries();
 
         modEventBus.addListener(EnhancedQuarriesNeoForge::onCommonSetup);

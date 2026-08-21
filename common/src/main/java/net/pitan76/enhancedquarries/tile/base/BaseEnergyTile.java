@@ -6,7 +6,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.enhancedquarries.block.base.BaseBlock;
-import net.pitan76.enhancedquarries.compat.IEnergyStorage;
+import net.pitan76.enhancedquarries.compat.TileEnergyStorage;
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.IEnergyStorage;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
@@ -36,6 +37,9 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
     }
 
     public IEnergyStorage getEnergyStorage() {
+        if (energyStorage == null)
+            energyStorage = new TileEnergyStorage(this);
+
         return energyStorage;
     }
 

@@ -14,7 +14,6 @@ import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.item.base.MachineModule;
 import net.pitan76.enhancedquarries.item.quarrymodule.DropRemovalModule;
 import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
-import net.pitan76.enhancedquarries.platform.PlatformHooks;
 import net.pitan76.enhancedquarries.util.UnbreakableBlocks;
 import net.pitan76.mcpitanlib.api.block.CompatBlocks;
 import net.pitan76.mcpitanlib.api.enchantment.CompatEnchantment;
@@ -48,6 +47,7 @@ import net.pitan76.mcpitanlib.midohra.world.World;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import net.pitan76.mcpitanlib.api.transfer.item.v1.ItemTransferUtil;
 
 //@SuppressWarnings("UnstableApiUsage")
 public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory {
@@ -429,8 +429,11 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                 ItemStack stack = getItems().get(i);
                 if (stack.isEmpty()) continue;
 
-                long amount = PlatformHooks.moveToNeighbor(callGetWorld(), getMidohraPos(), this, i, dir);
-                if (amount < stack.getCount()) continue;
+                int moved = ItemTransferUtil.moveToNeighbor(callGetWorld(), callGetPos(), dir.toMinecraft(), ItemStackUtil.copy(stack));
+                if (moved <= 0) continue;
+
+                ItemStackUtil.decrementCount(stack, moved);
+                callMarkDirty();
 
                 ++time;
                 break;

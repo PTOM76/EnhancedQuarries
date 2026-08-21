@@ -8,7 +8,6 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
-import net.pitan76.enhancedquarries.platform.PlatformHooks;
 import net.pitan76.mcpitanlib.api.transfer.fluid.v1.FluidStorageUtil;
 import net.pitan76.mcpitanlib.api.transfer.fluid.v1.IFluidStorage;
 import net.pitan76.mcpitanlib.api.util.FluidStateUtil;
@@ -29,7 +28,7 @@ import java.util.Set;
 
 // reference: Kibe Utilities's tank
 public class PumpTile extends BaseEnergyTile {
-    private IFluidStorage storedFluid = FluidStorageUtil.withFixedCapacity(PlatformHooks.bucketAmount() * 4, this::callMarkDirty);
+    private IFluidStorage storedFluid = FluidStorageUtil.withFixedCapacity(FluidStorageUtil.buckets(4), this::callMarkDirty);
 
     public IFluidStorage getStoredFluid() {
         return storedFluid;
@@ -179,7 +178,7 @@ public class PumpTile extends BaseEnergyTile {
 
     // 空のバケツで右クリックしたとき、1バケツ分を取り出す
     public boolean tryFillBucket(Player player, net.minecraft.util.Hand hand) {
-        long amount = PlatformHooks.bucketAmount();
+        long amount = FluidStorageUtil.bucketAmount();
         if (storedFluid.getAmount() < amount) return false;
 
         ItemStack held = player.getMidohraStackInHand(hand);
@@ -216,7 +215,7 @@ public class PumpTile extends BaseEnergyTile {
             FluidWrapper fluid = FluidStateUtil.getFluidWrapper(state);
             if (fluid.isEmpty()) return false;
 
-            storedFluid.insert(fluid, PlatformHooks.bucketAmount());
+            storedFluid.insert(fluid, FluidStorageUtil.bucketAmount());
             return !storedFluid.isEmpty();
         } catch (NullPointerException e) {
             return false;

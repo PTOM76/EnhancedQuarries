@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import net.pitan76.mcpitanlib.api.util.math.CompatBlockRotation;
 
 public class BlueprintUtil {
 
@@ -187,34 +188,25 @@ public class BlueprintUtil {
         return BlockPos.of(x, pos.getY(), z);
     }
 
-    public static Direction rotateDirection(Direction direction, int steps) {
-        if (direction.isVertical()) return direction;
-
-        Direction result = direction;
-        for (int i = 0; i < steps; i++) {
-            result = result.rotateYClockwise();
+    public static CompatBlockRotation getRotation(Direction direction) {
+        switch (getRotationSteps(direction)) {
+            case 1:
+                return CompatBlockRotation.CLOCKWISE_90;
+            case 2:
+                return CompatBlockRotation.CLOCKWISE_180;
+            case 3:
+                return CompatBlockRotation.COUNTERCLOCKWISE_90;
+            default:
+                return CompatBlockRotation.NONE;
         }
-        return result;
     }
 
-    public static net.minecraft.util.math.Direction.Axis rotateAxis(net.minecraft.util.math.Direction.Axis axis, int steps) {
-        if (steps % 2 == 0) return axis;
-        if (axis == net.minecraft.util.math.Direction.Axis.X) return net.minecraft.util.math.Direction.Axis.Z;
-        if (axis == net.minecraft.util.math.Direction.Axis.Z) return net.minecraft.util.math.Direction.Axis.X;
-        return axis;
-    }
-
-    private static BlockState withRotatedDirection(BlockState state, net.pitan76.mcpitanlib.api.state.property.DirectionProperty property, String name, int steps) {
-        Direction direction = getDirectionFromName(name);
+    private static BlockState withDirection(BlockState state, net.pitan76.mcpitanlib.api.state.property.DirectionProperty property, String name) {
         try {
-            return state.with(property, rotateDirection(direction, steps));
+            return state.with(property, getDirectionFromName(name));
         } catch (IllegalArgumentException | IllegalStateException ignore) {
-            try {
-                // そのプロパティに使えない値なら回転前の値で妥協する
-                return state.with(property, direction);
-            } catch (IllegalArgumentException | IllegalStateException ignore2) {
-                return state;
-            }
+            // そのプロパティに使えない値なら諦める
+            return state;
         }
     }
 
@@ -237,11 +229,11 @@ public class BlueprintUtil {
                 BlockPos pos = rotatePos(BlockPos.of(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z")), steps);
 
                 if (blockNbt.has("horizontal_facing"))
-                    state = withRotatedDirection(state, CompatProperties.HORIZONTAL_FACING, blockNbt.getString("horizontal_facing"), steps);
+                    state = withDirection(state, CompatProperties.HORIZONTAL_FACING, blockNbt.getString("horizontal_facing"));
                 if (blockNbt.has("facing"))
-                    state = withRotatedDirection(state, CompatProperties.FACING, blockNbt.getString("facing"), steps);
+                    state = withDirection(state, CompatProperties.FACING, blockNbt.getString("facing"));
                 if (blockNbt.has("hopper_facing"))
-                    state = withRotatedDirection(state, CompatProperties.HOPPER_FACING, blockNbt.getString("hopper_facing"), steps);
+                    state = withDirection(state, CompatProperties.HOPPER_FACING, blockNbt.getString("hopper_facing"));
 
                 if (blockNbt.has("block_half")) {
                     try {
@@ -266,12 +258,12 @@ public class BlueprintUtil {
                 }
                 if (blockNbt.has("axis")) {
                     try {
-                        state = state.with(Properties.AXIS, rotateAxis(net.minecraft.util.math.Direction.Axis.valueOf(blockNbt.getString("axis").toUpperCase()), steps));
+                        state = state.with(Properties.AXIS, net.minecraft.util.math.Direction.Axis.valueOf(blockNbt.getString("axis").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
                 if (blockNbt.has("horizontal_axis")) {
                     try {
-                        state = state.with(Properties.HORIZONTAL_AXIS, rotateAxis(net.minecraft.util.math.Direction.Axis.valueOf(blockNbt.getString("horizontal_axis").toUpperCase()), steps));
+                        state = state.with(Properties.HORIZONTAL_AXIS, net.minecraft.util.math.Direction.Axis.valueOf(blockNbt.getString("horizontal_axis").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
                 if (blockNbt.has("chest_type")) {
@@ -295,6 +287,9 @@ public class BlueprintUtil {
                         state = state.with(Properties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.valueOf(blockNbt.getString("double_block_half").toUpperCase()));
                     } catch (IllegalArgumentException ignore) {}
                 }
+
+                state = state.rotate(getRotation(direction));
+
                 blocks.put(pos, state);
             }
         }

@@ -9,6 +9,9 @@ import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
 import net.pitan76.mcpitanlib.api.tile.BlockEntityTypeBuilder;
 import net.pitan76.mcpitanlib.midohra.block.BlockWrapper;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
 
 public class Tiles {
@@ -58,6 +61,17 @@ public class Tiles {
         NORMAL_MARKER = registry.registerBlockEntityType(EnhancedQuarries._id("normal_marker"), () -> create(MarkerTile::new, Blocks.NORMAL_MARKER));
 
         ENERGY_GENERATOR_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("energy_generator_tile"), () -> create(EnergyGeneratorTile::new, Blocks.ENERGY_GENERATOR));
+    }
+
+    public static List<RegistryResult<BlockEntityType<?>>> getEnergyTileTypes() {
+        return Arrays.asList(
+                NORMAL_QUARRY_TILE, ENHANCED_QUARRY_TILE, FLUID_QUARRY_TILE,
+                OPTIMUM_QUARRY_TILE, ENHANCED_OPTIMUM_QUARRY_TILE, FLUID_OPTIMUM_QUARRY_TILE,
+                NORMAL_FILLER_TILE, ENHANCED_FILLER_TILE, ENHANCED_FILLER_WITH_CHEST_TILE,
+                NORMAL_PUMP_TILE, ENHANCED_PUMP_TILE,
+                NORMAL_SCANNER_TILE, NORMAL_BUILDER_TILE,
+                ENERGY_GENERATOR_TILE
+        );
     }
 
     public static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityTypeBuilder.Factory<T> supplier, Block... blocks) {
