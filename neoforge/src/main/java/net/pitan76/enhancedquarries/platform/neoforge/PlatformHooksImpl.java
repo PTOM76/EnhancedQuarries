@@ -9,6 +9,8 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 
@@ -29,15 +31,15 @@ public class PlatformHooksImpl {
                 dir.getOpposite().toMinecraft());
         if (handler == null) return 0;
 
-        ItemStack stack = inventory.getStack(slot);
-        if (stack.isEmpty()) return 0;
+        ItemStack stack = InventoryUtil.getStack(inventory, slot);
+        if (ItemStackUtil.isEmpty(stack)) return 0;
 
-        ItemStack remainder = ItemHandlerHelper.insertItemStacked(handler, stack.copy(), false);
-        int moved = stack.getCount() - remainder.getCount();
+        ItemStack remainder = ItemHandlerHelper.insertItemStacked(handler, ItemStackUtil.copy(stack), false);
+        int moved = ItemStackUtil.getCount(stack) - ItemStackUtil.getCount(remainder);
         if (moved <= 0) return 0;
 
-        stack.decrement(moved);
-        inventory.markDirty();
+        ItemStackUtil.decrementCount(stack, moved);
+        InventoryUtil.markDirty(inventory);
         return moved;
     }
 

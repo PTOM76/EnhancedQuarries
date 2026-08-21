@@ -5,10 +5,14 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.pitan76.enhancedquarries.forge.compat.FEEnergyRegister;
+import net.pitan76.mcpitanlib.api.util.InventoryUtil;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 
@@ -23,7 +27,7 @@ public class PlatformHooksImpl {
     }
 
     public static long moveToNeighbor(World world, BlockPos pos, Inventory inventory, int slot, Direction dir) {
-        BlockEntity target = world.getBlockEntity(pos.offset(dir).toMinecraft());
+        BlockEntity target = WorldUtil.getBlockEntity(world, pos.offset(dir).toMinecraft());
         if (target == null) return 0;
 
         IItemHandler handler = target
@@ -31,20 +35,20 @@ public class PlatformHooksImpl {
                 .orElse(null);
         if (handler == null) return 0;
 
-        ItemStack stack = inventory.getStack(slot);
+        ItemStack stack = InventoryUtil.getStack(inventory, slot);
         if (stack.isEmpty()) return 0;
 
-        ItemStack remainder = ItemHandlerHelper.insertItemStacked(handler, stack.copy(), false);
-        int moved = stack.getCount() - remainder.getCount();
+        ItemStack remainder = ItemHandlerHelper.insertItemStacked(handler, ItemStackUtil.copy(stack), false);
+        int moved = ItemStackUtil.getCount(stack) - ItemStackUtil.getCount(remainder);
         if (moved <= 0) return 0;
 
-        stack.decrement(moved);
-        inventory.markDirty();
+        ItemStackUtil.decrementCount(stack, moved);
+        InventoryUtil.markDirty(inventory);
         return moved;
     }
 
     public static boolean addEnergyToForeignTile(BlockEntity blockEntity, long amount) {
-        net.minecraftforge.energy.IEnergyStorage storage = blockEntity
+        IEnergyStorage storage = blockEntity
                 .getCapability(ForgeCapabilities.ENERGY)
                 .orElse(null);
         if (storage == null || !storage.canReceive()) return false;

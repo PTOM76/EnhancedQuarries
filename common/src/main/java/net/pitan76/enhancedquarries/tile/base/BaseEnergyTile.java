@@ -61,13 +61,17 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
         return holdEnergy;
     }
 
+    // エネルギーはNBTに保存されるので、変化したらチャンクに保存が必要だと知らせる
     public void setEnergy(long energy) {
+        if (holdEnergy == energy) return;
+
         holdEnergy = energy;
+        callMarkDirty();
     }
 
     public boolean addEnergy(long energy) {
         if (canAddEnergy(energy)) {
-            holdEnergy += energy;
+            setEnergy(holdEnergy + energy);
             return true;
         }
         return false;
@@ -84,20 +88,20 @@ public abstract class BaseEnergyTile extends CompatBlockEntity implements Extend
     public long insertEnergy(long amount) {
         long usableCapacity = getUsableCapacity();
         if (amount > usableCapacity) {
-            holdEnergy += usableCapacity;
+            setEnergy(holdEnergy + usableCapacity);
             return usableCapacity;
         }
-        holdEnergy += amount;
+        setEnergy(holdEnergy + amount);
         return amount;
     }
 
     public long extractEnergy(long amount) {
         if (amount > holdEnergy) {
             long energy = this.holdEnergy;
-            this.holdEnergy = 0;
+            setEnergy(0);
             return energy;
         }
-        holdEnergy -= amount;
+        setEnergy(holdEnergy - amount);
         return amount;
     }
 

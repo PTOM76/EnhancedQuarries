@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory, SimpleScreenHandlerFactory {
+public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory, SimpleScreenHandlerFactory, RangeTile {
 
     // Container
     public ItemStackList invItems = ItemStackList.ofSize(28, ItemStackUtil.empty());
@@ -302,12 +302,12 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                         StorageBoxHooks.setAmountInStorageBox(latestGotStack.toMinecraft(), countInBox);
                     }
 
-                    markDirty();
+                    callMarkDirty();
                     return true;
                 }
             }
             latestGotStack.decrement(1);
-            markDirty();
+            callMarkDirty();
             return true;
         }
         return false;

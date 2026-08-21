@@ -17,6 +17,7 @@ public class Config {
 
     public static boolean client_marker_rendering_range_box = true;
     public static boolean client_builder_rendering_range_box = true;
+    public static boolean client_scanner_rendering_range_box = true;
 
     public static boolean initialized = false;
     public static void init() {
@@ -31,6 +32,7 @@ public class Config {
         HorizontalLayerModule.interval = config.getIntOrDefault("horizontal_layer_interval", 6);
         client_marker_rendering_range_box = config.getBooleanOrDefault("client_marker_rendering_range_box", true);
         client_builder_rendering_range_box = config.getBooleanOrDefault("client_builder_rendering_range_box", true);
+        client_scanner_rendering_range_box = config.getBooleanOrDefault("client_scanner_rendering_range_box", true);
 
         if (!config.configMap.containsKey("reborn_energy_conversion_rate"))
             config.setDouble("reborn_energy_conversion_rate", 1.0);

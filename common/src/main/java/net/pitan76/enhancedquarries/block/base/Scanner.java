@@ -107,6 +107,8 @@ public abstract class Scanner extends BaseBlock {
             if (markerList.size() <= 2) return;
             scannerTile.setPos1(BlockPos.of(minPosX, minPosY, minPosZ));
             scannerTile.setPos2(BlockPos.of(maxPosX, maxPosY, maxPosZ));
+            scannerTile.callMarkDirty();
+            scannerTile.syncRangeToClient();
         }
     }
 }

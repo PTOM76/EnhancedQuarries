@@ -1,16 +1,16 @@
 package net.pitan76.enhancedquarries.client.renderer;
 
-import net.pitan76.enhancedquarries.tile.base.BuilderTile;
+import net.pitan76.enhancedquarries.tile.base.ScannerTile;
 import net.pitan76.mcpitanlib.api.client.registry.CompatRegistryClient;
 import net.pitan76.mcpitanlib.api.client.render.block.entity.event.CompatBlockEntityRendererConstructArgs;
 
-public class BuilderRenderer extends RangeBoxRenderer<BuilderTile> {
+public class ScannerRenderer extends RangeBoxRenderer<ScannerTile> {
 
-    public BuilderRenderer(CompatBlockEntityRendererConstructArgs args) {
+    public ScannerRenderer(CompatBlockEntityRendererConstructArgs args) {
         super(args);
     }
 
-    public BuilderRenderer(CompatRegistryClient.BlockEntityRendererFactory.Context ctx) {
+    public ScannerRenderer(CompatRegistryClient.BlockEntityRendererFactory.Context ctx) {
         super(ctx);
     }
 

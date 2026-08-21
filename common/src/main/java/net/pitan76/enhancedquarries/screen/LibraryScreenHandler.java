@@ -126,7 +126,7 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
 
         InventoryUtil.setStack(libraryInventory, LibrarySlot.SLOT_SAVE_INPUT, ItemStackUtil.empty());
         InventoryUtil.setStack(libraryInventory, LibrarySlot.SLOT_SAVE_OUTPUT, input);
-        libraryInventory.markDirty();
+        InventoryUtil.markDirty(libraryInventory);
         return true;
     }
 
@@ -144,7 +144,7 @@ public class LibraryScreenHandler extends SimpleScreenHandler {
 
         InventoryUtil.setStack(libraryInventory, LibrarySlot.SLOT_LOAD_INPUT, ItemStackUtil.empty());
         InventoryUtil.setStack(libraryInventory, LibrarySlot.SLOT_LOAD_OUTPUT, loaded);
-        libraryInventory.markDirty();
+        InventoryUtil.markDirty(libraryInventory);
         return true;
     }
 

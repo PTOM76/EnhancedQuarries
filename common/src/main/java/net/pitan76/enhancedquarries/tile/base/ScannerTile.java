@@ -2,6 +2,7 @@ package net.pitan76.enhancedquarries.tile.base;
 
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
@@ -18,6 +19,8 @@ import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
+import net.pitan76.mcpitanlib.api.packet.UpdatePacketType;
+import net.pitan76.mcpitanlib.api.registry.CompatRegistryLookup;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
@@ -31,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScreenHandlerFactory {
+public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScreenHandlerFactory, RangeTile {
 
     // Container
     public ItemStackList invItems = ItemStackList.ofSize(27, ItemStackUtil.empty());
@@ -83,16 +86,38 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
         NbtRWUtil.getInv(args, getItems());
         coolTime = NbtRWUtil.getDoubleOrDefault(args, "coolTime", getSettingCoolTime());
 
-        int pos1x = NbtRWUtil.getIntOrDefault(args, "rangePos1X", 0);
-        int pos1y = NbtRWUtil.getIntOrDefault(args, "rangePos1Y", 0);
-        int pos1z = NbtRWUtil.getIntOrDefault(args, "rangePos1Z", 0);
+        // 範囲が保存されていないときに(0,0,0)にしてしまうと、範囲なしではなく原点を指してしまう
+        setPos1(readRangePos(args, "rangePos1"));
+        setPos2(readRangePos(args, "rangePos2"));
+    }
 
-        int pos2x = NbtRWUtil.getIntOrDefault(args, "rangePos2X", 0);
-        int pos2y = NbtRWUtil.getIntOrDefault(args, "rangePos2Y", 0);
-        int pos2z = NbtRWUtil.getIntOrDefault(args, "rangePos2Z", 0);
+    private BlockPos readRangePos(ReadNbtArgs args, String key) {
+        if (!NbtUtil.has(args.getNbt(), key + "X")) return null;
 
-        setPos1(BlockPos.of(pos1x, pos1y, pos1z));
-        setPos2(BlockPos.of(pos2x, pos2y, pos2z));
+        return BlockPos.of(NbtRWUtil.getIntOrDefault(args, key + "X", 0),
+                NbtRWUtil.getIntOrDefault(args, key + "Y", 0),
+                NbtRWUtil.getIntOrDefault(args, key + "Z", 0));
+    }
+
+    @Override
+    public UpdatePacketType getUpdatePacketType() {
+        return UpdatePacketType.BLOCK_ENTITY_UPDATE_S2C;
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt(CompatRegistryLookup registryLookup) {
+        NbtCompound nbt = NbtUtil.create();
+        writeNbt(new WriteNbtArgs(nbt, registryLookup));
+        return nbt;
+    }
+
+    // 範囲の枠線を描くために、クライアントへ更新パケットを飛ばす
+    public void syncRangeToClient() {
+        World world = getMidohraWorld();
+        if (world.isNull() || world.isClient()) return;
+
+        net.minecraft.block.BlockState state = world.getBlockState(getMidohraPos()).toMinecraft();
+        WorldUtil.updateListeners(world.toMinecraft(), callGetPos(), state, state, 3);
     }
 
     // ----
@@ -132,6 +157,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
                     getItems().set(1, stack);
                     getItems().set(0, ItemStackUtil.empty());
                     useEnergy(getEnergyCost());
+                    callMarkDirty();
                 }
 
             }

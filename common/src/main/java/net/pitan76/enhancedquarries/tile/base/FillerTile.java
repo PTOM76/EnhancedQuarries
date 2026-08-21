@@ -231,7 +231,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
                 coolTime = getSettingCoolTime();
                 if (tryFilling(getModule().getItem())) {
                     useEnergy(getEnergyCost());
-                    markDirty();
+                    callMarkDirty();
                 }
             }
             coolTimeBonus();
