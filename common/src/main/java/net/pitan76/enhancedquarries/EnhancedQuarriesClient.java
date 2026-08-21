@@ -8,9 +8,12 @@ import net.pitan76.mcpitanlib.api.network.v2.ClientNetworking;
 
 public class EnhancedQuarriesClient {
 
+    public static void initScreens() {
+        Screens.init();
+    }
+
     public static void init() {
         BlockRenders.init();
-        Screens.init();
 
         TileRenderers.init();
 

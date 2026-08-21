@@ -17,8 +17,10 @@ public class EnhancedQuarriesNeoForge {
 
         new EnhancedQuarries();
 
-        if (dist.isClient())
+        if (dist.isClient()) {
+            EnhancedQuarriesClient.initScreens();
             modEventBus.addListener(EnhancedQuarriesNeoForge::onClientSetup);
+        }
     }
 
     private static void onClientSetup(FMLClientSetupEvent event) {

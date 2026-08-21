@@ -13,11 +13,13 @@ import net.pitan76.enhancedquarries.EnhancedQuarriesClient;
 public class EnhancedQuarriesForge {
     public EnhancedQuarriesForge() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-//        EventBuses.registerModEventBus(EnhancedQuarries.MOD_ID, modEventBus);
 
         new EnhancedQuarries();
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(EnhancedQuarriesForge::onClientSetup));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            EnhancedQuarriesClient.initScreens();
+            modEventBus.addListener(EnhancedQuarriesForge::onClientSetup);
+        });
     }
 
     private static void onClientSetup(FMLClientSetupEvent event) {
