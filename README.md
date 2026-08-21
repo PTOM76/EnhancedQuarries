@@ -5,8 +5,8 @@ CompactEngine、AkutoEngine、QuarryPlusをリスペクトしたようなMODで�
 ## Link
 <a href="https://www.curseforge.com/minecraft/mc-mods/enhancedquarries">CurseForge</a>
 
-## 互換性
-- Fabric: TechRebornのエネルギー(RebornEnergy)
+## Compatibility
+- Fabric: Energy of TechReborn (RebornEnergy)
 - Forge/NeoForge: ForgeEnergy
 - StorageBox for Fabric
 
