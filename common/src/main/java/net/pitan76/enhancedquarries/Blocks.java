@@ -3,13 +3,13 @@ package net.pitan76.enhancedquarries;
 import net.minecraft.block.Block;
 import net.pitan76.enhancedquarries.block.*;
 import net.pitan76.enhancedquarries.block.base.*;
+import net.pitan76.mcpitanlib.midohra.block.ITypedBlockWrapper;
 
-import static net.pitan76.enhancedquarries.EnhancedQuarries._id;
-import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
+import static net.pitan76.enhancedquarries.EnhancedQuarries.*;
 
 public class Blocks {
 
-    public static Quarry NORMAL_QUARRY;
+    public static ITypedBlockWrapper<Quarry> NORMAL_QUARRY;
     public static Quarry ENHANCED_QUARRY;
     public static Quarry FLUID_QUARRY;
     public static Quarry OPTIMUM_QUARRY;
@@ -33,7 +33,7 @@ public class Blocks {
     public static Block FRAME;
 
     public static void init() {
-        registry.registerBlock(EnhancedQuarries._id("normal_quarry"), () -> NORMAL_QUARRY = new NormalQuarry(_id("normal_quarry")));
+        NORMAL_QUARRY = registry2.registerBlock(EnhancedQuarries._id("normal_quarry"), () -> new NormalQuarry(_id("normal_quarry")));
         registry.registerBlock(EnhancedQuarries._id("enhanced_quarry"), () -> ENHANCED_QUARRY = new EnhancedQuarry(_id("enhanced_quarry")));
         registry.registerBlock(EnhancedQuarries._id("fluid_quarry"), () -> FLUID_QUARRY = new FluidQuarry(_id("fluid_quarry")));
         registry.registerBlock(EnhancedQuarries._id("optimum_quarry"), () -> OPTIMUM_QUARRY = new OptimumQuarry(_id("optimum_quarry")));

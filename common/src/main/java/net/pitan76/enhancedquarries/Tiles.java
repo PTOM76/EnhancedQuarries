@@ -35,7 +35,7 @@ public class Tiles {
     public static RegistryResult<BlockEntityType<?>> ENERGY_GENERATOR_TILE;
 
     public static void init() {
-        NORMAL_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("normal_quarry_tile"), () -> create(NormalQuarryTile::new, Blocks.NORMAL_QUARRY));
+        NORMAL_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("normal_quarry_tile"), () -> create(NormalQuarryTile::new, Blocks.NORMAL_QUARRY.get()));
         ENHANCED_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("enhanced_quarry_tile"), () -> create(EnhancedQuarryTile::new, Blocks.ENHANCED_QUARRY));
         FLUID_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("fluid_quarry_tile"), () -> create(FluidQuarryTile::new, Blocks.FLUID_QUARRY));
 

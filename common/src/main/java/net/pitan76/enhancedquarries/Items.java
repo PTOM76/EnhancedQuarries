@@ -11,13 +11,13 @@ import net.pitan76.enhancedquarries.item.quarrymodule.*;
 import net.pitan76.mcpitanlib.api.item.v2.CompatItem;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
+import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
 
-import static net.pitan76.enhancedquarries.EnhancedQuarries._id;
-import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
+import static net.pitan76.enhancedquarries.EnhancedQuarries.*;
 
 public class Items {
 
-    public static Item NORMAL_QUARRY;
+    public static ItemWrapper NORMAL_QUARRY;
     public static Item ENHANCED_QUARRY;
     public static Item FLUID_QUARRY;
     public static Item OPTIMUM_QUARRY;
@@ -109,7 +109,7 @@ public class Items {
 
 
     public static void init() {
-        registry.registerItem(EnhancedQuarries._id("normal_quarry"), () -> NORMAL_QUARRY = ItemUtil.create(Blocks.NORMAL_QUARRY, CompatibleItemSettings.of(_id("normal_quarry")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP)));
+        NORMAL_QUARRY = registry2.registerBlockItem(EnhancedQuarries._id("normal_quarry"), Blocks.NORMAL_QUARRY, CompatibleItemSettings.of(_id("normal_quarry")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
         registry.registerItem(EnhancedQuarries._id("enhanced_quarry"), () -> ENHANCED_QUARRY = ItemUtil.create(Blocks.ENHANCED_QUARRY, CompatibleItemSettings.of(_id("enhanced_quarry")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP)));
         registry.registerItem(EnhancedQuarries._id("fluid_quarry"), () -> FLUID_QUARRY = ItemUtil.create(Blocks.FLUID_QUARRY, CompatibleItemSettings.of(_id("fluid_quarry")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP)));
         registry.registerItem(EnhancedQuarries._id("optimum_quarry"), () -> OPTIMUM_QUARRY = ItemUtil.create(Blocks.OPTIMUM_QUARRY, CompatibleItemSettings.of(_id("optimum_quarry")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP)));

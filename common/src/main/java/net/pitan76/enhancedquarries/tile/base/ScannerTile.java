@@ -219,7 +219,7 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
 
                     if (procState.getBlock() == MCBlocks.AIR) continue;
 
-                    blocks.put(BlockPos.of(procX - pos1.getX(), procY - pos1.getY(), procZ - pos1.getZ()), procState);
+                    blocks.put(procPos.subtract(pos1), procState);
                 }
             }
         }

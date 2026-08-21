@@ -13,6 +13,7 @@ import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.enhancedquarries.platform.PlatformHooks;
 import net.pitan76.mcpitanlib.api.CommonModInitializer;
+import net.pitan76.mcpitanlib.midohra.registry.MidohraRegistryV2;
 
 public class EnhancedQuarries extends CommonModInitializer {
 
@@ -20,14 +21,16 @@ public class EnhancedQuarries extends CommonModInitializer {
     public static final String MOD_NAME = "Enhanced Quarries";
     public static EnhancedQuarries instance;
 
-    public static final CreativeTabBuilder ENHANCED_QUARRIES_GROUP = CreativeTabBuilder.create(_id("all")).setIcon(() -> ItemStackUtil.create(Items.NORMAL_QUARRY));
+    public static final CreativeTabBuilder ENHANCED_QUARRIES_GROUP = CreativeTabBuilder.create(_id("all")).setIconM(() -> Items.NORMAL_QUARRY.createStack());
 
     public static CompatRegistryV2 registry;
+    public static MidohraRegistryV2 registry2;
 
     @Override
     public void init() {
         instance = this;
         registry = super.registry;
+        registry2 = MidohraRegistryV2.of(registry);
 
         registry.registerItemGroup(ENHANCED_QUARRIES_GROUP);
         Blocks.init();

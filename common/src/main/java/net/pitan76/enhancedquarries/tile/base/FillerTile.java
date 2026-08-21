@@ -150,7 +150,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
-        if (callGetWorld() != null || !args.hasRegistryLookup())
+        if (callGetWorld() != null && !args.hasRegistryLookup())
             args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
         NbtRWUtil.getInv(args, getAllStacks());
