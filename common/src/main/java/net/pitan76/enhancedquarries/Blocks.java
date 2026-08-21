@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries;
 
-import net.minecraft.block.Block;
 import net.pitan76.enhancedquarries.block.*;
 import net.pitan76.enhancedquarries.block.base.*;
 import net.pitan76.mcpitanlib.midohra.block.ITypedBlockWrapper;
@@ -10,50 +9,50 @@ import static net.pitan76.enhancedquarries.EnhancedQuarries.*;
 public class Blocks {
 
     public static ITypedBlockWrapper<Quarry> NORMAL_QUARRY;
-    public static Quarry ENHANCED_QUARRY;
-    public static Quarry FLUID_QUARRY;
-    public static Quarry OPTIMUM_QUARRY;
-    public static Quarry ENHANCED_OPTIMUM_QUARRY;
-    public static Quarry FLUID_OPTIMUM_QUARRY;
+    public static ITypedBlockWrapper<Quarry> ENHANCED_QUARRY;
+    public static ITypedBlockWrapper<Quarry> FLUID_QUARRY;
+    public static ITypedBlockWrapper<Quarry> OPTIMUM_QUARRY;
+    public static ITypedBlockWrapper<Quarry> ENHANCED_OPTIMUM_QUARRY;
+    public static ITypedBlockWrapper<Quarry> FLUID_OPTIMUM_QUARRY;
 
-    public static Filler NORMAL_FILLER;
-    public static Filler ENHANCED_FILLER;
-    public static Filler ENHANCED_FILLER_WITH_CHEST;
+    public static ITypedBlockWrapper<Filler> NORMAL_FILLER;
+    public static ITypedBlockWrapper<Filler> ENHANCED_FILLER;
+    public static ITypedBlockWrapper<Filler> ENHANCED_FILLER_WITH_CHEST;
 
-    public static Pump NORMAL_PUMP;
-    public static Pump ENHANCED_PUMP;
+    public static ITypedBlockWrapper<Pump> NORMAL_PUMP;
+    public static ITypedBlockWrapper<Pump> ENHANCED_PUMP;
 
-    public static Scanner NORMAL_SCANNER;
-    public static Builder NORMAL_BUILDER;
-    public static Library NORMAL_LIBRARY;
+    public static ITypedBlockWrapper<Scanner> NORMAL_SCANNER;
+    public static ITypedBlockWrapper<Builder> NORMAL_BUILDER;
+    public static ITypedBlockWrapper<Library> NORMAL_LIBRARY;
 
-    public static Block ENERGY_GENERATOR;
+    public static ITypedBlockWrapper<EnergyGenerator> ENERGY_GENERATOR;
 
-    public static Block NORMAL_MARKER;
-    public static Block FRAME;
+    public static ITypedBlockWrapper<NormalMarker> NORMAL_MARKER;
+    public static ITypedBlockWrapper<Frame> FRAME;
 
     public static void init() {
-        NORMAL_QUARRY = registry2.registerBlock(EnhancedQuarries._id("normal_quarry"), () -> new NormalQuarry(_id("normal_quarry")));
-        registry.registerBlock(EnhancedQuarries._id("enhanced_quarry"), () -> ENHANCED_QUARRY = new EnhancedQuarry(_id("enhanced_quarry")));
-        registry.registerBlock(EnhancedQuarries._id("fluid_quarry"), () -> FLUID_QUARRY = new FluidQuarry(_id("fluid_quarry")));
-        registry.registerBlock(EnhancedQuarries._id("optimum_quarry"), () -> OPTIMUM_QUARRY = new OptimumQuarry(_id("optimum_quarry")));
-        registry.registerBlock(EnhancedQuarries._id("enhanced_optimum_quarry"), () -> ENHANCED_OPTIMUM_QUARRY = new EnhancedOptimumQuarry(_id("enhanced_optimum_quarry")));
-        registry.registerBlock(EnhancedQuarries._id("fluid_optimum_quarry"), () -> FLUID_OPTIMUM_QUARRY = new FluidOptimumQuarry(_id("fluid_optimum_quarry")));
+        NORMAL_QUARRY = registry2.registerBlock(_id("normal_quarry"), () -> new NormalQuarry(_id("normal_quarry")));
+        ENHANCED_QUARRY = registry2.registerBlock(_id("enhanced_quarry"), () -> new EnhancedQuarry(_id("enhanced_quarry")));
+        FLUID_QUARRY = registry2.registerBlock(_id("fluid_quarry"), () -> new FluidQuarry(_id("fluid_quarry")));
+        OPTIMUM_QUARRY = registry2.registerBlock(_id("optimum_quarry"), () -> new OptimumQuarry(_id("optimum_quarry")));
+        ENHANCED_OPTIMUM_QUARRY = registry2.registerBlock(_id("enhanced_optimum_quarry"), () -> new EnhancedOptimumQuarry(_id("enhanced_optimum_quarry")));
+        FLUID_OPTIMUM_QUARRY = registry2.registerBlock(_id("fluid_optimum_quarry"), () -> new FluidOptimumQuarry(_id("fluid_optimum_quarry")));
 
-        registry.registerBlock(EnhancedQuarries._id("normal_filler"), () -> NORMAL_FILLER = new NormalFiller(_id("normal_filler")));
-        registry.registerBlock(EnhancedQuarries._id("enhanced_filler"), () -> ENHANCED_FILLER = new EnhancedFiller(_id("enhanced_filler")));
-        registry.registerBlock(EnhancedQuarries._id("enhanced_filler_with_chest"), () -> ENHANCED_FILLER_WITH_CHEST = new EnhancedFillerWithChest(_id("enhanced_filler_with_chest")));
+        NORMAL_FILLER = registry2.registerBlock(_id("normal_filler"), () -> new NormalFiller(_id("normal_filler")));
+        ENHANCED_FILLER = registry2.registerBlock(_id("enhanced_filler"), () -> new EnhancedFiller(_id("enhanced_filler")));
+        ENHANCED_FILLER_WITH_CHEST = registry2.registerBlock(_id("enhanced_filler_with_chest"), () -> new EnhancedFillerWithChest(_id("enhanced_filler_with_chest")));
 
-        registry.registerBlock(EnhancedQuarries._id("normal_pump"), () -> NORMAL_PUMP = new NormalPump(_id("normal_pump")));
-        registry.registerBlock(EnhancedQuarries._id("enhanced_pump"), () -> ENHANCED_PUMP = new EnhancedPump(_id("enhanced_pump")));
+        NORMAL_PUMP = registry2.registerBlock(_id("normal_pump"), () -> new NormalPump(_id("normal_pump")));
+        ENHANCED_PUMP = registry2.registerBlock(_id("enhanced_pump"), () -> new EnhancedPump(_id("enhanced_pump")));
 
-        registry.registerBlock(EnhancedQuarries._id("normal_scanner"), () -> NORMAL_SCANNER = new NormalScanner(_id("normal_scanner")));
-        registry.registerBlock(EnhancedQuarries._id("normal_builder"), () -> NORMAL_BUILDER = new NormalBuilder(_id("normal_builder")));
-        registry.registerBlock(EnhancedQuarries._id("normal_library"), () -> NORMAL_LIBRARY = new NormalLibrary(_id("normal_library")));
+        NORMAL_SCANNER = registry2.registerBlock(_id("normal_scanner"), () -> new NormalScanner(_id("normal_scanner")));
+        NORMAL_BUILDER = registry2.registerBlock(_id("normal_builder"), () -> new NormalBuilder(_id("normal_builder")));
+        NORMAL_LIBRARY = registry2.registerBlock(_id("normal_library"), () -> new NormalLibrary(_id("normal_library")));
 
-        registry.registerBlock(EnhancedQuarries._id("energy_generator"), () -> ENERGY_GENERATOR = new EnergyGenerator(_id("energy_generator")));
+        ENERGY_GENERATOR = registry2.registerBlock(_id("energy_generator"), () -> new EnergyGenerator(_id("energy_generator")));
 
-        registry.registerBlock(EnhancedQuarries._id("normal_marker"), () -> NORMAL_MARKER = new NormalMarker(_id("normal_marker")));
-        registry.registerBlock(EnhancedQuarries._id("frame"), () -> FRAME = new Frame(_id("frame")));
+        NORMAL_MARKER = registry2.registerBlock(_id("normal_marker"), () -> new NormalMarker(_id("normal_marker")));
+        FRAME = registry2.registerBlock(_id("frame"), () -> new Frame(_id("frame")));
     }
 }

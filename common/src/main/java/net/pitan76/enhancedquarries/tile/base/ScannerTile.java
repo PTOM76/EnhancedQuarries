@@ -175,26 +175,26 @@ public class ScannerTile extends BaseEnergyTile implements IInventory, SimpleScr
         ItemWrapper item = getItemsM().get(0).getItem();
         if (item.isEmpty()) return false;
 
-        return item.get().equals(Items.EMPTY_TEMPLATE) || item.get().equals(Items.TEMPLATE);
+        return item.equals(Items.EMPTY_TEMPLATE) || item.equals(Items.TEMPLATE);
     }
 
     public boolean canScan() {
         ItemWrapper item = getItemsM().get(0).getItem();
         if (item.isEmpty()) return false;
 
-        return item.get().equals(Items.EMPTY_BLUEPRINT) || item.get().equals(Items.BLUEPRINT) || item.get().equals(Items.EMPTY_TEMPLATE) || item.get().equals(Items.TEMPLATE);
+        return item.equals(Items.EMPTY_BLUEPRINT) || item.equals(Items.BLUEPRINT) || item.equals(Items.EMPTY_TEMPLATE) || item.equals(Items.TEMPLATE);
     }
 
     public ItemStack createScannedStack(Map<BlockPos, BlockState> blocks) {
         int count = getItems().getAsMidohra(0).getCount();
 
         if (isTemplateInput()) {
-            ItemStack stack = ItemStackUtil.create(Items.TEMPLATE, count);
+            ItemStack stack = ItemStackUtil.create(Items.TEMPLATE.get(), count);
             TemplateUtil.writeNbt(net.pitan76.mcpitanlib.midohra.item.ItemStack.of(stack), blocks.keySet());
             return stack;
         }
 
-        ItemStack stack = ItemStackUtil.create(Items.BLUEPRINT, count);
+        ItemStack stack = ItemStackUtil.create(Items.BLUEPRINT.get(), count);
         BlueprintUtil.writeNbt(net.pitan76.mcpitanlib.midohra.item.ItemStack.of(stack), blocks);
         return stack;
     }

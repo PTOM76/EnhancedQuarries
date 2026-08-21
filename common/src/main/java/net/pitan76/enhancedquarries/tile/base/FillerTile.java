@@ -380,7 +380,7 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
             this.setLastCheckedPos(procPos);
             Block procBlock = world.getBlockState(procPos).getBlock().get();
 
-            BlockEntity blockEntity = world.getBlockEntity(procPos.toRaw());
+            BlockEntity blockEntity = world.getBlockEntity(procPos).get();
             boolean isThis = blockEntity instanceof FillerTile || blockEntity == this;
             if (!isThis) {
                 FillerProcessEvent event = new FillerProcessEvent(this, procPos, procBlock);

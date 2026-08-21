@@ -7,6 +7,7 @@ import net.pitan76.enhancedquarries.tile.*;
 import net.pitan76.enhancedquarries.tile.base.EnergyGeneratorTile;
 import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
 import net.pitan76.mcpitanlib.api.tile.BlockEntityTypeBuilder;
+import net.pitan76.mcpitanlib.midohra.block.BlockWrapper;
 
 import static net.pitan76.enhancedquarries.EnhancedQuarries.registry;
 
@@ -35,7 +36,7 @@ public class Tiles {
     public static RegistryResult<BlockEntityType<?>> ENERGY_GENERATOR_TILE;
 
     public static void init() {
-        NORMAL_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("normal_quarry_tile"), () -> create(NormalQuarryTile::new, Blocks.NORMAL_QUARRY.get()));
+        NORMAL_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("normal_quarry_tile"), () -> create(NormalQuarryTile::new, Blocks.NORMAL_QUARRY));
         ENHANCED_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("enhanced_quarry_tile"), () -> create(EnhancedQuarryTile::new, Blocks.ENHANCED_QUARRY));
         FLUID_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("fluid_quarry_tile"), () -> create(FluidQuarryTile::new, Blocks.FLUID_QUARRY));
 
@@ -61,6 +62,14 @@ public class Tiles {
 
     public static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityTypeBuilder.Factory<T> supplier, Block... blocks) {
         return BlockEntityTypeBuilder.create(supplier, blocks).build();
+    }
+
+    public static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityTypeBuilder.Factory<T> supplier, BlockWrapper... blocks) {
+        Block[] rawBlocks = new Block[blocks.length];
+        for (int i = 0; i < blocks.length; i++) {
+            rawBlocks[i] = blocks[i].get();
+        }
+        return create(supplier, rawBlocks);
     }
 
 }

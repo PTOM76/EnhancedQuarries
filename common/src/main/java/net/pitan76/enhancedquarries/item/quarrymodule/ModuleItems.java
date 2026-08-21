@@ -14,12 +14,12 @@ public class ModuleItems {
 
     // Items の値が入るのは登録後なので EnhancedQuarries.postInit() から呼ぶ
     public static void init() {
-        BEDROCK_BREAK_MODULE = (MachineModule) Items.BEDROCK_BREAK_MODULE;
-        SILK_TOUCH_MODULE = (MachineModule) Items.SILK_TOUCH_MODULE;
-        LUCK_MODULE = (MachineModule) Items.LUCK_MODULE;
-        MOB_KILL_MODULE = (MachineModule) Items.MOB_KILL_MODULE;
-        MOB_DELETE_MODULE = (MachineModule) Items.MOB_DELETE_MODULE;
-        EXP_COLLECT_MODULE = (MachineModule) Items.EXP_COLLECT_MODULE;
-        DROP_REMOVAL_MODULE = (MachineModule) Items.DROPPED_ITEM_REMOVAL_MODULE;
+        BEDROCK_BREAK_MODULE = Items.BEDROCK_BREAK_MODULE.getICompat();
+        SILK_TOUCH_MODULE = Items.SILK_TOUCH_MODULE.getICompat();
+        LUCK_MODULE = Items.LUCK_MODULE.getICompat();
+        MOB_KILL_MODULE = Items.MOB_KILL_MODULE.getICompat();
+        MOB_DELETE_MODULE = Items.MOB_DELETE_MODULE.getICompat();
+        EXP_COLLECT_MODULE = Items.EXP_COLLECT_MODULE.getICompat();
+        DROP_REMOVAL_MODULE = Items.DROPPED_ITEM_REMOVAL_MODULE.getICompat();
     }
 }

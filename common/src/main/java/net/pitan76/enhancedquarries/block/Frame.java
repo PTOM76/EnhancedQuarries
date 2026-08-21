@@ -82,7 +82,7 @@ public class Frame extends CompatBlock implements Waterloggable {
     }
 
     public static BlockState getPlacementStateDefine(World world, BlockPos pos) {
-        return BlockStateUtil.getMidohraDefaultState(Blocks.FRAME)
+        return BlockStateUtil.getMidohraDefaultState(Blocks.FRAME.get())
                 .with(CONNECT_NORTH, canConnect(world, pos.north()))
                 .with(CONNECT_SOUTH, canConnect(world, pos.south()))
                 .with(CONNECT_EAST, canConnect(world, pos.east()))
@@ -121,7 +121,7 @@ public class Frame extends CompatBlock implements Waterloggable {
     }
 
     public static boolean canConnect(IWorldView world, BlockPos blockPos) {
-        return world.getBlockState(blockPos).getBlock().get() == Blocks.FRAME;
+        return world.getBlockState(blockPos).getBlock().equals(Blocks.FRAME);
     }
 
     @Override

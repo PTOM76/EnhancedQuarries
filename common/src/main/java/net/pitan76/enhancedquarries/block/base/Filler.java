@@ -59,7 +59,7 @@ public abstract class Filler extends BaseBlock {
 
             // モジュールの返却
             if (filler.canBedrockBreak())
-                ItemEntityUtil.createWithSpawn(e.world, ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1), e.pos);
+                ItemEntityUtil.createWithSpawn(e.world, ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE.get(), 1), e.pos);
 
             filler.getCraftingInventory().set(9, ItemStackUtil.empty());
             ItemScattererUtil.spawn(e.world, e.pos, filler.getAllStacks());
@@ -87,7 +87,7 @@ public abstract class Filler extends BaseBlock {
 
             // モジュールの返却
             if (filler.canBedrockBreak())
-                ItemEntityUtil.createWithSpawn(e.world, ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE, 1), e.pos);
+                ItemEntityUtil.createWithSpawn(e.world, ItemStackUtil.create(Items.BEDROCK_BREAK_MODULE.get(), 1), e.pos);
 
             filler.getCraftingInventory().set(9, ItemStackUtil.empty());
             ItemScattererUtil.spawn(world, pos, filler.getAllStacks());

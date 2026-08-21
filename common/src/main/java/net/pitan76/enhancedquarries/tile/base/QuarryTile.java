@@ -324,28 +324,28 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     protected void addModulesFromOldNbt(NbtCompound nbt) {
         if (NbtUtil.has(nbt, "module_bedrock_break") && NbtUtil.getBoolean(nbt, "module_bedrock_break")) {
-            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.BEDROCK_BREAK_MODULE))
-                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.BEDROCK_BREAK_MODULE, 1));
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.BEDROCK_BREAK_MODULE.get()))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.BEDROCK_BREAK_MODULE.get(), 1));
         }
         if (NbtUtil.has(nbt, "module_mob_delete") && NbtUtil.getBoolean(nbt, "module_mob_delete")) {
-            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.MOB_DELETE_MODULE))
-                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.MOB_DELETE_MODULE, 1));
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.MOB_DELETE_MODULE.get()))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.MOB_DELETE_MODULE.get(), 1));
         }
         if (NbtUtil.has(nbt, "module_mob_kill") && NbtUtil.getBoolean(nbt, "module_mob_kill")) {
-            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.MOB_KILL_MODULE))
-                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.MOB_KILL_MODULE, 1));
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.MOB_KILL_MODULE.get()))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.MOB_KILL_MODULE.get(), 1));
         }
         if (NbtUtil.has(nbt, "module_luck") && NbtUtil.getBoolean(nbt, "module_luck")) {
-            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.LUCK_MODULE))
-                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.LUCK_MODULE, 1));
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.LUCK_MODULE.get()))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.LUCK_MODULE.get(), 1));
         }
         if (NbtUtil.has(nbt, "module_silk_touch") && NbtUtil.getBoolean(nbt, "module_silk_touch")) {
-            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.SILK_TOUCH_MODULE))
-                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.SILK_TOUCH_MODULE, 1));
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.SILK_TOUCH_MODULE.get()))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.SILK_TOUCH_MODULE.get(), 1));
         }
         if (NbtUtil.has(nbt, "module_exp_collect") && NbtUtil.getBoolean(nbt, "module_exp_collect")) {
-            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.EXP_COLLECT_MODULE))
-                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.EXP_COLLECT_MODULE, 1));
+            if (!hasModuleItem(net.pitan76.enhancedquarries.Items.EXP_COLLECT_MODULE.get()))
+                addModuleStack(ItemStackUtil.create(net.pitan76.enhancedquarries.Items.EXP_COLLECT_MODULE.get(), 1));
         }
     }
 

@@ -160,7 +160,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
         ItemStack blueprint = ItemStack.of(InventoryUtil.getStack(inventory, 0));
 
-        if (blueprint.hasCustomNbt() && blueprint.getItem().equals(ItemWrapper.of(Items.TEMPLATE))) {
+        if (blueprint.hasCustomNbt() && blueprint.is(Items.TEMPLATE)) {
             if (templatePositions.isEmpty()) {
                 templatePositions = TemplateUtil.readNbt(blueprint, getFacing());
 
@@ -172,7 +172,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
                 pos2 = origin.add(max);
                 syncRangeToClient();
             }
-        } else if (blueprint.hasCustomNbt() && blueprint.getItem().equals(ItemWrapper.of(Items.BLUEPRINT))) {
+        } else if (blueprint.hasCustomNbt() && blueprint.is(Items.BLUEPRINT)) {
             if (blueprintMap.isEmpty()) {
                 blueprintMap = BlueprintUtil.readNbt(blueprint, getFacing());
 
@@ -192,7 +192,7 @@ public class BuilderTile extends BaseEnergyTile implements IInventory, ChestStyl
 
                     boolean b = false;
                     for (ItemStack stack : needStacks) {
-                        if (!stack.getItem().equals(item)) continue;
+                        if (!stack.is(item)) continue;
                         stack.increment(1);
                         b = true;
                         break;

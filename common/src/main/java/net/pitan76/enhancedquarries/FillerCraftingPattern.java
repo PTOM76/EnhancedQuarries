@@ -38,7 +38,7 @@ public class FillerCraftingPattern {
     public FillerCraftingPattern(ItemStack output, ItemStack... inputs) {
         this(ItemStackUtil.getItem(output), Arrays.stream(inputs).map(ItemStackUtil::getItem).toArray(Item[]::new));
     }
-    
+
     public FillerCraftingPattern(Item output, Item... inputs) {
         this.output = output;
         if (inputs.length > 0) this.inputs[0] = inputs[0];
@@ -50,7 +50,7 @@ public class FillerCraftingPattern {
         if (inputs.length > 6) this.inputs[6] = inputs[6];
         if (inputs.length > 7) this.inputs[7] = inputs[7];
         if (inputs.length > 8) this.inputs[8] = inputs[8];
-        
+
     }
 
     @Deprecated
