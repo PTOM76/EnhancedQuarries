@@ -13,6 +13,7 @@ import net.pitan76.mcpitanlib.api.event.block.ItemScattererUtil;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.world.World;
@@ -43,9 +44,9 @@ public abstract class Scanner extends BaseBlock {
     @Override
     public void onStateReplaced(StateReplacedEvent e) {
         if (e.state.getBlock() != e.newState.getBlock()) {
-            BlockEntity blockEntity = e.getBlockEntity();
-            if (blockEntity instanceof ScannerTile) {
-                ScannerTile scanner = (ScannerTile)blockEntity;
+            BlockEntityWrapper blockEntity = e.getBlockEntityWrapper();
+            if (blockEntity.instanceOf(ScannerTile.class)) {
+                ScannerTile scanner = blockEntity.getCompatBlockEntity(ScannerTile.class);
                 if (scanner.keepNbtOnDrop) {
                     super.onStateReplaced(e);
                     return;

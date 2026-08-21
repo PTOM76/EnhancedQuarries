@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.block.base;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.pitan76.enhancedquarries.EnhancedQuarries;
 import net.pitan76.enhancedquarries.block.Frame;
@@ -17,6 +16,7 @@ import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.world.World;
@@ -52,8 +52,8 @@ public abstract class Quarry extends BaseBlock {
         ItemStack stack = e.player.getMainHandStack();
         if (stack != null && ItemStackUtil.getItem(stack) == CompatItems.GLASS_BOTTLE) {
             if (e.isClient()) return e.success();
-            if (e.getBlockEntity() instanceof QuarryTile) {
-                QuarryTile quarry = (QuarryTile) e.getBlockEntity();
+            if (e.getBlockEntityWrapper().instanceOf(QuarryTile.class)) {
+                QuarryTile quarry = e.getBlockEntityWrapper().getCompatBlockEntity(QuarryTile.class);
                 if (quarry.getStoredExp() >= 4) {
                     e.player.giveStack(ItemStackUtil.create(CompatItems.EXP_BOTTLE, 1));
                     ItemStackUtil.decrementCount(stack, 1);
@@ -79,9 +79,9 @@ public abstract class Quarry extends BaseBlock {
             return;
         }
 
-        BlockEntity blockEntity = e.getBlockEntity();
-        if (blockEntity instanceof QuarryTile) {
-            QuarryTile quarry = (QuarryTile) blockEntity;
+        BlockEntityWrapper blockEntity = e.getBlockEntityWrapper();
+        if (blockEntity.instanceOf(QuarryTile.class)) {
+            QuarryTile quarry = blockEntity.getCompatBlockEntity(QuarryTile.class);
             if (quarry.keepNbtOnDrop) {
                 super.onStateReplaced(e);
                 return;
@@ -125,9 +125,9 @@ public abstract class Quarry extends BaseBlock {
 
         if (state.isEmpty()) return super.onBreak(e);
 
-        BlockEntity blockEntity = e.getBlockEntity();
-        if (blockEntity instanceof QuarryTile) {
-            QuarryTile quarry = (QuarryTile) blockEntity;
+        BlockEntityWrapper blockEntity = e.getBlockEntityWrapper();
+        if (blockEntity.instanceOf(QuarryTile.class)) {
+            QuarryTile quarry = blockEntity.getCompatBlockEntity(QuarryTile.class);
             if (quarry.keepNbtOnDrop) {
                 return super.onBreak(e);
             }
@@ -164,11 +164,11 @@ public abstract class Quarry extends BaseBlock {
         BlockState state;
         state = (e.getState() == null) ? fstate : e.getMidohraState();
         if (e.isClient()) return;
-        BlockEntity blockEntity = e.getBlockEntity();
+        BlockEntityWrapper blockEntity = e.getBlockEntityWrapper();
 
-        if (!(blockEntity instanceof QuarryTile)) return;
+        if (!blockEntity.instanceOf(QuarryTile.class)) return;
 
-        QuarryTile quarryTile = (QuarryTile) blockEntity;
+        QuarryTile quarryTile = blockEntity.getCompatBlockEntity(QuarryTile.class);
         Objects.requireNonNull(quarryTile).init();
 
         if (quarryTile.canSetPosByMarker()) {
