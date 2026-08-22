@@ -1,6 +1,7 @@
 package net.pitan76.enhancedquarries.tile.base;
 
 import net.minecraft.block.Block;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
@@ -25,12 +26,15 @@ import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.gui.inventory.sided.ChestStyleSidedInventory;
 import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
 import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
+import net.pitan76.mcpitanlib.api.packet.UpdatePacketType;
+import net.pitan76.mcpitanlib.api.registry.CompatRegistryLookup;
 import net.pitan76.mcpitanlib.api.sound.CompatSoundCategory;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ClippedItemStackList;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.enhancedquarries.platform.StorageBoxHooks;
@@ -437,6 +441,26 @@ public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyle
     // マーカーによる範囲指定を許可するか？
     public boolean canSetPosByMarker() {
         return true;
+    }
+
+    @Override
+    public UpdatePacketType getUpdatePacketType() {
+        return UpdatePacketType.BLOCK_ENTITY_UPDATE_S2C;
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt(CompatRegistryLookup registryLookup) {
+        NbtCompound nbt = NbtUtil.create();
+        writeNbt(new WriteNbtArgs(nbt, registryLookup));
+        return nbt;
+    }
+
+    public void syncRangeToClient() {
+        World world = getMidohraWorld();
+        if (world.isNull() || world.isClient()) return;
+
+        BlockState state = world.getBlockState(getMidohraPos());
+        WorldUtil.updateListeners(world.toMinecraft(), callGetPos(), state.toMinecraft(), state.toMinecraft(), 3);
     }
 
     private BlockPos pos1 = null;
