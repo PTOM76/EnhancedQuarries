@@ -48,9 +48,9 @@ subprojects {
         }
 
         publishMods {
-            file = tasks.named("remapJar").flatMap { it.archiveFile }
+            file = remapJar.archiveFile
             version = rootProject.mod_version + "-" + loader
-            displayName = rootProject.archives_base_name + " " + rootProject.mod_version + " (" + loader + ")"
+            displayName = remapJar.archiveFileName
             changelog = rootProject.changelog + "\n" + "MCPitanLib version: " + rootProject.mcpitanlib_version.split(":")[1]
             type = STABLE
             modLoaders.add(loader)

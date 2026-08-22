@@ -80,7 +80,7 @@ public class FillerScreenHandler extends SimpleScreenHandler {
                 return ItemStackUtil.empty();
             }
 
-            if (originalStack.isEmpty()) {
+            if (ItemStackUtil.isEmpty(originalStack)) {
                 SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
                 SlotUtil.markDirty(slot);

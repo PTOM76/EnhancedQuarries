@@ -74,16 +74,16 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
 
         int size = getItems().size();
         for (int i = 27; i < size; i++) {
-            if (stack.isEmpty() || stack.getCount() == 0) return;
-            if (getItems().get(i).isEmpty()) {
+            if (ItemStackUtil.isEmpty(stack) || ItemStackUtil.getCount(stack) == 0) return;
+            if (ItemStackUtil.isEmpty(getItems().get(i))) {
                 getItems().set(i, stack);
                 callMarkDirty();
                 return;
             }
             ItemStack inStack = getItems().get(i);
-            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
-                int originInCount = getItems().get(i).getCount();
-                getItems().get(i).setCount(Math.min(ItemStackUtil.getMaxCount(stack), ItemStackUtil.getCount(stack) + originInCount));
+            if (ItemStackUtil.getItem(stack).equals(ItemStackUtil.getItem(inStack)) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && ItemStackUtil.getMaxCount(inStack) != 1) {
+                int originInCount = ItemStackUtil.getCount(getItems().get(i));
+                ItemStackUtil.setCount(getItems().get(i), Math.min(ItemStackUtil.getMaxCount(stack), ItemStackUtil.getCount(stack) + originInCount));
                 callMarkDirty();
                 if (ItemStackUtil.getMaxCount(stack) >= ItemStackUtil.getCount(stack) + originInCount) {
                     return;
@@ -92,7 +92,7 @@ public class EnhancedFillerWithChestTile extends EnhancedFillerTile {
             }
         }
 
-        ItemEntityUtil.createWithSpawn(world.getRaw(), stack, callGetPos());
+        ItemEntityUtil.createWithSpawn(world, stack, callGetPos());
     }
 
     @Nullable

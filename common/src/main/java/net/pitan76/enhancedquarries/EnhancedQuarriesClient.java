@@ -49,7 +49,6 @@ public class EnhancedQuarriesClient {
 
         ClientNetworking.registerReceiver(EnhancedQuarries._id("energy_generator_sync"), (e) -> {
             CompatPacketByteBuf buf = e.getCompatBuf();
-            if (!buf.isReadable(EnergyGeneratorScreenHandler.EXTRA_DATA_SIZE)) return;
 
             long energy = buf.readLong();
             long maxEnergy = buf.readLong();

@@ -94,7 +94,7 @@ public class BuilderScreenHandler extends SimpleScreenHandler {
                 }
             }
 
-            if (originalStack.isEmpty()) {
+            if (ItemStackUtil.isEmpty(originalStack)) {
                 SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
                 SlotUtil.markDirty(slot);

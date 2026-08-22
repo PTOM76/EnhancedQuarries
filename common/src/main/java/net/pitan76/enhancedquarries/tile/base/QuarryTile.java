@@ -181,7 +181,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
         CACHE_moduleItems.clear();
         for (ItemStack stack : getModuleStacks()) {
-            if (stack.isEmpty()) continue;
+            if (ItemStackUtil.isEmpty(stack)) continue;
 
             Item item = ItemStackUtil.getItem(stack);
             if (!CACHE_moduleItems.contains(item))
@@ -432,7 +432,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
             if (time > limit) break;
             for (Direction dir : dirs) {
                 ItemStack stack = getItems().get(i);
-                if (stack.isEmpty()) continue;
+                if (ItemStackUtil.isEmpty(stack)) continue;
 
                 int moved = ItemTransferUtil.moveToNeighbor(callGetWorld(), callGetPos(), dir.toMinecraft(), ItemStackUtil.copy(stack));
                 if (moved <= 0) continue;
@@ -833,14 +833,15 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     public Integer getEmptyOrCanInsertIndex(Inventory inventory, ItemStack stack) {
         int size = getItems().size();
         for (int i = 0; i < size; i++) {
-            if (InventoryUtil.getStack(inventory, i).isEmpty())
+            if (ItemStackUtil.isEmpty(InventoryUtil.getStack(inventory, i)))
                 return i;
 
             ItemStack inStack = getItems().get(i);
-            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
-                int originInCount = getItems().get(i).getCount();
-                getItems().get(i).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
-                if (stack.getMaxCount() >= stack.getCount() + originInCount) {
+            if (ItemStackUtil.getItem(stack).equals(ItemStackUtil.getItem(inStack)) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && ItemStackUtil.getMaxCount(inStack) != 1) {
+                int maxCount = ItemStackUtil.getMaxCount(stack);
+                int originInCount = ItemStackUtil.getCount(getItems().get(i));
+                ItemStackUtil.setCount(getItems().get(i), Math.min(maxCount, ItemStackUtil.getCount(stack) + originInCount));
+                if (maxCount >= ItemStackUtil.getCount(stack) + originInCount) {
                     return i;
                 }
             }
@@ -850,27 +851,28 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public void addStack(ItemStack stack) {
-        if (callGetWorld() == null || callGetWorld().isClient()) return;
+        if (callGetWorld() == null || WorldUtil.isClient(callGetWorld())) return;
 
         if (isRemovalItem(stack)) return;
 
         int size = getItems().size();
         for (int i = 0; i < size; i++) {
-            if (stack.isEmpty() || stack.getCount() == 0) return;
-            if (getItems().get(i).isEmpty()) {
+            if (ItemStackUtil.isEmpty(stack) || ItemStackUtil.getCount(stack) == 0) return;
+            if (ItemStackUtil.isEmpty(getItems().get(i))) {
                 getItems().set(i, stack);
                 callMarkDirty();
                 return;
             }
             ItemStack inStack = getItems().get(i);
-            if (stack.getItem().equals(inStack.getItem()) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && inStack.getItem().getMaxCount() != 1) {
-                int originInCount = getItems().get(i).getCount();
-                getItems().get(i).setCount(Math.min(stack.getMaxCount(), stack.getCount() + originInCount));
+            if (ItemStackUtil.getItem(stack).equals(ItemStackUtil.getItem(inStack)) && (ItemStackUtil.areNbtOrComponentEqual(stack, inStack) || !ItemStackUtil.hasNbtOrComponent(stack) == !ItemStackUtil.hasNbtOrComponent(inStack)) && ItemStackUtil.getMaxCount(inStack) != 1) {
+                int maxCount = ItemStackUtil.getMaxCount(stack);
+                int originInCount = ItemStackUtil.getCount(getItems().get(i));
+                ItemStackUtil.setCount(getItems().get(i), Math.min(maxCount, ItemStackUtil.getCount(stack) + originInCount));
                 callMarkDirty();
-                if (stack.getMaxCount() >= stack.getCount() + originInCount)
+                if (maxCount >= ItemStackUtil.getCount(stack) + originInCount)
                     return;
 
-                ItemStackUtil.setCount(stack, stack.getCount() + originInCount - stack.getMaxCount());
+                ItemStackUtil.setCount(stack, ItemStackUtil.getCount(stack) + originInCount - maxCount);
             }
         }
 

@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.item.ItemStack;
 import net.pitan76.enhancedquarries.tile.base.FillerTile;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.v2.BlockUtilV2;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
@@ -65,7 +66,7 @@ public class FillerProcessEvent {
 
     public FillerModuleReturn placeBlock() {
         ItemStack stack = getStack();
-        if (stack.isEmpty()) return FillerModuleReturn.RETURN_FALSE;
+        if (ItemStackUtil.isEmpty(stack)) return FillerModuleReturn.RETURN_FALSE;
 
         Block itemBlock = BlockUtilV2.fromItem(stack);
         // Skip if it's the same block. E.g., don't replace stone with stone!

@@ -90,7 +90,7 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
                 }
             }
 
-            if (originalStack.isEmpty()) {
+            if (ItemStackUtil.isEmpty(originalStack)) {
                 SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
                 SlotUtil.markDirty(slot);
