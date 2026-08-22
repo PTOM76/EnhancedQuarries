@@ -23,7 +23,10 @@ public class TileRenderers {
         if (Config.client_scanner_rendering_range_box)
             CompatRegistryClient.registerCompatBlockEntityRenderer(() -> (BlockEntityType<ScannerTile>) Tiles.NORMAL_SCANNER_TILE.getOrNull(), ScannerRenderer::new);
 
-        if (Config.client_filler_rendering_range_box)
+        if (Config.client_filler_rendering_range_box) {
             CompatRegistryClient.registerCompatBlockEntityRenderer(() -> (BlockEntityType<FillerTile>) Tiles.NORMAL_FILLER_TILE.getOrNull(), FillerRenderer::new);
+            CompatRegistryClient.registerCompatBlockEntityRenderer(() -> (BlockEntityType<FillerTile>) Tiles.ENHANCED_FILLER_TILE.getOrNull(), FillerRenderer::new);
+            CompatRegistryClient.registerCompatBlockEntityRenderer(() -> (BlockEntityType<FillerTile>) Tiles.ENHANCED_FILLER_WITH_CHEST_TILE.getOrNull(), FillerRenderer::new);
+        }
     }
 }
