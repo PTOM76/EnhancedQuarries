@@ -27,6 +27,9 @@ public class Items {
     public static TypedBlockItemWrapper<EnhancedOptimumQuarry> ENHANCED_OPTIMUM_QUARRY;
     public static TypedBlockItemWrapper<FluidOptimumQuarry> FLUID_OPTIMUM_QUARRY;
 
+    // 試験的なクォーリー
+    public static TypedBlockItemWrapper<ExperimentalQuarryTypeA> EXPERIMENTAL_QUARRY_TYPE_A;
+
     public static TypedBlockItemWrapper<NormalFiller> NORMAL_FILLER;
     public static TypedBlockItemWrapper<EnhancedFiller> ENHANCED_FILLER;
     public static TypedBlockItemWrapper<EnhancedFillerWithChest> ENHANCED_FILLER_WITH_CHEST;
@@ -118,6 +121,8 @@ public class Items {
         OPTIMUM_QUARRY = registry2.registerBlockItem(_id("optimum_quarry"), Blocks.OPTIMUM_QUARRY, CompatibleItemSettings.of(_id("optimum_quarry")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
         ENHANCED_OPTIMUM_QUARRY = registry2.registerBlockItem(_id("enhanced_optimum_quarry"), Blocks.ENHANCED_OPTIMUM_QUARRY, CompatibleItemSettings.of(_id("enhanced_optimum_quarry")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
         FLUID_OPTIMUM_QUARRY = registry2.registerBlockItem(_id("fluid_optimum_quarry"), Blocks.FLUID_OPTIMUM_QUARRY, CompatibleItemSettings.of(_id("fluid_optimum_quarry")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
+
+        EXPERIMENTAL_QUARRY_TYPE_A = registry2.registerBlockItem(_id("experimental_quarry_type_a"), Blocks.EXPERIMENTAL_QUARRY_TYPE_A, CompatibleItemSettings.of(_id("experimental_quarry_type_a")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
 
         NORMAL_FILLER = registry2.registerBlockItem(_id("normal_filler"), Blocks.NORMAL_FILLER, CompatibleItemSettings.of(_id("normal_filler")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));
         ENHANCED_FILLER = registry2.registerBlockItem(_id("enhanced_filler"), Blocks.ENHANCED_FILLER, CompatibleItemSettings.of(_id("enhanced_filler")).addGroup(EnhancedQuarries.ENHANCED_QUARRIES_GROUP));

@@ -15,6 +15,9 @@ public class Blocks {
     public static ITypedBlockWrapper<Quarry> ENHANCED_OPTIMUM_QUARRY;
     public static ITypedBlockWrapper<Quarry> FLUID_OPTIMUM_QUARRY;
 
+    // 試験的なクォーリー
+    public static ITypedBlockWrapper<Quarry> EXPERIMENTAL_QUARRY_TYPE_A;
+
     public static ITypedBlockWrapper<Filler> NORMAL_FILLER;
     public static ITypedBlockWrapper<Filler> ENHANCED_FILLER;
     public static ITypedBlockWrapper<Filler> ENHANCED_FILLER_WITH_CHEST;
@@ -38,6 +41,8 @@ public class Blocks {
         OPTIMUM_QUARRY = registry2.registerBlock(_id("optimum_quarry"), () -> new OptimumQuarry(_id("optimum_quarry")));
         ENHANCED_OPTIMUM_QUARRY = registry2.registerBlock(_id("enhanced_optimum_quarry"), () -> new EnhancedOptimumQuarry(_id("enhanced_optimum_quarry")));
         FLUID_OPTIMUM_QUARRY = registry2.registerBlock(_id("fluid_optimum_quarry"), () -> new FluidOptimumQuarry(_id("fluid_optimum_quarry")));
+
+        EXPERIMENTAL_QUARRY_TYPE_A = registry2.registerBlock(_id("experimental_quarry_type_a"), () -> new ExperimentalQuarryTypeA(_id("experimental_quarry_type_a")));
 
         NORMAL_FILLER = registry2.registerBlock(_id("normal_filler"), () -> new NormalFiller(_id("normal_filler")));
         ENHANCED_FILLER = registry2.registerBlock(_id("enhanced_filler"), () -> new EnhancedFiller(_id("enhanced_filler")));

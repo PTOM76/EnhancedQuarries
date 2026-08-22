@@ -9,6 +9,7 @@
     "block.enhanced_quarries.optimum_quarry": "軽量処理クァーリー",
     "block.enhanced_quarries.enhanced_optimum_quarry": "強化型軽量処理クァーリー",
     "block.enhanced_quarries.fluid_optimum_quarry": "液体除去型軽量処理クァーリー",
+    "block.enhanced_quarries.experimental_quarry_type_a": "試験的クァーリー Type-A",
     "block.enhanced_quarries.normal_pump": "ノーマル ポンプ",
     "block.enhanced_quarries.enhanced_pump": "強化型ポンプ",
     "block.enhanced_quarries.normal_scanner": "スキャナー",
@@ -65,5 +66,18 @@
     "category.enhanced_quarries.general": "一般",
     "option.enhanced_quarries.torch_interval": "松明設置モジュールの設置間隔",
     "option.enhanced_quarries.vertical_layer_interval": "垂直層建設モジュールの設置間隔",
-    "option.enhanced_quarries.horizontal_layer_interval": "平行層建設モジュールの設置間隔"
+    "option.enhanced_quarries.horizontal_layer_interval": "平行層建設モジュールの設置間隔",
+    "info.enhanced_quarries.optimization.selected": "%s: %s",
+    "info.enhanced_quarries.optimization.list": "== 試験的クァーリー Type-A ==",
+    "info.enhanced_quarries.optimization.entry": "  %s: %s",
+    "info.enhanced_quarries.optimization.entry.selected": "> %s: %s",
+    "info.enhanced_quarries.optimization.usage": "スニーク+右クリック(素手): 上面=次の項目, 側面=切り替え, 下面=この一覧",
+    "info.enhanced_quarries.optimization.on": "ON",
+    "info.enhanced_quarries.optimization.off": "OFF",
+    "info.enhanced_quarries.optimization.scan_cursor": "走査カーソル",
+    "info.enhanced_quarries.optimization.idle_suspend": "完掘時の休止",
+    "info.enhanced_quarries.optimization.fast_self_check": "自身判定の高速化",
+    "info.enhanced_quarries.optimization.cache_block_state": "BlockStateのキャッシュ",
+    "info.enhanced_quarries.optimization.cache_module_flags": "モジュール判定のキャッシュ",
+    "info.enhanced_quarries.optimization.optimized_insert_chest": "チェスト搬出の最適化"
 }

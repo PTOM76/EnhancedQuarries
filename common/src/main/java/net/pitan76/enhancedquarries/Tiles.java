@@ -23,6 +23,9 @@ public class Tiles {
     public static RegistryResult<BlockEntityType<?>> ENHANCED_OPTIMUM_QUARRY_TILE;
     public static RegistryResult<BlockEntityType<?>> FLUID_OPTIMUM_QUARRY_TILE;
 
+    // 試験的なクォーリー
+    public static RegistryResult<BlockEntityType<?>> EXPERIMENTAL_QUARRY_TYPE_A_TILE;
+
     public static RegistryResult<BlockEntityType<?>> NORMAL_FILLER_TILE;
     public static RegistryResult<BlockEntityType<?>> ENHANCED_FILLER_TILE;
     public static RegistryResult<BlockEntityType<?>> ENHANCED_FILLER_WITH_CHEST_TILE;
@@ -47,6 +50,8 @@ public class Tiles {
         ENHANCED_OPTIMUM_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("enhanced_optimum_quarry_tile"), () -> create(EnhancedOptimumQuarryTile::new, Blocks.ENHANCED_OPTIMUM_QUARRY));
         FLUID_OPTIMUM_QUARRY_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("fluid_optimum_quarry_tile"), () -> create(FluidOptimumQuarryTile::new, Blocks.FLUID_OPTIMUM_QUARRY));
 
+        EXPERIMENTAL_QUARRY_TYPE_A_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("experimental_quarry_type_a_tile"), () -> create(ExperimentalQuarryTypeATile::new, Blocks.EXPERIMENTAL_QUARRY_TYPE_A));
+
         NORMAL_FILLER_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("normal_filler_tile"), () -> create(NormalFillerTile::new, Blocks.NORMAL_FILLER));
         ENHANCED_FILLER_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("enhanced_filler_tile"), () -> create(EnhancedFillerTile::new, Blocks.ENHANCED_FILLER));
         ENHANCED_FILLER_WITH_CHEST_TILE = registry.registerBlockEntityType(EnhancedQuarries._id("enhanced_filler_with_chest_tile"), () -> create(EnhancedFillerWithChestTile::new, Blocks.ENHANCED_FILLER_WITH_CHEST));
@@ -67,6 +72,7 @@ public class Tiles {
         return Arrays.asList(
                 NORMAL_QUARRY_TILE, ENHANCED_QUARRY_TILE, FLUID_QUARRY_TILE,
                 OPTIMUM_QUARRY_TILE, ENHANCED_OPTIMUM_QUARRY_TILE, FLUID_OPTIMUM_QUARRY_TILE,
+                EXPERIMENTAL_QUARRY_TYPE_A_TILE,
                 NORMAL_FILLER_TILE, ENHANCED_FILLER_TILE, ENHANCED_FILLER_WITH_CHEST_TILE,
                 NORMAL_PUMP_TILE, ENHANCED_PUMP_TILE,
                 NORMAL_SCANNER_TILE, NORMAL_BUILDER_TILE,

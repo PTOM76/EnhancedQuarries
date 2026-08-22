@@ -9,6 +9,7 @@
     "block.enhanced_quarries.optimum_quarry": "Optimum Process Quarry",
     "block.enhanced_quarries.enhanced_optimum_quarry": "Enhanced Optimum Process Quarry",
     "block.enhanced_quarries.fluid_optimum_quarry": "Fluid Delete Type Optimum Process Quarry",
+    "block.enhanced_quarries.experimental_quarry_type_a": "Experimental Quarry Type-A",
     "block.enhanced_quarries.normal_pump": "Normal Pump",
     "block.enhanced_quarries.enhanced_pump": "Enhanced Pump",
     "block.enhanced_quarries.normal_scanner": "Scanner",
@@ -74,5 +75,18 @@
     "category.enhanced_quarries.general": "General",
     "option.enhanced_quarries.torch_interval": "Place Interval of Place Torch Module",
     "option.enhanced_quarries.vertical_layer_interval": "Place Interval of Create Vertical Layer Module",
-    "option.enhanced_quarries.horizontal_layer_interval": "Place Interval of Create Horizontal Layer Module"
+    "option.enhanced_quarries.horizontal_layer_interval": "Place Interval of Create Horizontal Layer Module",
+    "info.enhanced_quarries.optimization.selected": "%s: %s",
+    "info.enhanced_quarries.optimization.list": "== Experimental Quarry Type-A ==",
+    "info.enhanced_quarries.optimization.entry": "  %s: %s",
+    "info.enhanced_quarries.optimization.entry.selected": "> %s: %s",
+    "info.enhanced_quarries.optimization.usage": "Sneak + right click (empty hand): top = next option, side = toggle, bottom = this list",
+    "info.enhanced_quarries.optimization.on": "ON",
+    "info.enhanced_quarries.optimization.off": "OFF",
+    "info.enhanced_quarries.optimization.scan_cursor": "Scan cursor",
+    "info.enhanced_quarries.optimization.idle_suspend": "Suspend when finished",
+    "info.enhanced_quarries.optimization.fast_self_check": "Fast self check",
+    "info.enhanced_quarries.optimization.cache_block_state": "Cache block state",
+    "info.enhanced_quarries.optimization.cache_module_flags": "Cache module flags",
+    "info.enhanced_quarries.optimization.optimized_insert_chest": "Optimized chest output"
 }
