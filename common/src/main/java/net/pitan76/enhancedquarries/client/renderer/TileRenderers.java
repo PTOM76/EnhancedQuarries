@@ -5,6 +5,7 @@ import net.pitan76.enhancedquarries.Config;
 import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.tile.MarkerTile;
 import net.pitan76.enhancedquarries.tile.base.BuilderTile;
+import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.pitan76.enhancedquarries.tile.base.ScannerTile;
 import net.pitan76.mcpitanlib.api.client.registry.CompatRegistryClient;
 
@@ -21,5 +22,8 @@ public class TileRenderers {
 
         if (Config.client_scanner_rendering_range_box)
             CompatRegistryClient.registerCompatBlockEntityRenderer(() -> (BlockEntityType<ScannerTile>) Tiles.NORMAL_SCANNER_TILE.getOrNull(), ScannerRenderer::new);
+
+        if (Config.client_filler_rendering_range_box)
+            CompatRegistryClient.registerCompatBlockEntityRenderer(() -> (BlockEntityType<FillerTile>) Tiles.NORMAL_FILLER_TILE.getOrNull(), FillerRenderer::new);
     }
 }

@@ -50,7 +50,7 @@ import java.util.Map;
 import net.pitan76.mcpitanlib.api.transfer.item.v1.ItemTransferUtil;
 
 //@SuppressWarnings("UnstableApiUsage")
-public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory {
+public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory, RangeTile {
 
     public int getInvSize() {
         return 27;
@@ -908,5 +908,15 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     @Override
     public boolean canExtractEnergy() {
         return false;
+    }
+
+    @Override
+    public BlockPos getPos1() {
+        return minPos;
+    }
+
+    @Override
+    public BlockPos getPos2() {
+        return maxPos;
     }
 }

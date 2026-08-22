@@ -36,7 +36,7 @@ import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.enhancedquarries.platform.StorageBoxHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory, SimpleScreenHandlerFactory {
+public class FillerTile extends BaseEnergyTile implements IInventory, ChestStyleSidedInventory, SimpleScreenHandlerFactory, RangeTile {
 
     public int getInvSize() {
         return 27;
