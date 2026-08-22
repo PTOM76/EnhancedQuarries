@@ -34,8 +34,10 @@ public class EnhancedQuarriesClient {
         BlockRenders.init();
 
         ClientNetworking.registerReceiver(LibraryScreenHandler.LIST_PACKET_ID, (e) -> {
-            List<String> blueprints = readNames(e.getCompatBuf());
-            List<String> templates = readNames(e.getCompatBuf());
+            CompatPacketByteBuf buf = e.getCompatBuf();
+
+            List<String> blueprints = readNames(buf);
+            List<String> templates = readNames(buf);
 
             if (e.getClientPlayer() == null) return;
             if (!(e.player.getCurrentScreenHandler() instanceof LibraryScreenHandler)) return;
@@ -46,13 +48,19 @@ public class EnhancedQuarriesClient {
         });
 
         ClientNetworking.registerReceiver(EnhancedQuarries._id("energy_generator_sync"), (e) -> {
-            long energy = e.getCompatBuf().readLong();
-            int burnTime = e.getCompatBuf().readInt();
-            int maxBurnTime = e.getCompatBuf().readInt();
+            CompatPacketByteBuf buf = e.getCompatBuf();
+            if (!buf.isReadable(EnergyGeneratorScreenHandler.EXTRA_DATA_SIZE)) return;
+
+            long energy = buf.readLong();
+            long maxEnergy = buf.readLong();
+            int burnTime = buf.readInt();
+            int maxBurnTime = buf.readInt();
+
             if (e.getClientPlayer() == null) return;
             if (e.player.getCurrentScreenHandler() instanceof EnergyGeneratorScreenHandler) {
                 EnergyGeneratorScreenHandler screenHandler = (EnergyGeneratorScreenHandler) e.player.getCurrentScreenHandler();
                 screenHandler.energy = energy;
+                screenHandler.maxEnergy = maxEnergy;
                 screenHandler.burnTime = burnTime;
                 screenHandler.maxBurnTime = maxBurnTime;
             }

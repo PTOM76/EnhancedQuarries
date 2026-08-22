@@ -28,14 +28,20 @@ public class EnergyGeneratorScreenHandler extends ExtendedScreenHandler {
 
     public World world;
 
+    // energy (long) + maxEnergy (long) + burnTime (int) + maxBurnTime (int)
+    public static final int EXTRA_DATA_SIZE = Long.BYTES * 2 + Integer.BYTES * 2;
+
     public EnergyGeneratorScreenHandler(CreateMenuEvent e, PacketByteBuf buf) {
         this(ScreenHandlers.ENERGY_GENERATOR_SCREEN_HANDLER_TYPE, e.syncId, e.playerInventory, InventoryUtil.createSimpleInventory(1));
-        if (buf == null) return;
+
+        this.world = new Player(e.playerInventory.player).getWorld();
+
+        if (buf == null || !buf.isReadable(EXTRA_DATA_SIZE)) return;
+
         energy = buf.readLong();
         maxEnergy = buf.readLong();
         burnTime = buf.readInt();
         maxBurnTime = buf.readInt();
-        this.world = new Player(e.playerInventory.player).getWorld();
     }
 
     public EnergyGeneratorScreenHandler(CreateMenuEvent e, EnergyGeneratorTile tile) {
