@@ -12,7 +12,7 @@ public class BuilderSlot extends CompatibleSlot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        if (getIndex() == 0 && !stack.getItem().rawEquals(Items.BLUEPRINT) && !stack.getItem().rawEquals(Items.TEMPLATE)) return false;
+        if (callGetIndex() == 0 && !stack.getItem().rawEquals(Items.BLUEPRINT) && !stack.getItem().rawEquals(Items.TEMPLATE)) return false;
         return super.canInsert(stack);
     }
 }

@@ -11,7 +11,7 @@ public class ScannerSlot extends CompatibleSlot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        if (getIndex() == 1) return false;
+        if (callGetIndex() == 1) return false;
         return super.canInsert(stack);
     }
 }

@@ -26,9 +26,9 @@ public class LibrarySlot extends CompatibleSlot {
         // 書き込み済みのものを入れると上書きで中身が消えるため空のものだけ許可
         ItemWrapper item = stack.getItem();
 
-        if (getIndex() == SLOT_LOAD_INPUT)
+        if (callGetIndex() == SLOT_LOAD_INPUT)
             return item.rawEquals(Items.EMPTY_BLUEPRINT) || item.rawEquals(Items.EMPTY_TEMPLATE);
-        if (getIndex() == SLOT_SAVE_INPUT)
+        if (callGetIndex() == SLOT_SAVE_INPUT)
             return item.rawEquals(Items.BLUEPRINT) || item.rawEquals(Items.TEMPLATE);
         return false;
     }
