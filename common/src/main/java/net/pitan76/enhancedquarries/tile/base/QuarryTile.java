@@ -144,8 +144,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         }
 
         moduleStacks.set(nextIndex, stack);
-        CACHE_isEnchanted = null;
-        CACHE_moduleItems.add(item);
+        clearModuleCache();
     }
 
     public void insertModuleStack(ItemStack stack) {
@@ -157,8 +156,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     }
 
     public boolean removeModuleStack(ItemStack stack) {
-        CACHE_isEnchanted = null;
-        CACHE_moduleItems.remove(ItemStackUtil.getItem(stack));
+        clearModuleCache();
 
         return moduleStacks.remove(stack);
     }
@@ -169,17 +167,32 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     private final List<Item> CACHE_moduleItems = new ArrayList<>();
 
-    public boolean hasModuleItem(Item item) {
-        if (CACHE_moduleItems.contains(item)) return true;
+    // モジュールが変更されたらキャッシュを作り直す
+    private boolean CACHE_moduleItemsOutdated = true;
 
+    public void clearModuleCache() {
+        CACHE_isEnchanted = null;
+        CACHE_moduleItemsOutdated = true;
+    }
+
+    protected void updateModuleCache() {
+        if (!CACHE_moduleItemsOutdated) return;
+        CACHE_moduleItemsOutdated = false;
+
+        CACHE_moduleItems.clear();
         for (ItemStack stack : getModuleStacks()) {
-            if (ItemStackUtil.getItem(stack).equals(item)) {
-                CACHE_moduleItems.add(item);
-                return true;
-            }
-        }
+            if (stack.isEmpty()) continue;
 
-        return false;
+            Item item = ItemStackUtil.getItem(stack);
+            if (!CACHE_moduleItems.contains(item))
+                CACHE_moduleItems.add(item);
+        }
+    }
+
+    public boolean hasModuleItem(Item item) {
+        updateModuleCache();
+
+        return CACHE_moduleItems.contains(item);
     }
 
     public ItemStackList getModuleStacks() {
@@ -287,16 +300,8 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
             args.registryLookup = RegistryLookupUtil.getRegistryLookup(callGetWorld());
 
         //ReadNbtArgs moduleArgs = NbtRWUtil.get(args, "modules");
-        if (!getModuleStacks().isEmpty()) {
-            //NbtRWUtil.getInv(moduleArgs, getModuleStacks());
-            if (!isEmptyInModules()) {
-                CACHE_isEnchanted = null;
-                CACHE_moduleItems.clear();
-                for (ItemStack stack : getModuleStacks()) {
-                    CACHE_moduleItems.add(ItemStackUtil.getItem(stack));
-                }
-            }
-        }
+        //NbtRWUtil.getInv(moduleArgs, getModuleStacks());
+        clearModuleCache();
 
         addModulesFromOldNbt(args.nbt);
 
