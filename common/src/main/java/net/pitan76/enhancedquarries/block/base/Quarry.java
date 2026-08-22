@@ -159,11 +159,9 @@ public abstract class Quarry extends BaseBlock {
         super.onPlaced(e);
         World world = e.getMidohraWorld();
         BlockPos pos = e.getMidohraPos();
-        BlockState fstate = e.getMidohraState();
-
-        BlockState state;
-        state = (e.getState() == null) ? fstate : e.getMidohraState();
         if (e.isClient()) return;
+
+        BlockState state = world.getBlockState(pos);
         BlockEntityWrapper blockEntity = e.getBlockEntityWrapper();
 
         if (!blockEntity.instanceOf(QuarryTile.class)) return;
