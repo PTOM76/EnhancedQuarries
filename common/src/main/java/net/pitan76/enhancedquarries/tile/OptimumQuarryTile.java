@@ -184,7 +184,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
 
                     if (procBlock instanceof Frame) return continueQuarrying();
 
-                    breakBlock(procPos, false);
+                    breakBlockOnSetup(procPos);
                     return true;
                 } else {
                     procZ = minPos.getZ();
@@ -198,7 +198,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                 procY--;
                 if (minPos.getY() - 1 >= procY) {
                     procX = minPos.getX() + 1;
-                    procZ = minPos.getZ() + 1;
+                    procZ = minPos.getZ();
                 }
                 return continueQuarrying();
             }

@@ -23,6 +23,9 @@ public class Config {
     public static boolean client_scanner_rendering_range_box = true;
     public static boolean client_filler_rendering_range_box = true;
 
+    // フレーム設置のときに壊したブロックをドロップさせるかどうか。
+    public static boolean quarry_drop_blocks_on_setup = false;
+
     // 試験的クァーリー Type-A の最適化のデフォルト値 (ブロックごとにShift+右クリックで変更できる)
     public static Map<String, Boolean> experimental_quarry_optimizations = new HashMap<>();
 
@@ -53,6 +56,8 @@ public class Config {
         client_builder_rendering_range_box = config.getBooleanOrDefault("client_builder_rendering_range_box", true);
         client_scanner_rendering_range_box = config.getBooleanOrDefault("client_scanner_rendering_range_box", true);
         client_filler_rendering_range_box = config.getBooleanOrDefault("client_filler_rendering_range_box", true);
+
+        quarry_drop_blocks_on_setup = config.getBooleanOrDefault("quarry_drop_blocks_on_setup", false);
 
         for (ExperimentalQuarryTypeATile.Optimization optimization : ExperimentalQuarryTypeATile.Optimization.VALUES) {
             String key = "experimental_quarry_optimization_" + optimization.getId();

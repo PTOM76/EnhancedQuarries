@@ -80,6 +80,12 @@ public class Tiles {
         );
     }
 
+    public static List<RegistryResult<BlockEntityType<?>>> getFluidTileTypes() {
+        return Arrays.asList(
+                NORMAL_PUMP_TILE, ENHANCED_PUMP_TILE
+        );
+    }
+
     public static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityTypeBuilder.Factory<T> supplier, Block... blocks) {
         return BlockEntityTypeBuilder.create(supplier, blocks).build();
     }

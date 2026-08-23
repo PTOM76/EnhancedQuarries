@@ -8,6 +8,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.pitan76.enhancedquarries.Config;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.block.base.Quarry;
 import net.pitan76.enhancedquarries.item.base.MachineModule;
@@ -577,6 +578,26 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         }
     }
 
+    public void breakBlockOnSetup(BlockPos pos) {
+        if (!Config.quarry_drop_blocks_on_setup) {
+            breakBlock(pos, false);
+            return;
+        }
+
+        breakBlock(pos, true);
+        collectDroppedStacks(pos);
+    }
+
+    public void collectDroppedStacks(BlockPos pos) {
+        World world = getMidohraWorld();
+        List<ItemEntityWrapper> entities = ItemEntityUtil.getEntityWrappers(world, new Box(pos.add(-1, -1, -1), pos.add(1, 1, 1)));
+        for (ItemEntityWrapper itemEntity : entities) {
+            if (!itemEntity.isAlive()) continue;
+            addStack(itemEntity.getStackRaw());
+            itemEntity.discard();
+        }
+    }
+
     private Boolean CACHE_isEnchanted = null;
 
     public boolean isEnchanted() {
@@ -823,7 +844,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                             continue;
                         }
                         if (procBlock instanceof Frame) continue;
-                        breakBlock(procPos, false);
+                        breakBlockOnSetup(procPos);
                         return true;
                     }
                 }

@@ -405,7 +405,7 @@ public class ExperimentalQuarryTypeATile extends FluidQuarryTile {
                 && !FluidUtil.isStill(world.getFluidState(procPos.toMinecraft())))
             return SCAN_NOTHING;
 
-        breakBlock(procPos, false);
+        breakBlockOnSetup(procPos);
 
         return SCAN_MINED;
     }
