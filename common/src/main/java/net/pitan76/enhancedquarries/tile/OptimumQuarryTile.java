@@ -8,7 +8,6 @@ import net.pitan76.enhancedquarries.Tiles;
 import net.pitan76.enhancedquarries.block.Frame;
 import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
 import net.pitan76.enhancedquarries.util.UnbreakableBlocks;
-import net.pitan76.mcpitanlib.api.block.CompatBlocks;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
@@ -80,8 +79,9 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                     if (blockEntity == this)
                         continueQuarrying();
 
-                    Block procBlock = world.getBlockState(procPos).getBlock().get();
-                    if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
+                    net.pitan76.mcpitanlib.midohra.block.BlockState procState = world.getBlockState(procPos);
+                    Block procBlock = procState.getBlock().get();
+                    if (procState.isAir() || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                         if (canReplaceFluid()) {
                             double time = tryFluidReplace(procPos);
                             if (time != 0) {
@@ -151,7 +151,7 @@ public class OptimumQuarryTile extends NormalQuarryTile {
                         return false;
 
                     Block procBlock = BlockStateUtil.getBlock(state);
-                    if (procBlock instanceof AirBlock || (procBlock.equals(CompatBlocks.BEDROCK) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
+                    if (BlockStateUtil.isAir(state) || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                         if (tryPlaceFrame(procPos)) {
                             useEnergy(getPlaceFrameEnergyCost());
                             return false;

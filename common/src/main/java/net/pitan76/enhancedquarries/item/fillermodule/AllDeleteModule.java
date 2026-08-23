@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.item.fillermodule;
 
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
@@ -21,7 +20,7 @@ public class AllDeleteModule extends FillerModule {
     @Override
     public FillerModuleReturn onProcess(FillerProcessEvent e) {
         Block procBlock = e.getProcessBlock();
-        if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !e.canBreakBedrock())) return FillerModuleReturn.CONTINUE;
+        if (e.isProcessAir() || (UnbreakableBlocks.isUnbreakable(procBlock) && !e.canBreakBedrock())) return FillerModuleReturn.CONTINUE;
 
         if (e.getMidohraWorld().removeBlock(e.getProcessPos(), false)) {
             return FillerModuleReturn.RETURN_TRUE;

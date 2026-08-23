@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.item.fillermodule;
 
-import net.minecraft.block.AirBlock;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
 import net.pitan76.enhancedquarries.item.base.FillerModule;
@@ -31,7 +30,7 @@ public class TorchModule extends FillerModule {
             return FillerModuleReturn.CONTINUE;
         }
 
-        boolean isNotPlaceable = e.getMidohraWorld().getBlockState(e.getProcessPos().down()).getBlock().get() instanceof AirBlock;
+        boolean isNotPlaceable = e.getMidohraWorld().getBlockState(e.getProcessPos().down()).isAir();
         if (isNotPlaceable) {
             return FillerModuleReturn.CONTINUE;
         }

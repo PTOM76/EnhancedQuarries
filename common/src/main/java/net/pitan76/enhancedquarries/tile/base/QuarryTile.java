@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.tile.base;
 
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntityType;
@@ -34,6 +33,7 @@ import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 import net.pitan76.mcpitanlib.api.util.world.ServerWorldUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockWrapper;
 import net.pitan76.mcpitanlib.midohra.block.MCBlocks;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
 import net.pitan76.mcpitanlib.midohra.entity.EntityWrapper;
 import net.pitan76.mcpitanlib.midohra.entity.ItemEntityWrapper;
@@ -729,8 +729,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                         if (world.getBlockState(procPos).toMinecraft() == null) continue;
                         if (world.getBlockEntity(procPos).get() instanceof QuarryTile && world.getBlockEntity(procPos).get() == this) continue;
 
-                        Block procBlock = world.getBlockState(procPos).getBlock().get();
-                        if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
+                        BlockState procState = world.getBlockState(procPos);
+                        Block procBlock = procState.getBlock().get();
+                        if (procState.isAir() || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (canReplaceFluid()) {
                                 double time = tryFluidReplace(procPos);
                                 if (time != 0) {
@@ -787,8 +788,9 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                         BlockEntityWrapper blockEntity = world.getBlockEntity(procPos);
                         if (blockEntity.get() instanceof QuarryTile && blockEntity.get() == this) continue;
 
-                        Block procBlock = world.getBlockState(procPos).getBlock().get();
-                        if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
+                        BlockState procState = world.getBlockState(procPos);
+                        Block procBlock = procState.getBlock().get();
+                        if (procState.isAir() || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (tryPlaceFrame(procPos)) {
                                 useEnergy(getPlaceFrameEnergyCost());
                                 return false;

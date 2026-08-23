@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.item.fillermodule;
 
-import net.minecraft.block.AirBlock;
 import net.minecraft.util.math.Direction;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
 import net.pitan76.enhancedquarries.event.FillerProcessEvent;
@@ -19,7 +18,7 @@ public class CutStairsModule extends FillerModule {
 
     @Override
     public FillerModuleReturn onProcess(FillerProcessEvent e) {
-        if (!(e.getProcessBlock() instanceof AirBlock)) {
+        if (!e.isProcessAir()) {
             int procX = e.getProcessPos().getX();
             int procZ = e.getProcessPos().getZ();
             int procY = e.getProcessPos().getY();

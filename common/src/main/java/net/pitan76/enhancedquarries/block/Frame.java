@@ -1,6 +1,6 @@
 package net.pitan76.enhancedquarries.block;
 
-import net.minecraft.block.Waterloggable;
+import net.pitan76.mcpitanlib.api.block.CompatWaterloggable;
 import net.minecraft.util.shape.VoxelShape;
 import net.pitan76.enhancedquarries.Blocks;
 import net.pitan76.mcpitanlib.api.block.CompatBlockRenderType;
@@ -20,7 +20,7 @@ import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.world.*;
 import org.jetbrains.annotations.Nullable;
 
-public class Frame extends CompatBlock implements Waterloggable {
+public class Frame extends CompatBlock implements CompatWaterloggable {
     public static BooleanProperty CONNECT_NORTH = BooleanProperty.of("north");
     public static BooleanProperty CONNECT_SOUTH = BooleanProperty.of("south");
     public static BooleanProperty CONNECT_WEST = BooleanProperty.of("west");

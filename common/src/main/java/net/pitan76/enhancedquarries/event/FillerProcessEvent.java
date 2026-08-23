@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.event;
 
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.item.ItemStack;
@@ -8,6 +7,7 @@ import net.pitan76.enhancedquarries.tile.base.FillerTile;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.v2.BlockUtilV2;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.block.BlockWrapper;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.world.World;
 
@@ -36,6 +36,10 @@ public class FillerProcessEvent {
 
     public Block getProcessBlock() {
         return processBlock;
+    }
+
+    public BlockWrapper getProcessBlockWrapper() {
+        return BlockWrapper.of(processBlock);
     }
 
     public BlockPos getTilePos() {
@@ -83,9 +87,12 @@ public class FillerProcessEvent {
         else return FillerModuleReturn.RETURN_FALSE;
     }
 
+    public boolean isProcessAir() {
+        return getProcessBlockState().isAir();
+    }
+
     public boolean isAirOrLiquid() {
-        Block procBlock = getProcessBlock();
-        return procBlock instanceof AirBlock || procBlock instanceof FluidBlock;
+        return isProcessAir() || getProcessBlock() instanceof FluidBlock;
     }
 
     public boolean canBreakBedrock() {

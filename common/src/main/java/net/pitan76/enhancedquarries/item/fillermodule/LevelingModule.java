@@ -1,8 +1,6 @@
 package net.pitan76.enhancedquarries.item.fillermodule;
 
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.pitan76.enhancedquarries.event.FillerModuleRange;
 import net.pitan76.enhancedquarries.event.FillerModuleReturn;
@@ -39,7 +37,7 @@ public class LevelingModule extends FillerModule {
             return e.placeBlock();
         } else {
             // Destroy
-            if (procBlock instanceof AirBlock || (UnbreakableBlocks.isUnbreakable(procBlock) && !e.canBreakBedrock())) {
+            if (e.isProcessAir() || (UnbreakableBlocks.isUnbreakable(procBlock) && !e.canBreakBedrock())) {
                 return FillerModuleReturn.CONTINUE;
             }
             return e.destroyBlock();

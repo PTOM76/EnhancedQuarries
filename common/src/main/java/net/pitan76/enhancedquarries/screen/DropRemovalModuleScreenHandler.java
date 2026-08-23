@@ -7,12 +7,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
 import net.pitan76.enhancedquarries.ScreenHandlers;
 import net.pitan76.enhancedquarries.item.quarrymodule.DropRemovalModule;
 import net.pitan76.enhancedquarries.screen.slot.TargetSlot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.gui.args.SlotClickEvent;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
 import net.pitan76.mcpitanlib.api.util.nbt.NbtListUtil;
@@ -120,9 +120,10 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
     }
 
     @Override
-    public void overrideOnSlotClick(int slotIndex, int button, SlotActionType actionType, Player player) {
+    public void onSlotClick(SlotClickEvent e) {
+        int slotIndex = e.getSlot();
         if (slotIndex < 0 || slotIndex >= slots.size()) {
-            super.overrideOnSlotClick(slotIndex, button, actionType, player);
+            super.onSlotClick(e);
             return;
         }
 
@@ -141,6 +142,6 @@ public class DropRemovalModuleScreenHandler extends SimpleScreenHandler {
             return;
         }
 
-        super.overrideOnSlotClick(slotIndex, button, actionType, player);
+        super.onSlotClick(e);
     }
 }

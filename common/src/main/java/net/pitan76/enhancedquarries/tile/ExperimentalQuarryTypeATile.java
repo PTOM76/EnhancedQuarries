@@ -1,6 +1,5 @@
 package net.pitan76.enhancedquarries.tile;
 
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntityType;
@@ -353,7 +352,7 @@ public class ExperimentalQuarryTypeATile extends FluidQuarryTile {
         if (state == null || state.toMinecraft() == null) return SCAN_NOTHING;
 
         Block procBlock = getProcBlock(world, procPos, state);
-        if (isSkippableBlock(procBlock)) {
+        if (isSkippableBlock(state, procBlock)) {
             tryFluidReplaceWithEnergy(procPos);
             return SCAN_NOTHING;
         }
@@ -388,7 +387,7 @@ public class ExperimentalQuarryTypeATile extends FluidQuarryTile {
         if (state == null || state.toMinecraft() == null) return SCAN_NOTHING;
 
         Block procBlock = getProcBlock(world, procPos, state);
-        if (isSkippableBlock(procBlock)) {
+        if (isSkippableBlock(state, procBlock)) {
             if (tryPlaceFrame(procPos)) {
                 useEnergy(getPlaceFrameEnergyCost());
                 return SCAN_FRAME;
@@ -426,8 +425,8 @@ public class ExperimentalQuarryTypeATile extends FluidQuarryTile {
         return world.getBlockState(procPos).getBlock().get();
     }
 
-    protected boolean isSkippableBlock(Block block) {
-        if (block instanceof AirBlock) return true;
+    protected boolean isSkippableBlock(BlockState state, Block block) {
+        if (state.isAir()) return true;
 
         return !hasModule(ModuleItems.BEDROCK_BREAK_MODULE, hasBedrockBreakModule)
                 && UnbreakableBlocks.isUnbreakable(block);
