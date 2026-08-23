@@ -1,6 +1,7 @@
 package net.pitan76.enhancedquarries;
 
 import net.pitan76.enhancedquarries.command.EnhancedQuarriesCommand;
+import net.pitan76.enhancedquarries.platform.FluidStorageHooks;
 import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
 import net.pitan76.mcpitanlib.api.command.CommandRegistry;
@@ -9,9 +10,7 @@ import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
-import net.pitan76.mcpitanlib.api.transfer.energy.v1.EnergyLookup;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.CommonModInitializer;
 import net.pitan76.mcpitanlib.midohra.registry.MidohraRegistryV2;
 import net.minecraft.block.entity.BlockEntityType;
@@ -53,6 +52,7 @@ public class EnhancedQuarries extends CommonModInitializer {
         }));
 
         registerEnergyStorage();
+        registerFluidStorage();
 
         CommandRegistry.register("enhancedquarries", new EnhancedQuarriesCommand());
     }
@@ -73,19 +73,14 @@ public class EnhancedQuarries extends CommonModInitializer {
         return MOD_NAME;
     }
 
-    //@SuppressWarnings("UnstableApiUsage")
-    // まだ未使用
-    /*
     public static void registerFluidStorage() {
-        FluidStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
-            if (!(blockEntity instanceof QuarryTile)) return null;
-            QuarryTile quarryTile = (QuarryTile) blockEntity;
-            return quarryTile.getFluidStorage();
+        for (RegistryResult<BlockEntityType<?>> tileType : Tiles.getFluidTileTypes()) {
+            BlockEntityType<?> type = tileType.getOrNull();
+            if (type == null) continue;
 
-        }, Tiles.NORMAL_QUARRY_TILE.getOrNull());
-
+            FluidStorageHooks.registerPumpFluidStorage(type);
+        }
     }
-     */
 
     public static void registerEnergyStorage() {
         if (!EnergyLookup.ENERGY.isSupported()) return;
