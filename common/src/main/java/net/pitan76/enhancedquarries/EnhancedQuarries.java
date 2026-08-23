@@ -1,15 +1,16 @@
 package net.pitan76.enhancedquarries;
 
 import net.pitan76.enhancedquarries.command.EnhancedQuarriesCommand;
-import net.pitan76.enhancedquarries.platform.FluidStorageHooks;
 import net.pitan76.enhancedquarries.item.quarrymodule.ModuleItems;
 import net.pitan76.enhancedquarries.screen.LibraryScreenHandler;
+import net.pitan76.enhancedquarries.tile.base.PumpTile;
 import net.pitan76.mcpitanlib.api.command.CommandRegistry;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.network.v2.ServerNetworking;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
+import net.pitan76.mcpitanlib.api.transfer.fluid.v1.FluidLookup;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.CommonModInitializer;
 import net.pitan76.mcpitanlib.midohra.registry.MidohraRegistryV2;
@@ -78,7 +79,10 @@ public class EnhancedQuarries extends CommonModInitializer {
             BlockEntityType<?> type = tileType.getOrNull();
             if (type == null) continue;
 
-            FluidStorageHooks.registerPumpFluidStorage(type);
+            FluidLookup.FLUID.registerForBlockEntity((blockEntity, dir) -> {
+                if (!(blockEntity instanceof PumpTile)) return null;
+                return ((PumpTile) blockEntity).getStoredFluid();
+            }, type);
         }
     }
 
