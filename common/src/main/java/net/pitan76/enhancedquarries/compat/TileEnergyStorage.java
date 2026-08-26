@@ -2,10 +2,10 @@ package net.pitan76.enhancedquarries.compat;
 
 import net.pitan76.enhancedquarries.Config;
 import net.pitan76.enhancedquarries.tile.base.BaseEnergyTile;
-import net.pitan76.mcpitanlib.api.transfer.energy.v1.IEnergyStorage;
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.IMutableEnergyStorage;
 import net.pitan76.mcpitanlib.api.util.PlatformUtil;
 
-public class TileEnergyStorage implements IEnergyStorage {
+public class TileEnergyStorage implements IMutableEnergyStorage {
 
     private final BaseEnergyTile tile;
 
@@ -25,52 +25,75 @@ public class TileEnergyStorage implements IEnergyStorage {
     }
 
     public long toExternal(long internal) {
+        if (internal >= Long.MAX_VALUE) return Long.MAX_VALUE;
+
         return (long) (internal / getConversionRate());
     }
 
     public long toInternal(long external) {
+        if (external >= Long.MAX_VALUE) return Long.MAX_VALUE;
+
         return (long) (external * getConversionRate());
     }
 
     @Override
-    public long getAmount() {
+    public long getEnergyStored() {
         return toExternal(tile.getEnergy());
     }
 
     @Override
-    public long getCapacity() {
+    public void setEnergyStored(long energy) {
+        tile.setEnergy(Math.max(0, Math.min(toInternal(energy), tile.getMaxEnergy())));
+    }
+
+    @Override
+    public long getCapacityEnergy() {
         return toExternal(tile.getMaxEnergy());
     }
 
     @Override
-    public long insert(long maxAmount, boolean simulate) {
-        if (!supportsInsertion() || maxAmount <= 0) return 0;
+    public long getMaxInputEnergy() {
+        if (!canInsertEnergy()) return 0;
 
-        long amount = Math.min(toInternal(maxAmount), tile.getUsableCapacity());
-        if (amount <= 0) return 0;
-        if (simulate) return toExternal(amount);
-
-        return toExternal(tile.insertEnergy(amount));
+        return toExternal(tile.getMaxInput());
     }
 
     @Override
-    public long extract(long maxAmount, boolean simulate) {
-        if (!supportsExtraction() || maxAmount <= 0) return 0;
+    public long getMaxOutputEnergy() {
+        if (!canExtractEnergy()) return 0;
 
-        long amount = Math.min(toInternal(maxAmount), tile.getEnergy());
-        if (amount <= 0) return 0;
-        if (simulate) return toExternal(amount);
-
-        return toExternal(tile.extractEnergy(amount));
+        return toExternal(tile.getMaxOutput());
     }
 
     @Override
-    public boolean supportsInsertion() {
+    public long insertEnergy(long amount, boolean simulate) {
+        if (amount <= 0 || !canInsertEnergy()) return 0;
+
+        long internal = Math.min(toInternal(amount), Math.min(tile.getMaxInput(), tile.getUsableCapacity()));
+        if (internal <= 0) return 0;
+        if (!simulate) tile.setEnergy(tile.getEnergy() + internal);
+
+        return toExternal(internal);
+    }
+
+    @Override
+    public long extractEnergy(long amount, boolean simulate) {
+        if (amount <= 0 || !canExtractEnergy()) return 0;
+
+        long internal = Math.min(toInternal(amount), Math.min(tile.getMaxOutput(), tile.getEnergy()));
+        if (internal <= 0) return 0;
+        if (!simulate) tile.setEnergy(tile.getEnergy() - internal);
+
+        return toExternal(internal);
+    }
+
+    @Override
+    public boolean canInsertEnergy() {
         return tile.canInsertEnergy();
     }
 
     @Override
-    public boolean supportsExtraction() {
+    public boolean canExtractEnergy() {
         return tile.canExtractEnergy();
     }
 }

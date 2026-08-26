@@ -76,13 +76,10 @@ public class EnhancedQuarries extends CommonModInitializer {
 
     public static void registerFluidStorage() {
         for (RegistryResult<BlockEntityType<?>> tileType : Tiles.getFluidTileTypes()) {
-            BlockEntityType<?> type = tileType.getOrNull();
-            if (type == null) continue;
-
             FluidLookup.FLUID.registerForBlockEntity((blockEntity, dir) -> {
                 if (!(blockEntity instanceof PumpTile)) return null;
                 return ((PumpTile) blockEntity).getStoredFluid();
-            }, type);
+            }, tileType);
         }
     }
 
@@ -90,14 +87,11 @@ public class EnhancedQuarries extends CommonModInitializer {
         if (!EnergyLookup.ENERGY.isSupported()) return;
 
         for (RegistryResult<BlockEntityType<?>> tileType : Tiles.getEnergyTileTypes()) {
-            BlockEntityType<?> type = tileType.getOrNull();
-            if (type == null) continue;
-
             EnergyLookup.ENERGY.registerForBlockEntity((blockEntity, dir) -> {
                 if (!(blockEntity instanceof BaseEnergyTile)) return null;
 
                 return ((BaseEnergyTile) blockEntity).getEnergyStorage();
-            }, type);
+            }, tileType);
         }
     }
 
