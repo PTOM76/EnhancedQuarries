@@ -35,7 +35,6 @@ import net.pitan76.mcpitanlib.api.util.world.ServerWorldUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockWrapper;
 import net.pitan76.mcpitanlib.midohra.block.MCBlocks;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
-import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
 import net.pitan76.mcpitanlib.midohra.entity.EntityWrapper;
 import net.pitan76.mcpitanlib.midohra.entity.ItemEntityWrapper;
 import net.pitan76.mcpitanlib.midohra.item.MCItems;
@@ -546,6 +545,15 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
     private BlockPos minPos = null;
     private BlockPos maxPos = null;
 
+    // 前回の走査が止まった位置。毎回最上部から走査し直すと、1ブロックごとに (範囲の面積 x 掘った深さ) の走査が発生する
+    private BlockPos resumePos = null;
+    private long lastFullScanTime = 0L;
+    private long idleUntil = 0L;
+    // 掘り終わった後で設置されたブロックや壊されたフレームを拾うため、定期的に最上部から走査し直す
+    private static final long FULL_SCAN_INTERVAL = 1200L;
+    // 最上部から走査しても何も無かったとき (掘り終わり) に走査を休むtick数
+    private static final long IDLE_INTERVAL = 200L;
+
     public BlockPos getMinPos() {
         return minPos;
     }
@@ -556,10 +564,14 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
 
     public void setMinPos(BlockPos pos) {
         this.minPos = pos;
+        this.resumePos = null;
+        this.idleUntil = 0L;
     }
 
     public void setMaxPos(BlockPos pos) {
         this.maxPos = pos;
+        this.resumePos = null;
+        this.idleUntil = 0L;
     }
 
     public void breakBlock(BlockPos pos, boolean drop) {
@@ -703,27 +715,30 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         return time;
     }
     
+    public boolean isFramePos(BlockPos blockPos) {
+        if (minPos == null || maxPos == null) return false;
+        return ((blockPos.getX() == minPos.getX()
+                || blockPos.getZ() == minPos.getZ()
+                || blockPos.getX() + 1 == maxPos.getX()
+                || blockPos.getZ() + 1 == maxPos.getZ())
+                        && (blockPos.getY() == minPos.getY()
+                        || blockPos.getY() == maxPos.getY())
+                )
+                ||
+                (
+                        (blockPos.getX() == minPos.getX() && blockPos.getZ() == minPos.getZ())
+                                || (blockPos.getX() + 1 == maxPos.getX() && blockPos.getZ() + 1 == maxPos.getZ())
+                                || (blockPos.getX() == minPos.getX() && blockPos.getZ() + 1 == maxPos.getZ())
+                                || (blockPos.getX() + 1 == maxPos.getX() && blockPos.getZ() == minPos.getZ())
+                );
+    }
+
     public boolean tryPlaceFrame(BlockPos blockPos) {
         if (getEnergy() > getPlaceFrameEnergyCost()) {
             World world = getMidohraWorld();
             Block block = world.getBlockState(blockPos).getBlock().get();
             if (block instanceof Frame) return false;
-            if (
-                    ((blockPos.getX() == minPos.getX()
-                    || blockPos.getZ() == minPos.getZ()
-                    || blockPos.getX() + 1 == maxPos.getX()
-                    || blockPos.getZ() + 1 == maxPos.getZ())
-                            && (blockPos.getY() == minPos.getY()
-                            || blockPos.getY() == maxPos.getY())
-                    )
-                    ||
-                    (
-                            (blockPos.getX() == minPos.getX() && blockPos.getZ() == minPos.getZ())
-                                    || (blockPos.getX() + 1 == maxPos.getX() && blockPos.getZ() + 1 == maxPos.getZ())
-                                    || (blockPos.getX() == minPos.getX() && blockPos.getZ() + 1 == maxPos.getZ())
-                                    || (blockPos.getX() + 1 == maxPos.getX() && blockPos.getZ() == minPos.getZ())
-                    )
-            ) {
+            if (isFramePos(blockPos)) {
                 world.setBlockState(blockPos, Frame.getPlacementStateByTile(world, blockPos));
                 return true;
             }
@@ -742,15 +757,30 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
         int procX;
         int procY;
         int procZ;
-        for (procY = maxPos.getY(); procY > world.getBottomY(); procY--) {
+
+        long worldTime = world.getTime();
+        if (idleUntil != 0L) {
+            if (worldTime < idleUntil) return false;
+            idleUntil = 0L;
+            resumePos = null;
+        }
+        boolean resume = resumePos != null && worldTime - lastFullScanTime < FULL_SCAN_INTERVAL;
+        if (!resume) {
+            resumePos = null;
+            lastFullScanTime = worldTime;
+        }
+        BlockPos selfPos = getMidohraPos();
+
+        for (procY = resume ? Math.min(resumePos.getY(), maxPos.getY()) : maxPos.getY(); procY > world.getBottomY(); procY--) {
+            boolean resumeLayer = resume && procY == resumePos.getY();
             if (minPos.getY() - 1 >= procY) {
-                for (procX = minPos.getX() + 1; procX < maxPos.getX() - 1; procX++) {
-                    for (procZ = minPos.getZ() + 1; procZ < maxPos.getZ() - 1; procZ++) {
+                for (procX = resumeLayer ? Math.max(resumePos.getX(), minPos.getX() + 1) : minPos.getX() + 1; procX < maxPos.getX() - 1; procX++) {
+                    for (procZ = resumeLayer && procX == resumePos.getX() ? Math.max(resumePos.getZ(), minPos.getZ() + 1) : minPos.getZ() + 1; procZ < maxPos.getZ() - 1; procZ++) {
                         BlockPos procPos = BlockPos.of(procX, procY, procZ);
-                        if (world.getBlockState(procPos).toMinecraft() == null) continue;
-                        if (world.getBlockEntity(procPos).get() instanceof QuarryTile && world.getBlockEntity(procPos).get() == this) continue;
+                        if (procPos.equals(selfPos)) continue;
 
                         BlockState procState = world.getBlockState(procPos);
+                        if (procState.toMinecraft() == null) continue;
                         Block procBlock = procState.getBlock().get();
                         if (procState.isAir() || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (canReplaceFluid()) {
@@ -787,6 +817,7 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                             if (hasModuleItem(ModuleItems.EXP_COLLECT_MODULE)) {
                                 tryCollectExp(procPos);
                             }
+                            resumePos = procPos;
                             breakBlock(procPos, true);
                             List<ItemEntityWrapper> entities = ItemEntityUtil.getEntityWrappers(world, new Box(BlockPos.of(procX - 1, procY - 1, procZ - 1), BlockPos.of(procX + 1, procY + 1, procZ + 1)));
                             if (entities.isEmpty()) return true;
@@ -802,18 +833,23 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
             }
             else if (minPos.getY() <= procY && maxPos.getY() >= procY) {
                 // procX < pos2.getX()を=<するとposのずれ問題は修正可能だが、別の方法で対処しているので、時間があればこっちで修正したい。
-                for (procX = minPos.getX(); procX < maxPos.getX(); procX++) {
-                    for (procZ = minPos.getZ(); procZ < maxPos.getZ(); procZ++) {
+                for (procX = resumeLayer ? Math.max(resumePos.getX(), minPos.getX()) : minPos.getX(); procX < maxPos.getX(); procX++) {
+                    for (procZ = resumeLayer && procX == resumePos.getX() ? Math.max(resumePos.getZ(), minPos.getZ()) : minPos.getZ(); procZ < maxPos.getZ(); procZ++) {
                         BlockPos procPos = BlockPos.of(procX, procY, procZ);
-                        if (world.getBlockState(procPos).toMinecraft() == null) continue;
-                        BlockEntityWrapper blockEntity = world.getBlockEntity(procPos);
-                        if (blockEntity.get() instanceof QuarryTile && blockEntity.get() == this) continue;
+                        if (procPos.equals(selfPos)) continue;
 
                         BlockState procState = world.getBlockState(procPos);
+                        if (procState.toMinecraft() == null) continue;
                         Block procBlock = procState.getBlock().get();
                         if (procState.isAir() || (UnbreakableBlocks.isUnbreakable(procBlock) && !hasModuleItem(ModuleItems.BEDROCK_BREAK_MODULE))) {
                             if (tryPlaceFrame(procPos)) {
                                 useEnergy(getPlaceFrameEnergyCost());
+                                resumePos = procPos;
+                                return false;
+                            }
+                            // エネルギー不足でフレームを置けなかった場合、先に進むと穴が空いたままになるのでここで待つ
+                            if (getEnergy() <= getPlaceFrameEnergyCost() && isFramePos(procPos)) {
+                                resumePos = procPos;
                                 return false;
                             }
                             if (canReplaceFluid()) {
@@ -844,12 +880,18 @@ public class QuarryTile extends BaseEnergyTile implements IInventory, ChestStyle
                             continue;
                         }
                         if (procBlock instanceof Frame) continue;
+                        resumePos = procPos;
                         breakBlockOnSetup(procPos);
                         return true;
                     }
                 }
             }
         }
+        if (!resume) {
+            // 最上部から走査しても何も無かった = 掘り終わり。複数台が同じtickに走査しないよう待ち時間をずらす
+            idleUntil = worldTime + IDLE_INTERVAL + Math.floorMod(selfPos.hashCode(), IDLE_INTERVAL);
+        }
+        resumePos = null;
         return false;
     }
 
