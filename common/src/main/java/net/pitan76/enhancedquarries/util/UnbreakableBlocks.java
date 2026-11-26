@@ -3,6 +3,9 @@ package net.pitan76.enhancedquarries.util;
 import net.minecraft.block.Block;
 import net.pitan76.mcpitanlib.api.util.block.BlockUtil;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 // TODO: とりあえず、破壊不可ブロックを定義しているが、破壊できないブロックを動的に取得する調査する必要がある or もしくはクァーリーのブロック破壊処理を変更する
 public class UnbreakableBlocks {
     public static final String[] UNBREAKABLE_BLOCKS = {
@@ -26,7 +29,10 @@ public class UnbreakableBlocks {
         return false;
     }
 
+    // クォーリーは走査する座標ごとに呼ぶので、毎回ID文字列に変換すると重い。ブロックごとに結果をキャッシュする
+    private static final Map<Block, Boolean> CACHE = new ConcurrentHashMap<>();
+
     public static boolean isUnbreakable(Block block) {
-        return isUnbreakable(BlockUtil.toIdAsString(block));
+        return CACHE.computeIfAbsent(block, b -> isUnbreakable(BlockUtil.toIdAsString(b)));
     }
 }
